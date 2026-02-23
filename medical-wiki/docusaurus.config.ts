@@ -15,15 +15,16 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://DrYamaHiro.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/medical-wiki/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'DrYamaHiro', // Usually your GitHub org/user name.
+  projectName: 'medical-wiki', // Usually your repo name.
+  trailingSlash: false,
 
   onBrokenLinks: 'warn',
 
@@ -41,7 +42,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/DrYamaHiro/medical-wiki/edit/main/medical-wiki/',
+          editUrl: 'https://github.com/DrYamaHiro/medical-wiki/edit/master/medical-wiki/',
           // Remove this to remove the "edit this page" links.
         },
         blog: false,
@@ -72,7 +73,7 @@ const config: Config = {
           label: 'Wiki',
         },
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/DrYamaHiro/medical-wiki',
           label: 'GitHub',
           position: 'right',
         },
