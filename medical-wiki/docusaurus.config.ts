@@ -41,6 +41,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
+          editUrl: 'https://github.com/DrYamaHiro/medical-wiki/edit/main/medical-wiki/',
           // Remove this to remove the "edit this page" links.
         },
         blog: false,
