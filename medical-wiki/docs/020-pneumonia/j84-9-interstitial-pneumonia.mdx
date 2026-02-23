@@ -1,0 +1,85 @@
+---
+title: "[J84.9] 間質性肺炎 (Interstitial Pneumonia)"
+sidebar_position: 7
+---
+
+import MedicalEntry from '@site/src/components/MedicalEntry';
+
+<MedicalEntry
+  diseaseName="間質性肺炎 (Interstitial Pneumonia)"
+  icdCode="J84.9"
+  initialVisit={{
+    sText: `主訴: ( 発熱 / 咳嗽 / 膿性喀痰 / 呼吸困難 / 胸痛 / 全身倦怠感 / 食欲不振 )
+    【呼吸器系】
+    咳嗽: ( 有 / 無 ), 喀痰: ( 膿性 / 粘液性 / 血痰 / なし )
+    呼吸困難: ( 有 / 無 ), 胸痛: ( 有 / 無 )
+    【背景】
+    発症時期: ＿
+    既往歴:
+    誤嚥のリスク: ( 有 / 無 ), 喫煙歴: ( 有 / 無 )`,
+    oText: `バイタル: BT: ＿℃, SpO2: ＿% (Room Air), RR: ＿ /min
+    【胸部聴診】
+    呼吸音: ( 減弱 / 清明 )
+    副雑音: ( Coarse crackles / Fine crackles / Wheezes / なし )
+    【胸部X線】
+    胸部単純X線検査
+    所見: ( 浸潤影 / すりガラス影 / 胸水 / シルエットサイン / 異常なし )
+    AI解析結果: ( 異常なし / 異常所見あり: ＿ )
+    【迅速検査】
+    マイコプラズマ抗原検査 ( 陽性 / 陰性 )
+    尿中肺炎球菌抗原検査 ( 陽性 / 陰性 )
+    尿中レジオネラ抗原検査 ( 陽性 / 陰性 )
+    新型コロナウイルス抗原検査 ( 陽性 / 陰性 )
+    インフルエンザ抗原検査 ( 陽性 / 陰性 )
+    【血液検査】
+    末梢血一般(CBC), CRP
+    WBC: ＿, CRP: ＿ (※院内迅速・即日)
+    生化学(肝機能・腎機能等): (※外注・結果は後日)`,
+    nsText: `【胸部X線】
+    [ID: Img-Gen-ChestXP] 胸部単純X線撮影
+    【迅速検査】
+    [ID: Lab-Resp-Myco] マイコプラズマ抗原精密測定
+    [ID: Lab-Resp-PneuAg] 尿中肺炎球菌抗原定性
+    [ID: Lab-Resp-Legio] 尿中レジオネラ抗原定性
+    [ID: Lab-Gen-COVID] 新型コロナウイルス抗原精密測定
+    [ID: Lab-Gen-Influenza] インフルエンザ抗原精密測定
+    【血液検査】
+    [ID: Lab-Gen-CBC_CRP] 末梢血一般(CBC), CRP`,
+    advice: `[聴診の重要性]: 胸部X線で異常が目立たなくても、聴診で「バリバリ」というVelcro ralesが聞こえれば早期の間質性肺炎を疑い、KL-6を測定せよ。`
+  }}
+  followupVisit={{
+    sText: `発熱の推移: ( 解熱 / 微熱持続 / 高熱持続 )
+    呼吸器症状: ( 咳嗽軽減 / 喀痰減少 / 呼吸苦なし / 変化なし )
+    食事・水分: ( 摂取良好 / 不十分 )
+    服薬状況: ( コンプライアンス良好 / 下痢等の副作用あり )`,
+    oText: `バイタル: BT: ＿℃, SpO2: ＿% (Room Air), PR: ＿ bpm
+    聴診: ( ラ音消失 / 改善 / 残存 )
+    【必要時再検】
+    WBC: ＿, CRP: ＿
+    胸部X線: ( 浸潤影改善 / 不変 / 増悪 )`,
+    advice: ``
+  }}
+  assessment={`・診断根拠: 乾性咳嗽、労作時呼吸困難。背下部の捻髪音（Velcro rales）。
+    ・検査所見: KL-6高値。胸部X線ですりガラス影・網状影。`}
+  plan={`・早期診断と専門医紹介が原則。
+    ・急性増悪（風邪を引いた後の急激な呼吸困難）は致死的であるため、即座に高次病院へ送る。
+
+    ▼ 処方・アクション ▼
+    【スクリーニング検査】
+    [ID: Lab-Resp-KL6] 間質性肺炎マーカー
+    ・KL-6, SP-D (外注)
+    [ID: Img-Gen-ChestXP] 胸部単純X線撮影
+
+    【紹介】
+    [ID: Doc-Gen-Referral] 診療情報提供書
+    ・紹介先: 呼吸器内科専門医`}
+  drAdvice={`[聴診の重要性]: 胸部X線で異常が目立たなくても、聴診で「バリバリ」というVelcro ralesが聞こえれば早期の間質性肺炎を疑い、KL-6を測定せよ。`}
+>
+  :::info Wiki編集エリア
+  この右側のエリアは、最新のガイドラインや病態生理、エビデンスを追記するためのスペースです。
+  ファイルを直接編集して追記・修正を行ってください。
+  :::
+  
+  ### 🔗 関連リンク・文献
+  - [国内ガイドライン検索](https://www.google.com/search?q=%E9%96%93%E8%B3%AA%E6%80%A7%E8%82%BA%E7%82%8E%20(Interstitial%20Pneumonia)+ガイドライン)
+</MedicalEntry>

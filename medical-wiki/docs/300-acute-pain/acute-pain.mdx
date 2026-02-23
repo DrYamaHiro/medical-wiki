@@ -1,0 +1,41 @@
+---
+title: "[Acute-Pain] 経過観察・再評価 (数時間後・翌日)"
+sidebar_position: 1
+---
+
+import MedicalEntry from '@site/src/components/MedicalEntry';
+
+<MedicalEntry
+  diseaseName="経過観察・再評価 (数時間後・翌日)"
+  icdCode="Acute-Pain"
+  initialVisit={{
+    sText: `痛みの変化: ( 消失 / 改善 / 移動した / 増悪 )
+    食事摂取: ( 可 / 嘔吐して不可 )
+    排便・排ガス: ( 有 / 無 )`,
+    oText: `腹部所見の再評価（圧痛の限局化など）。
+    炎症反応の推移。`,
+    nsText: `【院内迅速検査】
+    [ID: Phy-Gen-ECG] 心電図（12誘導）
+    [ID: Lab-Gen-CBC_CRP] 末梢血一般(CBC), CRP
+    [ID: Lab-Gen-Urine] 尿定性
+    [ID: Img-Gen-ChestXP] 胸部単純X線撮影
+    [ID: Img-Gen-AbdomenXP] 腹部単純X線撮影`,
+    advice: `[帰宅の条件]: 「バイタルが安定している」「腹膜刺激症状がない」「水分が摂取できる」の3つが揃って初めて、厳重な再診指示のもと帰宅を許可できる。一つでも欠ければ入院・搬送を考慮せよ。`
+  }}
+  followupVisit={{
+    sText: ``,
+    oText: ``,
+    advice: ``
+  }}
+  assessment={``}
+  plan={``}
+  drAdvice={`[帰宅の条件]: 「バイタルが安定している」「腹膜刺激症状がない」「水分が摂取できる」の3つが揃って初めて、厳重な再診指示のもと帰宅を許可できる。一つでも欠ければ入院・搬送を考慮せよ。`}
+>
+  :::info Wiki編集エリア
+  この右側のエリアは、最新のガイドラインや病態生理、エビデンスを追記するためのスペースです。
+  ファイルを直接編集して追記・修正を行ってください。
+  :::
+  
+  ### 🔗 関連リンク・文献
+  - [国内ガイドライン検索](https://www.google.com/search?q=%E7%B5%8C%E9%81%8E%E8%A6%B3%E5%AF%9F%E3%83%BB%E5%86%8D%E8%A9%95%E4%BE%A1%20(%E6%95%B0%E6%99%82%E9%96%93%E5%BE%8C%E3%83%BB%E7%BF%8C%E6%97%A5)+ガイドライン)
+</MedicalEntry>

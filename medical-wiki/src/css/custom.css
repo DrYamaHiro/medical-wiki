@@ -1,0 +1,91 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #2e8555;
+  --ifm-color-primary-dark: #29784c;
+  --ifm-color-primary-darker: #277148;
+  --ifm-color-primary-darkest: #205d3b;
+  --ifm-color-primary-light: #33925d;
+  --ifm-color-primary-lighter: #359962;
+  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #25c2a0;
+  --ifm-color-primary-dark: #21af90;
+  --ifm-color-primary-darker: #1fa588;
+  --ifm-color-primary-darkest: #1a8870;
+  --ifm-color-primary-light: #29d5b0;
+  --ifm-color-primary-lighter: #32d8b4;
+  --ifm-color-primary-lightest: #4fddbf;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Medical Entry Specific Styles */
+.medical-entry .content-box {
+  background-color: var(--ifm-background-color);
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  /* Increased line-height as per request */
+}
+
+.medical-entry .prescription-set-header {
+  background-color: #f0f0f0;
+  /* Grey background */
+  padding: 0.5rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  border-left: 4px solid #666;
+}
+
+[data-theme='dark'] .medical-entry .prescription-set-header {
+  background-color: #2c2c2c;
+  border-left-color: #888;
+}
+
+.medical-entry .prescription-item {
+  padding-left: 1rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-100);
+}
+
+.medical-entry .view-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.medical-entry .tabs__item {
+  cursor: pointer;
+}
+
+.medical-entry .border--info {
+  border: 1px solid var(--ifm-color-info);
+  border-radius: 4px;
+  background-color: rgba(var(--ifm-color-info-rgb), 0.05);
+}
+
+.medical-entry .so-section {
+  background-color: rgba(var(--ifm-color-info-rgb), 0.03);
+}
+
+.medical-entry h3 {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  border-bottom: 2px solid var(--ifm-color-primary);
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
