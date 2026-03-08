@@ -36,7 +36,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/DrYamaHiro/medical-wiki/tree/master/',
+            'https://github.com/DrYamaHiro/medical-wiki/tree/master/medical-wiki/',
           showLastUpdateTime: false,
           showLastUpdateAuthor: false,
         },
