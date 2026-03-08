@@ -1,0 +1,30 @@
+{
+  "id": "Rhinitis/j019-acute-sinusitis",
+  "title": "[J01.9] 急性副鼻腔炎 / Acute Sinusitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/040-Rhinitis/j019-acute-sinusitis.mdx",
+  "sourceDirName": "040-Rhinitis",
+  "slug": "/Rhinitis/j019-acute-sinusitis",
+  "permalink": "/medical-wiki/docs/Rhinitis/j019-acute-sinusitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/040-Rhinitis/j019-acute-sinusitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "j019-acute-sinusitis",
+    "title": "[J01.9] 急性副鼻腔炎 / Acute Sinusitis",
+    "sidebar_label": "[J01.9] 急性副鼻腔炎",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[R04.0] 鼻出血",
+    "permalink": "/medical-wiki/docs/Rhinitis/r040-epistaxis"
+  },
+  "next": {
+    "title": "[J32.9] 慢性副鼻腔炎",
+    "permalink": "/medical-wiki/docs/Rhinitis/j329-chronic-sinusitis"
+  }
+}

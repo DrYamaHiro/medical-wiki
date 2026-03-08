@@ -1,0 +1,445 @@
+================================================================
+00-INDEX.txt
+医療診断プロトコル 全体目次
+データソース: ver.2.0.1.1
+生成日: 2026-02-25
+================================================================
+
+No. 010 | Acute-URI (上気道感染・急性疾患)
+  ├─ S/O: 010-SO-01.txt (初診), 010-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 010-AP-01.txt [J00] 急性上気道炎 (Common Cold)
+  │   ├─ 010-AP-02.txt [J10] インフルエンザA型 (Influenza A)
+  │   ├─ 010-AP-03.txt [J11] インフルエンザB型 (Influenza B)
+  │   ├─ 010-AP-04.txt [U07.1] 新型コロナウイルス感染症 (COVID-19)
+  │   ├─ 010-AP-05.txt [J02.0] 溶連菌性咽頭炎 (Strep Throat)
+  │   ├─ 010-AP-06.txt [J03.9] 急性扁桃炎 (Acute Tonsillitis)
+  │   ├─ 010-AP-07.txt [J02.9] 急性咽頭炎 (Acute Pharyngitis)
+  │   ├─ 010-AP-08.txt [J04.0] 急性喉頭炎 (Acute Laryngitis)
+  │   ├─ 010-AP-09.txt [J36] 扁桃周囲膿瘍 (Peritonsillar Abscess)
+  │   ├─ 010-AP-10.txt [J05.1] 急性喉頭蓋炎 (Acute Epiglottitis)
+  │   ├─ 010-AP-11.txt [B27.9] 伝染性単核球症 (Infectious Mononucleosis)
+  │   └─ 010-AP-12.txt [B34.1] アデノウイルス感染症 (Adenovirus)
+
+No. 020 | Pneumonia (肺炎・下気道感染症)
+  ├─ S/O: 020-SO-01.txt (初診), 020-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 020-AP-01.txt [J15.9] 細菌性肺炎 / 市中肺炎 (Bacterial Pneumonia)
+  │   ├─ 020-AP-02.txt [J18.0] 気管支肺炎 (Bronchopneumonia)
+  │   ├─ 020-AP-03.txt [J15.7] マイコプラズマ肺炎 (Mycoplasma Pneumonia)
+  │   ├─ 020-AP-04.txt [J69.0] 誤嚥性肺炎 (Aspiration Pneumonia)
+  │   ├─ 020-AP-05.txt [J20.9] 急性気管支炎 (Acute Bronchitis)
+  │   ├─ 020-AP-06.txt [A31.0] 非結核性抗酸菌症 (NTM)
+  │   └─ 020-AP-07.txt [J84.9] 間質性肺炎 (Interstitial Pneumonia)
+
+No. 030 | Chronic-Resp (喘息・COPD・慢性咳嗽)
+  ├─ S/O: 030-SO-01.txt (初診), 030-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 030-AP-01.txt [J45.9] 気管支喘息 / 軽症・安定期 (Asthma - Mild)
+  │   ├─ 030-AP-02.txt [J45.9] 気管支喘息 / 中等症・コントロール不十分 (Asthma - Moderate)
+  │   ├─ 030-AP-03.txt [J46] 喘息発作重積状態 (Status Asthmaticus)
+  │   ├─ 030-AP-04.txt [J44.9] COPD (慢性閉塞性肺疾患)
+  │   ├─ 030-AP-05.txt [J45.9] 咳喘息 (Cough Variant Asthma)
+  │   ├─ 030-AP-06.txt [R05] 慢性咳嗽 (Chronic Cough)
+  │   └─ 030-AP-07.txt [B90.9] 陳旧性肺結核 (Old Pulmonary Tuberculosis)
+
+No. 035 | Smoking-Cessation (禁煙外来)
+  ├─ S/O: 035-SO-01.txt (初診), 035-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 035-AP-01.txt [F17.2] ニコチン依存症 / 導入 (Nicotine Dependence - Induction)
+  │   ├─ 035-AP-02.txt [F17.2] ニコチン依存症 / 再診・維持 (Nicotine Dependence - Maintenance)
+  │   └─ 035-AP-03.txt [F17.2] ニコチン依存症 / 治療完了 (Nicotine Dependence - Completion)
+
+No. 040 | Rhinitis (鼻炎・花粉症)
+  ├─ S/O: 040-SO-01.txt (初診), 040-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 040-AP-01.txt [J30.1/J30.4] 花粉症・アレルギー性鼻炎 (Allergic Rhinitis)
+  │   ├─ 040-AP-02.txt [J30.3] 通年性アレルギー性鼻炎 (Perennial Allergic Rhinitis)
+  │   ├─ 040-AP-03.txt [J30.0] 血管運動性鼻炎 (Vasomotor Rhinitis)
+  │   ├─ 040-AP-04.txt [J34.2] 鼻中隔弯曲症 (Nasal Septal Deviation)
+  │   ├─ 040-AP-05.txt [R04.0] 鼻出血 (Epistaxis)
+  │   ├─ 040-AP-06.txt [J01.9] 急性副鼻腔炎 (Acute Sinusitis)
+  │   ├─ 040-AP-07.txt [J32.9] 慢性副鼻腔炎 (Chronic Sinusitis)
+  │   ├─ 040-AP-08.txt [J30.1] スギ花粉症 / 舌下免疫療法・導入 (SLIT - Cedar Induction)
+  │   └─ 040-AP-09.txt [J30.1] スギ花粉症 / 舌下免疫療法・維持 (SLIT - Cedar Maintenance)
+
+No. 050 | Gastroenteritis (感染性胃腸炎・上部消化管)
+  ├─ S/O: 050-SO-01.txt (初診), 050-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 050-AP-01.txt [A09] 感染性胃腸炎 (Infectious Gastroenteritis)
+  │   ├─ 050-AP-02.txt [A08.1] ノロウイルス腸炎 (Norovirus Gastroenteritis)
+  │   ├─ 050-AP-03.txt [A04.5] カンピロバクター腸炎 (Campylobacter Enteritis)
+  │   ├─ 050-AP-04.txt [A05.9] 細菌性食中毒 (Bacterial Gastroenteritis)
+  │   ├─ 050-AP-05.txt [K21.0/K21.9] 胃食道逆流症・逆流性食道炎 (GERD)
+  │   ├─ 050-AP-06.txt [K30] 機能性ディスペプシア (Functional Dyspepsia / FD)
+  │   ├─ 050-AP-07.txt [K29.1] 急性胃炎 (Acute Gastritis)
+  │   ├─ 050-AP-08.txt [K29.5] 慢性胃炎 (Chronic Gastritis)
+  │   ├─ 050-AP-09.txt [K25/K26] 胃・十二指腸潰瘍 (Gastric / Duodenal Ulcer)
+  │   └─ 050-AP-10.txt [B96.8] ヘリコバクター・ピロリ感染症 (H.Pylori)
+
+No. 060 | Bowel-Disorder (便秘・IBS・下部消化管疾患)
+  ├─ S/O: 060-SO-01.txt (初診), 060-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 060-AP-01.txt [K58.9] 過敏性腸症候群 (IBS)
+  │   ├─ 060-AP-02.txt [K59.0] 慢性便秘症 (Chronic Constipation)
+  │   ├─ 060-AP-03.txt [R19.7] 下痢症・整腸剤処方 (Diarrhea / Intestinal Regulation)
+  │   ├─ 060-AP-04.txt [A04.9] 感染性大腸炎 (Infectious Colitis)
+  │   ├─ 060-AP-05.txt [A04.3] 腸管出血性大腸菌感染症疑い (EHEC / O157)
+  │   ├─ 060-AP-06.txt [K57.3] 大腸憩室炎 (Diverticulitis)
+  │   ├─ 060-AP-07.txt [K55.9] 虚血性大腸炎 (Ischemic Colitis)
+  │   ├─ 060-AP-08.txt [I84.2] 内痔核 (Internal Hemorrhoids)
+  │   ├─ 060-AP-09.txt [I84.5] 外痔核 (External Hemorrhoids)
+  │   ├─ 060-AP-10.txt [K60.2] 裂肛 (Anal Fissure)
+  │   ├─ 060-AP-11.txt [K61.0] 肛門周囲膿瘍 (Perianal Abscess)
+  │   └─ 060-AP-12.txt [K63.5] 大腸ポリープ (Colon Polyp)
+
+No. 070 | Hepatobiliary (肝胆膵・脂肪肝)
+  ├─ S/O: 070-SO-01.txt (初診), 070-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 070-AP-01.txt [K76.0] 脂肪肝・NAFLD / NASH (Fatty Liver)
+  │   ├─ 070-AP-02.txt [K70] アルコール性肝障害 (Alcoholic Liver Disease)
+  │   ├─ 070-AP-03.txt [K73] 慢性肝炎(B型 / C型) (Chronic Hepatitis B/C)
+  │   ├─ 070-AP-04.txt [K74.6] 肝硬変 (Liver Cirrhosis)
+  │   ├─ 070-AP-05.txt [K80.2] 胆石症 (Cholelithiasis)
+  │   ├─ 070-AP-06.txt [K81.0] 胆嚢炎 (Cholecystitis)
+  │   ├─ 070-AP-07.txt [K86.1] 慢性膵炎 (Chronic Pancreatitis)
+  │   └─ 070-AP-08.txt [D18.0] 肝血管腫 (Hepatic Hemangioma)
+
+No. 080 | Hypertension (高血圧・血管疾患)
+  ├─ S/O: 080-SO-01.txt (初診), 080-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 080-AP-01.txt [I10] 本態性高血圧 / 初期・安定期 (HT - Stable)
+  │   ├─ 080-AP-02.txt [I10] 難治性高血圧 / 多剤併用 (HT - Resistant)
+  │   ├─ 080-AP-03.txt [I15] 二次性高血圧症 (Secondary Hypertension)
+  │   ├─ 080-AP-04.txt [I11] 高血圧性心疾患 (Hypertensive Heart Disease)
+  │   ├─ 080-AP-05.txt [R03.0] 白衣高血圧 (White Coat Hypertension)
+  │   └─ 080-AP-06.txt [I95.9] 低血圧症 (Hypotension)
+
+No. 090 | Cardiovascular (循環器・血管疾患)
+  ├─ S/O: 090-SO-01.txt (初診), 090-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 090-AP-01.txt [I50.9] 慢性心不全 (Chronic Heart Failure)
+  │   ├─ 090-AP-02.txt [I50.0] 鬱血性心不全 (Congestive Heart Failure)
+  │   ├─ 090-AP-03.txt [I20.8] 労作性狭心症 (Angina Pectoris)
+  │   ├─ 090-AP-04.txt [I48] 心房細動 (Atrial Fibrillation)
+  │   ├─ 090-AP-05.txt [I48] 心房粗動 (Atrial Flutter)
+  │   ├─ 090-AP-06.txt [I49] 期外収縮 (Premature Contraction)
+  │   ├─ 090-AP-07.txt [I38] 弁膜症 (Valvular Heart Disease)
+  │   ├─ 090-AP-08.txt [I25.2] 陳旧性心筋梗塞 (Old Myocardial Infarction)
+  │   ├─ 090-AP-09.txt [I80.2] 深部静脈血栓症 (DVT)
+  │   ├─ 090-AP-10.txt [I83.9] 下肢静脈瘤 (Varicose Veins)
+  │   └─ 090-AP-11.txt [I70.2] 閉塞性動脈硬化症 (ASO / PAD)
+
+No. 100 | Stroke (脳血管障害・脳卒中)
+  ├─ S/O: 100-SO-01.txt (初診), 100-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 100-AP-01.txt [I69.3] 脳梗塞後遺症・再発予防 (Cerebral Infarction Seq.)
+  │   ├─ 100-AP-02.txt [G45.9] 一過性脳虚血発作 (TIA)
+  │   ├─ 100-AP-03.txt [I69.1] 脳出血後遺症 (Intracerebral Hemorrhage Seq.)
+  │   └─ 100-AP-04.txt [I67.8] 慢性脳循環不全 (Chronic Cerebrovascular Insufficiency)
+
+No. 110 | Diabetes (糖尿病・糖代謝)
+  ├─ S/O: 110-SO-01.txt (初診), 110-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 110-AP-01.txt [E11.9] 2型糖尿病 (Type 2 Diabetes) / 経口薬・GLP-1療法 ()
+  │   ├─ 110-AP-02.txt [E11.9] 2型糖尿病 (Type 2 Diabetes) / インスリン導入 ()
+  │   ├─ 110-AP-03.txt [E11.9] 2型糖尿病 (Type 2 Diabetes) / インスリン強化療法 (Basal-Bolus)
+  │   ├─ 110-AP-04.txt [E14.0] 糖尿病・入院適応判断 (Diabetes Admission Criteria)
+  │   ├─ 110-AP-05.txt [E10.9] 1型糖尿病 (Type 1 Diabetes)
+  │   ├─ 110-AP-06.txt [E16.2] 低血糖症 (Hypoglycemia)
+  │   ├─ 110-AP-07.txt [G63.2] 糖尿病性神経障害 (Diabetic Neuropathy)
+  │   └─ 110-AP-08.txt [E11.2] 糖尿病性腎症 (Diabetic Kidney Disease / DKD)
+
+No. 120 | Dyslipidemia (脂質・尿酸・肥満)
+  ├─ S/O: 120-SO-01.txt (初診), 120-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 120-AP-01.txt [E78.5] 脂質異常症 (Dyslipidemia)
+  │   ├─ 120-AP-02.txt [E78.0] 高LDLコレステロール血症 (High LDL Cholesterol)
+  │   ├─ 120-AP-03.txt [E78.0] 家族性高コレステロール血症 (Familial Hypercholesterolemia / FH)
+  │   ├─ 120-AP-04.txt [E78.1] 高中性脂肪血症 (Hypertriglyceridemia)
+  │   ├─ 120-AP-05.txt [E78.6] 低HDLコレステロール血症 (Low HDL Cholesterol)
+  │   ├─ 120-AP-06.txt [M10.9/E79.0] 痛風・高尿酸血症 (Gout / Hyperuricemia)
+  │   ├─ 120-AP-07.txt [E66.9] 肥満症 (Obesity)
+  │   └─ 120-AP-08.txt [E88.9] メタボリックシンドローム (Metabolic Syndrome)
+
+No. 130 | Endocrine (甲状腺・内分泌)
+  ├─ S/O: 130-SO-01.txt (初診), 130-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 130-AP-01.txt [E06.3] 橋本病 (Hashimoto's Thyroiditis)
+  │   ├─ 130-AP-02.txt [E03.9] 甲状腺機能低下症 (Hypothyroidism)
+  │   ├─ 130-AP-03.txt [E05.0] バセドウ病 (Graves' Disease)
+  │   ├─ 130-AP-04.txt [E06.1] 亜急性甲状腺炎 (Subacute Thyroiditis)
+  │   ├─ 130-AP-05.txt [D34] 甲状腺腫瘍 (Thyroid Tumor)
+  │   └─ 130-AP-06.txt [E26.0] 原発性アルドステロン症 (Primary Aldosteronism / PA)
+
+No. 140 | Headache (頭痛・てんかん・神経痛)
+  ├─ S/O: 140-SO-01.txt (初診), 140-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 140-AP-01.txt [G43.9] 片頭痛 (Migraine)
+  │   ├─ 140-AP-02.txt [G44.2] 緊張型頭痛 (Tension-Type Headache)
+  │   ├─ 140-AP-03.txt [G44.0] 群発頭痛 (Cluster Headache)
+  │   ├─ 140-AP-04.txt [G44.4] 薬物乱用頭痛 (Medication Overuse Headache / MOH)
+  │   ├─ 140-AP-05.txt [G40.9] てんかん (Epilepsy)
+  │   ├─ 140-AP-06.txt [G50.0] 三叉神経痛 (Trigeminal Neuralgia)
+  │   └─ 140-AP-07.txt [M54.8] 後頭神経痛 (Occipital Neuralgia)
+
+No. 150 | Vertigo (めまい・末梢神経)
+  ├─ S/O: 150-SO-01.txt (初診), 150-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 150-AP-01.txt [H81.1] 良性発作性頭位めまい症 (BPPV)
+  │   ├─ 150-AP-02.txt [H81.0] メニエール病 (Meniere's Disease)
+  │   ├─ 150-AP-03.txt [H81.2] 前庭神経炎 (Vestibular Neuritis)
+  │   ├─ 150-AP-04.txt [R42] めまい症 (Dizziness / Vertigo NOS)
+  │   └─ 150-AP-05.txt [G62.9] 末梢神経障害 (Peripheral Neuropathy)
+
+No. 160 | Sleep-Apnea (睡眠時無呼吸・睡眠障害)
+  ├─ S/O: 160-SO-01.txt (初診), 160-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 160-AP-01.txt [G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / 診断・導入検討 ()
+  │   ├─ 160-AP-02.txt [G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / CPAP定期管理 ()
+  │   ├─ 160-AP-03.txt [G25.8] むずむず脚症候群 (Restless Legs Syndrome / RLS)
+  │   └─ 160-AP-04.txt [G47.4] ナルコレプシー (Narcolepsy)
+
+No. 170 | Psychiatry (不眠・不安・心身症)
+  ├─ S/O: 170-SO-01.txt (初診), 170-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 170-AP-01.txt [F51.0] 不眠症 (Insomnia)
+  │   ├─ 170-AP-02.txt [F32.9] うつ状態 (Depressive State)
+  │   ├─ 170-AP-03.txt [F43.2] 適応障害 (Adjustment Disorder)
+  │   ├─ 170-AP-04.txt [F54] 心身症 (Psychosomatic Disorder)
+  │   ├─ 170-AP-05.txt [F41.0] パニック障害 (Panic Disorder)
+  │   ├─ 170-AP-06.txt [F41.1] 全般性不安障害 (Generalized Anxiety Disorder / GAD)
+  │   └─ 170-AP-07.txt [F90.0] 大人の注意欠如・多動症 (Adult ADHD) / 疑い・紹介 ()
+
+No. 180 | Dementia (認知症・物忘れ)
+  ├─ S/O: 180-SO-01.txt (初診), 180-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 180-AP-01.txt [G30.9] アルツハイマー型認知症 (Alzheimer's Disease / AD)
+  │   ├─ 180-AP-02.txt [G31.8] レビー小体型認知症 (Dementia with Lewy Bodies / DLB)
+  │   ├─ 180-AP-03.txt [F01.5] 血管性認知症 (Vascular Dementia / VaD)
+  │   ├─ 180-AP-04.txt [F06.7] 軽度認知障害 (Mild Cognitive Impairment / MCI)
+  │   ├─ 180-AP-05.txt [F03] 認知症・BPSD対応 (BPSD Management)
+  │   └─ 180-AP-06.txt [Z50.7] 介護保険主治医意見書作成 (Opinion Letter for Long-term Care)
+
+No. 190 | Gynecology (女性外来・更年期)
+  ├─ S/O: 190-SO-01.txt (初診), 190-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 190-AP-01.txt [N95.1] 更年期障害 (Menopausal Disorder)
+  │   ├─ 190-AP-02.txt [N94.6] 月経困難症・PMS (Dysmenorrhea / PMS)
+  │   ├─ 190-AP-03.txt [B37.3] カンジダ腟炎 (Candida Vaginitis)
+  │   ├─ 190-AP-04.txt [N61] 乳腺炎 (Mastitis)
+  │   └─ 190-AP-05.txt [Z30.0] 緊急避妊 (Emergency Contraception)
+
+No. 200 | Dermatitis (皮膚炎・湿疹)
+  ├─ S/O: 200-SO-01.txt (初診), 200-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 200-AP-01.txt [L30.9] 湿疹・手湿疹 (Eczema / Hand Eczema)
+  │   ├─ 200-AP-02.txt [L20.9] アトピー性皮膚炎 / 寛解導入 (AD - Induction Phase)
+  │   ├─ 200-AP-03.txt [L20.9] アトピー性皮膚炎 / 維持療法 (AD - Proactive Phase)
+  │   ├─ 200-AP-04.txt [L23.9] 接触皮膚炎 (Contact Dermatitis)
+  │   ├─ 200-AP-05.txt [L50.9] 蕁麻疹 (Urticaria)
+  │   ├─ 200-AP-06.txt [L27.0] 薬疹 (Drug Eruption)
+  │   ├─ 200-AP-07.txt [L21.9] 脂漏性皮膚炎 (Seborrheic Dermatitis)
+  │   ├─ 200-AP-08.txt [L70.0] 尋常性ざ瘡 / 急性炎症期 (Acne - Acute Phase)
+  │   ├─ 200-AP-09.txt [L70.0] 尋常性ざ瘡 / 維持期 (Acne - Maintenance Phase)
+  │   └─ 200-AP-10.txt [L40.0] 尋常性乾癬 (Psoriasis Vulgaris)
+
+No. 210 | Skin-Infect (皮膚感染症・熱傷)
+  ├─ S/O: 210-SO-01.txt (初診), 210-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 210-AP-01.txt [B35.3] 足白癬 (Tinea Pedis)
+  │   ├─ 210-AP-02.txt [B35.1] 爪白癬 (Tinea Unguium)
+  │   ├─ 210-AP-03.txt [B00.9] 単純ヘルペス (Herpes Simplex / HSV)
+  │   ├─ 210-AP-04.txt [B02.9] 帯状疱疹 (Herpes Zoster)
+  │   ├─ 210-AP-05.txt [L03.9] 蜂窩織炎 (Cellulitis)
+  │   ├─ 210-AP-06.txt [L01.0] 伝染性膿痂疹 (Impetigo Contagiosa / とびひ)
+  │   ├─ 210-AP-07.txt [B07] 尋常性疣贅 (Common Warts / Verruca)
+  │   ├─ 210-AP-08.txt [B08.1] 伝染性軟属腫 (Molluscum Contagiosum / 水イボ)
+  │   └─ 210-AP-09.txt [L72.0] 粉瘤 (Epidermal Cyst)
+
+No. 220 | Rheumatology (関節リウマチ・膠原病)
+  ├─ S/O: 220-SO-01.txt (初診), 220-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 220-AP-01.txt [M06.9] 関節リウマチ (Rheumatoid Arthritis / RA)
+  │   ├─ 220-AP-02.txt [M35.3] リウマチ性多発筋痛症 (Polymyalgia Rheumatica / PMR)
+  │   ├─ 220-AP-03.txt [M35.0] シェーグレン症候群 (Sjögren's Syndrome)
+  │   └─ 220-AP-04.txt [M32.9] 全身性エリテマトーデス (SLE) / 膠原病疑い ()
+
+No. 230 | Orthopedics (脊椎・運動器疼痛)
+  ├─ S/O: 230-SO-01.txt (初診), 230-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 230-AP-01.txt [M54.5] 腰痛症・急性腰痛症 (Low Back Pain)
+  │   ├─ 230-AP-02.txt [M51.2] 腰椎椎間板ヘルニア (Lumbar Disc Herniation)
+  │   ├─ 230-AP-03.txt [M17.9] 変形性膝関節症 (Knee Osteoarthritis)
+  │   ├─ 230-AP-04.txt [M75.0] 肩関節周囲炎・五十肩 (Frozen Shoulder)
+  │   ├─ 230-AP-05.txt [M47.8] 頸椎症・頸肩腕症候群 (Cervical Spondylosis)
+  │   ├─ 230-AP-06.txt [M65.4] 狭窄性腱鞘炎 (De Quervain Disease)
+  │   └─ 230-AP-07.txt [M72.2] 足底腱膜炎 (Plantar Fasciitis)
+
+No. 240 | Osteoporosis (骨粗鬆症)
+  ├─ S/O: 240-SO-01.txt (初診), 240-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 240-AP-01.txt [M81.9] 骨粗鬆症 (Osteoporosis)
+  │   ├─ 240-AP-02.txt [M48.5] 脊椎圧迫骨折 (Vertebral Compression Fracture)
+  │   └─ 240-AP-03.txt [M81.4] ステロイド性骨粗鬆症 (Glucocorticoid-induced Osteoporosis)
+
+No. 250 | Uro-Infect (尿路感染・結石・STD)
+  ├─ S/O: 250-SO-01.txt (初診), 250-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 250-AP-01.txt [N30.0] 急性膀胱炎 (Acute Cystitis)
+  │   ├─ 250-AP-02.txt [N10] 腎盂腎炎 (Acute Pyelonephritis)
+  │   ├─ 250-AP-03.txt [A56.0] 性器クラミジア感染症 (Chlamydia Trachomatis)
+  │   ├─ 250-AP-04.txt [A54.0] 淋菌感染症 (Gonorrhea)
+  │   ├─ 250-AP-05.txt [A51.0] 第1期梅毒 (Primary Syphilis)
+  │   ├─ 250-AP-06.txt [A51.3] 第2期梅毒 (Secondary Syphilis)
+  │   ├─ 250-AP-07.txt [A51.5] 早期潜伏梅毒 (Early Latent Syphilis)
+  │   ├─ 250-AP-08.txt [A53.0] 後期潜伏梅毒・感染時期不明 (Late Latent / Unknown Duration)
+  │   ├─ 250-AP-09.txt [A52] 神経梅毒疑い (Neurosyphilis Suspected)
+  │   └─ 250-AP-10.txt [N20.1] 尿管結石 (Ureterolithiasis)
+
+No. 260 | Prostate (前立腺・男性機能)
+  ├─ S/O: 260-SO-01.txt (初診), 260-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 260-AP-01.txt [N40] 前立腺肥大症 (Benign Prostatic Hyperplasia / BPH)
+  │   ├─ 260-AP-02.txt [N32.8] 過活動膀胱 (Overactive Bladder / OAB)
+  │   ├─ 260-AP-03.txt [N41.0] 急性前立腺炎 (Acute Prostatitis)
+  │   ├─ 260-AP-04.txt [N41.1] 慢性前立腺炎・骨盤痛症候群 (Chronic Prostatitis / CPPS)
+  │   ├─ 260-AP-05.txt [N48.4] 勃起不全 (Erectile Dysfunction / ED)
+  │   └─ 260-AP-06.txt [E29.1] 男性更年期障害 (LOH Syndrome)
+
+No. 270 | Nephrology (慢性腎臓病 (CKD))
+  ├─ S/O: 270-SO-01.txt (初診), 270-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 270-AP-01.txt [N18.9] 慢性腎臓病 (Chronic Kidney Disease / CKD)
+  │   ├─ 270-AP-02.txt [N04.9] ネフローゼ症候群 (Nephrotic Syndrome)
+  │   └─ 270-AP-03.txt [E11.2] 糖尿病性腎症 (Diabetic Kidney Disease / DKD)
+
+No. 280 | Sensory-Organs (眼・耳鼻一般)
+  ├─ S/O: 280-SO-01.txt (初診), 280-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 280-AP-01.txt [H10.1] アレルギー性結膜炎 (Allergic Conjunctivitis)
+  │   ├─ 280-AP-02.txt [H00.0] 麦粒腫 (Hordeolum / Stye)
+  │   ├─ 280-AP-03.txt [H00.1] 霰粒腫 (Chalazion)
+  │   ├─ 280-AP-04.txt [H04.1] ドライアイ (Dry Eye)
+  │   ├─ 280-AP-05.txt [H26.9] 白内障 (Cataract)
+  │   ├─ 280-AP-06.txt [H60.9] 外耳炎 (Otitis Externa)
+  │   ├─ 280-AP-07.txt [H61.2] 耳垢塞栓 (Impacted Cerumen)
+  │   └─ 280-AP-08.txt [H91.2] 突発性難聴 (Sudden Sensorineural Hearing Loss)
+
+No. 290 | General-Sx (不明熱・全身倦怠感・浮腫)
+  ├─ S/O: 290-SO-01.txt (初診), 290-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 290-AP-01.txt [R50.9] 不明熱 (Fever of Unknown Origin / FUO)
+  │   ├─ 290-AP-02.txt [R53] 全身倦怠感 (General Fatigue)
+  │   ├─ 290-AP-03.txt [R60.9] 浮腫 (Edema)
+  │   ├─ 290-AP-04.txt [R63.4] 体重減少 (Weight Loss)
+  │   ├─ 290-AP-05.txt [R59.9] リンパ節腫脹 (Lymphadenopathy)
+  │   └─ 290-AP-06.txt [K12.0] 口内炎 (Stomatitis)
+
+No. 300 | Acute-Pain (急性腹症・胸痛・背部痛トリアージ)
+  ├─ S/O: 300-SO-01.txt (初診), 300-SO-02.txt (数時間後・翌日)
+  ├─ A/P:
+  │   ├─ 300-AP-01.txt [R10.0] 急性腹症 (Acute Abdomen)
+  │   ├─ 300-AP-02.txt [R07.4] 胸痛 (Chest Pain) / ACS疑い ()
+  │   ├─ 300-AP-03.txt [M54.9] 急性背部痛 (Acute Back Pain)
+  │   └─ 300-AP-04.txt [G58.0] 肋間神経痛 (Intercostal Neuralgia)
+
+No. 310 | Trauma (外傷・外科処置)
+  ├─ S/O: 310-SO-01.txt (初診), 310-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 310-AP-01.txt [T14.1] 切創・挫創 (Open Wound: Incised / Laceration)
+  │   ├─ 310-AP-02.txt [T20] 熱傷 (Burn)
+  │   ├─ 310-AP-03.txt [T14.1] 動物咬傷 (Animal Bites)
+  │   ├─ 310-AP-04.txt [S00] 打撲・皮下血腫 (Contusion / Hematoma)
+  │   └─ 310-AP-05.txt [T14.2] 骨折疑い・不顕性骨折 (Suspected / Occult Fracture)
+
+No. 320 | Hematology (血液疾患・貧血)
+  ├─ S/O: 320-SO-01.txt (初診), 320-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 320-AP-01.txt [D50.9] 鉄欠乏性貧血 (Iron Deficiency Anemia)
+  │   ├─ 320-AP-02.txt [D51] 巨赤芽球性貧血 (Megaloblastic Anemia)
+  │   ├─ 320-AP-03.txt [D63.8] 慢性疾患に伴う貧血 (Anemia of Chronic Disease / ACD)
+  │   ├─ 320-AP-04.txt [D46.9] 骨髄異形成症候群 (MDS)
+  │   └─ 320-AP-05.txt [D69.3] 特発性血小板減少性紫斑病 (ITP)
+
+No. 330 | Ped-Infect (小児感染症)
+  ├─ S/O: 330-SO-01.txt (初診), 330-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 330-AP-01.txt [J00] 小児感冒 (Common Cold - Pediatric)
+  │   ├─ 330-AP-02.txt [J21.0] RSウイルス感染症 (RS Virus Infection)
+  │   ├─ 330-AP-03.txt [B08.4] 手足口病・ヘルパンギーナ (HFMD / Herpangina)
+  │   ├─ 330-AP-04.txt [B34.1] アデノウイルス感染症 (Adenovirus)
+  │   ├─ 330-AP-05.txt [B08.2] 突発性発疹 (Exanthem Subitum)
+  │   ├─ 330-AP-06.txt [B26.9] 流行性耳下腺炎・おたふく風邪 (Mumps)
+  │   ├─ 330-AP-07.txt [B01.9] 水痘・水ぼうそう (Varicella)
+  │   ├─ 330-AP-08.txt [J15.7] マイコプラズマ肺炎 (Mycoplasma Pneumonia)
+  │   └─ 330-AP-09.txt [J05.0] クループ症候群 (Croup)
+
+No. 340 | Ped-Skin (小児皮膚・アレルギー)
+  ├─ S/O: 340-SO-01.txt (初診), 340-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 340-AP-01.txt [L20.8] 乳児湿疹・小児湿疹 (Infantile / Pediatric Eczema)
+  │   ├─ 340-AP-02.txt [L22] おむつ皮膚炎 (Diaper Dermatitis)
+  │   ├─ 340-AP-03.txt [B08.1] 伝染性軟属腫・水イボ (Molluscum Contagiosum)
+  │   └─ 340-AP-04.txt [T14.0] 虫刺され・ストロフルス (Insect Bite / Strophulus)
+
+No. 350 | Ped-Dev (小児発達・夜尿・OD)
+  ├─ S/O: 350-SO-01.txt (初診), 350-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 350-AP-01.txt [N39.4] 夜尿症 (Nocturnal Enuresis)
+  │   ├─ 350-AP-02.txt [F45.8] 起立性調節障害 (OD)
+  │   ├─ 350-AP-03.txt [K59.0] 小児便秘症 (Pediatric Constipation)
+  │   └─ 350-AP-04.txt [F90.0] 注意欠如・多動症 (Pediatric ADHD) / 疑い・紹介 ()
+
+No. 360 | Ped-Checkup (小児健診・育児相談)
+  ├─ S/O: 360-SO-01.txt (定期), 360-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 360-AP-01.txt [Z00.1] 乳幼児健診 (Infant Checkup)
+  │   └─ 360-AP-02.txt [Z76.8] 育児相談・授乳相談 (Parenting Consultation)
+
+No. 400 | Home-Care (在宅医療・訪問管理)
+  ├─ S/O: 400-SO-01.txt (導入), 400-SO-02.txt (再診)
+  ├─ A/P:
+  │   ├─ 400-AP-01.txt [Z51.8] 在宅時医学総合管理 (Home Medical Management)
+  │   ├─ 400-AP-02.txt [L89.9] 褥瘡 (Pressure Ulcer)
+  │   ├─ 400-AP-03.txt [Z51.5] 悪性腫瘍末期・緩和ケア (Terminal Care)
+  │   └─ 400-AP-04.txt [R54] 老衰・看取り (Senility / End of Life Care)
+
+No. 510 | Health-Check (健診・書類)
+  ├─ S/O: 510-SO-01.txt (初診)
+  ├─ A/P:
+  │   ├─ 510-AP-01.txt [Z00.0] 特定健診・長寿健診 (Specific Health Checkup)
+  │   ├─ 510-AP-02.txt [Z02.1] 雇用時健診 (Employment Health Checkup)
+  │   ├─ 510-AP-03.txt [Z00.0] 一般健診・自費健診 (General Health Checkup)
+  │   └─ 510-AP-04.txt [Z02.7] 診断書作成 (Medical Certificate)
+
+No. 600 | Emergency (救命救急)
+  ├─ S/O: 600-SO-01.txt (Code Blue)
+  ├─ A/P:
+  │   ├─ 600-AP-01.txt [I46.9] 心肺機能停止 (Cardiopulmonary Arrest / CPA)
+  │   └─ 600-AP-02.txt [T78.2] アナフィラキシーショック (Anaphylactic Shock)
+
+No. 700 | Private (自由診療・美容)
+  ├─ S/O: 700-SO-01.txt (初診)
+  ├─ A/P:
+  │   ├─ 700-AP-01.txt [Z41.3] プラセンタ療法 (Placenta Therapy)
+  │   ├─ 700-AP-02.txt [L64.9] AGA (男性型脱毛症) / FAGA (女性男性型脱毛症)
+  │   ├─ 700-AP-03.txt [E66.9] メディカルダイエット (Medical Diet)
+  │   └─ 700-AP-04.txt [Z41.1] 美容内服・点滴療法 (Beauty Oral / IV Therapy)
+
+================================================================
+【マスターファイル一覧】
+  01-MASTER-CONTAINER-CLASSIFICATION.txt  - コンテナ分類体系
+  02-DIAGNOSTIC-PROTOCOL-ROS-MAP.txt      - ROS診断プロトコル
+  03-DOCTOR-ADVICE-COLLECTION.txt         - Dr.Advice統合
+  04-MASTER-THERAPEUTIC-ITEMS.txt          - 処方・検査・処置統合マスター
+  05-MASTER-CATEGORY1-MEDICATIONS.txt     - 処方セット
+  06-MASTER-CATEGORY2-TESTS.txt           - 検査セット
+  07-MASTER-CATEGORY3-PROCEDURES.txt      - 処置・注射セット
+  08-MASTER-CATEGORY4-DOCUMENTS.txt       - 文書セット
+================================================================
+
+【注意事項】
+・本データは診療支援を目的としたバックアップ情報です。
+・当院にはCTおよびファイバースコープがありません。
+・これらの機器が必要な場合は高次医療機関への紹介を検討してください。

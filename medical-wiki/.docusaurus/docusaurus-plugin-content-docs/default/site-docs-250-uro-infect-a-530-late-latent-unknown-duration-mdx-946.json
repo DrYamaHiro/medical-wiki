@@ -1,0 +1,30 @@
+{
+  "id": "Uro-Infect/a530-late-latent-unknown-duration",
+  "title": "[A53.0] 後期潜伏梅毒・感染時期不明 / Late Latent / Unknown Duration",
+  "description": "主訴・ROS",
+  "source": "@site/docs/250-Uro-Infect/a530-late-latent-unknown-duration.mdx",
+  "sourceDirName": "250-Uro-Infect",
+  "slug": "/Uro-Infect/a530-late-latent-unknown-duration",
+  "permalink": "/medical-wiki/docs/Uro-Infect/a530-late-latent-unknown-duration",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/250-Uro-Infect/a530-late-latent-unknown-duration.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "a530-late-latent-unknown-duration",
+    "title": "[A53.0] 後期潜伏梅毒・感染時期不明 / Late Latent / Unknown Duration",
+    "sidebar_label": "[A53.0] 後期潜伏梅毒・感染時期不明",
+    "sidebar_position": 8
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[A51.5] 早期潜伏梅毒",
+    "permalink": "/medical-wiki/docs/Uro-Infect/a515-early-latent-syphilis"
+  },
+  "next": {
+    "title": "[A52] 神経梅毒疑い",
+    "permalink": "/medical-wiki/docs/Uro-Infect/a52-neurosyphilis-suspected"
+  }
+}

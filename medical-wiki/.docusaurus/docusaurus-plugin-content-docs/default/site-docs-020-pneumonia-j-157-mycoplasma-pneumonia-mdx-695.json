@@ -1,0 +1,30 @@
+{
+  "id": "Pneumonia/j157-mycoplasma-pneumonia",
+  "title": "[J15.7] マイコプラズマ肺炎 / Mycoplasma Pneumonia",
+  "description": "主訴・ROS",
+  "source": "@site/docs/020-Pneumonia/j157-mycoplasma-pneumonia.mdx",
+  "sourceDirName": "020-Pneumonia",
+  "slug": "/Pneumonia/j157-mycoplasma-pneumonia",
+  "permalink": "/medical-wiki/docs/Pneumonia/j157-mycoplasma-pneumonia",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/020-Pneumonia/j157-mycoplasma-pneumonia.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "j157-mycoplasma-pneumonia",
+    "title": "[J15.7] マイコプラズマ肺炎 / Mycoplasma Pneumonia",
+    "sidebar_label": "[J15.7] マイコプラズマ肺炎",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J18.0] 気管支肺炎",
+    "permalink": "/medical-wiki/docs/Pneumonia/j180-bronchopneumonia"
+  },
+  "next": {
+    "title": "[J69.0] 誤嚥性肺炎",
+    "permalink": "/medical-wiki/docs/Pneumonia/j690-aspiration-pneumonia"
+  }
+}

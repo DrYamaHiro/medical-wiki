@@ -1,0 +1,30 @@
+{
+  "id": "Psychiatry/f900-adult-adhd",
+  "title": "[F90.0] 大人の注意欠如・多動症 (Adult ADHD) / 疑い・紹介",
+  "description": "主訴・ROS",
+  "source": "@site/docs/170-Psychiatry/f900-adult-adhd.mdx",
+  "sourceDirName": "170-Psychiatry",
+  "slug": "/Psychiatry/f900-adult-adhd",
+  "permalink": "/medical-wiki/docs/Psychiatry/f900-adult-adhd",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/170-Psychiatry/f900-adult-adhd.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "f900-adult-adhd",
+    "title": "[F90.0] 大人の注意欠如・多動症 (Adult ADHD) / 疑い・紹介",
+    "sidebar_label": "[F90.0] 大人の注意欠如・多動症 (Adult ADHD) / 疑い・紹介",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[F41.1] 全般性不安障害",
+    "permalink": "/medical-wiki/docs/Psychiatry/f411-generalized-anxiety-disorder-gad"
+  },
+  "next": {
+    "title": "180: Dementia（認知症・物忘れ）",
+    "permalink": "/medical-wiki/docs/category/180-dementia認知症物忘れ"
+  }
+}

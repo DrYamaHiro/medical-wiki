@@ -1,0 +1,30 @@
+{
+  "id": "Bowel-Disorder/k559-ischemic-colitis",
+  "title": "[K55.9] 虚血性大腸炎 / Ischemic Colitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/060-Bowel-Disorder/k559-ischemic-colitis.mdx",
+  "sourceDirName": "060-Bowel-Disorder",
+  "slug": "/Bowel-Disorder/k559-ischemic-colitis",
+  "permalink": "/medical-wiki/docs/Bowel-Disorder/k559-ischemic-colitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/060-Bowel-Disorder/k559-ischemic-colitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "k559-ischemic-colitis",
+    "title": "[K55.9] 虚血性大腸炎 / Ischemic Colitis",
+    "sidebar_label": "[K55.9] 虚血性大腸炎",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K57.3] 大腸憩室炎",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/k573-diverticulitis"
+  },
+  "next": {
+    "title": "[I84.2] 内痔核",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/i842-internal-hemorrhoids"
+  }
+}

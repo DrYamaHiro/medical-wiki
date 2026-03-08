@@ -1,0 +1,30 @@
+{
+  "id": "Hepatobiliary/k861-chronic-pancreatitis",
+  "title": "[K86.1] 慢性膵炎 / Chronic Pancreatitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/070-Hepatobiliary/k861-chronic-pancreatitis.mdx",
+  "sourceDirName": "070-Hepatobiliary",
+  "slug": "/Hepatobiliary/k861-chronic-pancreatitis",
+  "permalink": "/medical-wiki/docs/Hepatobiliary/k861-chronic-pancreatitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/070-Hepatobiliary/k861-chronic-pancreatitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "k861-chronic-pancreatitis",
+    "title": "[K86.1] 慢性膵炎 / Chronic Pancreatitis",
+    "sidebar_label": "[K86.1] 慢性膵炎",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K81.0] 胆嚢炎",
+    "permalink": "/medical-wiki/docs/Hepatobiliary/k810-cholecystitis"
+  },
+  "next": {
+    "title": "[D18.0] 肝血管腫",
+    "permalink": "/medical-wiki/docs/Hepatobiliary/d180-hepatic-hemangioma"
+  }
+}

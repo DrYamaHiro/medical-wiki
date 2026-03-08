@@ -1,0 +1,30 @@
+{
+  "id": "Dermatitis/l270-drug-eruption",
+  "title": "[L27.0] 薬疹 / Drug Eruption",
+  "description": "主訴・ROS",
+  "source": "@site/docs/200-Dermatitis/l270-drug-eruption.mdx",
+  "sourceDirName": "200-Dermatitis",
+  "slug": "/Dermatitis/l270-drug-eruption",
+  "permalink": "/medical-wiki/docs/Dermatitis/l270-drug-eruption",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/200-Dermatitis/l270-drug-eruption.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "l270-drug-eruption",
+    "title": "[L27.0] 薬疹 / Drug Eruption",
+    "sidebar_label": "[L27.0] 薬疹",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[L50.9] 蕁麻疹",
+    "permalink": "/medical-wiki/docs/Dermatitis/l509-urticaria"
+  },
+  "next": {
+    "title": "[L21.9] 脂漏性皮膚炎",
+    "permalink": "/medical-wiki/docs/Dermatitis/l219-seborrheic-dermatitis"
+  }
+}

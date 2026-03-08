@@ -1,4 +1,8 @@
 {
-  "label": "130 Endocrine (甲状腺・内分泌)",
-  "position": 14
+  "label": "130: Endocrine（甲状腺・内分泌）",
+  "position": 130,
+  "link": {
+    "type": "generated-index",
+    "description": "甲状腺・内分泌の診療テンプレート一覧"
+  }
 }

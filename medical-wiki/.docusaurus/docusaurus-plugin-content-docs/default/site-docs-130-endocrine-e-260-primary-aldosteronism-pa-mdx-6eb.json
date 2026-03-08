@@ -1,0 +1,30 @@
+{
+  "id": "Endocrine/e260-primary-aldosteronism-pa",
+  "title": "[E26.0] 原発性アルドステロン症 / Primary Aldosteronism / PA",
+  "description": "主訴・ROS",
+  "source": "@site/docs/130-Endocrine/e260-primary-aldosteronism-pa.mdx",
+  "sourceDirName": "130-Endocrine",
+  "slug": "/Endocrine/e260-primary-aldosteronism-pa",
+  "permalink": "/medical-wiki/docs/Endocrine/e260-primary-aldosteronism-pa",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/130-Endocrine/e260-primary-aldosteronism-pa.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "e260-primary-aldosteronism-pa",
+    "title": "[E26.0] 原発性アルドステロン症 / Primary Aldosteronism / PA",
+    "sidebar_label": "[E26.0] 原発性アルドステロン症",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[D34] 甲状腺腫瘍",
+    "permalink": "/medical-wiki/docs/Endocrine/d34-thyroid-tumor"
+  },
+  "next": {
+    "title": "140: Headache（頭痛・てんかん・神経痛）",
+    "permalink": "/medical-wiki/docs/category/140-headache頭痛てんかん神経痛"
+  }
+}

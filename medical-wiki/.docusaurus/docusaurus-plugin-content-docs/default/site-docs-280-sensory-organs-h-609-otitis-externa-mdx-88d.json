@@ -1,0 +1,30 @@
+{
+  "id": "Sensory-Organs/h609-otitis-externa",
+  "title": "[H60.9] 外耳炎 / Otitis Externa",
+  "description": "主訴・ROS",
+  "source": "@site/docs/280-Sensory-Organs/h609-otitis-externa.mdx",
+  "sourceDirName": "280-Sensory-Organs",
+  "slug": "/Sensory-Organs/h609-otitis-externa",
+  "permalink": "/medical-wiki/docs/Sensory-Organs/h609-otitis-externa",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/280-Sensory-Organs/h609-otitis-externa.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "h609-otitis-externa",
+    "title": "[H60.9] 外耳炎 / Otitis Externa",
+    "sidebar_label": "[H60.9] 外耳炎",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[H26.9] 白内障",
+    "permalink": "/medical-wiki/docs/Sensory-Organs/h269-cataract"
+  },
+  "next": {
+    "title": "[H61.2] 耳垢塞栓",
+    "permalink": "/medical-wiki/docs/Sensory-Organs/h612-impacted-cerumen"
+  }
+}

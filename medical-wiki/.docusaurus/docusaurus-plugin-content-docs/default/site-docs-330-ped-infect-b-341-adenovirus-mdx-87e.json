@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Infect/b341-adenovirus",
+  "title": "[B34.1] アデノウイルス感染症 / Adenovirus",
+  "description": "主訴・ROS",
+  "source": "@site/docs/330-Ped-Infect/b341-adenovirus.mdx",
+  "sourceDirName": "330-Ped-Infect",
+  "slug": "/Ped-Infect/b341-adenovirus",
+  "permalink": "/medical-wiki/docs/Ped-Infect/b341-adenovirus",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/330-Ped-Infect/b341-adenovirus.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "b341-adenovirus",
+    "title": "[B34.1] アデノウイルス感染症 / Adenovirus",
+    "sidebar_label": "[B34.1] アデノウイルス感染症",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[B08.4] 手足口病・ヘルパンギーナ",
+    "permalink": "/medical-wiki/docs/Ped-Infect/b084-hfmd-herpangina"
+  },
+  "next": {
+    "title": "[B08.2] 突発性発疹",
+    "permalink": "/medical-wiki/docs/Ped-Infect/b082-exanthem-subitum"
+  }
+}

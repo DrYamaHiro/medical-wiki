@@ -1,0 +1,30 @@
+{
+  "id": "Health-Check/z027-medical-certificate",
+  "title": "[Z02.7] 診断書作成 / Medical Certificate",
+  "description": "主訴・ROS",
+  "source": "@site/docs/510-Health-Check/z027-medical-certificate.mdx",
+  "sourceDirName": "510-Health-Check",
+  "slug": "/Health-Check/z027-medical-certificate",
+  "permalink": "/medical-wiki/docs/Health-Check/z027-medical-certificate",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/510-Health-Check/z027-medical-certificate.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "z027-medical-certificate",
+    "title": "[Z02.7] 診断書作成 / Medical Certificate",
+    "sidebar_label": "[Z02.7] 診断書作成",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[Z00.0] 一般健診・自費健診",
+    "permalink": "/medical-wiki/docs/Health-Check/z000-general-health-checkup"
+  },
+  "next": {
+    "title": "600: Emergency（救命救急）",
+    "permalink": "/medical-wiki/docs/category/600-emergency救命救急"
+  }
+}

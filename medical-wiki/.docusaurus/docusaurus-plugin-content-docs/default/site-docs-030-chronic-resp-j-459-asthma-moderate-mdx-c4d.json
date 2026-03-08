@@ -1,0 +1,30 @@
+{
+  "id": "Chronic-Resp/j459-asthma-moderate",
+  "title": "[J45.9] 気管支喘息 / 中等症・コントロール不十分 / Asthma - Moderate",
+  "description": "主訴・ROS",
+  "source": "@site/docs/030-Chronic-Resp/j459-asthma-moderate.mdx",
+  "sourceDirName": "030-Chronic-Resp",
+  "slug": "/Chronic-Resp/j459-asthma-moderate",
+  "permalink": "/medical-wiki/docs/Chronic-Resp/j459-asthma-moderate",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/030-Chronic-Resp/j459-asthma-moderate.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "j459-asthma-moderate",
+    "title": "[J45.9] 気管支喘息 / 中等症・コントロール不十分 / Asthma - Moderate",
+    "sidebar_label": "[J45.9] 気管支喘息 / 中等症・コントロール不十分",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J45.9] 気管支喘息 / 軽症・安定期",
+    "permalink": "/medical-wiki/docs/Chronic-Resp/j459-asthma-mild"
+  },
+  "next": {
+    "title": "[J46] 喘息発作重積状態",
+    "permalink": "/medical-wiki/docs/Chronic-Resp/j46-status-asthmaticus"
+  }
+}

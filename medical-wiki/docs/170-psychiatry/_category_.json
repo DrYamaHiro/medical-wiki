@@ -1,4 +1,8 @@
 {
-  "label": "170 Psychiatry (不眠・不安・心身症)",
-  "position": 18
+  "label": "170: Psychiatry（不眠・不安・心身症）",
+  "position": 170,
+  "link": {
+    "type": "generated-index",
+    "description": "不眠・不安・心身症の診療テンプレート一覧"
+  }
 }

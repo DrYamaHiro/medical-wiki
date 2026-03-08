@@ -1,0 +1,30 @@
+{
+  "id": "Skin-Infect/b351-tinea-unguium",
+  "title": "[B35.1] 爪白癬 / Tinea Unguium",
+  "description": "主訴・ROS",
+  "source": "@site/docs/210-Skin-Infect/b351-tinea-unguium.mdx",
+  "sourceDirName": "210-Skin-Infect",
+  "slug": "/Skin-Infect/b351-tinea-unguium",
+  "permalink": "/medical-wiki/docs/Skin-Infect/b351-tinea-unguium",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/210-Skin-Infect/b351-tinea-unguium.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "b351-tinea-unguium",
+    "title": "[B35.1] 爪白癬 / Tinea Unguium",
+    "sidebar_label": "[B35.1] 爪白癬",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[B35.3] 足白癬",
+    "permalink": "/medical-wiki/docs/Skin-Infect/b353-tinea-pedis"
+  },
+  "next": {
+    "title": "[B00.9] 単純ヘルペス",
+    "permalink": "/medical-wiki/docs/Skin-Infect/b009-herpes-simplex-hsv"
+  }
+}

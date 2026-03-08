@@ -1,4 +1,8 @@
 {
-  "label": "260 Prostate (前立腺・男性機能)",
-  "position": 27
+  "label": "260: Prostate（前立腺・男性機能）",
+  "position": 260,
+  "link": {
+    "type": "generated-index",
+    "description": "前立腺・男性機能の診療テンプレート一覧"
+  }
 }

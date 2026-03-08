@@ -1,0 +1,30 @@
+{
+  "id": "Bowel-Disorder/k635-colon-polyp",
+  "title": "[K63.5] 大腸ポリープ / Colon Polyp",
+  "description": "主訴・ROS",
+  "source": "@site/docs/060-Bowel-Disorder/k635-colon-polyp.mdx",
+  "sourceDirName": "060-Bowel-Disorder",
+  "slug": "/Bowel-Disorder/k635-colon-polyp",
+  "permalink": "/medical-wiki/docs/Bowel-Disorder/k635-colon-polyp",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/060-Bowel-Disorder/k635-colon-polyp.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 12,
+  "frontMatter": {
+    "id": "k635-colon-polyp",
+    "title": "[K63.5] 大腸ポリープ / Colon Polyp",
+    "sidebar_label": "[K63.5] 大腸ポリープ",
+    "sidebar_position": 12
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K61.0] 肛門周囲膿瘍",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/k610-perianal-abscess"
+  },
+  "next": {
+    "title": "070: Hepatobiliary（肝胆膵・脂肪肝）",
+    "permalink": "/medical-wiki/docs/category/070-hepatobiliary肝胆膵脂肪肝"
+  }
+}

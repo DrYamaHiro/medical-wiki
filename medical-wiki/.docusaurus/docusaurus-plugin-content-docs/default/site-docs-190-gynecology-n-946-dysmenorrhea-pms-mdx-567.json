@@ -1,0 +1,30 @@
+{
+  "id": "Gynecology/n946-dysmenorrhea-pms",
+  "title": "[N94.6] 月経困難症・PMS / Dysmenorrhea / PMS",
+  "description": "主訴・ROS",
+  "source": "@site/docs/190-Gynecology/n946-dysmenorrhea-pms.mdx",
+  "sourceDirName": "190-Gynecology",
+  "slug": "/Gynecology/n946-dysmenorrhea-pms",
+  "permalink": "/medical-wiki/docs/Gynecology/n946-dysmenorrhea-pms",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/190-Gynecology/n946-dysmenorrhea-pms.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "n946-dysmenorrhea-pms",
+    "title": "[N94.6] 月経困難症・PMS / Dysmenorrhea / PMS",
+    "sidebar_label": "[N94.6] 月経困難症・PMS",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[N95.1] 更年期障害",
+    "permalink": "/medical-wiki/docs/Gynecology/n951-menopausal-disorder"
+  },
+  "next": {
+    "title": "[B37.3] カンジダ腟炎",
+    "permalink": "/medical-wiki/docs/Gynecology/b373-candida-vaginitis"
+  }
+}

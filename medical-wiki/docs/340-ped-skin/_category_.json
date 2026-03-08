@@ -1,4 +1,8 @@
 {
-  "label": "340 Ped-Skin (小児皮膚・アレルギー)",
-  "position": 35
+  "label": "340: Ped-Skin（小児皮膚・アレルギー）",
+  "position": 340,
+  "link": {
+    "type": "generated-index",
+    "description": "小児皮膚・アレルギーの診療テンプレート一覧"
+  }
 }

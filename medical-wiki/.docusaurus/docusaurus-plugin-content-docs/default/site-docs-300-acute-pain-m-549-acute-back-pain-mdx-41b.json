@@ -1,0 +1,30 @@
+{
+  "id": "Acute-Pain/m549-acute-back-pain",
+  "title": "[M54.9] 急性背部痛 / Acute Back Pain",
+  "description": "主訴・ROS",
+  "source": "@site/docs/300-Acute-Pain/m549-acute-back-pain.mdx",
+  "sourceDirName": "300-Acute-Pain",
+  "slug": "/Acute-Pain/m549-acute-back-pain",
+  "permalink": "/medical-wiki/docs/Acute-Pain/m549-acute-back-pain",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/300-Acute-Pain/m549-acute-back-pain.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "m549-acute-back-pain",
+    "title": "[M54.9] 急性背部痛 / Acute Back Pain",
+    "sidebar_label": "[M54.9] 急性背部痛",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[R07.4] 胸痛 (Chest Pain) / ACS疑い",
+    "permalink": "/medical-wiki/docs/Acute-Pain/r074-chest-pain-acs"
+  },
+  "next": {
+    "title": "[G58.0] 肋間神経痛",
+    "permalink": "/medical-wiki/docs/Acute-Pain/g580-intercostal-neuralgia"
+  }
+}

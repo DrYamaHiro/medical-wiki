@@ -1,0 +1,30 @@
+{
+  "id": "Dermatitis/l219-seborrheic-dermatitis",
+  "title": "[L21.9] 脂漏性皮膚炎 / Seborrheic Dermatitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/200-Dermatitis/l219-seborrheic-dermatitis.mdx",
+  "sourceDirName": "200-Dermatitis",
+  "slug": "/Dermatitis/l219-seborrheic-dermatitis",
+  "permalink": "/medical-wiki/docs/Dermatitis/l219-seborrheic-dermatitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/200-Dermatitis/l219-seborrheic-dermatitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "l219-seborrheic-dermatitis",
+    "title": "[L21.9] 脂漏性皮膚炎 / Seborrheic Dermatitis",
+    "sidebar_label": "[L21.9] 脂漏性皮膚炎",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[L27.0] 薬疹",
+    "permalink": "/medical-wiki/docs/Dermatitis/l270-drug-eruption"
+  },
+  "next": {
+    "title": "[L70.0] 尋常性ざ瘡 / 急性炎症期",
+    "permalink": "/medical-wiki/docs/Dermatitis/l700-acne-acute-phase"
+  }
+}

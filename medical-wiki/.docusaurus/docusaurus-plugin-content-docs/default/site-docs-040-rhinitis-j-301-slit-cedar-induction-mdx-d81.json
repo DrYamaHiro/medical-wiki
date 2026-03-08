@@ -1,0 +1,30 @@
+{
+  "id": "Rhinitis/j301-slit-cedar-induction",
+  "title": "[J30.1] スギ花粉症 / 舌下免疫療法・導入 / SLIT - Cedar Induction",
+  "description": "主訴・ROS",
+  "source": "@site/docs/040-Rhinitis/j301-slit-cedar-induction.mdx",
+  "sourceDirName": "040-Rhinitis",
+  "slug": "/Rhinitis/j301-slit-cedar-induction",
+  "permalink": "/medical-wiki/docs/Rhinitis/j301-slit-cedar-induction",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/040-Rhinitis/j301-slit-cedar-induction.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "j301-slit-cedar-induction",
+    "title": "[J30.1] スギ花粉症 / 舌下免疫療法・導入 / SLIT - Cedar Induction",
+    "sidebar_label": "[J30.1] スギ花粉症 / 舌下免疫療法・導入",
+    "sidebar_position": 8
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J32.9] 慢性副鼻腔炎",
+    "permalink": "/medical-wiki/docs/Rhinitis/j329-chronic-sinusitis"
+  },
+  "next": {
+    "title": "[J30.1] スギ花粉症 / 舌下免疫療法・維持",
+    "permalink": "/medical-wiki/docs/Rhinitis/j301-slit-cedar-maintenance"
+  }
+}

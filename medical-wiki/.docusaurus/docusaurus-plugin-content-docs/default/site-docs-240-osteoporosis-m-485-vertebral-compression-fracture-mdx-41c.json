@@ -1,0 +1,30 @@
+{
+  "id": "Osteoporosis/m485-vertebral-compression-fracture",
+  "title": "[M48.5] 脊椎圧迫骨折 / Vertebral Compression Fracture",
+  "description": "主訴・ROS",
+  "source": "@site/docs/240-Osteoporosis/m485-vertebral-compression-fracture.mdx",
+  "sourceDirName": "240-Osteoporosis",
+  "slug": "/Osteoporosis/m485-vertebral-compression-fracture",
+  "permalink": "/medical-wiki/docs/Osteoporosis/m485-vertebral-compression-fracture",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/240-Osteoporosis/m485-vertebral-compression-fracture.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "m485-vertebral-compression-fracture",
+    "title": "[M48.5] 脊椎圧迫骨折 / Vertebral Compression Fracture",
+    "sidebar_label": "[M48.5] 脊椎圧迫骨折",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[M81.9] 骨粗鬆症",
+    "permalink": "/medical-wiki/docs/Osteoporosis/m819-osteoporosis"
+  },
+  "next": {
+    "title": "[M81.4] ステロイド性骨粗鬆症",
+    "permalink": "/medical-wiki/docs/Osteoporosis/m814-glucocorticoid-induced-osteoporosis"
+  }
+}

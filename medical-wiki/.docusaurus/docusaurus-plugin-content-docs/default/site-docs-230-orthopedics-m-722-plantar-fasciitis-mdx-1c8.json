@@ -1,0 +1,30 @@
+{
+  "id": "Orthopedics/m722-plantar-fasciitis",
+  "title": "[M72.2] 足底腱膜炎 / Plantar Fasciitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/230-Orthopedics/m722-plantar-fasciitis.mdx",
+  "sourceDirName": "230-Orthopedics",
+  "slug": "/Orthopedics/m722-plantar-fasciitis",
+  "permalink": "/medical-wiki/docs/Orthopedics/m722-plantar-fasciitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/230-Orthopedics/m722-plantar-fasciitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "m722-plantar-fasciitis",
+    "title": "[M72.2] 足底腱膜炎 / Plantar Fasciitis",
+    "sidebar_label": "[M72.2] 足底腱膜炎",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[M65.4] 狭窄性腱鞘炎",
+    "permalink": "/medical-wiki/docs/Orthopedics/m654-de-quervain-disease"
+  },
+  "next": {
+    "title": "240: Osteoporosis（骨粗鬆症）",
+    "permalink": "/medical-wiki/docs/category/240-osteoporosis骨粗鬆症"
+  }
+}

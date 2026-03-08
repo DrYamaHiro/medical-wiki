@@ -1,4 +1,8 @@
 {
-  "label": "510 Health-Check (健診・書類)",
-  "position": 39
+  "label": "510: Health-Check（健診・書類）",
+  "position": 510,
+  "link": {
+    "type": "generated-index",
+    "description": "健診・書類の診療テンプレート一覧"
+  }
 }

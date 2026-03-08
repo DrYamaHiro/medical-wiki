@@ -1,0 +1,30 @@
+{
+  "id": "Sleep-Apnea/g258-restless-legs-syndrome-rls",
+  "title": "[G25.8] むずむず脚症候群 / Restless Legs Syndrome / RLS",
+  "description": "主訴・ROS",
+  "source": "@site/docs/160-Sleep-Apnea/g258-restless-legs-syndrome-rls.mdx",
+  "sourceDirName": "160-Sleep-Apnea",
+  "slug": "/Sleep-Apnea/g258-restless-legs-syndrome-rls",
+  "permalink": "/medical-wiki/docs/Sleep-Apnea/g258-restless-legs-syndrome-rls",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/160-Sleep-Apnea/g258-restless-legs-syndrome-rls.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "g258-restless-legs-syndrome-rls",
+    "title": "[G25.8] むずむず脚症候群 / Restless Legs Syndrome / RLS",
+    "sidebar_label": "[G25.8] むずむず脚症候群",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / CPAP定期管理",
+    "permalink": "/medical-wiki/docs/Sleep-Apnea/g473-osas-cpap"
+  },
+  "next": {
+    "title": "[G47.4] ナルコレプシー",
+    "permalink": "/medical-wiki/docs/Sleep-Apnea/g474-narcolepsy"
+  }
+}

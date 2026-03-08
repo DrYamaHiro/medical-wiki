@@ -1,0 +1,30 @@
+{
+  "id": "Chronic-Resp/j46-status-asthmaticus",
+  "title": "[J46] 喘息発作重積状態 / Status Asthmaticus",
+  "description": "主訴・ROS",
+  "source": "@site/docs/030-Chronic-Resp/j46-status-asthmaticus.mdx",
+  "sourceDirName": "030-Chronic-Resp",
+  "slug": "/Chronic-Resp/j46-status-asthmaticus",
+  "permalink": "/medical-wiki/docs/Chronic-Resp/j46-status-asthmaticus",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/030-Chronic-Resp/j46-status-asthmaticus.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "j46-status-asthmaticus",
+    "title": "[J46] 喘息発作重積状態 / Status Asthmaticus",
+    "sidebar_label": "[J46] 喘息発作重積状態",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J45.9] 気管支喘息 / 中等症・コントロール不十分",
+    "permalink": "/medical-wiki/docs/Chronic-Resp/j459-asthma-moderate"
+  },
+  "next": {
+    "title": "[J44.9] COPD",
+    "permalink": "/medical-wiki/docs/Chronic-Resp/j449"
+  }
+}

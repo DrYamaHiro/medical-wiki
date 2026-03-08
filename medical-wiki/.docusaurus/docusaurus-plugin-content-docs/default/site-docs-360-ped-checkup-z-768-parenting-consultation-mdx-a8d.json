@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Checkup/z768-parenting-consultation",
+  "title": "[Z76.8] 育児相談・授乳相談 / Parenting Consultation",
+  "description": "主訴・ROS",
+  "source": "@site/docs/360-Ped-Checkup/z768-parenting-consultation.mdx",
+  "sourceDirName": "360-Ped-Checkup",
+  "slug": "/Ped-Checkup/z768-parenting-consultation",
+  "permalink": "/medical-wiki/docs/Ped-Checkup/z768-parenting-consultation",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/360-Ped-Checkup/z768-parenting-consultation.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "z768-parenting-consultation",
+    "title": "[Z76.8] 育児相談・授乳相談 / Parenting Consultation",
+    "sidebar_label": "[Z76.8] 育児相談・授乳相談",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[Z00.1] 乳幼児健診",
+    "permalink": "/medical-wiki/docs/Ped-Checkup/z001-infant-checkup"
+  },
+  "next": {
+    "title": "400: Home-Care（在宅医療・訪問管理）",
+    "permalink": "/medical-wiki/docs/category/400-home-care在宅医療訪問管理"
+  }
+}

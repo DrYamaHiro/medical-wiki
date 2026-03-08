@@ -1,0 +1,30 @@
+{
+  "id": "Diabetes/e140-diabetes-admission-criteria",
+  "title": "[E14.0] 糖尿病・入院適応判断 / Diabetes Admission Criteria",
+  "description": "主訴・ROS",
+  "source": "@site/docs/110-Diabetes/e140-diabetes-admission-criteria.mdx",
+  "sourceDirName": "110-Diabetes",
+  "slug": "/Diabetes/e140-diabetes-admission-criteria",
+  "permalink": "/medical-wiki/docs/Diabetes/e140-diabetes-admission-criteria",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/110-Diabetes/e140-diabetes-admission-criteria.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "e140-diabetes-admission-criteria",
+    "title": "[E14.0] 糖尿病・入院適応判断 / Diabetes Admission Criteria",
+    "sidebar_label": "[E14.0] 糖尿病・入院適応判断",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[E11.9] 2型糖尿病 (Type 2 Diabetes) / インスリン強化療法",
+    "permalink": "/medical-wiki/docs/Diabetes/e119-basal-bolus"
+  },
+  "next": {
+    "title": "[E10.9] 1型糖尿病",
+    "permalink": "/medical-wiki/docs/Diabetes/e109-type-1-diabetes"
+  }
+}

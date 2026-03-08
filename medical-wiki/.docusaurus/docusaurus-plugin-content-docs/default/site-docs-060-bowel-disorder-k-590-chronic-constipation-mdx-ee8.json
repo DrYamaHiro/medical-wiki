@@ -1,0 +1,30 @@
+{
+  "id": "Bowel-Disorder/k590-chronic-constipation",
+  "title": "[K59.0] 慢性便秘症 / Chronic Constipation",
+  "description": "主訴・ROS",
+  "source": "@site/docs/060-Bowel-Disorder/k590-chronic-constipation.mdx",
+  "sourceDirName": "060-Bowel-Disorder",
+  "slug": "/Bowel-Disorder/k590-chronic-constipation",
+  "permalink": "/medical-wiki/docs/Bowel-Disorder/k590-chronic-constipation",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/060-Bowel-Disorder/k590-chronic-constipation.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "k590-chronic-constipation",
+    "title": "[K59.0] 慢性便秘症 / Chronic Constipation",
+    "sidebar_label": "[K59.0] 慢性便秘症",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K58.9] 過敏性腸症候群",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/k589-ibs"
+  },
+  "next": {
+    "title": "[R19.7] 下痢症・整腸剤処方",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/r197-diarrhea-intestinal-regulation"
+  }
+}

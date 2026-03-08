@@ -1,0 +1,30 @@
+{
+  "id": "Endocrine/e063-hashimotos-thyroiditis",
+  "title": "[E06.3] 橋本病 / Hashimoto's Thyroiditis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/130-Endocrine/e063-hashimotos-thyroiditis.mdx",
+  "sourceDirName": "130-Endocrine",
+  "slug": "/Endocrine/e063-hashimotos-thyroiditis",
+  "permalink": "/medical-wiki/docs/Endocrine/e063-hashimotos-thyroiditis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/130-Endocrine/e063-hashimotos-thyroiditis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "e063-hashimotos-thyroiditis",
+    "title": "[E06.3] 橋本病 / Hashimoto's Thyroiditis",
+    "sidebar_label": "[E06.3] 橋本病",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "130: Endocrine（甲状腺・内分泌）",
+    "permalink": "/medical-wiki/docs/category/130-endocrine甲状腺内分泌"
+  },
+  "next": {
+    "title": "[E03.9] 甲状腺機能低下症",
+    "permalink": "/medical-wiki/docs/Endocrine/e039-hypothyroidism"
+  }
+}

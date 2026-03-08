@@ -1,0 +1,30 @@
+{
+  "id": "Pneumonia/j159-bacterial-pneumonia",
+  "title": "[J15.9] 細菌性肺炎 / 市中肺炎 / Bacterial Pneumonia",
+  "description": "主訴・ROS",
+  "source": "@site/docs/020-Pneumonia/j159-bacterial-pneumonia.mdx",
+  "sourceDirName": "020-Pneumonia",
+  "slug": "/Pneumonia/j159-bacterial-pneumonia",
+  "permalink": "/medical-wiki/docs/Pneumonia/j159-bacterial-pneumonia",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/020-Pneumonia/j159-bacterial-pneumonia.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "j159-bacterial-pneumonia",
+    "title": "[J15.9] 細菌性肺炎 / 市中肺炎 / Bacterial Pneumonia",
+    "sidebar_label": "[J15.9] 細菌性肺炎 / 市中肺炎",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "020: Pneumonia（肺炎・下気道感染症）",
+    "permalink": "/medical-wiki/docs/category/020-pneumonia肺炎下気道感染症"
+  },
+  "next": {
+    "title": "[J18.0] 気管支肺炎",
+    "permalink": "/medical-wiki/docs/Pneumonia/j180-bronchopneumonia"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Uro-Infect/a52-neurosyphilis-suspected",
+  "title": "[A52] 神経梅毒疑い / Neurosyphilis Suspected",
+  "description": "主訴・ROS",
+  "source": "@site/docs/250-Uro-Infect/a52-neurosyphilis-suspected.mdx",
+  "sourceDirName": "250-Uro-Infect",
+  "slug": "/Uro-Infect/a52-neurosyphilis-suspected",
+  "permalink": "/medical-wiki/docs/Uro-Infect/a52-neurosyphilis-suspected",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/250-Uro-Infect/a52-neurosyphilis-suspected.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 9,
+  "frontMatter": {
+    "id": "a52-neurosyphilis-suspected",
+    "title": "[A52] 神経梅毒疑い / Neurosyphilis Suspected",
+    "sidebar_label": "[A52] 神経梅毒疑い",
+    "sidebar_position": 9
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[A53.0] 後期潜伏梅毒・感染時期不明",
+    "permalink": "/medical-wiki/docs/Uro-Infect/a530-late-latent-unknown-duration"
+  },
+  "next": {
+    "title": "[N20.1] 尿管結石",
+    "permalink": "/medical-wiki/docs/Uro-Infect/n201-ureterolithiasis"
+  }
+}

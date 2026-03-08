@@ -1,4 +1,8 @@
 {
-  "label": "330 Ped-Infect (小児感染症)",
-  "position": 34
+  "label": "330: Ped-Infect（小児感染症）",
+  "position": 330,
+  "link": {
+    "type": "generated-index",
+    "description": "小児感染症の診療テンプレート一覧"
+  }
 }

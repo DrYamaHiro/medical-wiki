@@ -1,0 +1,30 @@
+{
+  "id": "General-Sx/r509-fever-of-unknown-origin-fuo",
+  "title": "[R50.9] 不明熱 / Fever of Unknown Origin / FUO",
+  "description": "主訴・ROS",
+  "source": "@site/docs/290-General-Sx/r509-fever-of-unknown-origin-fuo.mdx",
+  "sourceDirName": "290-General-Sx",
+  "slug": "/General-Sx/r509-fever-of-unknown-origin-fuo",
+  "permalink": "/medical-wiki/docs/General-Sx/r509-fever-of-unknown-origin-fuo",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/290-General-Sx/r509-fever-of-unknown-origin-fuo.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "r509-fever-of-unknown-origin-fuo",
+    "title": "[R50.9] 不明熱 / Fever of Unknown Origin / FUO",
+    "sidebar_label": "[R50.9] 不明熱",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "290: General-Sx（不明熱・全身倦怠感・浮腫）",
+    "permalink": "/medical-wiki/docs/category/290-general-sx不明熱全身倦怠感浮腫"
+  },
+  "next": {
+    "title": "[R53] 全身倦怠感",
+    "permalink": "/medical-wiki/docs/General-Sx/r53-general-fatigue"
+  }
+}

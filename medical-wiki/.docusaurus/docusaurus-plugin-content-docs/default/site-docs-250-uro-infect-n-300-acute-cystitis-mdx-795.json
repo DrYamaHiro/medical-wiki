@@ -1,0 +1,30 @@
+{
+  "id": "Uro-Infect/n300-acute-cystitis",
+  "title": "[N30.0] 急性膀胱炎 / Acute Cystitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/250-Uro-Infect/n300-acute-cystitis.mdx",
+  "sourceDirName": "250-Uro-Infect",
+  "slug": "/Uro-Infect/n300-acute-cystitis",
+  "permalink": "/medical-wiki/docs/Uro-Infect/n300-acute-cystitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/250-Uro-Infect/n300-acute-cystitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "n300-acute-cystitis",
+    "title": "[N30.0] 急性膀胱炎 / Acute Cystitis",
+    "sidebar_label": "[N30.0] 急性膀胱炎",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "250: Uro-Infect（尿路感染・結石・STD）",
+    "permalink": "/medical-wiki/docs/category/250-uro-infect尿路感染結石std"
+  },
+  "next": {
+    "title": "[N10] 腎盂腎炎",
+    "permalink": "/medical-wiki/docs/Uro-Infect/n10-acute-pyelonephritis"
+  }
+}

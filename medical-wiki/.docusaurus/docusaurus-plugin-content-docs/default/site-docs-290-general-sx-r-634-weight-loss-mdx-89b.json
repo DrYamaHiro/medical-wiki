@@ -1,0 +1,30 @@
+{
+  "id": "General-Sx/r634-weight-loss",
+  "title": "[R63.4] 体重減少 / Weight Loss",
+  "description": "主訴・ROS",
+  "source": "@site/docs/290-General-Sx/r634-weight-loss.mdx",
+  "sourceDirName": "290-General-Sx",
+  "slug": "/General-Sx/r634-weight-loss",
+  "permalink": "/medical-wiki/docs/General-Sx/r634-weight-loss",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/290-General-Sx/r634-weight-loss.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "r634-weight-loss",
+    "title": "[R63.4] 体重減少 / Weight Loss",
+    "sidebar_label": "[R63.4] 体重減少",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[R60.9] 浮腫",
+    "permalink": "/medical-wiki/docs/General-Sx/r609-edema"
+  },
+  "next": {
+    "title": "[R59.9] リンパ節腫脹",
+    "permalink": "/medical-wiki/docs/General-Sx/r599-lymphadenopathy"
+  }
+}

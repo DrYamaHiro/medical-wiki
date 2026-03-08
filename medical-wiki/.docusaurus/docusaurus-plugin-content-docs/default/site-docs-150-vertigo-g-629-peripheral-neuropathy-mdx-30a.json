@@ -1,0 +1,30 @@
+{
+  "id": "Vertigo/g629-peripheral-neuropathy",
+  "title": "[G62.9] 末梢神経障害 / Peripheral Neuropathy",
+  "description": "主訴・ROS",
+  "source": "@site/docs/150-Vertigo/g629-peripheral-neuropathy.mdx",
+  "sourceDirName": "150-Vertigo",
+  "slug": "/Vertigo/g629-peripheral-neuropathy",
+  "permalink": "/medical-wiki/docs/Vertigo/g629-peripheral-neuropathy",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/150-Vertigo/g629-peripheral-neuropathy.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "g629-peripheral-neuropathy",
+    "title": "[G62.9] 末梢神経障害 / Peripheral Neuropathy",
+    "sidebar_label": "[G62.9] 末梢神経障害",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[R42] めまい症",
+    "permalink": "/medical-wiki/docs/Vertigo/r42-dizziness-vertigo-nos"
+  },
+  "next": {
+    "title": "160: Sleep-Apnea（睡眠時無呼吸・睡眠障害）",
+    "permalink": "/medical-wiki/docs/category/160-sleep-apnea睡眠時無呼吸睡眠障害"
+  }
+}

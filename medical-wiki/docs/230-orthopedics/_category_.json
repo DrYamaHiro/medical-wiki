@@ -1,4 +1,8 @@
 {
-  "label": "230 Orthopedics (脊椎・運動器疼痛)",
-  "position": 24
+  "label": "230: Orthopedics（脊椎・運動器疼痛）",
+  "position": 230,
+  "link": {
+    "type": "generated-index",
+    "description": "脊椎・運動器疼痛の診療テンプレート一覧"
+  }
 }

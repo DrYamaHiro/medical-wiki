@@ -1,0 +1,30 @@
+{
+  "id": "Sleep-Apnea/g473-osas-cpap",
+  "title": "[G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / CPAP定期管理",
+  "description": "主訴・ROS",
+  "source": "@site/docs/160-Sleep-Apnea/g473-osas-cpap.mdx",
+  "sourceDirName": "160-Sleep-Apnea",
+  "slug": "/Sleep-Apnea/g473-osas-cpap",
+  "permalink": "/medical-wiki/docs/Sleep-Apnea/g473-osas-cpap",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/160-Sleep-Apnea/g473-osas-cpap.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "g473-osas-cpap",
+    "title": "[G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / CPAP定期管理",
+    "sidebar_label": "[G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / CPAP定期管理",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / 診断・導入検討",
+    "permalink": "/medical-wiki/docs/Sleep-Apnea/g473-osas"
+  },
+  "next": {
+    "title": "[G25.8] むずむず脚症候群",
+    "permalink": "/medical-wiki/docs/Sleep-Apnea/g258-restless-legs-syndrome-rls"
+  }
+}

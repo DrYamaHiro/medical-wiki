@@ -1,4 +1,8 @@
 {
-  "label": "300 Acute-Pain (急性腹症・胸痛・背部痛トリアージ)",
-  "position": 31
+  "label": "300: Acute-Pain（急性腹症・胸痛・背部痛トリアージ）",
+  "position": 300,
+  "link": {
+    "type": "generated-index",
+    "description": "急性腹症・胸痛・背部痛トリアージの診療テンプレート一覧"
+  }
 }

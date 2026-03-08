@@ -1,0 +1,30 @@
+{
+  "id": "Nephrology/n049-nephrotic-syndrome",
+  "title": "[N04.9] ネフローゼ症候群 / Nephrotic Syndrome",
+  "description": "主訴・ROS",
+  "source": "@site/docs/270-Nephrology/n049-nephrotic-syndrome.mdx",
+  "sourceDirName": "270-Nephrology",
+  "slug": "/Nephrology/n049-nephrotic-syndrome",
+  "permalink": "/medical-wiki/docs/Nephrology/n049-nephrotic-syndrome",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/270-Nephrology/n049-nephrotic-syndrome.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "n049-nephrotic-syndrome",
+    "title": "[N04.9] ネフローゼ症候群 / Nephrotic Syndrome",
+    "sidebar_label": "[N04.9] ネフローゼ症候群",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[N18.9] 慢性腎臓病",
+    "permalink": "/medical-wiki/docs/Nephrology/n189-chronic-kidney-disease-ckd"
+  },
+  "next": {
+    "title": "[E11.2] 糖尿病性腎症",
+    "permalink": "/medical-wiki/docs/Nephrology/e112-diabetic-kidney-disease-dkd"
+  }
+}

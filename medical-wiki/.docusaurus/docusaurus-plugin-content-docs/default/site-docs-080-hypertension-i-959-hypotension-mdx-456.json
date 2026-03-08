@@ -1,0 +1,30 @@
+{
+  "id": "Hypertension/i959-hypotension",
+  "title": "[I95.9] 低血圧症 / Hypotension",
+  "description": "主訴・ROS",
+  "source": "@site/docs/080-Hypertension/i959-hypotension.mdx",
+  "sourceDirName": "080-Hypertension",
+  "slug": "/Hypertension/i959-hypotension",
+  "permalink": "/medical-wiki/docs/Hypertension/i959-hypotension",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/080-Hypertension/i959-hypotension.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "i959-hypotension",
+    "title": "[I95.9] 低血圧症 / Hypotension",
+    "sidebar_label": "[I95.9] 低血圧症",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[R03.0] 白衣高血圧",
+    "permalink": "/medical-wiki/docs/Hypertension/r030-white-coat-hypertension"
+  },
+  "next": {
+    "title": "090: Cardiovascular（循環器・血管疾患）",
+    "permalink": "/medical-wiki/docs/category/090-cardiovascular循環器血管疾患"
+  }
+}

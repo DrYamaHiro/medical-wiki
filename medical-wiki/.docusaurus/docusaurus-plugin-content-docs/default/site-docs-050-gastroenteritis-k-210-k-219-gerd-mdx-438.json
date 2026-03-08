@@ -1,0 +1,30 @@
+{
+  "id": "Gastroenteritis/k210-k219-gerd",
+  "title": "[K21.0/K21.9] 胃食道逆流症・逆流性食道炎 / GERD",
+  "description": "主訴・ROS",
+  "source": "@site/docs/050-Gastroenteritis/k210-k219-gerd.mdx",
+  "sourceDirName": "050-Gastroenteritis",
+  "slug": "/Gastroenteritis/k210-k219-gerd",
+  "permalink": "/medical-wiki/docs/Gastroenteritis/k210-k219-gerd",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/050-Gastroenteritis/k210-k219-gerd.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "k210-k219-gerd",
+    "title": "[K21.0/K21.9] 胃食道逆流症・逆流性食道炎 / GERD",
+    "sidebar_label": "[K21.0/K21.9] 胃食道逆流症・逆流性食道炎",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[A05.9] 細菌性食中毒",
+    "permalink": "/medical-wiki/docs/Gastroenteritis/a059-bacterial-gastroenteritis"
+  },
+  "next": {
+    "title": "[K30] 機能性ディスペプシア",
+    "permalink": "/medical-wiki/docs/Gastroenteritis/k30-functional-dyspepsia-fd"
+  }
+}

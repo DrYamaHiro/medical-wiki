@@ -1,0 +1,30 @@
+{
+  "id": "Bowel-Disorder/a043-ehec-o157",
+  "title": "[A04.3] 腸管出血性大腸菌感染症疑い / EHEC / O157",
+  "description": "主訴・ROS",
+  "source": "@site/docs/060-Bowel-Disorder/a043-ehec-o157.mdx",
+  "sourceDirName": "060-Bowel-Disorder",
+  "slug": "/Bowel-Disorder/a043-ehec-o157",
+  "permalink": "/medical-wiki/docs/Bowel-Disorder/a043-ehec-o157",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/060-Bowel-Disorder/a043-ehec-o157.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "a043-ehec-o157",
+    "title": "[A04.3] 腸管出血性大腸菌感染症疑い / EHEC / O157",
+    "sidebar_label": "[A04.3] 腸管出血性大腸菌感染症疑い",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[A04.9] 感染性大腸炎",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/a049-infectious-colitis"
+  },
+  "next": {
+    "title": "[K57.3] 大腸憩室炎",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/k573-diverticulitis"
+  }
+}

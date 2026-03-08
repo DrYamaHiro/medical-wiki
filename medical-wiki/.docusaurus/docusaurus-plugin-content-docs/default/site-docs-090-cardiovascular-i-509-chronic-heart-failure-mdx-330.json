@@ -1,0 +1,30 @@
+{
+  "id": "Cardiovascular/i509-chronic-heart-failure",
+  "title": "[I50.9] 慢性心不全 / Chronic Heart Failure",
+  "description": "主訴・ROS",
+  "source": "@site/docs/090-Cardiovascular/i509-chronic-heart-failure.mdx",
+  "sourceDirName": "090-Cardiovascular",
+  "slug": "/Cardiovascular/i509-chronic-heart-failure",
+  "permalink": "/medical-wiki/docs/Cardiovascular/i509-chronic-heart-failure",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/090-Cardiovascular/i509-chronic-heart-failure.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "i509-chronic-heart-failure",
+    "title": "[I50.9] 慢性心不全 / Chronic Heart Failure",
+    "sidebar_label": "[I50.9] 慢性心不全",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "090: Cardiovascular（循環器・血管疾患）",
+    "permalink": "/medical-wiki/docs/category/090-cardiovascular循環器血管疾患"
+  },
+  "next": {
+    "title": "[I50.0] 鬱血性心不全",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i500-congestive-heart-failure"
+  }
+}

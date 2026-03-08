@@ -1,0 +1,30 @@
+{
+  "id": "Bowel-Disorder/k610-perianal-abscess",
+  "title": "[K61.0] 肛門周囲膿瘍 / Perianal Abscess",
+  "description": "主訴・ROS",
+  "source": "@site/docs/060-Bowel-Disorder/k610-perianal-abscess.mdx",
+  "sourceDirName": "060-Bowel-Disorder",
+  "slug": "/Bowel-Disorder/k610-perianal-abscess",
+  "permalink": "/medical-wiki/docs/Bowel-Disorder/k610-perianal-abscess",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/060-Bowel-Disorder/k610-perianal-abscess.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 11,
+  "frontMatter": {
+    "id": "k610-perianal-abscess",
+    "title": "[K61.0] 肛門周囲膿瘍 / Perianal Abscess",
+    "sidebar_label": "[K61.0] 肛門周囲膿瘍",
+    "sidebar_position": 11
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K60.2] 裂肛",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/k602-anal-fissure"
+  },
+  "next": {
+    "title": "[K63.5] 大腸ポリープ",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/k635-colon-polyp"
+  }
+}

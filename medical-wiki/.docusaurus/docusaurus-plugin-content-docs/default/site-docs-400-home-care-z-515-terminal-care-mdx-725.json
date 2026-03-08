@@ -1,0 +1,30 @@
+{
+  "id": "Home-Care/z515-terminal-care",
+  "title": "[Z51.5] 悪性腫瘍末期・緩和ケア / Terminal Care",
+  "description": "主訴・ROS",
+  "source": "@site/docs/400-Home-Care/z515-terminal-care.mdx",
+  "sourceDirName": "400-Home-Care",
+  "slug": "/Home-Care/z515-terminal-care",
+  "permalink": "/medical-wiki/docs/Home-Care/z515-terminal-care",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/400-Home-Care/z515-terminal-care.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "z515-terminal-care",
+    "title": "[Z51.5] 悪性腫瘍末期・緩和ケア / Terminal Care",
+    "sidebar_label": "[Z51.5] 悪性腫瘍末期・緩和ケア",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[L89.9] 褥瘡",
+    "permalink": "/medical-wiki/docs/Home-Care/l899-pressure-ulcer"
+  },
+  "next": {
+    "title": "[R54] 老衰・看取り",
+    "permalink": "/medical-wiki/docs/Home-Care/r54-senility-end-of-life-care"
+  }
+}

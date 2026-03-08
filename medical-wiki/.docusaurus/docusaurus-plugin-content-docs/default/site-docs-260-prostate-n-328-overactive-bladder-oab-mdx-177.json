@@ -1,0 +1,30 @@
+{
+  "id": "Prostate/n328-overactive-bladder-oab",
+  "title": "[N32.8] 過活動膀胱 / Overactive Bladder / OAB",
+  "description": "主訴・ROS",
+  "source": "@site/docs/260-Prostate/n328-overactive-bladder-oab.mdx",
+  "sourceDirName": "260-Prostate",
+  "slug": "/Prostate/n328-overactive-bladder-oab",
+  "permalink": "/medical-wiki/docs/Prostate/n328-overactive-bladder-oab",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/260-Prostate/n328-overactive-bladder-oab.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "n328-overactive-bladder-oab",
+    "title": "[N32.8] 過活動膀胱 / Overactive Bladder / OAB",
+    "sidebar_label": "[N32.8] 過活動膀胱",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[N40] 前立腺肥大症",
+    "permalink": "/medical-wiki/docs/Prostate/n40-benign-prostatic-hyperplasia-bph"
+  },
+  "next": {
+    "title": "[N41.0] 急性前立腺炎",
+    "permalink": "/medical-wiki/docs/Prostate/n410-acute-prostatitis"
+  }
+}

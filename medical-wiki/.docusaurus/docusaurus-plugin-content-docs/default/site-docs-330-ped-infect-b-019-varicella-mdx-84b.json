@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Infect/b019-varicella",
+  "title": "[B01.9] 水痘・水ぼうそう / Varicella",
+  "description": "主訴・ROS",
+  "source": "@site/docs/330-Ped-Infect/b019-varicella.mdx",
+  "sourceDirName": "330-Ped-Infect",
+  "slug": "/Ped-Infect/b019-varicella",
+  "permalink": "/medical-wiki/docs/Ped-Infect/b019-varicella",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/330-Ped-Infect/b019-varicella.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "b019-varicella",
+    "title": "[B01.9] 水痘・水ぼうそう / Varicella",
+    "sidebar_label": "[B01.9] 水痘・水ぼうそう",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[B26.9] 流行性耳下腺炎・おたふく風邪",
+    "permalink": "/medical-wiki/docs/Ped-Infect/b269-mumps"
+  },
+  "next": {
+    "title": "[J15.7] マイコプラズマ肺炎",
+    "permalink": "/medical-wiki/docs/Ped-Infect/j157-mycoplasma-pneumonia"
+  }
+}

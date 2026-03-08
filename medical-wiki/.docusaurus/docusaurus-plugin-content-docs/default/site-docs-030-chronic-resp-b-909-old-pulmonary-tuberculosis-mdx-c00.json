@@ -1,0 +1,30 @@
+{
+  "id": "Chronic-Resp/b909-old-pulmonary-tuberculosis",
+  "title": "[B90.9] 陳旧性肺結核 / Old Pulmonary Tuberculosis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/030-Chronic-Resp/b909-old-pulmonary-tuberculosis.mdx",
+  "sourceDirName": "030-Chronic-Resp",
+  "slug": "/Chronic-Resp/b909-old-pulmonary-tuberculosis",
+  "permalink": "/medical-wiki/docs/Chronic-Resp/b909-old-pulmonary-tuberculosis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/030-Chronic-Resp/b909-old-pulmonary-tuberculosis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "b909-old-pulmonary-tuberculosis",
+    "title": "[B90.9] 陳旧性肺結核 / Old Pulmonary Tuberculosis",
+    "sidebar_label": "[B90.9] 陳旧性肺結核",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[R05] 慢性咳嗽",
+    "permalink": "/medical-wiki/docs/Chronic-Resp/r05-chronic-cough"
+  },
+  "next": {
+    "title": "035: Smoking-Cessation（禁煙外来）",
+    "permalink": "/medical-wiki/docs/category/035-smoking-cessation禁煙外来"
+  }
+}

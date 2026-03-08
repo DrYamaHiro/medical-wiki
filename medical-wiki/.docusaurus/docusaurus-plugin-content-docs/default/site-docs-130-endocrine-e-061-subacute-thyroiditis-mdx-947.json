@@ -1,0 +1,30 @@
+{
+  "id": "Endocrine/e061-subacute-thyroiditis",
+  "title": "[E06.1] 亜急性甲状腺炎 / Subacute Thyroiditis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/130-Endocrine/e061-subacute-thyroiditis.mdx",
+  "sourceDirName": "130-Endocrine",
+  "slug": "/Endocrine/e061-subacute-thyroiditis",
+  "permalink": "/medical-wiki/docs/Endocrine/e061-subacute-thyroiditis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/130-Endocrine/e061-subacute-thyroiditis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "e061-subacute-thyroiditis",
+    "title": "[E06.1] 亜急性甲状腺炎 / Subacute Thyroiditis",
+    "sidebar_label": "[E06.1] 亜急性甲状腺炎",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[E05.0] バセドウ病",
+    "permalink": "/medical-wiki/docs/Endocrine/e050-graves-disease"
+  },
+  "next": {
+    "title": "[D34] 甲状腺腫瘍",
+    "permalink": "/medical-wiki/docs/Endocrine/d34-thyroid-tumor"
+  }
+}

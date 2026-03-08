@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Infect/b082-exanthem-subitum",
+  "title": "[B08.2] 突発性発疹 / Exanthem Subitum",
+  "description": "主訴・ROS",
+  "source": "@site/docs/330-Ped-Infect/b082-exanthem-subitum.mdx",
+  "sourceDirName": "330-Ped-Infect",
+  "slug": "/Ped-Infect/b082-exanthem-subitum",
+  "permalink": "/medical-wiki/docs/Ped-Infect/b082-exanthem-subitum",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/330-Ped-Infect/b082-exanthem-subitum.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "b082-exanthem-subitum",
+    "title": "[B08.2] 突発性発疹 / Exanthem Subitum",
+    "sidebar_label": "[B08.2] 突発性発疹",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[B34.1] アデノウイルス感染症",
+    "permalink": "/medical-wiki/docs/Ped-Infect/b341-adenovirus"
+  },
+  "next": {
+    "title": "[B26.9] 流行性耳下腺炎・おたふく風邪",
+    "permalink": "/medical-wiki/docs/Ped-Infect/b269-mumps"
+  }
+}

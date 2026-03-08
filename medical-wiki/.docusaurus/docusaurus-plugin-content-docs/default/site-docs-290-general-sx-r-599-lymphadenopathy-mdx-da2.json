@@ -1,0 +1,30 @@
+{
+  "id": "General-Sx/r599-lymphadenopathy",
+  "title": "[R59.9] リンパ節腫脹 / Lymphadenopathy",
+  "description": "主訴・ROS",
+  "source": "@site/docs/290-General-Sx/r599-lymphadenopathy.mdx",
+  "sourceDirName": "290-General-Sx",
+  "slug": "/General-Sx/r599-lymphadenopathy",
+  "permalink": "/medical-wiki/docs/General-Sx/r599-lymphadenopathy",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/290-General-Sx/r599-lymphadenopathy.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "r599-lymphadenopathy",
+    "title": "[R59.9] リンパ節腫脹 / Lymphadenopathy",
+    "sidebar_label": "[R59.9] リンパ節腫脹",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[R63.4] 体重減少",
+    "permalink": "/medical-wiki/docs/General-Sx/r634-weight-loss"
+  },
+  "next": {
+    "title": "[K12.0] 口内炎",
+    "permalink": "/medical-wiki/docs/General-Sx/k120-stomatitis"
+  }
+}

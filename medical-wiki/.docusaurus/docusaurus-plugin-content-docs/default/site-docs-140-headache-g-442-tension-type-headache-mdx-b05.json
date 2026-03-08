@@ -1,0 +1,30 @@
+{
+  "id": "Headache/g442-tension-type-headache",
+  "title": "[G44.2] 緊張型頭痛 / Tension-Type Headache",
+  "description": "主訴・ROS",
+  "source": "@site/docs/140-Headache/g442-tension-type-headache.mdx",
+  "sourceDirName": "140-Headache",
+  "slug": "/Headache/g442-tension-type-headache",
+  "permalink": "/medical-wiki/docs/Headache/g442-tension-type-headache",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/140-Headache/g442-tension-type-headache.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "g442-tension-type-headache",
+    "title": "[G44.2] 緊張型頭痛 / Tension-Type Headache",
+    "sidebar_label": "[G44.2] 緊張型頭痛",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[G43.9] 片頭痛",
+    "permalink": "/medical-wiki/docs/Headache/g439-migraine"
+  },
+  "next": {
+    "title": "[G44.0] 群発頭痛",
+    "permalink": "/medical-wiki/docs/Headache/g440-cluster-headache"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Psychiatry/f510-insomnia",
+  "title": "[F51.0] 不眠症 / Insomnia",
+  "description": "主訴・ROS",
+  "source": "@site/docs/170-Psychiatry/f510-insomnia.mdx",
+  "sourceDirName": "170-Psychiatry",
+  "slug": "/Psychiatry/f510-insomnia",
+  "permalink": "/medical-wiki/docs/Psychiatry/f510-insomnia",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/170-Psychiatry/f510-insomnia.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "f510-insomnia",
+    "title": "[F51.0] 不眠症 / Insomnia",
+    "sidebar_label": "[F51.0] 不眠症",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "170: Psychiatry（不眠・不安・心身症）",
+    "permalink": "/medical-wiki/docs/category/170-psychiatry不眠不安心身症"
+  },
+  "next": {
+    "title": "[F32.9] うつ状態",
+    "permalink": "/medical-wiki/docs/Psychiatry/f329-depressive-state"
+  }
+}

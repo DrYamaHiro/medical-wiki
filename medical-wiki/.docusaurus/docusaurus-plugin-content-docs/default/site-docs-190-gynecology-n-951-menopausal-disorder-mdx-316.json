@@ -1,0 +1,30 @@
+{
+  "id": "Gynecology/n951-menopausal-disorder",
+  "title": "[N95.1] 更年期障害 / Menopausal Disorder",
+  "description": "主訴・ROS",
+  "source": "@site/docs/190-Gynecology/n951-menopausal-disorder.mdx",
+  "sourceDirName": "190-Gynecology",
+  "slug": "/Gynecology/n951-menopausal-disorder",
+  "permalink": "/medical-wiki/docs/Gynecology/n951-menopausal-disorder",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/190-Gynecology/n951-menopausal-disorder.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "n951-menopausal-disorder",
+    "title": "[N95.1] 更年期障害 / Menopausal Disorder",
+    "sidebar_label": "[N95.1] 更年期障害",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "190: Gynecology（女性外来・更年期）",
+    "permalink": "/medical-wiki/docs/category/190-gynecology女性外来更年期"
+  },
+  "next": {
+    "title": "[N94.6] 月経困難症・PMS",
+    "permalink": "/medical-wiki/docs/Gynecology/n946-dysmenorrhea-pms"
+  }
+}

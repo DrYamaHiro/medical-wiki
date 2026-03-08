@@ -1,0 +1,30 @@
+{
+  "id": "Psychiatry/f329-depressive-state",
+  "title": "[F32.9] うつ状態 / Depressive State",
+  "description": "主訴・ROS",
+  "source": "@site/docs/170-Psychiatry/f329-depressive-state.mdx",
+  "sourceDirName": "170-Psychiatry",
+  "slug": "/Psychiatry/f329-depressive-state",
+  "permalink": "/medical-wiki/docs/Psychiatry/f329-depressive-state",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/170-Psychiatry/f329-depressive-state.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "f329-depressive-state",
+    "title": "[F32.9] うつ状態 / Depressive State",
+    "sidebar_label": "[F32.9] うつ状態",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[F51.0] 不眠症",
+    "permalink": "/medical-wiki/docs/Psychiatry/f510-insomnia"
+  },
+  "next": {
+    "title": "[F43.2] 適応障害",
+    "permalink": "/medical-wiki/docs/Psychiatry/f432-adjustment-disorder"
+  }
+}

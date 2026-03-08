@@ -1,0 +1,30 @@
+{
+  "id": "Hepatobiliary/d180-hepatic-hemangioma",
+  "title": "[D18.0] 肝血管腫 / Hepatic Hemangioma",
+  "description": "主訴・ROS",
+  "source": "@site/docs/070-Hepatobiliary/d180-hepatic-hemangioma.mdx",
+  "sourceDirName": "070-Hepatobiliary",
+  "slug": "/Hepatobiliary/d180-hepatic-hemangioma",
+  "permalink": "/medical-wiki/docs/Hepatobiliary/d180-hepatic-hemangioma",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/070-Hepatobiliary/d180-hepatic-hemangioma.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "d180-hepatic-hemangioma",
+    "title": "[D18.0] 肝血管腫 / Hepatic Hemangioma",
+    "sidebar_label": "[D18.0] 肝血管腫",
+    "sidebar_position": 8
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K86.1] 慢性膵炎",
+    "permalink": "/medical-wiki/docs/Hepatobiliary/k861-chronic-pancreatitis"
+  },
+  "next": {
+    "title": "080: Hypertension（高血圧・血管疾患）",
+    "permalink": "/medical-wiki/docs/category/080-hypertension高血圧血管疾患"
+  }
+}

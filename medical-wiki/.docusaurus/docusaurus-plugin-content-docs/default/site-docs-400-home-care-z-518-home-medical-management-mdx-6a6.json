@@ -1,0 +1,30 @@
+{
+  "id": "Home-Care/z518-home-medical-management",
+  "title": "[Z51.8] 在宅時医学総合管理 / Home Medical Management",
+  "description": "主訴・ROS",
+  "source": "@site/docs/400-Home-Care/z518-home-medical-management.mdx",
+  "sourceDirName": "400-Home-Care",
+  "slug": "/Home-Care/z518-home-medical-management",
+  "permalink": "/medical-wiki/docs/Home-Care/z518-home-medical-management",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/400-Home-Care/z518-home-medical-management.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "z518-home-medical-management",
+    "title": "[Z51.8] 在宅時医学総合管理 / Home Medical Management",
+    "sidebar_label": "[Z51.8] 在宅時医学総合管理",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "400: Home-Care（在宅医療・訪問管理）",
+    "permalink": "/medical-wiki/docs/category/400-home-care在宅医療訪問管理"
+  },
+  "next": {
+    "title": "[L89.9] 褥瘡",
+    "permalink": "/medical-wiki/docs/Home-Care/l899-pressure-ulcer"
+  }
+}

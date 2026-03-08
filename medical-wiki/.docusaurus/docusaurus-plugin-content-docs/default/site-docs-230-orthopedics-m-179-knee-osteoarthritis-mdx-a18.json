@@ -1,0 +1,30 @@
+{
+  "id": "Orthopedics/m179-knee-osteoarthritis",
+  "title": "[M17.9] 変形性膝関節症 / Knee Osteoarthritis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/230-Orthopedics/m179-knee-osteoarthritis.mdx",
+  "sourceDirName": "230-Orthopedics",
+  "slug": "/Orthopedics/m179-knee-osteoarthritis",
+  "permalink": "/medical-wiki/docs/Orthopedics/m179-knee-osteoarthritis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/230-Orthopedics/m179-knee-osteoarthritis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "m179-knee-osteoarthritis",
+    "title": "[M17.9] 変形性膝関節症 / Knee Osteoarthritis",
+    "sidebar_label": "[M17.9] 変形性膝関節症",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[M51.2] 腰椎椎間板ヘルニア",
+    "permalink": "/medical-wiki/docs/Orthopedics/m512-lumbar-disc-herniation"
+  },
+  "next": {
+    "title": "[M75.0] 肩関節周囲炎・五十肩",
+    "permalink": "/medical-wiki/docs/Orthopedics/m750-frozen-shoulder"
+  }
+}

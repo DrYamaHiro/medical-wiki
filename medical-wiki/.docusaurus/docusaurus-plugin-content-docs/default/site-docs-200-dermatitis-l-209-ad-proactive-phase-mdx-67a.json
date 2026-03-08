@@ -1,0 +1,30 @@
+{
+  "id": "Dermatitis/l209-ad-proactive-phase",
+  "title": "[L20.9] アトピー性皮膚炎 / 維持療法 / AD - Proactive Phase",
+  "description": "主訴・ROS",
+  "source": "@site/docs/200-Dermatitis/l209-ad-proactive-phase.mdx",
+  "sourceDirName": "200-Dermatitis",
+  "slug": "/Dermatitis/l209-ad-proactive-phase",
+  "permalink": "/medical-wiki/docs/Dermatitis/l209-ad-proactive-phase",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/200-Dermatitis/l209-ad-proactive-phase.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "l209-ad-proactive-phase",
+    "title": "[L20.9] アトピー性皮膚炎 / 維持療法 / AD - Proactive Phase",
+    "sidebar_label": "[L20.9] アトピー性皮膚炎 / 維持療法",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[L20.9] アトピー性皮膚炎 / 寛解導入",
+    "permalink": "/medical-wiki/docs/Dermatitis/l209-ad-induction-phase"
+  },
+  "next": {
+    "title": "[L23.9] 接触皮膚炎",
+    "permalink": "/medical-wiki/docs/Dermatitis/l239-contact-dermatitis"
+  }
+}

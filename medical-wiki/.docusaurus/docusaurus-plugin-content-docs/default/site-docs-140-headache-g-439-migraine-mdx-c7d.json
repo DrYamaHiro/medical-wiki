@@ -1,0 +1,30 @@
+{
+  "id": "Headache/g439-migraine",
+  "title": "[G43.9] 片頭痛 / Migraine",
+  "description": "主訴・ROS",
+  "source": "@site/docs/140-Headache/g439-migraine.mdx",
+  "sourceDirName": "140-Headache",
+  "slug": "/Headache/g439-migraine",
+  "permalink": "/medical-wiki/docs/Headache/g439-migraine",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/140-Headache/g439-migraine.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "g439-migraine",
+    "title": "[G43.9] 片頭痛 / Migraine",
+    "sidebar_label": "[G43.9] 片頭痛",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "140: Headache（頭痛・てんかん・神経痛）",
+    "permalink": "/medical-wiki/docs/category/140-headache頭痛てんかん神経痛"
+  },
+  "next": {
+    "title": "[G44.2] 緊張型頭痛",
+    "permalink": "/medical-wiki/docs/Headache/g442-tension-type-headache"
+  }
+}

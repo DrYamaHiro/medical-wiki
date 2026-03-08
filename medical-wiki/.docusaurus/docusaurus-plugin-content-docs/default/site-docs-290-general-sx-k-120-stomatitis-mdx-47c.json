@@ -1,0 +1,30 @@
+{
+  "id": "General-Sx/k120-stomatitis",
+  "title": "[K12.0] 口内炎 / Stomatitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/290-General-Sx/k120-stomatitis.mdx",
+  "sourceDirName": "290-General-Sx",
+  "slug": "/General-Sx/k120-stomatitis",
+  "permalink": "/medical-wiki/docs/General-Sx/k120-stomatitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/290-General-Sx/k120-stomatitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "k120-stomatitis",
+    "title": "[K12.0] 口内炎 / Stomatitis",
+    "sidebar_label": "[K12.0] 口内炎",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[R59.9] リンパ節腫脹",
+    "permalink": "/medical-wiki/docs/General-Sx/r599-lymphadenopathy"
+  },
+  "next": {
+    "title": "300: Acute-Pain（急性腹症・胸痛・背部痛トリアージ）",
+    "permalink": "/medical-wiki/docs/category/300-acute-pain急性腹症胸痛背部痛トリアージ"
+  }
+}

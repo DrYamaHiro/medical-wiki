@@ -1,0 +1,30 @@
+{
+  "id": "Uro-Infect/a515-early-latent-syphilis",
+  "title": "[A51.5] 早期潜伏梅毒 / Early Latent Syphilis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/250-Uro-Infect/a515-early-latent-syphilis.mdx",
+  "sourceDirName": "250-Uro-Infect",
+  "slug": "/Uro-Infect/a515-early-latent-syphilis",
+  "permalink": "/medical-wiki/docs/Uro-Infect/a515-early-latent-syphilis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/250-Uro-Infect/a515-early-latent-syphilis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "a515-early-latent-syphilis",
+    "title": "[A51.5] 早期潜伏梅毒 / Early Latent Syphilis",
+    "sidebar_label": "[A51.5] 早期潜伏梅毒",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[A51.3] 第2期梅毒",
+    "permalink": "/medical-wiki/docs/Uro-Infect/a513-secondary-syphilis"
+  },
+  "next": {
+    "title": "[A53.0] 後期潜伏梅毒・感染時期不明",
+    "permalink": "/medical-wiki/docs/Uro-Infect/a530-late-latent-unknown-duration"
+  }
+}

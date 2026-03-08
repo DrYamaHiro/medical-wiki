@@ -1,0 +1,30 @@
+{
+  "id": "Hypertension/i10-ht-stable",
+  "title": "[I10] 本態性高血圧 / 初期・安定期 / HT - Stable",
+  "description": "主訴・ROS",
+  "source": "@site/docs/080-Hypertension/i10-ht-stable.mdx",
+  "sourceDirName": "080-Hypertension",
+  "slug": "/Hypertension/i10-ht-stable",
+  "permalink": "/medical-wiki/docs/Hypertension/i10-ht-stable",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/080-Hypertension/i10-ht-stable.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "i10-ht-stable",
+    "title": "[I10] 本態性高血圧 / 初期・安定期 / HT - Stable",
+    "sidebar_label": "[I10] 本態性高血圧 / 初期・安定期",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "080: Hypertension（高血圧・血管疾患）",
+    "permalink": "/medical-wiki/docs/category/080-hypertension高血圧血管疾患"
+  },
+  "next": {
+    "title": "[I10] 難治性高血圧 / 多剤併用",
+    "permalink": "/medical-wiki/docs/Hypertension/i10-ht-resistant"
+  }
+}

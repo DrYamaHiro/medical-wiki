@@ -1,4 +1,8 @@
 {
-  "label": "110 Diabetes (糖尿病・糖代謝)",
-  "position": 12
+  "label": "110: Diabetes（糖尿病・糖代謝）",
+  "position": 110,
+  "link": {
+    "type": "generated-index",
+    "description": "糖尿病・糖代謝の診療テンプレート一覧"
+  }
 }

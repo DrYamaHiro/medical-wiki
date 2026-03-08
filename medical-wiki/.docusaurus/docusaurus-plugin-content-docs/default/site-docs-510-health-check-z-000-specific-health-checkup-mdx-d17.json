@@ -1,0 +1,30 @@
+{
+  "id": "Health-Check/z000-specific-health-checkup",
+  "title": "[Z00.0] 特定健診・長寿健診 / Specific Health Checkup",
+  "description": "主訴・ROS",
+  "source": "@site/docs/510-Health-Check/z000-specific-health-checkup.mdx",
+  "sourceDirName": "510-Health-Check",
+  "slug": "/Health-Check/z000-specific-health-checkup",
+  "permalink": "/medical-wiki/docs/Health-Check/z000-specific-health-checkup",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/510-Health-Check/z000-specific-health-checkup.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "z000-specific-health-checkup",
+    "title": "[Z00.0] 特定健診・長寿健診 / Specific Health Checkup",
+    "sidebar_label": "[Z00.0] 特定健診・長寿健診",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "510: Health-Check（健診・書類）",
+    "permalink": "/medical-wiki/docs/category/510-health-check健診書類"
+  },
+  "next": {
+    "title": "[Z02.1] 雇用時健診",
+    "permalink": "/medical-wiki/docs/Health-Check/z021-employment-health-checkup"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Bowel-Disorder/i845-external-hemorrhoids",
+  "title": "[I84.5] 外痔核 / External Hemorrhoids",
+  "description": "主訴・ROS",
+  "source": "@site/docs/060-Bowel-Disorder/i845-external-hemorrhoids.mdx",
+  "sourceDirName": "060-Bowel-Disorder",
+  "slug": "/Bowel-Disorder/i845-external-hemorrhoids",
+  "permalink": "/medical-wiki/docs/Bowel-Disorder/i845-external-hemorrhoids",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/060-Bowel-Disorder/i845-external-hemorrhoids.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 9,
+  "frontMatter": {
+    "id": "i845-external-hemorrhoids",
+    "title": "[I84.5] 外痔核 / External Hemorrhoids",
+    "sidebar_label": "[I84.5] 外痔核",
+    "sidebar_position": 9
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[I84.2] 内痔核",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/i842-internal-hemorrhoids"
+  },
+  "next": {
+    "title": "[K60.2] 裂肛",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/k602-anal-fissure"
+  }
+}

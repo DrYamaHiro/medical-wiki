@@ -1,4 +1,8 @@
 {
-  "label": "050 Gastroenteritis (感染性胃腸炎・上部消化管)",
-  "position": 6
+  "label": "050: Gastroenteritis（感染性胃腸炎・上部消化管）",
+  "position": 50,
+  "link": {
+    "type": "generated-index",
+    "description": "感染性胃腸炎・上部消化管の診療テンプレート一覧"
+  }
 }

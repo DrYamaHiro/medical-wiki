@@ -1,0 +1,30 @@
+{
+  "id": "Health-Check/z000-general-health-checkup",
+  "title": "[Z00.0] 一般健診・自費健診 / General Health Checkup",
+  "description": "主訴・ROS",
+  "source": "@site/docs/510-Health-Check/z000-general-health-checkup.mdx",
+  "sourceDirName": "510-Health-Check",
+  "slug": "/Health-Check/z000-general-health-checkup",
+  "permalink": "/medical-wiki/docs/Health-Check/z000-general-health-checkup",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/510-Health-Check/z000-general-health-checkup.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "z000-general-health-checkup",
+    "title": "[Z00.0] 一般健診・自費健診 / General Health Checkup",
+    "sidebar_label": "[Z00.0] 一般健診・自費健診",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[Z02.1] 雇用時健診",
+    "permalink": "/medical-wiki/docs/Health-Check/z021-employment-health-checkup"
+  },
+  "next": {
+    "title": "[Z02.7] 診断書作成",
+    "permalink": "/medical-wiki/docs/Health-Check/z027-medical-certificate"
+  }
+}

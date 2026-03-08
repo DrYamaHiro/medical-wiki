@@ -1,4 +1,8 @@
 {
-  "label": "310 Trauma (外傷・外科処置)",
-  "position": 32
+  "label": "310: Trauma（外傷・外科処置）",
+  "position": 310,
+  "link": {
+    "type": "generated-index",
+    "description": "外傷・外科処置の診療テンプレート一覧"
+  }
 }

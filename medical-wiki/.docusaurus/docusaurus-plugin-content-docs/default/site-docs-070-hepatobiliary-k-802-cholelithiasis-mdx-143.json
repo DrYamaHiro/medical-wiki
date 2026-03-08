@@ -1,0 +1,30 @@
+{
+  "id": "Hepatobiliary/k802-cholelithiasis",
+  "title": "[K80.2] 胆石症 / Cholelithiasis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/070-Hepatobiliary/k802-cholelithiasis.mdx",
+  "sourceDirName": "070-Hepatobiliary",
+  "slug": "/Hepatobiliary/k802-cholelithiasis",
+  "permalink": "/medical-wiki/docs/Hepatobiliary/k802-cholelithiasis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/070-Hepatobiliary/k802-cholelithiasis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "k802-cholelithiasis",
+    "title": "[K80.2] 胆石症 / Cholelithiasis",
+    "sidebar_label": "[K80.2] 胆石症",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K74.6] 肝硬変",
+    "permalink": "/medical-wiki/docs/Hepatobiliary/k746-liver-cirrhosis"
+  },
+  "next": {
+    "title": "[K81.0] 胆嚢炎",
+    "permalink": "/medical-wiki/docs/Hepatobiliary/k810-cholecystitis"
+  }
+}

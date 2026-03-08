@@ -1,0 +1,30 @@
+{
+  "id": "Psychiatry/f411-generalized-anxiety-disorder-gad",
+  "title": "[F41.1] 全般性不安障害 / Generalized Anxiety Disorder / GAD",
+  "description": "主訴・ROS",
+  "source": "@site/docs/170-Psychiatry/f411-generalized-anxiety-disorder-gad.mdx",
+  "sourceDirName": "170-Psychiatry",
+  "slug": "/Psychiatry/f411-generalized-anxiety-disorder-gad",
+  "permalink": "/medical-wiki/docs/Psychiatry/f411-generalized-anxiety-disorder-gad",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/170-Psychiatry/f411-generalized-anxiety-disorder-gad.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "f411-generalized-anxiety-disorder-gad",
+    "title": "[F41.1] 全般性不安障害 / Generalized Anxiety Disorder / GAD",
+    "sidebar_label": "[F41.1] 全般性不安障害",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[F41.0] パニック障害",
+    "permalink": "/medical-wiki/docs/Psychiatry/f410-panic-disorder"
+  },
+  "next": {
+    "title": "[F90.0] 大人の注意欠如・多動症 (Adult ADHD) / 疑い・紹介",
+    "permalink": "/medical-wiki/docs/Psychiatry/f900-adult-adhd"
+  }
+}

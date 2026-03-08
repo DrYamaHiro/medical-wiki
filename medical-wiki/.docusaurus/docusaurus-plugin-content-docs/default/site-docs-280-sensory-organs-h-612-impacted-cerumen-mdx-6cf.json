@@ -1,0 +1,30 @@
+{
+  "id": "Sensory-Organs/h612-impacted-cerumen",
+  "title": "[H61.2] 耳垢塞栓 / Impacted Cerumen",
+  "description": "主訴・ROS",
+  "source": "@site/docs/280-Sensory-Organs/h612-impacted-cerumen.mdx",
+  "sourceDirName": "280-Sensory-Organs",
+  "slug": "/Sensory-Organs/h612-impacted-cerumen",
+  "permalink": "/medical-wiki/docs/Sensory-Organs/h612-impacted-cerumen",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/280-Sensory-Organs/h612-impacted-cerumen.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "h612-impacted-cerumen",
+    "title": "[H61.2] 耳垢塞栓 / Impacted Cerumen",
+    "sidebar_label": "[H61.2] 耳垢塞栓",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[H60.9] 外耳炎",
+    "permalink": "/medical-wiki/docs/Sensory-Organs/h609-otitis-externa"
+  },
+  "next": {
+    "title": "[H91.2] 突発性難聴",
+    "permalink": "/medical-wiki/docs/Sensory-Organs/h912-sudden-sensorineural-hearing-loss"
+  }
+}

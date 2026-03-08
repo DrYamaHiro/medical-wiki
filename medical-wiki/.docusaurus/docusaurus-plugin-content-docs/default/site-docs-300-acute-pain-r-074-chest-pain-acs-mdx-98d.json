@@ -1,0 +1,30 @@
+{
+  "id": "Acute-Pain/r074-chest-pain-acs",
+  "title": "[R07.4] 胸痛 (Chest Pain) / ACS疑い",
+  "description": "主訴・ROS",
+  "source": "@site/docs/300-Acute-Pain/r074-chest-pain-acs.mdx",
+  "sourceDirName": "300-Acute-Pain",
+  "slug": "/Acute-Pain/r074-chest-pain-acs",
+  "permalink": "/medical-wiki/docs/Acute-Pain/r074-chest-pain-acs",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/300-Acute-Pain/r074-chest-pain-acs.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "r074-chest-pain-acs",
+    "title": "[R07.4] 胸痛 (Chest Pain) / ACS疑い",
+    "sidebar_label": "[R07.4] 胸痛 (Chest Pain) / ACS疑い",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[R10.0] 急性腹症",
+    "permalink": "/medical-wiki/docs/Acute-Pain/r100-acute-abdomen"
+  },
+  "next": {
+    "title": "[M54.9] 急性背部痛",
+    "permalink": "/medical-wiki/docs/Acute-Pain/m549-acute-back-pain"
+  }
+}

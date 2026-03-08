@@ -1,0 +1,30 @@
+{
+  "id": "Prostate/n40-benign-prostatic-hyperplasia-bph",
+  "title": "[N40] 前立腺肥大症 / Benign Prostatic Hyperplasia / BPH",
+  "description": "主訴・ROS",
+  "source": "@site/docs/260-Prostate/n40-benign-prostatic-hyperplasia-bph.mdx",
+  "sourceDirName": "260-Prostate",
+  "slug": "/Prostate/n40-benign-prostatic-hyperplasia-bph",
+  "permalink": "/medical-wiki/docs/Prostate/n40-benign-prostatic-hyperplasia-bph",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/260-Prostate/n40-benign-prostatic-hyperplasia-bph.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "n40-benign-prostatic-hyperplasia-bph",
+    "title": "[N40] 前立腺肥大症 / Benign Prostatic Hyperplasia / BPH",
+    "sidebar_label": "[N40] 前立腺肥大症",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "260: Prostate（前立腺・男性機能）",
+    "permalink": "/medical-wiki/docs/category/260-prostate前立腺男性機能"
+  },
+  "next": {
+    "title": "[N32.8] 過活動膀胱",
+    "permalink": "/medical-wiki/docs/Prostate/n328-overactive-bladder-oab"
+  }
+}

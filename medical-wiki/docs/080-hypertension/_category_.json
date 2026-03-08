@@ -1,4 +1,8 @@
 {
-  "label": "080 Hypertension (高血圧・血管疾患)",
-  "position": 9
+  "label": "080: Hypertension（高血圧・血管疾患）",
+  "position": 80,
+  "link": {
+    "type": "generated-index",
+    "description": "高血圧・血管疾患の診療テンプレート一覧"
+  }
 }

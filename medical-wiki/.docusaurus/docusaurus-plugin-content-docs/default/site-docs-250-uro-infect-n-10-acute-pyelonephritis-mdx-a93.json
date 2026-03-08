@@ -1,0 +1,30 @@
+{
+  "id": "Uro-Infect/n10-acute-pyelonephritis",
+  "title": "[N10] 腎盂腎炎 / Acute Pyelonephritis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/250-Uro-Infect/n10-acute-pyelonephritis.mdx",
+  "sourceDirName": "250-Uro-Infect",
+  "slug": "/Uro-Infect/n10-acute-pyelonephritis",
+  "permalink": "/medical-wiki/docs/Uro-Infect/n10-acute-pyelonephritis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/250-Uro-Infect/n10-acute-pyelonephritis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "n10-acute-pyelonephritis",
+    "title": "[N10] 腎盂腎炎 / Acute Pyelonephritis",
+    "sidebar_label": "[N10] 腎盂腎炎",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[N30.0] 急性膀胱炎",
+    "permalink": "/medical-wiki/docs/Uro-Infect/n300-acute-cystitis"
+  },
+  "next": {
+    "title": "[A56.0] 性器クラミジア感染症",
+    "permalink": "/medical-wiki/docs/Uro-Infect/a560-chlamydia-trachomatis"
+  }
+}

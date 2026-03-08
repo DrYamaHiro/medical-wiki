@@ -1,0 +1,30 @@
+{
+  "id": "Vertigo/h812-vestibular-neuritis",
+  "title": "[H81.2] 前庭神経炎 / Vestibular Neuritis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/150-Vertigo/h812-vestibular-neuritis.mdx",
+  "sourceDirName": "150-Vertigo",
+  "slug": "/Vertigo/h812-vestibular-neuritis",
+  "permalink": "/medical-wiki/docs/Vertigo/h812-vestibular-neuritis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/150-Vertigo/h812-vestibular-neuritis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "h812-vestibular-neuritis",
+    "title": "[H81.2] 前庭神経炎 / Vestibular Neuritis",
+    "sidebar_label": "[H81.2] 前庭神経炎",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[H81.0] メニエール病",
+    "permalink": "/medical-wiki/docs/Vertigo/h810-menieres-disease"
+  },
+  "next": {
+    "title": "[R42] めまい症",
+    "permalink": "/medical-wiki/docs/Vertigo/r42-dizziness-vertigo-nos"
+  }
+}

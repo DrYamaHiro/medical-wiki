@@ -1,0 +1,30 @@
+{
+  "id": "Cardiovascular/i48-atrial-flutter",
+  "title": "[I48] 心房粗動 / Atrial Flutter",
+  "description": "主訴・ROS",
+  "source": "@site/docs/090-Cardiovascular/i48-atrial-flutter.mdx",
+  "sourceDirName": "090-Cardiovascular",
+  "slug": "/Cardiovascular/i48-atrial-flutter",
+  "permalink": "/medical-wiki/docs/Cardiovascular/i48-atrial-flutter",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/090-Cardiovascular/i48-atrial-flutter.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "i48-atrial-flutter",
+    "title": "[I48] 心房粗動 / Atrial Flutter",
+    "sidebar_label": "[I48] 心房粗動",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[I48] 心房細動",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i48-atrial-fibrillation"
+  },
+  "next": {
+    "title": "[I49] 期外収縮",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i49-premature-contraction"
+  }
+}

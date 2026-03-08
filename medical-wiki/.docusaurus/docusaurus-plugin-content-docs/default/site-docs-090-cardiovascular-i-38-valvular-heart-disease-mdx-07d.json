@@ -1,0 +1,30 @@
+{
+  "id": "Cardiovascular/i38-valvular-heart-disease",
+  "title": "[I38] 弁膜症 / Valvular Heart Disease",
+  "description": "主訴・ROS",
+  "source": "@site/docs/090-Cardiovascular/i38-valvular-heart-disease.mdx",
+  "sourceDirName": "090-Cardiovascular",
+  "slug": "/Cardiovascular/i38-valvular-heart-disease",
+  "permalink": "/medical-wiki/docs/Cardiovascular/i38-valvular-heart-disease",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/090-Cardiovascular/i38-valvular-heart-disease.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "i38-valvular-heart-disease",
+    "title": "[I38] 弁膜症 / Valvular Heart Disease",
+    "sidebar_label": "[I38] 弁膜症",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[I49] 期外収縮",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i49-premature-contraction"
+  },
+  "next": {
+    "title": "[I25.2] 陳旧性心筋梗塞",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i252-old-myocardial-infarction"
+  }
+}

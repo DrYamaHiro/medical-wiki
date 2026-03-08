@@ -1,4 +1,8 @@
 {
-  "label": "400 Home-Care (在宅医療・訪問管理)",
-  "position": 38
+  "label": "400: Home-Care（在宅医療・訪問管理）",
+  "position": 400,
+  "link": {
+    "type": "generated-index",
+    "description": "在宅医療・訪問管理の診療テンプレート一覧"
+  }
 }

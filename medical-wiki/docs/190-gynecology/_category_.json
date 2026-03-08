@@ -1,4 +1,8 @@
 {
-  "label": "190 Gynecology (女性外来・更年期)",
-  "position": 20
+  "label": "190: Gynecology（女性外来・更年期）",
+  "position": 190,
+  "link": {
+    "type": "generated-index",
+    "description": "女性外来・更年期の診療テンプレート一覧"
+  }
 }

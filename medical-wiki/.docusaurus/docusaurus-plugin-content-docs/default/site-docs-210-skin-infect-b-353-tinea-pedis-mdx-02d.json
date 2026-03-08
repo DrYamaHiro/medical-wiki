@@ -1,0 +1,30 @@
+{
+  "id": "Skin-Infect/b353-tinea-pedis",
+  "title": "[B35.3] 足白癬 / Tinea Pedis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/210-Skin-Infect/b353-tinea-pedis.mdx",
+  "sourceDirName": "210-Skin-Infect",
+  "slug": "/Skin-Infect/b353-tinea-pedis",
+  "permalink": "/medical-wiki/docs/Skin-Infect/b353-tinea-pedis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/210-Skin-Infect/b353-tinea-pedis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "b353-tinea-pedis",
+    "title": "[B35.3] 足白癬 / Tinea Pedis",
+    "sidebar_label": "[B35.3] 足白癬",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "210: Skin-Infect（皮膚感染症・熱傷）",
+    "permalink": "/medical-wiki/docs/category/210-skin-infect皮膚感染症熱傷"
+  },
+  "next": {
+    "title": "[B35.1] 爪白癬",
+    "permalink": "/medical-wiki/docs/Skin-Infect/b351-tinea-unguium"
+  }
+}

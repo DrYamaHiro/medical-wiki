@@ -1,0 +1,30 @@
+{
+  "id": "Cardiovascular/i500-congestive-heart-failure",
+  "title": "[I50.0] 鬱血性心不全 / Congestive Heart Failure",
+  "description": "主訴・ROS",
+  "source": "@site/docs/090-Cardiovascular/i500-congestive-heart-failure.mdx",
+  "sourceDirName": "090-Cardiovascular",
+  "slug": "/Cardiovascular/i500-congestive-heart-failure",
+  "permalink": "/medical-wiki/docs/Cardiovascular/i500-congestive-heart-failure",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/090-Cardiovascular/i500-congestive-heart-failure.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "i500-congestive-heart-failure",
+    "title": "[I50.0] 鬱血性心不全 / Congestive Heart Failure",
+    "sidebar_label": "[I50.0] 鬱血性心不全",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[I50.9] 慢性心不全",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i509-chronic-heart-failure"
+  },
+  "next": {
+    "title": "[I20.8] 労作性狭心症",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i208-angina-pectoris"
+  }
+}

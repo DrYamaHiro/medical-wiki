@@ -1,0 +1,30 @@
+{
+  "id": "Dermatitis/l700-acne-maintenance-phase",
+  "title": "[L70.0] 尋常性ざ瘡 / 維持期 / Acne - Maintenance Phase",
+  "description": "主訴・ROS",
+  "source": "@site/docs/200-Dermatitis/l700-acne-maintenance-phase.mdx",
+  "sourceDirName": "200-Dermatitis",
+  "slug": "/Dermatitis/l700-acne-maintenance-phase",
+  "permalink": "/medical-wiki/docs/Dermatitis/l700-acne-maintenance-phase",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/200-Dermatitis/l700-acne-maintenance-phase.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 9,
+  "frontMatter": {
+    "id": "l700-acne-maintenance-phase",
+    "title": "[L70.0] 尋常性ざ瘡 / 維持期 / Acne - Maintenance Phase",
+    "sidebar_label": "[L70.0] 尋常性ざ瘡 / 維持期",
+    "sidebar_position": 9
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[L70.0] 尋常性ざ瘡 / 急性炎症期",
+    "permalink": "/medical-wiki/docs/Dermatitis/l700-acne-acute-phase"
+  },
+  "next": {
+    "title": "[L40.0] 尋常性乾癬",
+    "permalink": "/medical-wiki/docs/Dermatitis/l400-psoriasis-vulgaris"
+  }
+}

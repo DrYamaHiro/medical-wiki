@@ -1,0 +1,30 @@
+{
+  "id": "Rhinitis/j300-vasomotor-rhinitis",
+  "title": "[J30.0] 血管運動性鼻炎 / Vasomotor Rhinitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/040-Rhinitis/j300-vasomotor-rhinitis.mdx",
+  "sourceDirName": "040-Rhinitis",
+  "slug": "/Rhinitis/j300-vasomotor-rhinitis",
+  "permalink": "/medical-wiki/docs/Rhinitis/j300-vasomotor-rhinitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/040-Rhinitis/j300-vasomotor-rhinitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "j300-vasomotor-rhinitis",
+    "title": "[J30.0] 血管運動性鼻炎 / Vasomotor Rhinitis",
+    "sidebar_label": "[J30.0] 血管運動性鼻炎",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J30.3] 通年性アレルギー性鼻炎",
+    "permalink": "/medical-wiki/docs/Rhinitis/j303-perennial-allergic-rhinitis"
+  },
+  "next": {
+    "title": "[J34.2] 鼻中隔弯曲症",
+    "permalink": "/medical-wiki/docs/Rhinitis/j342-nasal-septal-deviation"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Gynecology/b373-candida-vaginitis",
+  "title": "[B37.3] カンジダ腟炎 / Candida Vaginitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/190-Gynecology/b373-candida-vaginitis.mdx",
+  "sourceDirName": "190-Gynecology",
+  "slug": "/Gynecology/b373-candida-vaginitis",
+  "permalink": "/medical-wiki/docs/Gynecology/b373-candida-vaginitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/190-Gynecology/b373-candida-vaginitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "b373-candida-vaginitis",
+    "title": "[B37.3] カンジダ腟炎 / Candida Vaginitis",
+    "sidebar_label": "[B37.3] カンジダ腟炎",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[N94.6] 月経困難症・PMS",
+    "permalink": "/medical-wiki/docs/Gynecology/n946-dysmenorrhea-pms"
+  },
+  "next": {
+    "title": "[N61] 乳腺炎",
+    "permalink": "/medical-wiki/docs/Gynecology/n61-mastitis"
+  }
+}

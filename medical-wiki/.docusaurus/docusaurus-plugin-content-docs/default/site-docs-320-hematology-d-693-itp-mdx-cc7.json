@@ -1,0 +1,30 @@
+{
+  "id": "Hematology/d693-itp",
+  "title": "[D69.3] 特発性血小板減少性紫斑病 / ITP",
+  "description": "主訴・ROS",
+  "source": "@site/docs/320-Hematology/d693-itp.mdx",
+  "sourceDirName": "320-Hematology",
+  "slug": "/Hematology/d693-itp",
+  "permalink": "/medical-wiki/docs/Hematology/d693-itp",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/320-Hematology/d693-itp.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "d693-itp",
+    "title": "[D69.3] 特発性血小板減少性紫斑病 / ITP",
+    "sidebar_label": "[D69.3] 特発性血小板減少性紫斑病",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[D46.9] 骨髄異形成症候群",
+    "permalink": "/medical-wiki/docs/Hematology/d469-mds"
+  },
+  "next": {
+    "title": "330: Ped-Infect（小児感染症）",
+    "permalink": "/medical-wiki/docs/category/330-ped-infect小児感染症"
+  }
+}

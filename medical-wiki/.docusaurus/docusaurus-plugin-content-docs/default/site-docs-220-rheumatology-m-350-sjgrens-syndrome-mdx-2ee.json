@@ -1,0 +1,30 @@
+{
+  "id": "Rheumatology/m350-sjgrens-syndrome",
+  "title": "[M35.0] シェーグレン症候群 / Sjögren's Syndrome",
+  "description": "主訴・ROS",
+  "source": "@site/docs/220-Rheumatology/m350-sjgrens-syndrome.mdx",
+  "sourceDirName": "220-Rheumatology",
+  "slug": "/Rheumatology/m350-sjgrens-syndrome",
+  "permalink": "/medical-wiki/docs/Rheumatology/m350-sjgrens-syndrome",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/220-Rheumatology/m350-sjgrens-syndrome.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "m350-sjgrens-syndrome",
+    "title": "[M35.0] シェーグレン症候群 / Sjögren's Syndrome",
+    "sidebar_label": "[M35.0] シェーグレン症候群",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[M35.3] リウマチ性多発筋痛症",
+    "permalink": "/medical-wiki/docs/Rheumatology/m353-polymyalgia-rheumatica-pmr"
+  },
+  "next": {
+    "title": "[M32.9] 全身性エリテマトーデス (SLE) / 膠原病疑い",
+    "permalink": "/medical-wiki/docs/Rheumatology/m329-sle"
+  }
+}

@@ -1,4 +1,8 @@
 {
-  "label": "220 Rheumatology (関節リウマチ・膠原病)",
-  "position": 23
+  "label": "220: Rheumatology（関節リウマチ・膠原病）",
+  "position": 220,
+  "link": {
+    "type": "generated-index",
+    "description": "関節リウマチ・膠原病の診療テンプレート一覧"
+  }
 }

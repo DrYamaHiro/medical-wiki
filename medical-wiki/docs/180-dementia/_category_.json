@@ -1,4 +1,8 @@
 {
-  "label": "180 Dementia (認知症・物忘れ)",
-  "position": 19
+  "label": "180: Dementia（認知症・物忘れ）",
+  "position": 180,
+  "link": {
+    "type": "generated-index",
+    "description": "認知症・物忘れの診療テンプレート一覧"
+  }
 }

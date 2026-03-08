@@ -1,0 +1,30 @@
+{
+  "id": "Diabetes/e162-hypoglycemia",
+  "title": "[E16.2] 低血糖症 / Hypoglycemia",
+  "description": "主訴・ROS",
+  "source": "@site/docs/110-Diabetes/e162-hypoglycemia.mdx",
+  "sourceDirName": "110-Diabetes",
+  "slug": "/Diabetes/e162-hypoglycemia",
+  "permalink": "/medical-wiki/docs/Diabetes/e162-hypoglycemia",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/110-Diabetes/e162-hypoglycemia.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "e162-hypoglycemia",
+    "title": "[E16.2] 低血糖症 / Hypoglycemia",
+    "sidebar_label": "[E16.2] 低血糖症",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[E10.9] 1型糖尿病",
+    "permalink": "/medical-wiki/docs/Diabetes/e109-type-1-diabetes"
+  },
+  "next": {
+    "title": "[G63.2] 糖尿病性神経障害",
+    "permalink": "/medical-wiki/docs/Diabetes/g632-diabetic-neuropathy"
+  }
+}

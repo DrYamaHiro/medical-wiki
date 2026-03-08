@@ -1,0 +1,30 @@
+{
+  "id": "Sleep-Apnea/g473-osas",
+  "title": "[G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / 診断・導入検討",
+  "description": "主訴・ROS",
+  "source": "@site/docs/160-Sleep-Apnea/g473-osas.mdx",
+  "sourceDirName": "160-Sleep-Apnea",
+  "slug": "/Sleep-Apnea/g473-osas",
+  "permalink": "/medical-wiki/docs/Sleep-Apnea/g473-osas",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/160-Sleep-Apnea/g473-osas.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "g473-osas",
+    "title": "[G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / 診断・導入検討",
+    "sidebar_label": "[G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / 診断・導入検討",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "160: Sleep-Apnea（睡眠時無呼吸・睡眠障害）",
+    "permalink": "/medical-wiki/docs/category/160-sleep-apnea睡眠時無呼吸睡眠障害"
+  },
+  "next": {
+    "title": "[G47.3] 閉塞性睡眠時無呼吸症候群 (OSAS) / CPAP定期管理",
+    "permalink": "/medical-wiki/docs/Sleep-Apnea/g473-osas-cpap"
+  }
+}

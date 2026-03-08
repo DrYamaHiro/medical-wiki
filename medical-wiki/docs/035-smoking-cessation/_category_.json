@@ -1,4 +1,8 @@
 {
-  "label": "035 Smoking-Cessation (禁煙外来)",
-  "position": 4
+  "label": "035: Smoking-Cessation（禁煙外来）",
+  "position": 35,
+  "link": {
+    "type": "generated-index",
+    "description": "禁煙外来の診療テンプレート一覧"
+  }
 }

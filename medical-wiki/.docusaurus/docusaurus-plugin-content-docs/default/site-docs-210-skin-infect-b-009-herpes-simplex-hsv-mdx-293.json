@@ -1,0 +1,30 @@
+{
+  "id": "Skin-Infect/b009-herpes-simplex-hsv",
+  "title": "[B00.9] 単純ヘルペス / Herpes Simplex / HSV",
+  "description": "主訴・ROS",
+  "source": "@site/docs/210-Skin-Infect/b009-herpes-simplex-hsv.mdx",
+  "sourceDirName": "210-Skin-Infect",
+  "slug": "/Skin-Infect/b009-herpes-simplex-hsv",
+  "permalink": "/medical-wiki/docs/Skin-Infect/b009-herpes-simplex-hsv",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/210-Skin-Infect/b009-herpes-simplex-hsv.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "b009-herpes-simplex-hsv",
+    "title": "[B00.9] 単純ヘルペス / Herpes Simplex / HSV",
+    "sidebar_label": "[B00.9] 単純ヘルペス",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[B35.1] 爪白癬",
+    "permalink": "/medical-wiki/docs/Skin-Infect/b351-tinea-unguium"
+  },
+  "next": {
+    "title": "[B02.9] 帯状疱疹",
+    "permalink": "/medical-wiki/docs/Skin-Infect/b029-herpes-zoster"
+  }
+}

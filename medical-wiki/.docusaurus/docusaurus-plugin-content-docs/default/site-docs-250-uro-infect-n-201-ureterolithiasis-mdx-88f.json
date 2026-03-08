@@ -1,0 +1,30 @@
+{
+  "id": "Uro-Infect/n201-ureterolithiasis",
+  "title": "[N20.1] 尿管結石 / Ureterolithiasis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/250-Uro-Infect/n201-ureterolithiasis.mdx",
+  "sourceDirName": "250-Uro-Infect",
+  "slug": "/Uro-Infect/n201-ureterolithiasis",
+  "permalink": "/medical-wiki/docs/Uro-Infect/n201-ureterolithiasis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/250-Uro-Infect/n201-ureterolithiasis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 10,
+  "frontMatter": {
+    "id": "n201-ureterolithiasis",
+    "title": "[N20.1] 尿管結石 / Ureterolithiasis",
+    "sidebar_label": "[N20.1] 尿管結石",
+    "sidebar_position": 10
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[A52] 神経梅毒疑い",
+    "permalink": "/medical-wiki/docs/Uro-Infect/a52-neurosyphilis-suspected"
+  },
+  "next": {
+    "title": "260: Prostate（前立腺・男性機能）",
+    "permalink": "/medical-wiki/docs/category/260-prostate前立腺男性機能"
+  }
+}

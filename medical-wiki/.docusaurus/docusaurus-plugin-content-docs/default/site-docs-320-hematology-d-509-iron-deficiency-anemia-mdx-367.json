@@ -1,0 +1,30 @@
+{
+  "id": "Hematology/d509-iron-deficiency-anemia",
+  "title": "[D50.9] 鉄欠乏性貧血 / Iron Deficiency Anemia",
+  "description": "主訴・ROS",
+  "source": "@site/docs/320-Hematology/d509-iron-deficiency-anemia.mdx",
+  "sourceDirName": "320-Hematology",
+  "slug": "/Hematology/d509-iron-deficiency-anemia",
+  "permalink": "/medical-wiki/docs/Hematology/d509-iron-deficiency-anemia",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/320-Hematology/d509-iron-deficiency-anemia.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "d509-iron-deficiency-anemia",
+    "title": "[D50.9] 鉄欠乏性貧血 / Iron Deficiency Anemia",
+    "sidebar_label": "[D50.9] 鉄欠乏性貧血",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "320: Hematology（血液疾患・貧血）",
+    "permalink": "/medical-wiki/docs/category/320-hematology血液疾患貧血"
+  },
+  "next": {
+    "title": "[D51] 巨赤芽球性貧血",
+    "permalink": "/medical-wiki/docs/Hematology/d51-megaloblastic-anemia"
+  }
+}

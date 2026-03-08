@@ -1,0 +1,30 @@
+{
+  "id": "Diabetes/e119-2-type-2-diabetes",
+  "title": "[E11.9] 2型糖尿病 (Type 2 Diabetes) / インスリン導入",
+  "description": "主訴・ROS",
+  "source": "@site/docs/110-Diabetes/e119-2-type-2-diabetes.mdx",
+  "sourceDirName": "110-Diabetes",
+  "slug": "/Diabetes/e119-2-type-2-diabetes",
+  "permalink": "/medical-wiki/docs/Diabetes/e119-2-type-2-diabetes",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/110-Diabetes/e119-2-type-2-diabetes.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "e119-2-type-2-diabetes",
+    "title": "[E11.9] 2型糖尿病 (Type 2 Diabetes) / インスリン導入",
+    "sidebar_label": "[E11.9] 2型糖尿病 (Type 2 Diabetes) / インスリン導入",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[E11.9] 2型糖尿病 (Type 2 Diabetes) / 経口薬・GLP-1療法",
+    "permalink": "/medical-wiki/docs/Diabetes/e119-2-type-2-diabetes-glp-1"
+  },
+  "next": {
+    "title": "[E11.9] 2型糖尿病 (Type 2 Diabetes) / インスリン強化療法",
+    "permalink": "/medical-wiki/docs/Diabetes/e119-basal-bolus"
+  }
+}

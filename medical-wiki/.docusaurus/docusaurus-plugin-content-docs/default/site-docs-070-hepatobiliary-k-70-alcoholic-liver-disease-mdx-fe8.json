@@ -1,0 +1,30 @@
+{
+  "id": "Hepatobiliary/k70-alcoholic-liver-disease",
+  "title": "[K70] アルコール性肝障害 / Alcoholic Liver Disease",
+  "description": "主訴・ROS",
+  "source": "@site/docs/070-Hepatobiliary/k70-alcoholic-liver-disease.mdx",
+  "sourceDirName": "070-Hepatobiliary",
+  "slug": "/Hepatobiliary/k70-alcoholic-liver-disease",
+  "permalink": "/medical-wiki/docs/Hepatobiliary/k70-alcoholic-liver-disease",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/070-Hepatobiliary/k70-alcoholic-liver-disease.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "k70-alcoholic-liver-disease",
+    "title": "[K70] アルコール性肝障害 / Alcoholic Liver Disease",
+    "sidebar_label": "[K70] アルコール性肝障害",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K76.0] 脂肪肝・NAFLD / NASH",
+    "permalink": "/medical-wiki/docs/Hepatobiliary/k760-fatty-liver"
+  },
+  "next": {
+    "title": "[K73] 慢性肝炎(B型 / C型)",
+    "permalink": "/medical-wiki/docs/Hepatobiliary/k73-chronic-hepatitis-b-c"
+  }
+}

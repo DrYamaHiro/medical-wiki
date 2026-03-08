@@ -1,0 +1,30 @@
+{
+  "id": "Trauma/t142-suspected-occult-fracture",
+  "title": "[T14.2] 骨折疑い・不顕性骨折 / Suspected / Occult Fracture",
+  "description": "主訴・ROS",
+  "source": "@site/docs/310-Trauma/t142-suspected-occult-fracture.mdx",
+  "sourceDirName": "310-Trauma",
+  "slug": "/Trauma/t142-suspected-occult-fracture",
+  "permalink": "/medical-wiki/docs/Trauma/t142-suspected-occult-fracture",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/310-Trauma/t142-suspected-occult-fracture.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "t142-suspected-occult-fracture",
+    "title": "[T14.2] 骨折疑い・不顕性骨折 / Suspected / Occult Fracture",
+    "sidebar_label": "[T14.2] 骨折疑い・不顕性骨折",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[S00] 打撲・皮下血腫",
+    "permalink": "/medical-wiki/docs/Trauma/s00-contusion-hematoma"
+  },
+  "next": {
+    "title": "320: Hematology（血液疾患・貧血）",
+    "permalink": "/medical-wiki/docs/category/320-hematology血液疾患貧血"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Dermatitis/l309-eczema-hand-eczema",
+  "title": "[L30.9] 湿疹・手湿疹 / Eczema / Hand Eczema",
+  "description": "主訴・ROS",
+  "source": "@site/docs/200-Dermatitis/l309-eczema-hand-eczema.mdx",
+  "sourceDirName": "200-Dermatitis",
+  "slug": "/Dermatitis/l309-eczema-hand-eczema",
+  "permalink": "/medical-wiki/docs/Dermatitis/l309-eczema-hand-eczema",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/200-Dermatitis/l309-eczema-hand-eczema.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "l309-eczema-hand-eczema",
+    "title": "[L30.9] 湿疹・手湿疹 / Eczema / Hand Eczema",
+    "sidebar_label": "[L30.9] 湿疹・手湿疹",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "200: Dermatitis（皮膚炎・湿疹）",
+    "permalink": "/medical-wiki/docs/category/200-dermatitis皮膚炎湿疹"
+  },
+  "next": {
+    "title": "[L20.9] アトピー性皮膚炎 / 寛解導入",
+    "permalink": "/medical-wiki/docs/Dermatitis/l209-ad-induction-phase"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Orthopedics/m654-de-quervain-disease",
+  "title": "[M65.4] 狭窄性腱鞘炎 / De Quervain Disease",
+  "description": "主訴・ROS",
+  "source": "@site/docs/230-Orthopedics/m654-de-quervain-disease.mdx",
+  "sourceDirName": "230-Orthopedics",
+  "slug": "/Orthopedics/m654-de-quervain-disease",
+  "permalink": "/medical-wiki/docs/Orthopedics/m654-de-quervain-disease",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/230-Orthopedics/m654-de-quervain-disease.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "m654-de-quervain-disease",
+    "title": "[M65.4] 狭窄性腱鞘炎 / De Quervain Disease",
+    "sidebar_label": "[M65.4] 狭窄性腱鞘炎",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[M47.8] 頸椎症・頸肩腕症候群",
+    "permalink": "/medical-wiki/docs/Orthopedics/m478-cervical-spondylosis"
+  },
+  "next": {
+    "title": "[M72.2] 足底腱膜炎",
+    "permalink": "/medical-wiki/docs/Orthopedics/m722-plantar-fasciitis"
+  }
+}

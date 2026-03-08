@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Skin/t140-insect-bite-strophulus",
+  "title": "[T14.0] 虫刺され・ストロフルス / Insect Bite / Strophulus",
+  "description": "主訴・ROS",
+  "source": "@site/docs/340-Ped-Skin/t140-insect-bite-strophulus.mdx",
+  "sourceDirName": "340-Ped-Skin",
+  "slug": "/Ped-Skin/t140-insect-bite-strophulus",
+  "permalink": "/medical-wiki/docs/Ped-Skin/t140-insect-bite-strophulus",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/340-Ped-Skin/t140-insect-bite-strophulus.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "t140-insect-bite-strophulus",
+    "title": "[T14.0] 虫刺され・ストロフルス / Insect Bite / Strophulus",
+    "sidebar_label": "[T14.0] 虫刺され・ストロフルス",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[B08.1] 伝染性軟属腫・水イボ",
+    "permalink": "/medical-wiki/docs/Ped-Skin/b081-molluscum-contagiosum"
+  },
+  "next": {
+    "title": "350: Ped-Dev（小児発達・夜尿・OD）",
+    "permalink": "/medical-wiki/docs/category/350-ped-dev小児発達夜尿od"
+  }
+}

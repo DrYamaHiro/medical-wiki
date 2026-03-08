@@ -1,0 +1,30 @@
+{
+  "id": "Bowel-Disorder/k589-ibs",
+  "title": "[K58.9] 過敏性腸症候群 / IBS",
+  "description": "主訴・ROS",
+  "source": "@site/docs/060-Bowel-Disorder/k589-ibs.mdx",
+  "sourceDirName": "060-Bowel-Disorder",
+  "slug": "/Bowel-Disorder/k589-ibs",
+  "permalink": "/medical-wiki/docs/Bowel-Disorder/k589-ibs",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/060-Bowel-Disorder/k589-ibs.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "k589-ibs",
+    "title": "[K58.9] 過敏性腸症候群 / IBS",
+    "sidebar_label": "[K58.9] 過敏性腸症候群",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "060: Bowel-Disorder（便秘・IBS・下部消化管疾患）",
+    "permalink": "/medical-wiki/docs/category/060-bowel-disorder便秘ibs下部消化管疾患"
+  },
+  "next": {
+    "title": "[K59.0] 慢性便秘症",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/k590-chronic-constipation"
+  }
+}

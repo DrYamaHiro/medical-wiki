@@ -1,0 +1,30 @@
+{
+  "id": "Cardiovascular/i839-varicose-veins",
+  "title": "[I83.9] 下肢静脈瘤 / Varicose Veins",
+  "description": "主訴・ROS",
+  "source": "@site/docs/090-Cardiovascular/i839-varicose-veins.mdx",
+  "sourceDirName": "090-Cardiovascular",
+  "slug": "/Cardiovascular/i839-varicose-veins",
+  "permalink": "/medical-wiki/docs/Cardiovascular/i839-varicose-veins",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/090-Cardiovascular/i839-varicose-veins.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 10,
+  "frontMatter": {
+    "id": "i839-varicose-veins",
+    "title": "[I83.9] 下肢静脈瘤 / Varicose Veins",
+    "sidebar_label": "[I83.9] 下肢静脈瘤",
+    "sidebar_position": 10
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[I80.2] 深部静脈血栓症",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i802-dvt"
+  },
+  "next": {
+    "title": "[I70.2] 閉塞性動脈硬化症",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i702-aso-pad"
+  }
+}

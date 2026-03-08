@@ -1,0 +1,30 @@
+{
+  "id": "Chronic-Resp/j449",
+  "title": "[J44.9] COPD / 慢性閉塞性肺疾患",
+  "description": "主訴・ROS",
+  "source": "@site/docs/030-Chronic-Resp/j449.mdx",
+  "sourceDirName": "030-Chronic-Resp",
+  "slug": "/Chronic-Resp/j449",
+  "permalink": "/medical-wiki/docs/Chronic-Resp/j449",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/030-Chronic-Resp/j449.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "j449",
+    "title": "[J44.9] COPD / 慢性閉塞性肺疾患",
+    "sidebar_label": "[J44.9] COPD",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J46] 喘息発作重積状態",
+    "permalink": "/medical-wiki/docs/Chronic-Resp/j46-status-asthmaticus"
+  },
+  "next": {
+    "title": "[J45.9] 咳喘息",
+    "permalink": "/medical-wiki/docs/Chronic-Resp/j459-cough-variant-asthma"
+  }
+}

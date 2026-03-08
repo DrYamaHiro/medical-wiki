@@ -1,0 +1,30 @@
+{
+  "id": "Diabetes/e112-diabetic-kidney-disease-dkd",
+  "title": "[E11.2] 糖尿病性腎症 / Diabetic Kidney Disease / DKD",
+  "description": "主訴・ROS",
+  "source": "@site/docs/110-Diabetes/e112-diabetic-kidney-disease-dkd.mdx",
+  "sourceDirName": "110-Diabetes",
+  "slug": "/Diabetes/e112-diabetic-kidney-disease-dkd",
+  "permalink": "/medical-wiki/docs/Diabetes/e112-diabetic-kidney-disease-dkd",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/110-Diabetes/e112-diabetic-kidney-disease-dkd.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "e112-diabetic-kidney-disease-dkd",
+    "title": "[E11.2] 糖尿病性腎症 / Diabetic Kidney Disease / DKD",
+    "sidebar_label": "[E11.2] 糖尿病性腎症",
+    "sidebar_position": 8
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[G63.2] 糖尿病性神経障害",
+    "permalink": "/medical-wiki/docs/Diabetes/g632-diabetic-neuropathy"
+  },
+  "next": {
+    "title": "120: Dyslipidemia（脂質・尿酸・肥満）",
+    "permalink": "/medical-wiki/docs/category/120-dyslipidemia脂質尿酸肥満"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Pneumonia/j690-aspiration-pneumonia",
+  "title": "[J69.0] 誤嚥性肺炎 / Aspiration Pneumonia",
+  "description": "主訴・ROS",
+  "source": "@site/docs/020-Pneumonia/j690-aspiration-pneumonia.mdx",
+  "sourceDirName": "020-Pneumonia",
+  "slug": "/Pneumonia/j690-aspiration-pneumonia",
+  "permalink": "/medical-wiki/docs/Pneumonia/j690-aspiration-pneumonia",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/020-Pneumonia/j690-aspiration-pneumonia.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "j690-aspiration-pneumonia",
+    "title": "[J69.0] 誤嚥性肺炎 / Aspiration Pneumonia",
+    "sidebar_label": "[J69.0] 誤嚥性肺炎",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J15.7] マイコプラズマ肺炎",
+    "permalink": "/medical-wiki/docs/Pneumonia/j157-mycoplasma-pneumonia"
+  },
+  "next": {
+    "title": "[J20.9] 急性気管支炎",
+    "permalink": "/medical-wiki/docs/Pneumonia/j209-acute-bronchitis"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Skin/b081-molluscum-contagiosum",
+  "title": "[B08.1] 伝染性軟属腫・水イボ / Molluscum Contagiosum",
+  "description": "主訴・ROS",
+  "source": "@site/docs/340-Ped-Skin/b081-molluscum-contagiosum.mdx",
+  "sourceDirName": "340-Ped-Skin",
+  "slug": "/Ped-Skin/b081-molluscum-contagiosum",
+  "permalink": "/medical-wiki/docs/Ped-Skin/b081-molluscum-contagiosum",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/340-Ped-Skin/b081-molluscum-contagiosum.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "b081-molluscum-contagiosum",
+    "title": "[B08.1] 伝染性軟属腫・水イボ / Molluscum Contagiosum",
+    "sidebar_label": "[B08.1] 伝染性軟属腫・水イボ",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[L22] おむつ皮膚炎",
+    "permalink": "/medical-wiki/docs/Ped-Skin/l22-diaper-dermatitis"
+  },
+  "next": {
+    "title": "[T14.0] 虫刺され・ストロフルス",
+    "permalink": "/medical-wiki/docs/Ped-Skin/t140-insect-bite-strophulus"
+  }
+}

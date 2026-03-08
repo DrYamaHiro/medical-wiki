@@ -1,0 +1,30 @@
+{
+  "id": "Rhinitis/j329-chronic-sinusitis",
+  "title": "[J32.9] 慢性副鼻腔炎 / Chronic Sinusitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/040-Rhinitis/j329-chronic-sinusitis.mdx",
+  "sourceDirName": "040-Rhinitis",
+  "slug": "/Rhinitis/j329-chronic-sinusitis",
+  "permalink": "/medical-wiki/docs/Rhinitis/j329-chronic-sinusitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/040-Rhinitis/j329-chronic-sinusitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "j329-chronic-sinusitis",
+    "title": "[J32.9] 慢性副鼻腔炎 / Chronic Sinusitis",
+    "sidebar_label": "[J32.9] 慢性副鼻腔炎",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J01.9] 急性副鼻腔炎",
+    "permalink": "/medical-wiki/docs/Rhinitis/j019-acute-sinusitis"
+  },
+  "next": {
+    "title": "[J30.1] スギ花粉症 / 舌下免疫療法・導入",
+    "permalink": "/medical-wiki/docs/Rhinitis/j301-slit-cedar-induction"
+  }
+}

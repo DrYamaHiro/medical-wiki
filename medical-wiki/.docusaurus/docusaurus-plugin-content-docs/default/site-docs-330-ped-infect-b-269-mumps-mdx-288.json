@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Infect/b269-mumps",
+  "title": "[B26.9] 流行性耳下腺炎・おたふく風邪 / Mumps",
+  "description": "主訴・ROS",
+  "source": "@site/docs/330-Ped-Infect/b269-mumps.mdx",
+  "sourceDirName": "330-Ped-Infect",
+  "slug": "/Ped-Infect/b269-mumps",
+  "permalink": "/medical-wiki/docs/Ped-Infect/b269-mumps",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/330-Ped-Infect/b269-mumps.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "b269-mumps",
+    "title": "[B26.9] 流行性耳下腺炎・おたふく風邪 / Mumps",
+    "sidebar_label": "[B26.9] 流行性耳下腺炎・おたふく風邪",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[B08.2] 突発性発疹",
+    "permalink": "/medical-wiki/docs/Ped-Infect/b082-exanthem-subitum"
+  },
+  "next": {
+    "title": "[B01.9] 水痘・水ぼうそう",
+    "permalink": "/medical-wiki/docs/Ped-Infect/b019-varicella"
+  }
+}

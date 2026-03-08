@@ -1,4 +1,8 @@
 {
-  "label": "320 Hematology (血液疾患・貧血)",
-  "position": 33
+  "label": "320: Hematology（血液疾患・貧血）",
+  "position": 320,
+  "link": {
+    "type": "generated-index",
+    "description": "血液疾患・貧血の診療テンプレート一覧"
+  }
 }

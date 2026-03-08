@@ -1,0 +1,30 @@
+{
+  "id": "Emergency/t782-anaphylactic-shock",
+  "title": "[T78.2] アナフィラキシーショック / Anaphylactic Shock",
+  "description": "主訴・ROS",
+  "source": "@site/docs/600-Emergency/t782-anaphylactic-shock.mdx",
+  "sourceDirName": "600-Emergency",
+  "slug": "/Emergency/t782-anaphylactic-shock",
+  "permalink": "/medical-wiki/docs/Emergency/t782-anaphylactic-shock",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/600-Emergency/t782-anaphylactic-shock.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "t782-anaphylactic-shock",
+    "title": "[T78.2] アナフィラキシーショック / Anaphylactic Shock",
+    "sidebar_label": "[T78.2] アナフィラキシーショック",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[I46.9] 心肺機能停止",
+    "permalink": "/medical-wiki/docs/Emergency/i469-cardiopulmonary-arrest-cpa"
+  },
+  "next": {
+    "title": "700: Private（自由診療・美容）",
+    "permalink": "/medical-wiki/docs/category/700-private自由診療美容"
+  }
+}

@@ -1,4 +1,8 @@
 {
-  "label": "360 Ped-Checkup (小児健診・育児相談)",
-  "position": 37
+  "label": "360: Ped-Checkup（小児健診・育児相談）",
+  "position": 360,
+  "link": {
+    "type": "generated-index",
+    "description": "小児健診・育児相談の診療テンプレート一覧"
+  }
 }

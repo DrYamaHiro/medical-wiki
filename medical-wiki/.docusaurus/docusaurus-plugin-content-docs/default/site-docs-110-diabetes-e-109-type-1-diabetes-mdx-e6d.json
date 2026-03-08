@@ -1,0 +1,30 @@
+{
+  "id": "Diabetes/e109-type-1-diabetes",
+  "title": "[E10.9] 1型糖尿病 / Type 1 Diabetes",
+  "description": "主訴・ROS",
+  "source": "@site/docs/110-Diabetes/e109-type-1-diabetes.mdx",
+  "sourceDirName": "110-Diabetes",
+  "slug": "/Diabetes/e109-type-1-diabetes",
+  "permalink": "/medical-wiki/docs/Diabetes/e109-type-1-diabetes",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/110-Diabetes/e109-type-1-diabetes.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "e109-type-1-diabetes",
+    "title": "[E10.9] 1型糖尿病 / Type 1 Diabetes",
+    "sidebar_label": "[E10.9] 1型糖尿病",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[E14.0] 糖尿病・入院適応判断",
+    "permalink": "/medical-wiki/docs/Diabetes/e140-diabetes-admission-criteria"
+  },
+  "next": {
+    "title": "[E16.2] 低血糖症",
+    "permalink": "/medical-wiki/docs/Diabetes/e162-hypoglycemia"
+  }
+}

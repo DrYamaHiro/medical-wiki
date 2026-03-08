@@ -1,0 +1,30 @@
+{
+  "id": "Headache/g500-trigeminal-neuralgia",
+  "title": "[G50.0] 三叉神経痛 / Trigeminal Neuralgia",
+  "description": "主訴・ROS",
+  "source": "@site/docs/140-Headache/g500-trigeminal-neuralgia.mdx",
+  "sourceDirName": "140-Headache",
+  "slug": "/Headache/g500-trigeminal-neuralgia",
+  "permalink": "/medical-wiki/docs/Headache/g500-trigeminal-neuralgia",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/140-Headache/g500-trigeminal-neuralgia.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "g500-trigeminal-neuralgia",
+    "title": "[G50.0] 三叉神経痛 / Trigeminal Neuralgia",
+    "sidebar_label": "[G50.0] 三叉神経痛",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[G40.9] てんかん",
+    "permalink": "/medical-wiki/docs/Headache/g409-epilepsy"
+  },
+  "next": {
+    "title": "[M54.8] 後頭神経痛",
+    "permalink": "/medical-wiki/docs/Headache/m548-occipital-neuralgia"
+  }
+}

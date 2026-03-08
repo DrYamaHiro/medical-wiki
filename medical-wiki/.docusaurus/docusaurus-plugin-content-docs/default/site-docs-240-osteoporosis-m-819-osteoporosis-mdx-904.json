@@ -1,0 +1,30 @@
+{
+  "id": "Osteoporosis/m819-osteoporosis",
+  "title": "[M81.9] 骨粗鬆症 / Osteoporosis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/240-Osteoporosis/m819-osteoporosis.mdx",
+  "sourceDirName": "240-Osteoporosis",
+  "slug": "/Osteoporosis/m819-osteoporosis",
+  "permalink": "/medical-wiki/docs/Osteoporosis/m819-osteoporosis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/240-Osteoporosis/m819-osteoporosis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "m819-osteoporosis",
+    "title": "[M81.9] 骨粗鬆症 / Osteoporosis",
+    "sidebar_label": "[M81.9] 骨粗鬆症",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "240: Osteoporosis（骨粗鬆症）",
+    "permalink": "/medical-wiki/docs/category/240-osteoporosis骨粗鬆症"
+  },
+  "next": {
+    "title": "[M48.5] 脊椎圧迫骨折",
+    "permalink": "/medical-wiki/docs/Osteoporosis/m485-vertebral-compression-fracture"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Hematology/d51-megaloblastic-anemia",
+  "title": "[D51] 巨赤芽球性貧血 / Megaloblastic Anemia",
+  "description": "主訴・ROS",
+  "source": "@site/docs/320-Hematology/d51-megaloblastic-anemia.mdx",
+  "sourceDirName": "320-Hematology",
+  "slug": "/Hematology/d51-megaloblastic-anemia",
+  "permalink": "/medical-wiki/docs/Hematology/d51-megaloblastic-anemia",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/320-Hematology/d51-megaloblastic-anemia.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "d51-megaloblastic-anemia",
+    "title": "[D51] 巨赤芽球性貧血 / Megaloblastic Anemia",
+    "sidebar_label": "[D51] 巨赤芽球性貧血",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[D50.9] 鉄欠乏性貧血",
+    "permalink": "/medical-wiki/docs/Hematology/d509-iron-deficiency-anemia"
+  },
+  "next": {
+    "title": "[D63.8] 慢性疾患に伴う貧血",
+    "permalink": "/medical-wiki/docs/Hematology/d638-anemia-of-chronic-disease-acd"
+  }
+}

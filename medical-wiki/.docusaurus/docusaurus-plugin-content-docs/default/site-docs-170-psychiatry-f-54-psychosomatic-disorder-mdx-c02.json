@@ -1,0 +1,30 @@
+{
+  "id": "Psychiatry/f54-psychosomatic-disorder",
+  "title": "[F54] 心身症 / Psychosomatic Disorder",
+  "description": "主訴・ROS",
+  "source": "@site/docs/170-Psychiatry/f54-psychosomatic-disorder.mdx",
+  "sourceDirName": "170-Psychiatry",
+  "slug": "/Psychiatry/f54-psychosomatic-disorder",
+  "permalink": "/medical-wiki/docs/Psychiatry/f54-psychosomatic-disorder",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/170-Psychiatry/f54-psychosomatic-disorder.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "f54-psychosomatic-disorder",
+    "title": "[F54] 心身症 / Psychosomatic Disorder",
+    "sidebar_label": "[F54] 心身症",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[F43.2] 適応障害",
+    "permalink": "/medical-wiki/docs/Psychiatry/f432-adjustment-disorder"
+  },
+  "next": {
+    "title": "[F41.0] パニック障害",
+    "permalink": "/medical-wiki/docs/Psychiatry/f410-panic-disorder"
+  }
+}

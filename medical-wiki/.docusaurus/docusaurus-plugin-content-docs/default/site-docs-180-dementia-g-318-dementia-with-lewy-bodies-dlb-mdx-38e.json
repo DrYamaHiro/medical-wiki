@@ -1,0 +1,30 @@
+{
+  "id": "Dementia/g318-dementia-with-lewy-bodies-dlb",
+  "title": "[G31.8] レビー小体型認知症 / Dementia with Lewy Bodies / DLB",
+  "description": "主訴・ROS",
+  "source": "@site/docs/180-Dementia/g318-dementia-with-lewy-bodies-dlb.mdx",
+  "sourceDirName": "180-Dementia",
+  "slug": "/Dementia/g318-dementia-with-lewy-bodies-dlb",
+  "permalink": "/medical-wiki/docs/Dementia/g318-dementia-with-lewy-bodies-dlb",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/180-Dementia/g318-dementia-with-lewy-bodies-dlb.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "g318-dementia-with-lewy-bodies-dlb",
+    "title": "[G31.8] レビー小体型認知症 / Dementia with Lewy Bodies / DLB",
+    "sidebar_label": "[G31.8] レビー小体型認知症",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[G30.9] アルツハイマー型認知症",
+    "permalink": "/medical-wiki/docs/Dementia/g309-alzheimers-disease-ad"
+  },
+  "next": {
+    "title": "[F01.5] 血管性認知症",
+    "permalink": "/medical-wiki/docs/Dementia/f015-vascular-dementia-vad"
+  }
+}

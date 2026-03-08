@@ -1,0 +1,30 @@
+{
+  "id": "Diabetes/g632-diabetic-neuropathy",
+  "title": "[G63.2] 糖尿病性神経障害 / Diabetic Neuropathy",
+  "description": "主訴・ROS",
+  "source": "@site/docs/110-Diabetes/g632-diabetic-neuropathy.mdx",
+  "sourceDirName": "110-Diabetes",
+  "slug": "/Diabetes/g632-diabetic-neuropathy",
+  "permalink": "/medical-wiki/docs/Diabetes/g632-diabetic-neuropathy",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/110-Diabetes/g632-diabetic-neuropathy.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "g632-diabetic-neuropathy",
+    "title": "[G63.2] 糖尿病性神経障害 / Diabetic Neuropathy",
+    "sidebar_label": "[G63.2] 糖尿病性神経障害",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[E16.2] 低血糖症",
+    "permalink": "/medical-wiki/docs/Diabetes/e162-hypoglycemia"
+  },
+  "next": {
+    "title": "[E11.2] 糖尿病性腎症",
+    "permalink": "/medical-wiki/docs/Diabetes/e112-diabetic-kidney-disease-dkd"
+  }
+}

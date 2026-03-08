@@ -1,0 +1,30 @@
+{
+  "id": "Trauma/t20-burn",
+  "title": "[T20] 熱傷 / Burn",
+  "description": "主訴・ROS",
+  "source": "@site/docs/310-Trauma/t20-burn.mdx",
+  "sourceDirName": "310-Trauma",
+  "slug": "/Trauma/t20-burn",
+  "permalink": "/medical-wiki/docs/Trauma/t20-burn",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/310-Trauma/t20-burn.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "t20-burn",
+    "title": "[T20] 熱傷 / Burn",
+    "sidebar_label": "[T20] 熱傷",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[T14.1] 切創・挫創",
+    "permalink": "/medical-wiki/docs/Trauma/t141-open-wound-incised-laceration"
+  },
+  "next": {
+    "title": "[T14.1] 動物咬傷",
+    "permalink": "/medical-wiki/docs/Trauma/t141-animal-bites"
+  }
+}

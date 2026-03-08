@@ -1,0 +1,30 @@
+{
+  "id": "Gastroenteritis/a081-norovirus-gastroenteritis",
+  "title": "[A08.1] ノロウイルス腸炎 / Norovirus Gastroenteritis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/050-Gastroenteritis/a081-norovirus-gastroenteritis.mdx",
+  "sourceDirName": "050-Gastroenteritis",
+  "slug": "/Gastroenteritis/a081-norovirus-gastroenteritis",
+  "permalink": "/medical-wiki/docs/Gastroenteritis/a081-norovirus-gastroenteritis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/050-Gastroenteritis/a081-norovirus-gastroenteritis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "a081-norovirus-gastroenteritis",
+    "title": "[A08.1] ノロウイルス腸炎 / Norovirus Gastroenteritis",
+    "sidebar_label": "[A08.1] ノロウイルス腸炎",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[A09] 感染性胃腸炎",
+    "permalink": "/medical-wiki/docs/Gastroenteritis/a09-infectious-gastroenteritis"
+  },
+  "next": {
+    "title": "[A04.5] カンピロバクター腸炎",
+    "permalink": "/medical-wiki/docs/Gastroenteritis/a045-campylobacter-enteritis"
+  }
+}

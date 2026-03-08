@@ -1,0 +1,30 @@
+{
+  "id": "Trauma/t141-animal-bites",
+  "title": "[T14.1] 動物咬傷 / Animal Bites",
+  "description": "主訴・ROS",
+  "source": "@site/docs/310-Trauma/t141-animal-bites.mdx",
+  "sourceDirName": "310-Trauma",
+  "slug": "/Trauma/t141-animal-bites",
+  "permalink": "/medical-wiki/docs/Trauma/t141-animal-bites",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/310-Trauma/t141-animal-bites.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "t141-animal-bites",
+    "title": "[T14.1] 動物咬傷 / Animal Bites",
+    "sidebar_label": "[T14.1] 動物咬傷",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[T20] 熱傷",
+    "permalink": "/medical-wiki/docs/Trauma/t20-burn"
+  },
+  "next": {
+    "title": "[S00] 打撲・皮下血腫",
+    "permalink": "/medical-wiki/docs/Trauma/s00-contusion-hematoma"
+  }
+}

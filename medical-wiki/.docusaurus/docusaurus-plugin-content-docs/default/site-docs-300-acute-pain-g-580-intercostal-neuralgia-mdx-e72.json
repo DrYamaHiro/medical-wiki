@@ -1,0 +1,30 @@
+{
+  "id": "Acute-Pain/g580-intercostal-neuralgia",
+  "title": "[G58.0] 肋間神経痛 / Intercostal Neuralgia",
+  "description": "主訴・ROS",
+  "source": "@site/docs/300-Acute-Pain/g580-intercostal-neuralgia.mdx",
+  "sourceDirName": "300-Acute-Pain",
+  "slug": "/Acute-Pain/g580-intercostal-neuralgia",
+  "permalink": "/medical-wiki/docs/Acute-Pain/g580-intercostal-neuralgia",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/300-Acute-Pain/g580-intercostal-neuralgia.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "g580-intercostal-neuralgia",
+    "title": "[G58.0] 肋間神経痛 / Intercostal Neuralgia",
+    "sidebar_label": "[G58.0] 肋間神経痛",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[M54.9] 急性背部痛",
+    "permalink": "/medical-wiki/docs/Acute-Pain/m549-acute-back-pain"
+  },
+  "next": {
+    "title": "310: Trauma（外傷・外科処置）",
+    "permalink": "/medical-wiki/docs/category/310-trauma外傷外科処置"
+  }
+}

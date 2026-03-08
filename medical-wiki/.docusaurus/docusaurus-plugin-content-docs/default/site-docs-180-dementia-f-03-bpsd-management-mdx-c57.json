@@ -1,0 +1,30 @@
+{
+  "id": "Dementia/f03-bpsd-management",
+  "title": "[F03] 認知症・BPSD対応 / BPSD Management",
+  "description": "主訴・ROS",
+  "source": "@site/docs/180-Dementia/f03-bpsd-management.mdx",
+  "sourceDirName": "180-Dementia",
+  "slug": "/Dementia/f03-bpsd-management",
+  "permalink": "/medical-wiki/docs/Dementia/f03-bpsd-management",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/180-Dementia/f03-bpsd-management.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "f03-bpsd-management",
+    "title": "[F03] 認知症・BPSD対応 / BPSD Management",
+    "sidebar_label": "[F03] 認知症・BPSD対応",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[F06.7] 軽度認知障害",
+    "permalink": "/medical-wiki/docs/Dementia/f067-mild-cognitive-impairment-mci"
+  },
+  "next": {
+    "title": "[Z50.7] 介護保険主治医意見書作成",
+    "permalink": "/medical-wiki/docs/Dementia/z507-opinion-letter-for-long-term-care"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Vertigo/h811-bppv",
+  "title": "[H81.1] 良性発作性頭位めまい症 / BPPV",
+  "description": "主訴・ROS",
+  "source": "@site/docs/150-Vertigo/h811-bppv.mdx",
+  "sourceDirName": "150-Vertigo",
+  "slug": "/Vertigo/h811-bppv",
+  "permalink": "/medical-wiki/docs/Vertigo/h811-bppv",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/150-Vertigo/h811-bppv.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "h811-bppv",
+    "title": "[H81.1] 良性発作性頭位めまい症 / BPPV",
+    "sidebar_label": "[H81.1] 良性発作性頭位めまい症",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "150: Vertigo（めまい・末梢神経）",
+    "permalink": "/medical-wiki/docs/category/150-vertigoめまい末梢神経"
+  },
+  "next": {
+    "title": "[H81.0] メニエール病",
+    "permalink": "/medical-wiki/docs/Vertigo/h810-menieres-disease"
+  }
+}

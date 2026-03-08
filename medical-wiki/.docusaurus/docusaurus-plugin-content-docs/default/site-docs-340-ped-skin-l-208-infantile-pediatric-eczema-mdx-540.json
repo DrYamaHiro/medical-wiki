@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Skin/l208-infantile-pediatric-eczema",
+  "title": "[L20.8] 乳児湿疹・小児湿疹 / Infantile / Pediatric Eczema",
+  "description": "主訴・ROS",
+  "source": "@site/docs/340-Ped-Skin/l208-infantile-pediatric-eczema.mdx",
+  "sourceDirName": "340-Ped-Skin",
+  "slug": "/Ped-Skin/l208-infantile-pediatric-eczema",
+  "permalink": "/medical-wiki/docs/Ped-Skin/l208-infantile-pediatric-eczema",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/340-Ped-Skin/l208-infantile-pediatric-eczema.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "l208-infantile-pediatric-eczema",
+    "title": "[L20.8] 乳児湿疹・小児湿疹 / Infantile / Pediatric Eczema",
+    "sidebar_label": "[L20.8] 乳児湿疹・小児湿疹",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "340: Ped-Skin（小児皮膚・アレルギー）",
+    "permalink": "/medical-wiki/docs/category/340-ped-skin小児皮膚アレルギー"
+  },
+  "next": {
+    "title": "[L22] おむつ皮膚炎",
+    "permalink": "/medical-wiki/docs/Ped-Skin/l22-diaper-dermatitis"
+  }
+}

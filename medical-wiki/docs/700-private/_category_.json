@@ -1,4 +1,8 @@
 {
-  "label": "700 Private (自由診療・美容)",
-  "position": 41
+  "label": "700: Private（自由診療・美容）",
+  "position": 700,
+  "link": {
+    "type": "generated-index",
+    "description": "自由診療・美容の診療テンプレート一覧"
+  }
 }

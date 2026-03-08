@@ -1,0 +1,30 @@
+{
+  "id": "Prostate/e291-loh-syndrome",
+  "title": "[E29.1] 男性更年期障害 / LOH Syndrome",
+  "description": "主訴・ROS",
+  "source": "@site/docs/260-Prostate/e291-loh-syndrome.mdx",
+  "sourceDirName": "260-Prostate",
+  "slug": "/Prostate/e291-loh-syndrome",
+  "permalink": "/medical-wiki/docs/Prostate/e291-loh-syndrome",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/260-Prostate/e291-loh-syndrome.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "e291-loh-syndrome",
+    "title": "[E29.1] 男性更年期障害 / LOH Syndrome",
+    "sidebar_label": "[E29.1] 男性更年期障害",
+    "sidebar_position": 6
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[N48.4] 勃起不全",
+    "permalink": "/medical-wiki/docs/Prostate/n484-erectile-dysfunction-ed"
+  },
+  "next": {
+    "title": "270: Nephrology（慢性腎臓病 (CKD）",
+    "permalink": "/medical-wiki/docs/category/270-nephrology慢性腎臓病-ckd"
+  }
+}

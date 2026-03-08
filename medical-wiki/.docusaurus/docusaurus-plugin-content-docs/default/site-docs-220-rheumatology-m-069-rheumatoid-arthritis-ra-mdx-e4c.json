@@ -1,0 +1,30 @@
+{
+  "id": "Rheumatology/m069-rheumatoid-arthritis-ra",
+  "title": "[M06.9] 関節リウマチ / Rheumatoid Arthritis / RA",
+  "description": "主訴・ROS",
+  "source": "@site/docs/220-Rheumatology/m069-rheumatoid-arthritis-ra.mdx",
+  "sourceDirName": "220-Rheumatology",
+  "slug": "/Rheumatology/m069-rheumatoid-arthritis-ra",
+  "permalink": "/medical-wiki/docs/Rheumatology/m069-rheumatoid-arthritis-ra",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/220-Rheumatology/m069-rheumatoid-arthritis-ra.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "m069-rheumatoid-arthritis-ra",
+    "title": "[M06.9] 関節リウマチ / Rheumatoid Arthritis / RA",
+    "sidebar_label": "[M06.9] 関節リウマチ",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "220: Rheumatology（関節リウマチ・膠原病）",
+    "permalink": "/medical-wiki/docs/category/220-rheumatology関節リウマチ膠原病"
+  },
+  "next": {
+    "title": "[M35.3] リウマチ性多発筋痛症",
+    "permalink": "/medical-wiki/docs/Rheumatology/m353-polymyalgia-rheumatica-pmr"
+  }
+}

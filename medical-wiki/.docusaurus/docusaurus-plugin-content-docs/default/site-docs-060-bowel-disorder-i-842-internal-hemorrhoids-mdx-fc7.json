@@ -1,0 +1,30 @@
+{
+  "id": "Bowel-Disorder/i842-internal-hemorrhoids",
+  "title": "[I84.2] 内痔核 / Internal Hemorrhoids",
+  "description": "主訴・ROS",
+  "source": "@site/docs/060-Bowel-Disorder/i842-internal-hemorrhoids.mdx",
+  "sourceDirName": "060-Bowel-Disorder",
+  "slug": "/Bowel-Disorder/i842-internal-hemorrhoids",
+  "permalink": "/medical-wiki/docs/Bowel-Disorder/i842-internal-hemorrhoids",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/060-Bowel-Disorder/i842-internal-hemorrhoids.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "i842-internal-hemorrhoids",
+    "title": "[I84.2] 内痔核 / Internal Hemorrhoids",
+    "sidebar_label": "[I84.2] 内痔核",
+    "sidebar_position": 8
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K55.9] 虚血性大腸炎",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/k559-ischemic-colitis"
+  },
+  "next": {
+    "title": "[I84.5] 外痔核",
+    "permalink": "/medical-wiki/docs/Bowel-Disorder/i845-external-hemorrhoids"
+  }
+}

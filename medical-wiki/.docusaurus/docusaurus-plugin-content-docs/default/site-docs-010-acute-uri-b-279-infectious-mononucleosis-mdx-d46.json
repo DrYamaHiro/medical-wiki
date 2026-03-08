@@ -1,0 +1,30 @@
+{
+  "id": "Acute-URI/b279-infectious-mononucleosis",
+  "title": "[B27.9] 伝染性単核球症 / Infectious Mononucleosis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/010-Acute-URI/b279-infectious-mononucleosis.mdx",
+  "sourceDirName": "010-Acute-URI",
+  "slug": "/Acute-URI/b279-infectious-mononucleosis",
+  "permalink": "/medical-wiki/docs/Acute-URI/b279-infectious-mononucleosis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/010-Acute-URI/b279-infectious-mononucleosis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 11,
+  "frontMatter": {
+    "id": "b279-infectious-mononucleosis",
+    "title": "[B27.9] 伝染性単核球症 / Infectious Mononucleosis",
+    "sidebar_label": "[B27.9] 伝染性単核球症",
+    "sidebar_position": 11
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J05.1] 急性喉頭蓋炎",
+    "permalink": "/medical-wiki/docs/Acute-URI/j051-acute-epiglottitis"
+  },
+  "next": {
+    "title": "[B34.1] アデノウイルス感染症",
+    "permalink": "/medical-wiki/docs/Acute-URI/b341-adenovirus"
+  }
+}

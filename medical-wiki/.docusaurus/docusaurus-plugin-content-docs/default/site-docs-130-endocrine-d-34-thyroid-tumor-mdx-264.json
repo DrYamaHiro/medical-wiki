@@ -1,0 +1,30 @@
+{
+  "id": "Endocrine/d34-thyroid-tumor",
+  "title": "[D34] 甲状腺腫瘍 / Thyroid Tumor",
+  "description": "主訴・ROS",
+  "source": "@site/docs/130-Endocrine/d34-thyroid-tumor.mdx",
+  "sourceDirName": "130-Endocrine",
+  "slug": "/Endocrine/d34-thyroid-tumor",
+  "permalink": "/medical-wiki/docs/Endocrine/d34-thyroid-tumor",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/130-Endocrine/d34-thyroid-tumor.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "d34-thyroid-tumor",
+    "title": "[D34] 甲状腺腫瘍 / Thyroid Tumor",
+    "sidebar_label": "[D34] 甲状腺腫瘍",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[E06.1] 亜急性甲状腺炎",
+    "permalink": "/medical-wiki/docs/Endocrine/e061-subacute-thyroiditis"
+  },
+  "next": {
+    "title": "[E26.0] 原発性アルドステロン症",
+    "permalink": "/medical-wiki/docs/Endocrine/e260-primary-aldosteronism-pa"
+  }
+}

@@ -1,0 +1,172 @@
+================================================================
+06-MASTER-CATEGORY2-TESTS.txt
+検査セット (Lab/Img/Phy)
+生成日: 2026-02-17
+================================================================
+
+[ID: Lab-Gen-Influenza] | インフルエンザ抗原精密測定
+
+[ID: Lab-Gen-COVID] | 新型コロナウイルス抗原精密測定
+
+[ID: Lab-Gen-Strep] | A群ベータ溶連菌抗原定性
+
+[ID: Lab-Ped-Adeno] | アデノウイルス抗原精密測定
+
+[ID: Lab-Ped-RSV] | RSウイルス抗原精密測定
+
+[ID: Lab-Ped-hMPV] | ヒトメタニューモウイルス抗原精密測定
+
+[ID: Lab-Resp-Myco] | マイコプラズマ抗原精密測定
+
+[ID: Lab-Resp-PneuAg] | 尿中肺炎球菌抗原定性
+
+[ID: Lab-Resp-Legio] | 尿中レジオネラ抗原定性
+
+[ID: Lab-Der-Rapid-HSV] | 単純ヘルペスウイルス抗原定性
+
+[ID: Lab-Der-Rapid-VZV] | 水痘帯状疱疹ウイルス抗原定性
+
+[ID: Lab-Gen-Urine] | 尿定性・尿沈渣
+  使用先: 290-AP-03.txt, 510-AP-01.txt, 510-AP-02.txt
+
+[ID: Lab-Gen-CBC_CRP] | 末梢血一般(CBC), CRP (院内迅速)
+  使用先: 290-AP-05.txt
+
+[ID: Lab-Gen-Screen] | 全身スクリーニング
+  ・末梢血一般(CBC), 肝機能(AST/ALT/γGTP/ALP/Bil), 腎機能(Cre/eGFR/BUN/UA), 電解質(Na/K/Cl), 血糖, HbA1c, CRP, 脂質
+  使用先: 150-AP-05.txt, 290-AP-01.txt, 290-AP-02.txt, 290-AP-04.txt, 320-AP-03.txt, 510-AP-01.txt, 510-AP-03.txt
+
+[ID: Lab-Check-Employ] | 雇用時血液検査セット
+  ・CBC, AST, ALT, γGTP, LDL, HDL, TG, 血糖, HbA1c
+  使用先: 510-AP-02.txt
+
+[ID: Lab-Resp-AFB] | 結核・抗酸菌検査
+  ・喀痰抗酸菌塗抹・培養・同定・PCR
+  使用先: 020-AP-06.txt, 030-AP-07.txt
+
+[ID: Lab-Resp-KL6] | 間質性肺炎マーカー
+  ・KL-6, SP-D
+  使用先: 020-AP-07.txt
+
+[ID: Lab-Ent-Allergy-MAST36] | アレルギー検査(MAST36)
+  使用先: 040-AP-01.txt, 040-AP-02.txt, 040-AP-03.txt
+
+[ID: Lab-Ent-Allergy-View39] | アレルギー検査(View39)
+
+[ID: Lab-GI-HP-Ab] | ピロリ菌検査
+  ・血清ヘリコバクター・ピロリ抗体, ペプシノゲン
+  使用先: 050-AP-08.txt, 050-AP-10.txt, 320-AP-05.txt, 510-AP-03.txt
+
+[ID: Lab-GI-Calpro] | 腸炎マーカー
+  ・便中カルプロテクチン
+
+[ID: Lab-Hep-Full] | 肝臓詳細セット
+  ・AST/ALT/γGTP/Bil/ALP/Alb/PT/Plt/HBsAg/HCVAb
+  使用先: 070-AP-03.txt
+
+[ID: Lab-Hep-Tumor] | 腫瘍マーカーセット
+  ・AFP, PIVKA-II, CEA, CA19-9, PSA
+  使用先: 290-AP-04.txt, 510-AP-03.txt
+
+[ID: Lab-HT-Secondary] | 二次性高血圧セット
+  ・レニン活性(PRA), アルドステロン(PAC), コルチゾール, ACTH
+  使用先: 080-AP-02.txt, 080-AP-03.txt, 130-AP-06.txt
+
+[ID: Lab-CV-BNP] | 心不全マーカー
+  ・BNP (またはNT-proBNP)
+  使用先: 080-AP-04.txt, 290-AP-03.txt
+
+[ID: Lab-CV-Ddimer] | 血栓マーカー
+  ・Dダイマー
+  使用先: 090-AP-09.txt, 290-AP-03.txt
+
+[ID: Lab-DM-Full] | 糖尿病詳細セット
+  ・HbA1c, 血糖, 尿中微量アルブミン, 尿中ケトン体, CPR
+  使用先: 110-AP-08.txt, 270-AP-03.txt
+
+[ID: Lab-Endo-Thy-Screen] | 甲状腺スクリーニング
+  ・TSH, FT3, FT4
+  使用先: 130-AP-01.txt, 150-AP-05.txt, 290-AP-02.txt, 290-AP-03.txt
+
+[ID: Lab-Endo-Thy-Ab] | 甲状腺自己抗体
+  ・TRAb, TPOAb, TgAb
+
+[ID: Lab-Endo-Testo] | 男性ホルモン
+  ・遊離テストステロン(Free-T), PSA, LH, FSH
+  使用先: 260-AP-06.txt
+
+[ID: Lab-Dem-Screen] | 認知症スクリーニング
+  ・CBC, 肝・腎, 電解質, 血糖, HbA1c, TSH, FT4, VitB1, VitB12, 葉酸
+  使用先: 180-AP-01.txt
+
+[ID: Lab-Gyn-Hormone] | 女性ホルモンセット
+  ・E2, FSH, LH, PRL
+
+[ID: Lab-Der-TARC] | アトピーマーカー
+  ・TARC
+
+[ID: Lab-Der-KOH] | 真菌検査(外注)
+  ・真菌鏡検(KOH法)
+
+[ID: Lab-Der-Culture] | 細菌培養
+  ・一般細菌培養同定・感受性
+  使用先: 210-AP-06.txt
+
+[ID: Lab-Rheum-Screen] | リウマチ・膠原病スクリーニング
+  ・RF, 抗CCP抗体, MMP-3, 抗核抗体(ANA), CRP, ESR
+  使用先: 290-AP-01.txt
+
+[ID: Lab-Rheum-SLE] | SLE詳細
+  ・抗ds-DNA抗体, 補体(C3/C4), 血球, 尿定性
+  使用先: 220-AP-04.txt
+
+[ID: Lab-Rheum-Sjogren] | シェーグレン詳細
+  ・抗SS-A抗体, 抗SS-B抗体
+
+[ID: Lab-Ost-Marker] | 骨代謝マーカー
+  ・TRACP-5b, P1NP, 25(OH)VitD
+
+[ID: Lab-Uro-Culture] | 尿培養
+  ・尿培養・細菌同定・感受性
+  使用先: 290-AP-01.txt
+
+[ID: Lab-Uro-STD] | 性感染症(尿)
+  ・尿中淋菌・クラミジアPCR
+  使用先: 510-AP-03.txt
+
+[ID: Lab-Uro-STD-Pharynx] | 性感染症(咽頭)
+  ・咽頭淋菌・クラミジアPCR (うがい液)
+
+[ID: Lab-Hem-Iron] | 貧血・鉄代謝
+  ・血清鉄(Fe), UIBC, フェリチン
+  使用先: 320-AP-03.txt
+
+[ID: Lab-Hem-Vit] | ビタミン欠乏性貧血
+  ・ビタミンB12, 葉酸
+  使用先: 150-AP-05.txt
+
+[ID: Img-Gen-ChestXP] | 胸部単純X線撮影
+  使用先: 020-AP-07.txt, 030-AP-07.txt, 510-AP-02.txt
+
+[ID: Img-Gen-AbdomenXP] | 腹部単純X線撮影
+
+[ID: Img-Gen-SpineXP] | 胸腰椎単純X線撮影
+
+[ID: Img-Gen-AnkleXP] | アキレス腱軟部単純X線撮影
+  使用先: 120-AP-03.txt
+
+[ID: Phy-Gen-ECG] | 心電図（12誘導）
+  使用先: 080-AP-04.txt, 300-AP-02.txt, 510-AP-01.txt, 510-AP-02.txt
+
+[ID: Phy-Gen-Spiro] | 呼吸機能検査（スパイロメトリー）
+
+[ID: Phy-Ent-Audio] | 標準純音聴力検査
+  使用先: 280-AP-08.txt
+
+[ID: Phy-Resp-HSAT] | 携帯型睡眠時無呼吸検査（簡易検査・外注）
+  使用先: 160-AP-01.txt
+
+[ID: Phy-Resp-OCST] | 在宅睡眠時無呼吸検査（OCST・外注）
+  使用先: 160-AP-01.txt
+
+--- 合計: 53件 ---

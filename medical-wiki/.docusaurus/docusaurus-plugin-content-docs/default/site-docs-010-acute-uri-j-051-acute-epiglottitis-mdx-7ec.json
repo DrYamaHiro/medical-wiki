@@ -1,0 +1,30 @@
+{
+  "id": "Acute-URI/j051-acute-epiglottitis",
+  "title": "[J05.1] 急性喉頭蓋炎 / Acute Epiglottitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/010-Acute-URI/j051-acute-epiglottitis.mdx",
+  "sourceDirName": "010-Acute-URI",
+  "slug": "/Acute-URI/j051-acute-epiglottitis",
+  "permalink": "/medical-wiki/docs/Acute-URI/j051-acute-epiglottitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/010-Acute-URI/j051-acute-epiglottitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 10,
+  "frontMatter": {
+    "id": "j051-acute-epiglottitis",
+    "title": "[J05.1] 急性喉頭蓋炎 / Acute Epiglottitis",
+    "sidebar_label": "[J05.1] 急性喉頭蓋炎",
+    "sidebar_position": 10
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J36] 扁桃周囲膿瘍",
+    "permalink": "/medical-wiki/docs/Acute-URI/j36-peritonsillar-abscess"
+  },
+  "next": {
+    "title": "[B27.9] 伝染性単核球症",
+    "permalink": "/medical-wiki/docs/Acute-URI/b279-infectious-mononucleosis"
+  }
+}

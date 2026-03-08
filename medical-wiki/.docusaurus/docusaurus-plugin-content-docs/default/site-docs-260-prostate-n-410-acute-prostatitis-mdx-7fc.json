@@ -1,0 +1,30 @@
+{
+  "id": "Prostate/n410-acute-prostatitis",
+  "title": "[N41.0] 急性前立腺炎 / Acute Prostatitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/260-Prostate/n410-acute-prostatitis.mdx",
+  "sourceDirName": "260-Prostate",
+  "slug": "/Prostate/n410-acute-prostatitis",
+  "permalink": "/medical-wiki/docs/Prostate/n410-acute-prostatitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/260-Prostate/n410-acute-prostatitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "n410-acute-prostatitis",
+    "title": "[N41.0] 急性前立腺炎 / Acute Prostatitis",
+    "sidebar_label": "[N41.0] 急性前立腺炎",
+    "sidebar_position": 3
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[N32.8] 過活動膀胱",
+    "permalink": "/medical-wiki/docs/Prostate/n328-overactive-bladder-oab"
+  },
+  "next": {
+    "title": "[N41.1] 慢性前立腺炎・骨盤痛症候群",
+    "permalink": "/medical-wiki/docs/Prostate/n411-chronic-prostatitis-cpps"
+  }
+}

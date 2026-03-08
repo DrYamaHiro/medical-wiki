@@ -1,0 +1,30 @@
+{
+  "id": "Dyslipidemia/e780-high-ldl-cholesterol",
+  "title": "[E78.0] 高LDLコレステロール血症 / High LDL Cholesterol",
+  "description": "主訴・ROS",
+  "source": "@site/docs/120-Dyslipidemia/e780-high-ldl-cholesterol.mdx",
+  "sourceDirName": "120-Dyslipidemia",
+  "slug": "/Dyslipidemia/e780-high-ldl-cholesterol",
+  "permalink": "/medical-wiki/docs/Dyslipidemia/e780-high-ldl-cholesterol",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/120-Dyslipidemia/e780-high-ldl-cholesterol.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "e780-high-ldl-cholesterol",
+    "title": "[E78.0] 高LDLコレステロール血症 / High LDL Cholesterol",
+    "sidebar_label": "[E78.0] 高LDLコレステロール血症",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[E78.5] 脂質異常症",
+    "permalink": "/medical-wiki/docs/Dyslipidemia/e785-dyslipidemia"
+  },
+  "next": {
+    "title": "[E78.0] 家族性高コレステロール血症",
+    "permalink": "/medical-wiki/docs/Dyslipidemia/e780-familial-hypercholesterolemia-fh"
+  }
+}

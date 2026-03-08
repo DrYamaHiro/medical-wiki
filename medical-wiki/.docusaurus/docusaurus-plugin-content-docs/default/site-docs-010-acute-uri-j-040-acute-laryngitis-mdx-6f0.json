@@ -1,0 +1,30 @@
+{
+  "id": "Acute-URI/j040-acute-laryngitis",
+  "title": "[J04.0] 急性喉頭炎 / Acute Laryngitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/010-Acute-URI/j040-acute-laryngitis.mdx",
+  "sourceDirName": "010-Acute-URI",
+  "slug": "/Acute-URI/j040-acute-laryngitis",
+  "permalink": "/medical-wiki/docs/Acute-URI/j040-acute-laryngitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/010-Acute-URI/j040-acute-laryngitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "j040-acute-laryngitis",
+    "title": "[J04.0] 急性喉頭炎 / Acute Laryngitis",
+    "sidebar_label": "[J04.0] 急性喉頭炎",
+    "sidebar_position": 8
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[J02.9] 急性咽頭炎",
+    "permalink": "/medical-wiki/docs/Acute-URI/j029-acute-pharyngitis"
+  },
+  "next": {
+    "title": "[J36] 扁桃周囲膿瘍",
+    "permalink": "/medical-wiki/docs/Acute-URI/j36-peritonsillar-abscess"
+  }
+}

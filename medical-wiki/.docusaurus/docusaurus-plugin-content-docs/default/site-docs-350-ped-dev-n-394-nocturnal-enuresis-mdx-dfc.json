@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Dev/n394-nocturnal-enuresis",
+  "title": "[N39.4] 夜尿症 / Nocturnal Enuresis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/350-Ped-Dev/n394-nocturnal-enuresis.mdx",
+  "sourceDirName": "350-Ped-Dev",
+  "slug": "/Ped-Dev/n394-nocturnal-enuresis",
+  "permalink": "/medical-wiki/docs/Ped-Dev/n394-nocturnal-enuresis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/350-Ped-Dev/n394-nocturnal-enuresis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "n394-nocturnal-enuresis",
+    "title": "[N39.4] 夜尿症 / Nocturnal Enuresis",
+    "sidebar_label": "[N39.4] 夜尿症",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "350: Ped-Dev（小児発達・夜尿・OD）",
+    "permalink": "/medical-wiki/docs/category/350-ped-dev小児発達夜尿od"
+  },
+  "next": {
+    "title": "[F45.8] 起立性調節障害",
+    "permalink": "/medical-wiki/docs/Ped-Dev/f458-od"
+  }
+}

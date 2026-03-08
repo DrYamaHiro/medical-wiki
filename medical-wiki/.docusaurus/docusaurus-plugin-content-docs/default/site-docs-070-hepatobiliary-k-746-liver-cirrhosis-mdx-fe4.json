@@ -1,0 +1,30 @@
+{
+  "id": "Hepatobiliary/k746-liver-cirrhosis",
+  "title": "[K74.6] 肝硬変 / Liver Cirrhosis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/070-Hepatobiliary/k746-liver-cirrhosis.mdx",
+  "sourceDirName": "070-Hepatobiliary",
+  "slug": "/Hepatobiliary/k746-liver-cirrhosis",
+  "permalink": "/medical-wiki/docs/Hepatobiliary/k746-liver-cirrhosis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/070-Hepatobiliary/k746-liver-cirrhosis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "k746-liver-cirrhosis",
+    "title": "[K74.6] 肝硬変 / Liver Cirrhosis",
+    "sidebar_label": "[K74.6] 肝硬変",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K73] 慢性肝炎(B型 / C型)",
+    "permalink": "/medical-wiki/docs/Hepatobiliary/k73-chronic-hepatitis-b-c"
+  },
+  "next": {
+    "title": "[K80.2] 胆石症",
+    "permalink": "/medical-wiki/docs/Hepatobiliary/k802-cholelithiasis"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "Pneumonia/j849-interstitial-pneumonia",
+  "title": "[J84.9] 間質性肺炎 / Interstitial Pneumonia",
+  "description": "主訴・ROS",
+  "source": "@site/docs/020-Pneumonia/j849-interstitial-pneumonia.mdx",
+  "sourceDirName": "020-Pneumonia",
+  "slug": "/Pneumonia/j849-interstitial-pneumonia",
+  "permalink": "/medical-wiki/docs/Pneumonia/j849-interstitial-pneumonia",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/020-Pneumonia/j849-interstitial-pneumonia.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "j849-interstitial-pneumonia",
+    "title": "[J84.9] 間質性肺炎 / Interstitial Pneumonia",
+    "sidebar_label": "[J84.9] 間質性肺炎",
+    "sidebar_position": 7
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[A31.0] 非結核性抗酸菌症",
+    "permalink": "/medical-wiki/docs/Pneumonia/a310-ntm"
+  },
+  "next": {
+    "title": "030: Chronic-Resp（喘息・COPD・慢性咳嗽）",
+    "permalink": "/medical-wiki/docs/category/030-chronic-resp喘息copd慢性咳嗽"
+  }
+}

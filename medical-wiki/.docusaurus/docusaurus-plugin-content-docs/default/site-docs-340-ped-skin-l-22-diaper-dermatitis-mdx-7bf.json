@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Skin/l22-diaper-dermatitis",
+  "title": "[L22] おむつ皮膚炎 / Diaper Dermatitis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/340-Ped-Skin/l22-diaper-dermatitis.mdx",
+  "sourceDirName": "340-Ped-Skin",
+  "slug": "/Ped-Skin/l22-diaper-dermatitis",
+  "permalink": "/medical-wiki/docs/Ped-Skin/l22-diaper-dermatitis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/340-Ped-Skin/l22-diaper-dermatitis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "l22-diaper-dermatitis",
+    "title": "[L22] おむつ皮膚炎 / Diaper Dermatitis",
+    "sidebar_label": "[L22] おむつ皮膚炎",
+    "sidebar_position": 2
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[L20.8] 乳児湿疹・小児湿疹",
+    "permalink": "/medical-wiki/docs/Ped-Skin/l208-infantile-pediatric-eczema"
+  },
+  "next": {
+    "title": "[B08.1] 伝染性軟属腫・水イボ",
+    "permalink": "/medical-wiki/docs/Ped-Skin/b081-molluscum-contagiosum"
+  }
+}

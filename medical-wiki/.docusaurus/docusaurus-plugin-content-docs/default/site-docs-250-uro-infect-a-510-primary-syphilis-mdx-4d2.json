@@ -1,0 +1,30 @@
+{
+  "id": "Uro-Infect/a510-primary-syphilis",
+  "title": "[A51.0] 第1期梅毒 / Primary Syphilis",
+  "description": "主訴・ROS",
+  "source": "@site/docs/250-Uro-Infect/a510-primary-syphilis.mdx",
+  "sourceDirName": "250-Uro-Infect",
+  "slug": "/Uro-Infect/a510-primary-syphilis",
+  "permalink": "/medical-wiki/docs/Uro-Infect/a510-primary-syphilis",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/250-Uro-Infect/a510-primary-syphilis.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "a510-primary-syphilis",
+    "title": "[A51.0] 第1期梅毒 / Primary Syphilis",
+    "sidebar_label": "[A51.0] 第1期梅毒",
+    "sidebar_position": 5
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[A54.0] 淋菌感染症",
+    "permalink": "/medical-wiki/docs/Uro-Infect/a540-gonorrhea"
+  },
+  "next": {
+    "title": "[A51.3] 第2期梅毒",
+    "permalink": "/medical-wiki/docs/Uro-Infect/a513-secondary-syphilis"
+  }
+}

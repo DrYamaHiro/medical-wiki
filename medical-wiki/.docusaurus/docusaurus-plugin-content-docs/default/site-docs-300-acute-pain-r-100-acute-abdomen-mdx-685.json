@@ -1,0 +1,30 @@
+{
+  "id": "Acute-Pain/r100-acute-abdomen",
+  "title": "[R10.0] 急性腹症 / Acute Abdomen",
+  "description": "主訴・ROS",
+  "source": "@site/docs/300-Acute-Pain/r100-acute-abdomen.mdx",
+  "sourceDirName": "300-Acute-Pain",
+  "slug": "/Acute-Pain/r100-acute-abdomen",
+  "permalink": "/medical-wiki/docs/Acute-Pain/r100-acute-abdomen",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/300-Acute-Pain/r100-acute-abdomen.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "r100-acute-abdomen",
+    "title": "[R10.0] 急性腹症 / Acute Abdomen",
+    "sidebar_label": "[R10.0] 急性腹症",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "300: Acute-Pain（急性腹症・胸痛・背部痛トリアージ）",
+    "permalink": "/medical-wiki/docs/category/300-acute-pain急性腹症胸痛背部痛トリアージ"
+  },
+  "next": {
+    "title": "[R07.4] 胸痛 (Chest Pain) / ACS疑い",
+    "permalink": "/medical-wiki/docs/Acute-Pain/r074-chest-pain-acs"
+  }
+}

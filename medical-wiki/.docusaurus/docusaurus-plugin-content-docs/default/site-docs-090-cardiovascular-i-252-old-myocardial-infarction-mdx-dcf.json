@@ -1,0 +1,30 @@
+{
+  "id": "Cardiovascular/i252-old-myocardial-infarction",
+  "title": "[I25.2] 陳旧性心筋梗塞 / Old Myocardial Infarction",
+  "description": "主訴・ROS",
+  "source": "@site/docs/090-Cardiovascular/i252-old-myocardial-infarction.mdx",
+  "sourceDirName": "090-Cardiovascular",
+  "slug": "/Cardiovascular/i252-old-myocardial-infarction",
+  "permalink": "/medical-wiki/docs/Cardiovascular/i252-old-myocardial-infarction",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/090-Cardiovascular/i252-old-myocardial-infarction.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "i252-old-myocardial-infarction",
+    "title": "[I25.2] 陳旧性心筋梗塞 / Old Myocardial Infarction",
+    "sidebar_label": "[I25.2] 陳旧性心筋梗塞",
+    "sidebar_position": 8
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[I38] 弁膜症",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i38-valvular-heart-disease"
+  },
+  "next": {
+    "title": "[I80.2] 深部静脈血栓症",
+    "permalink": "/medical-wiki/docs/Cardiovascular/i802-dvt"
+  }
+}

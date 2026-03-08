@@ -1,0 +1,30 @@
+{
+  "id": "Ped-Dev/f900-pediatric-adhd",
+  "title": "[F90.0] 注意欠如・多動症 (Pediatric ADHD) / 疑い・紹介",
+  "description": "主訴・ROS",
+  "source": "@site/docs/350-Ped-Dev/f900-pediatric-adhd.mdx",
+  "sourceDirName": "350-Ped-Dev",
+  "slug": "/Ped-Dev/f900-pediatric-adhd",
+  "permalink": "/medical-wiki/docs/Ped-Dev/f900-pediatric-adhd",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/350-Ped-Dev/f900-pediatric-adhd.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "f900-pediatric-adhd",
+    "title": "[F90.0] 注意欠如・多動症 (Pediatric ADHD) / 疑い・紹介",
+    "sidebar_label": "[F90.0] 注意欠如・多動症 (Pediatric ADHD) / 疑い・紹介",
+    "sidebar_position": 4
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "[K59.0] 小児便秘症",
+    "permalink": "/medical-wiki/docs/Ped-Dev/k590-pediatric-constipation"
+  },
+  "next": {
+    "title": "360: Ped-Checkup（小児健診・育児相談）",
+    "permalink": "/medical-wiki/docs/category/360-ped-checkup小児健診育児相談"
+  }
+}

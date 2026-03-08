@@ -1,0 +1,30 @@
+{
+  "id": "Trauma/t141-open-wound-incised-laceration",
+  "title": "[T14.1] 切創・挫創 / Open Wound: Incised / Laceration",
+  "description": "主訴・ROS",
+  "source": "@site/docs/310-Trauma/t141-open-wound-incised-laceration.mdx",
+  "sourceDirName": "310-Trauma",
+  "slug": "/Trauma/t141-open-wound-incised-laceration",
+  "permalink": "/medical-wiki/docs/Trauma/t141-open-wound-incised-laceration",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/dryamahiro/medical-wiki/tree/main/docs/310-Trauma/t141-open-wound-incised-laceration.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "t141-open-wound-incised-laceration",
+    "title": "[T14.1] 切創・挫創 / Open Wound: Incised / Laceration",
+    "sidebar_label": "[T14.1] 切創・挫創",
+    "sidebar_position": 1
+  },
+  "sidebar": "medicalSidebar",
+  "previous": {
+    "title": "310: Trauma（外傷・外科処置）",
+    "permalink": "/medical-wiki/docs/category/310-trauma外傷外科処置"
+  },
+  "next": {
+    "title": "[T20] 熱傷",
+    "permalink": "/medical-wiki/docs/Trauma/t20-burn"
+  }
+}
