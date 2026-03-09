@@ -10,6 +10,9 @@ keywords: ["りんぱ節腫脹", "りんぱ", "R59.9", "lymphadenopathy"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 **全身症状**
@@ -63,12 +66,16 @@ Virchow節: 触知 / なし ；左鎖骨上窩
 
 **院内迅速検査**
 
-- 尿定性
-- 末梢血一般(CBC), CRP
+- <span className="med-id">[Lab-Gen-Urine]</span> 尿定性
+- <span className="med-id">[Lab-Gen-CBC_CRP]</span> 末梢血一般(CBC), CRP
 
 **画像**
 
-- 胸部単純X線撮影
+- <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -90,7 +97,7 @@ Virchow節: 触知 / なし ；左鎖骨上窩
 
 **精査・紹介**
 
-- 末梢血一般(CBC), CRP (院内) ※LDH, sIL-2R追加検討(外注)
+- <span className="med-id">[Lab-Gen-CBC_CRP]</span> 末梢血一般(CBC), CRP (院内) ※LDH, sIL-2R追加検討(外注)
 
 #### 指導・計画
 

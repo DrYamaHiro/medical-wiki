@@ -10,6 +10,9 @@ keywords: ["Z00.0", "general", "health", "checkup"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 目的: 特定健診 / 雇用時健診 / 診断書作成 / 抗体検査 / 予防接種相談
@@ -46,6 +49,10 @@ keywords: ["Z00.0", "general", "health", "checkup"]
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - 個人の希望による健康診断（定期チェック等）。
@@ -58,15 +65,15 @@ keywords: ["Z00.0", "general", "health", "checkup"]
 
 **基本セット**
 
-- 全身スクリーニング
+- <span className="med-id">[Lab-Gen-Screen]</span> 全身スクリーニング
 - 末梢血一般(CBC), 肝機能(AST/ALT/γGTP/ALP/Bil), 腎機能(Cre/eGFR/BUN/UA), 電解質(Na/K/Cl), 血糖, HbA1c, CRP, 脂質
 
 **オプション (希望時追加)**
 
-- 腫瘍マーカーセット
+- <span className="med-id">[Lab-Hep-Tumor]</span> 腫瘍マーカーセット
 - AFP, PIVKA-II, CEA, CA19-9, PSA
-- 性感染症(尿) ；梅毒/HIV/肝炎セットなど適宜組み合わせ
-- ピロリ菌検査 ；ABC検診用
+- <span className="med-id">[Lab-Uro-STD]</span> 性感染症(尿) ；梅毒/HIV/肝炎セットなど適宜組み合わせ
+- <span className="med-id">[Lab-GI-HP-Ab]</span> ピロリ菌検査 ；ABC検診用
 
 > 💡 **Dr.Advice**
 >

@@ -10,6 +10,9 @@ keywords: ["R60.9", "edema"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 **全身症状**
@@ -63,12 +66,16 @@ Virchow節: 触知 / なし ；左鎖骨上窩
 
 **院内迅速検査**
 
-- 尿定性
-- 末梢血一般(CBC), CRP
+- <span className="med-id">[Lab-Gen-Urine]</span> 尿定性
+- <span className="med-id">[Lab-Gen-CBC_CRP]</span> 末梢血一般(CBC), CRP
 
 **画像**
 
-- 胸部単純X線撮影
+- <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -84,12 +91,12 @@ Virchow節: 触知 / なし ；左鎖骨上窩
 
 **スクリーニング検査 (外注)**
 
-- 心不全マーカー
+- <span className="med-id">[Lab-CV-BNP]</span> 心不全マーカー
 - BNP (またはNT-proBNP)
-- 血栓マーカー
+- <span className="med-id">[Lab-CV-Ddimer]</span> 血栓マーカー
 - Dダイマー ；DVT除外用
-- 尿定性 ；蛋白尿チェック
-- 甲状腺スクリーニング ；粘液水腫除外
+- <span className="med-id">[Lab-Gen-Urine]</span> 尿定性 ；蛋白尿チェック
+- <span className="med-id">[Lab-Endo-Thy-Screen]</span> 甲状腺スクリーニング ；粘液水腫除外
 
 **対症療法 (1つ選択)**
 

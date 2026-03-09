@@ -10,6 +10,9 @@ keywords: ["E11.2", "diabetic", "kidney", "disease", "dkd"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 検診異常 / 口渇 / 多飲 / 多尿 / 体重減少 / だるさ
@@ -60,6 +63,10 @@ CPR(インスリン分泌能), 尿中微量アルブミン
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - **診断根拠:** 糖尿病歴、網膜症の合併（一般的）、微量アルブミン尿～顕性蛋白尿。
@@ -80,7 +87,7 @@ CPR(インスリン分泌能), 尿中微量アルブミン
 
 **検査オーダー**
 
-- 糖尿病詳細セット
+- <span className="med-id">[Lab-DM-Full]</span> 糖尿病詳細セット
 - HbA1c, 血糖, 尿中微量アルブミン, 尿中ケトン体, CPR (外注)
 
 > 💡 **Dr.Advice**

@@ -10,6 +10,9 @@ keywords: ["I15", "secondary", "hypertension"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 検診異常 / 自宅血圧高値 / 頭痛 / 肩こり / めまい / 動悸
@@ -44,6 +47,10 @@ keywords: ["I15", "secondary", "hypertension"]
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - **診断根拠:** 若年発症(&lt;35歳)、治療抵抗性、低カリウム血症、急激な発症。
@@ -58,7 +65,7 @@ keywords: ["I15", "secondary", "hypertension"]
 
 **スクリーニングセット**
 
-- 二次性高血圧セット
+- <span className="med-id">[Lab-HT-Secondary]</span> 二次性高血圧セット
 - レニン活性(PRA), アルドステロン(PAC), コルチゾール, ACTH
 - **紹介先:** 内分泌内科・循環器内科
 

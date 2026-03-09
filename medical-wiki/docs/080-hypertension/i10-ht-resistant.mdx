@@ -10,6 +10,9 @@ keywords: ["I10", "ht", "resistant"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 検診異常 / 自宅血圧高値 / 頭痛 / 肩こり / めまい / 動悸
@@ -44,6 +47,10 @@ keywords: ["I10", "ht", "resistant"]
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - **定義:** 利尿薬を含む3剤以上を使用しても目標血圧未達。
@@ -70,7 +77,7 @@ keywords: ["I10", "ht", "resistant"]
 
 **精査オーダー**
 
-- 二次性高血圧セット
+- <span className="med-id">[Lab-HT-Secondary]</span> 二次性高血圧セット
 - レニン活性(PRA), アルドステロン(PAC), コルチゾール, ACTH
 - **紹介先:** 専門医療機関（SAS・副腎腫瘍精査）
 

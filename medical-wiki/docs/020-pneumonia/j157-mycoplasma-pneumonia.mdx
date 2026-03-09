@@ -10,6 +10,9 @@ keywords: ["まいこぷらずま肺炎", "まいこぷらずま", "J15.7", "myc
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 発熱 / 咳嗽 / 膿性喀痰 / 呼吸困難 / 胸痛 / 全身倦怠感 / 食欲不振
@@ -58,19 +61,23 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 
 **胸部X線**
 
-- 胸部単純X線撮影
+- <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 
 **迅速検査**
 
-- マイコプラズマ抗原精密測定
-- 尿中肺炎球菌抗原定性
-- 尿中レジオネラ抗原定性
-- 新型コロナウイルス抗原精密測定
-- インフルエンザ抗原精密測定
+- <span className="med-id">[Lab-Resp-Myco]</span> マイコプラズマ抗原精密測定
+- <span className="med-id">[Lab-Resp-PneuAg]</span> 尿中肺炎球菌抗原定性
+- <span className="med-id">[Lab-Resp-Legio]</span> 尿中レジオネラ抗原定性
+- <span className="med-id">[Lab-Gen-COVID]</span> 新型コロナウイルス抗原精密測定
+- <span className="med-id">[Lab-Gen-Influenza]</span> インフルエンザ抗原精密測定
 
 **血液検査**
 
-- 末梢血一般(CBC), CRP
+- <span className="med-id">[Lab-Gen-CBC_CRP]</span> 末梢血一般(CBC), CRP
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 

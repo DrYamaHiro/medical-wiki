@@ -10,6 +10,9 @@ keywords: ["家族性高これすてろーる血症", "これすてろーる", "
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 検診異常[脂質・尿酸・肥満] / 痛風発作 / 体重増加
@@ -46,8 +49,12 @@ keywords: ["家族性高これすてろーる血症", "これすてろーる", "
 
 **検査 (外注)**
 
-- 全身スクリーニング
-- 甲状腺スクリーニング
+- <span className="med-id">[Lab-Gen-Screen]</span> 全身スクリーニング
+- <span className="med-id">[Lab-Endo-Thy-Screen]</span> 甲状腺スクリーニング
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -73,7 +80,7 @@ keywords: ["家族性高これすてろーる血症", "これすてろーる", "
 
 **画像診断**
 
-- アキレス腱軟部単純X線撮影
+- <span className="med-id">[Img-Gen-AnkleXP]</span> アキレス腱軟部単純X線撮影
 
 **紹介**
 

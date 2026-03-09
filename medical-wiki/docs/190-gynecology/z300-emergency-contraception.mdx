@@ -10,6 +10,9 @@ keywords: ["Z30.0", "emergency", "contraception"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: ホットフラッシュ / のぼせ / 多汗 / 不眠 / イライラ / 下腹部痛 / 腰痛 / 不正出血 / 帯下異常 / 外陰部痒み / 乳房しこり
@@ -60,9 +63,13 @@ CVA叩打痛: 有 / 無 ；腎盂腎炎除外
 
 **検査**
 
-- 女性ホルモンセット(E2, FSH, LH, PRL)
-- 貧血・鉄代謝(Hb, Ferritin)
-- 甲状腺スクリーニング(TSH, FT4)
+- <span className="med-id">[Lab-Gyn-Hormone]</span> 女性ホルモンセット(E2, FSH, LH, PRL)
+- <span className="med-id">[Lab-Hem-Iron]</span> 貧血・鉄代謝(Hb, Ferritin)
+- <span className="med-id">[Lab-Endo-Thy-Screen]</span> 甲状腺スクリーニング(TSH, FT4)
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 

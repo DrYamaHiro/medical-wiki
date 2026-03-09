@@ -261,6 +261,95 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
 }
 
 /* =========================================================
+   S/O 折りたたみ (details/summary)
+   ========================================================= */
+details.so-details {
+  margin: 0 0 1rem 0;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+summary.so-summary {
+  cursor: pointer;
+  padding: 0.55rem 1rem;
+  background: var(--ifm-color-emphasis-100);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--ifm-color-emphasis-700);
+  list-style: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+summary.so-summary::-webkit-details-marker { display: none; }
+summary.so-summary::marker { display: none; }
+
+summary.so-summary::after {
+  content: "▼ 表示";
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-500);
+}
+
+details.so-details[open] > summary.so-summary::after {
+  content: "▲ 非表示";
+}
+
+details.so-details > :not(summary) {
+  padding: 0 1rem 0.5rem 1rem;
+}
+
+[data-theme='dark'] summary.so-summary {
+  background: var(--ifm-color-emphasis-200);
+}
+
+/* =========================================================
+   IDコード表示トグル
+   ========================================================= */
+.med-id {
+  display: none;
+  font-family: ui-monospace, 'Courier New', monospace;
+  font-size: 0.72em;
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-600);
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.show-ids .med-id {
+  display: inline;
+}
+
+.toggle-id-btn {
+  cursor: pointer;
+  padding: 0.28rem 0.75rem;
+  font-size: 0.78rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 0.75rem;
+  transition: background 0.15s;
+}
+
+.toggle-id-btn:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] .toggle-id-btn {
+  background: var(--ifm-color-emphasis-200);
+  border-color: var(--ifm-color-emphasis-400);
+}
+
+[data-theme='dark'] .toggle-id-btn:hover {
+  background: var(--ifm-color-emphasis-300);
+}
+
+/* =========================================================
    印刷スタイル (外来での使用を想定)
    ========================================================= */
 @media print {
@@ -268,7 +357,16 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   .footer,
   .table-of-contents,
   .pagination-nav,
-  .col--5 {
+  .col--5,
+  .toggle-id-btn {
+    display: none !important;
+  }
+
+  /* 折りたたみを展開して印刷 */
+  details.so-details {
+    border: none !important;
+  }
+  details.so-details > summary.so-summary {
     display: none !important;
   }
 

@@ -10,6 +10,9 @@ keywords: ["RSういるす感染症", "ういるす", "J21.0", "rs", "virus", "i
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 発熱: あり ＿℃ / なし
@@ -63,12 +66,16 @@ COVID-19 陽性 / 陰性
 
 **迅速検査**
 
-- RSウイルス
-- アデノウイルス
-- ヒトメタニューモ
-- 溶連菌
-- インフルエンザ
-- COVID-19
+- <span className="med-id">[Lab-Ped-RSV]</span> RSウイルス
+- <span className="med-id">[Lab-Ped-Adeno]</span> アデノウイルス
+- <span className="med-id">[Lab-Ped-hMPV]</span> ヒトメタニューモ
+- <span className="med-id">[Lab-Gen-Strep]</span> 溶連菌
+- <span className="med-id">[Lab-Gen-Influenza]</span> インフルエンザ
+- <span className="med-id">[Lab-Gen-COVID]</span> COVID-19
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 

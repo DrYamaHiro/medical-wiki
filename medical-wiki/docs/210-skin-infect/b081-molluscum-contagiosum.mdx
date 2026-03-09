@@ -10,6 +10,9 @@ keywords: ["B08.1", "molluscum", "contagiosum", "水イボ"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 痒み / 痛み / 水疱 / 膿疱 / しこり / イボ
@@ -42,10 +45,14 @@ keywords: ["B08.1", "molluscum", "contagiosum", "水イボ"]
 
 **検査**
 
-- 真菌鏡検(KOH法)
-- 細菌培養同定・感受性
-- 単純ヘルペスウイルス抗原定性
-- 水痘帯状疱疹ウイルス抗原定性
+- <span className="med-id">[Lab-Der-KOH]</span> 真菌鏡検(KOH法)
+- <span className="med-id">[Lab-Der-Culture]</span> 細菌培養同定・感受性
+- <span className="med-id">[Lab-Der-Rapid-HSV]</span> 単純ヘルペスウイルス抗原定性
+- <span className="med-id">[Lab-Der-Rapid-VZV]</span> 水痘帯状疱疹ウイルス抗原定性
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 

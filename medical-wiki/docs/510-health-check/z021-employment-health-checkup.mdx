@@ -10,6 +10,9 @@ keywords: ["Z02.1", "employment", "health", "checkup"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 目的: 特定健診 / 雇用時健診 / 診断書作成 / 抗体検査 / 予防接種相談
@@ -46,6 +49,10 @@ keywords: ["Z02.1", "employment", "health", "checkup"]
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - 労働安全衛生規則第43条に基づく雇入時健康診断。
@@ -60,11 +67,11 @@ keywords: ["Z02.1", "employment", "health", "checkup"]
 
 **雇用時健診セット**
 
-- 胸部単純X線撮影
-- 心電図（12誘導）
-- 雇用時血液検査セット
+- <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
+- <span className="med-id">[Phy-Gen-ECG]</span> 心電図（12誘導）
+- <span className="med-id">[Lab-Check-Employ]</span> 雇用時血液検査セット
 - CBC, AST, ALT, γGTP, LDL, HDL, TG, 血糖, HbA1c
-- 尿定性・尿沈渣
+- <span className="med-id">[Lab-Gen-Urine]</span> 尿定性・尿沈渣
 
 > 💡 **Dr.Advice**
 >

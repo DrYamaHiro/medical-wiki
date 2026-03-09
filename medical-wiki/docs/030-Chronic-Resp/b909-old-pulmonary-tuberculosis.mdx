@@ -10,6 +10,9 @@ keywords: ["B90.9", "old", "pulmonary", "tuberculosis"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 咳嗽 / 喀痰 / 喘鳴 / 呼吸困難
@@ -51,11 +54,15 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 **呼吸機能検査 (スパイロ)**
 
-- 呼吸機能検査（スパイロメトリー）
+- <span className="med-id">[Phy-Gen-Spiro]</span> 呼吸機能検査（スパイロメトリー）
 
 **画像**
 
-- 胸部単純X線撮影
+- <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -71,8 +78,8 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 **フォローアップ検査**
 
-- 胸部単純X線撮影
-- 結核・抗酸菌検査
+- <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
+- <span className="med-id">[Lab-Resp-AFB]</span> 結核・抗酸菌検査
 - 喀痰抗酸菌塗抹・培養・同定・PCR (外注)
 
 > 💡 **Dr.Advice**

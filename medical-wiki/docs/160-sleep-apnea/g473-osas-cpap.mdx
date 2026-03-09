@@ -10,6 +10,9 @@ keywords: ["G47.3"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 **睡眠関連**
@@ -57,8 +60,12 @@ Mallampati分類: Class I / II / III / IV
 
 **検査 (外注予定)**
 
-- 携帯型睡眠時無呼吸検査（簡易検査）
-- 在宅睡眠時無呼吸検査（OCST/フルPSG）
+- <span className="med-id">[Phy-Resp-HSAT]</span> 携帯型睡眠時無呼吸検査（簡易検査）
+- <span className="med-id">[Phy-Resp-OCST]</span> 在宅睡眠時無呼吸検査（OCST/フルPSG）
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 

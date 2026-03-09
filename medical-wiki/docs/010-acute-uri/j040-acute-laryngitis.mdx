@@ -10,6 +10,9 @@ keywords: ["J04.0", "acute", "laryngitis"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 発熱 / 咽頭痛 / 咳嗽 / 鼻汁 / 喀痰 / 頭痛 / 倦怠感 / 関節痛 / 悪寒 / 呼吸困難
@@ -64,14 +67,18 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 **迅速検査**
 
-- インフルエンザ抗原精密測定
-- 新型コロナウイルス抗原精密測定
-- A群ベータ溶連菌抗原定性
-- アデノウイルス抗原精密測定
+- <span className="med-id">[Lab-Gen-Influenza]</span> インフルエンザ抗原精密測定
+- <span className="med-id">[Lab-Gen-COVID]</span> 新型コロナウイルス抗原精密測定
+- <span className="med-id">[Lab-Gen-Strep]</span> A群ベータ溶連菌抗原定性
+- <span className="med-id">[Lab-Ped-Adeno]</span> アデノウイルス抗原精密測定
 
 **画像 (必要時)**
 
-- 胸部単純X線撮影
+- <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 

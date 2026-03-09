@@ -10,6 +10,9 @@ keywords: ["S00", "contusion", "hematoma"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 受傷機転: 転倒 / 切創[ナイフ・ガラス] / 打撲 / 咬傷 / 刺傷
@@ -51,7 +54,11 @@ keywords: ["S00", "contusion", "hematoma"]
 
 **画像**
 
-- 単純X線
+- <span className="med-id">[Img-Gen-ChestXP]</span> 単純X線
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 

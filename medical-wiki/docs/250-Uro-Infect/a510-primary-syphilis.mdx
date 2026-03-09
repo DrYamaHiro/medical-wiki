@@ -10,6 +10,9 @@ keywords: ["A51.0", "primary", "syphilis"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 **排尿症状**
@@ -54,13 +57,17 @@ keywords: ["A51.0", "primary", "syphilis"]
 
 **院内迅速検査**
 
-- 尿定性・尿沈渣
+- <span className="med-id">[Lab-Gen-Urine]</span> 尿定性・尿沈渣
 
 **外注検査**
 
-- 尿培養
-- 性感染症(尿)
-- 性感染症(咽頭)
+- <span className="med-id">[Lab-Uro-Culture]</span> 尿培養
+- <span className="med-id">[Lab-Uro-STD]</span> 性感染症(尿)
+- <span className="med-id">[Lab-Uro-STD-Pharynx]</span> 性感染症(咽頭)
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 

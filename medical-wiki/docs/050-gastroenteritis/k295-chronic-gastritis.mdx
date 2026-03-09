@@ -10,6 +10,9 @@ keywords: ["K29.5", "chronic", "gastritis"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 腹痛 / 悪心・嘔吐 / 下痢 / 便秘 / 血便 / 吐血 / 心窩部不快感
@@ -59,6 +62,10 @@ keywords: ["K29.5", "chronic", "gastritis"]
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - **診断根拠:** 慢性的な心窩部不快感。
@@ -74,7 +81,7 @@ keywords: ["K29.5", "chronic", "gastritis"]
 
 **検査**
 
-- ピロリ菌検査
+- <span className="med-id">[Lab-GI-HP-Ab]</span> ピロリ菌検査
 - 血清ヘリコバクター・ピロリ抗体 (外注)
 
 **対症療法**

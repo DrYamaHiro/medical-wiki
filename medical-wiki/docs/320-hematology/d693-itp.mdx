@@ -10,6 +10,9 @@ keywords: ["D69.3", "itp"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 **貧血症状**
@@ -53,12 +56,16 @@ keywords: ["D69.3", "itp"]
 
 **院内迅速検査**
 
-- 末梢血一般(CBC)
+- <span className="med-id">[Lab-Gen-CBC_CRP]</span> 末梢血一般(CBC)
 
 **外注検査**
 
-- 貧血・鉄代謝
-- ビタミン欠乏性貧血
+- <span className="med-id">[Lab-Hem-Iron]</span> 貧血・鉄代謝
+- <span className="med-id">[Lab-Hem-Vit]</span> ビタミン欠乏性貧血
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -79,7 +86,7 @@ keywords: ["D69.3", "itp"]
 
 **検査・紹介**
 
-- ピロリ菌検査
+- <span className="med-id">[Lab-GI-HP-Ab]</span> ピロリ菌検査
 - 血清ヘリコバクター・ピロリ抗体 (外注)
 
 #### 指導・計画

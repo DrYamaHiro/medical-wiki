@@ -10,6 +10,9 @@ keywords: ["I11", "hypertensive", "heart", "disease"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 検診異常 / 自宅血圧高値 / 頭痛 / 肩こり / めまい / 動悸
@@ -44,6 +47,10 @@ keywords: ["I11", "hypertensive", "heart", "disease"]
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - **診断根拠:** 長期間の高血圧。心電図での左室肥大(LVH)。心不全徴候（BNP上昇、息切れ）。
@@ -62,9 +69,9 @@ keywords: ["I11", "hypertensive", "heart", "disease"]
 - テルミサルタン錠40mg 1回1錠 1日1回 朝食後 28日分
 - アジルバ錠20mg 1回1錠 1日1回 朝食後 28日分 *— 強力な降圧*
 - ビソプロロールフマル酸塩錠2.5mg 1回1錠 1日1回 朝食後 28日分 *— 頻脈・心不全傾向時*
-- 心不全マーカー
+- <span className="med-id">[Lab-CV-BNP]</span> 心不全マーカー
 - BNP (またはNT-proBNP)
-- 心電図（12誘導）
+- <span className="med-id">[Phy-Gen-ECG]</span> 心電図（12誘導）
 
 > 💡 **Dr.Advice**
 >

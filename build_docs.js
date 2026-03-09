@@ -145,7 +145,8 @@ function formatContent(rawText) {
       const code = idMatch[1];
       const desc = idMatch[2].trim();
       if (classifyId(code) === 'show' && desc) {
-        result.push(`- ${esc(desc)}`);
+        // IDコードをspan.med-idで包む（デフォルト非表示、トグルボタンで表示）
+        result.push(`- <span className="med-id">[${code}]</span> ${esc(desc)}`);
       }
       // skip の場合は何も出力しない
       continue;
@@ -368,6 +369,9 @@ ${keywordsYaml}
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 ${secS || '*（データなし）*'}
@@ -379,6 +383,10 @@ ${secO || '*（データなし）*'}
 <h3 className="soap-ns">診察前対応</h3>
 
 ${secNs || '*（データなし）*'}
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 

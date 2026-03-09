@@ -10,6 +10,9 @@ keywords: ["I80.2", "dvt"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 労作時息切れ / 動悸 / 胸痛 / 浮腫 / 下肢痛
@@ -57,6 +60,10 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - **診断根拠:** 片側下肢の急激な腫脹、疼痛、色調変化。
@@ -72,7 +79,7 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 
 **検査**
 
-- 血栓マーカー
+- <span className="med-id">[Lab-CV-Ddimer]</span> 血栓マーカー
 - Dダイマー (外注)
 
 **紹介**

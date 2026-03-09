@@ -10,6 +10,9 @@ keywords: ["通年性あれるぎー性鼻炎", "あれるぎー", "J30.3", "per
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 鼻汁 / 鼻閉 / くしゃみ / 鼻内掻痒感 / 後鼻漏 / 嗅覚障害 / 鼻出血
@@ -45,6 +48,10 @@ keywords: ["通年性あれるぎー性鼻炎", "あれるぎー", "J30.3", "per
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - **診断根拠:** 一年を通じた水様性鼻汁、くしゃみ、鼻閉。
@@ -66,7 +73,7 @@ keywords: ["通年性あれるぎー性鼻炎", "あれるぎー", "J30.3", "per
 
 **アレルギー検査（原因同定）**
 
-- アレルギー検査(MAST36)
+- <span className="med-id">[Lab-Ent-Allergy-MAST36]</span> アレルギー検査(MAST36)
 
 > 💡 **Dr.Advice**
 >

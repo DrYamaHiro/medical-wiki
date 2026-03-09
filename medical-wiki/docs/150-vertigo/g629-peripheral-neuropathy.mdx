@@ -10,6 +10,9 @@ keywords: ["G62.9", "peripheral", "neuropathy"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 **めまい (TiTrATE)**
@@ -53,6 +56,10 @@ Dix-Hallpike / Supine Roll test: 陽性 / 陰性
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - **診断根拠:** 四肢末端のしびれ、感覚鈍麻（手袋靴下型）。腱反射低下。
@@ -68,11 +75,11 @@ Dix-Hallpike / Supine Roll test: 陽性 / 陰性
 
 **スクリーニング検査**
 
-- 全身スクリーニング
+- <span className="med-id">[Lab-Gen-Screen]</span> 全身スクリーニング
 - 末梢血一般, 血糖, HbA1c, 肝・腎, 電解質
-- 甲状腺スクリーニング
+- <span className="med-id">[Lab-Endo-Thy-Screen]</span> 甲状腺スクリーニング
 - TSH, FT4
-- ビタミン欠乏性貧血
+- <span className="med-id">[Lab-Hem-Vit]</span> ビタミン欠乏性貧血
 - ビタミンB12, 葉酸
 
 **治療薬**

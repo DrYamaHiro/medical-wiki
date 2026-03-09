@@ -10,6 +10,9 @@ keywords: ["あるつはいまー型認知症", "あるつはいまー", "G30.9"
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 家族の勧め / もの忘れ外来希望 / 区の検診 / 介護保険申請のため
@@ -64,6 +67,10 @@ keywords: ["あるつはいまー型認知症", "あるつはいまー", "G30.9"
 
 *（データなし）*
 
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
 <h3 className="soap-a">評価</h3>
 
 - **診断根拠:** 近時記憶障害主体、HDS-R 20点以下、緩徐進行、病識欠如。
@@ -83,7 +90,7 @@ keywords: ["あるつはいまー型認知症", "あるつはいまー", "G30.9"
 
 **検査・書類**
 
-- 認知症スクリーニング採血
+- <span className="med-id">[Lab-Dem-Screen]</span> 認知症スクリーニング採血
 
 #### 指導・計画 (必須)
 

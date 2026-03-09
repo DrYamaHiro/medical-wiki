@@ -10,6 +10,9 @@ keywords: ["K74.6", "liver", "cirrhosis"]
 <div className="row">
 <div className="col col--7">
 
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
 <h3 className="soap-s">主訴・ROS</h3>
 
 主訴: 検診異常 / 右季肋部痛 / 心窩部痛 / 背部痛 / 黄疸 / 倦怠感
@@ -49,8 +52,12 @@ keywords: ["K74.6", "liver", "cirrhosis"]
 
 **検査 (外注)**
 
-- 肝臓詳細セット
-- 腫瘍マーカーセット
+- <span className="med-id">[Lab-Hep-Full]</span> 肝臓詳細セット
+- <span className="med-id">[Lab-Hep-Tumor]</span> 腫瘍マーカーセット
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
