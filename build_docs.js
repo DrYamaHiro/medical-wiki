@@ -304,6 +304,22 @@ function generateMdx({ apData, soData, sidebarPosition, relatedLinks }) {
   const titleYaml = title.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
   const labelYaml = sidebarLabel.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 
+  // カテゴリインデックスに表示する description
+  // 優先順: Dr.Advice[疾患概要] → A:評価の診断根拠 → 英語名
+  const descAdvice = [...(soData ? soData.drAdvice : []), ...apData.drAdvice]
+    .find(a => a.tag === '疾患概要');
+  let description = '';
+  if (descAdvice) {
+    description = descAdvice.content.trim();
+  } else {
+    const aText = apData.sections['A: 評価'] || '';
+    const diagMatch = aText.match(/診断根拠[：:]\s*(.+)/);
+    description = diagMatch ? diagMatch[1].trim() : nameEn;
+  }
+  const descYaml = description
+    ? `description: "${description.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`
+    : '';
+
   // 検索キーワード（ひらがな読み・ICD・英語名）
   const keywords = buildKeywords(icdCode, nameJa, nameEn);
   const keywordsYaml = keywords.length > 0
@@ -345,6 +361,7 @@ id: ${docId}
 title: "${titleYaml}"
 sidebar_label: "${labelYaml}"
 sidebar_position: ${sidebarPosition}
+${descYaml}
 ${keywordsYaml}
 ---
 
