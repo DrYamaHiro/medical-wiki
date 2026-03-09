@@ -109,8 +109,7 @@ function cleanChoices(text) {
  *   - Rx / Div / Inj / Doc / その他 → 処方・書類 → スキップ
  */
 function classifyId(idCode) {
-  if (/^(Lab|Img|Phy)-/.test(idCode)) return 'show';
-  return 'skip';
+  return 'show';
 }
 
 /**
