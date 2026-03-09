@@ -26,6 +26,26 @@ const config = {
     locales: ['ja'],
   },
 
+  themes: [
+    [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: true,
+        language: ['ja', 'en'],
+        indexDocs: true,
+        indexBlog: false,
+        indexPages: false,
+        docsRouteBasePath: '/docs',
+        searchResultLimits: 12,
+        searchResultContextMaxLength: 80,
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+        searchBarShortcut: true,
+        searchBarShortcutHint: true,
+      },
+    ],
+  ],
+
   presets: [
     [
       'classic',
