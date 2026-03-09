@@ -29,6 +29,43 @@ function toKebabCase(str) {
     .replace(/^-|-$/g, '');
 }
 
+/**
+ * カタカナ → ひらがな変換
+ * 「クラミジア」→「くらみじあ」のように変換して検索キーワードに追加
+ */
+function kataToHira(str) {
+  return str.replace(/[\u30a1-\u30f6]/g, ch =>
+    String.fromCharCode(ch.charCodeAt(0) - 0x60)
+  );
+}
+
+/**
+ * 疾患名・ICD・英語名から検索キーワード配列を生成
+ * カタカナ語のひらがな読み / ICD番号 / 英語略称 を含める
+ */
+function buildKeywords(icdCode, nameJa, nameEn) {
+  const kw = new Set();
+
+  // カタカナ語をひらがなに変換（「くらみじあ」で検索できるように）
+  const hira = kataToHira(nameJa);
+  if (hira !== nameJa) kw.add(hira);
+
+  // カタカナ単語を個別に抽出してひらがな化（部分一致のため）
+  const kataWords = nameJa.match(/[\u30a1-\u30f6ー]+/g) || [];
+  for (const w of kataWords) {
+    if (w.length >= 2) kw.add(kataToHira(w));
+  }
+
+  // ICD コード（括弧なし: A56.0, J00 など）
+  kw.add(icdCode);
+
+  // 英語名の各単語（2文字以上）
+  const enWords = nameEn.split(/[\s\/\-().,]+/).filter(w => w.length >= 2);
+  for (const w of enWords) kw.add(w.toLowerCase());
+
+  return [...kw].filter(Boolean);
+}
+
 /** ICD コードを安全なファイル名用識別子に変換 */
 function icdToId(icdCode) {
   return icdCode
@@ -267,6 +304,12 @@ function generateMdx({ apData, soData, sidebarPosition, relatedLinks }) {
   const titleYaml = title.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
   const labelYaml = sidebarLabel.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 
+  // 検索キーワード（ひらがな読み・ICD・英語名）
+  const keywords = buildKeywords(icdCode, nameJa, nameEn);
+  const keywordsYaml = keywords.length > 0
+    ? `keywords: [${keywords.map(k => `"${k.replace(/"/g, '\\"')}"`).join(', ')}]`
+    : '';
+
   const icdId  = icdToId(icdRaw);
   const enId   = toKebabCase(nameEn || nameJa || 'unknown');
   const docId  = `${icdId}-${enId}`.replace(/-+/g, '-').replace(/^-|-$/g, '');
@@ -302,6 +345,7 @@ id: ${docId}
 title: "${titleYaml}"
 sidebar_label: "${labelYaml}"
 sidebar_position: ${sidebarPosition}
+${keywordsYaml}
 ---
 
 <div className="row">
