@@ -182,9 +182,9 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
 }
 
 /* =========================================================
-   Dr.Advice blockquote (右カラム col--3)
+   Dr.Advice blockquote (中カラム col--4)
    ========================================================= */
-.col--3 blockquote {
+.col--4 blockquote {
   background: #fffbeb;
   border-left: 4px solid #f59e0b;
   border-radius: 0 8px 8px 0;
@@ -193,29 +193,39 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   font-size: 0.85rem;
 }
 
-.col--3 blockquote p {
+.col--4 blockquote p {
   color: #78350f;
   margin-bottom: 0.35rem;
   line-height: 1.6;
 }
 
-.col--3 blockquote p:last-child {
+.col--4 blockquote p:last-child {
   margin-bottom: 0;
 }
 
-[data-theme='dark'] .col--3 blockquote {
+[data-theme='dark'] .col--4 blockquote {
   background: #2d1f00;
   border-color: #f59e0b;
 }
 
-[data-theme='dark'] .col--3 blockquote p {
+[data-theme='dark'] .col--4 blockquote p {
   color: #fde68a;
 }
 
+/* SO Dr.Advice: S/O折りたたみと連動して非表示 (デフォルト hidden) */
+.so-dr-advice {
+  display: none;
+}
+
+/* S/O が展開されたら SO Dr.Advice も表示 */
+.col--5:has(details.so-details[open]) ~ .col--4 .so-dr-advice {
+  display: block;
+}
+
 /* =========================================================
-   中カラム (詳細解説 .col--4)
+   右カラム (詳細解説 .col--3)
    ========================================================= */
-.col--4 > h2 {
+.col--3 > h2 {
   font-size: 1.05rem;
   color: var(--ifm-color-primary-dark);
   padding-bottom: 0.4rem;
@@ -223,7 +233,7 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   margin-bottom: 1.2rem;
 }
 
-.col--4 > h3 {
+.col--3 > h3 {
   font-size: 0.9rem;
   color: var(--ifm-color-emphasis-700);
   margin-top: 1.2rem;
@@ -231,7 +241,7 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
 }
 
 /* 編集ヒント (イタリック段落) */
-.col--4 > p > em:only-child {
+.col--3 > p > em:only-child {
   display: block;
   font-style: normal;
   font-size: 0.85rem;

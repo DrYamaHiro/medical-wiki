@@ -337,21 +337,15 @@ function generateMdx({ apData, soData, sidebarPosition, relatedLinks }) {
   const secA  = formatContent(apData.sections['A: 評価']  || '');
   const secP  = formatContent(apData.sections['P: 方針']  || '');
 
-  // Dr.Advice 統合 (SO + AP) — 純粋 Markdown blockquote 形式 (JSX 不使用)
-  const allAdvice = [
-    ...(soData ? soData.drAdvice : []),
-    ...apData.drAdvice,
-  ];
-
-  const adviceMd = allAdvice.length > 0
+  // Dr.Advice を SO 由来と AP 由来に分離
+  const mkAdviceMd = (items) => items.length > 0
     ? '> 💡 **Dr.Advice**\n>\n'
-      + allAdvice.map(a => `> **[${esc(a.tag)}]** ${esc(a.content)}`).join('\n>\n')
+      + items.map(a => `> **[${esc(a.tag)}]** ${esc(a.content)}`).join('\n>\n')
       + '\n'
     : '';
 
-  // 関連リンク
-  const linksBlock = (relatedLinks || []).map(l => `- [${l.label}](${l.url})`).join('\n')
-    || '- [日本内科学会](https://www.naika.or.jp/)';
+  const soAdviceMd = mkAdviceMd(soData ? soData.drAdvice : []);
+  const apAdviceMd = mkAdviceMd(apData.drAdvice);
 
   // ── MDX テンプレート (フラット構造: JSX ネスト最小化) ──────────────
   // ※ 2 レベル以上の JSX ネスト内で ::: admonition を使うと MDX v3 が
@@ -398,6 +392,15 @@ ${secP || '*（データなし）*'}
 </div>
 <div className="col col--4">
 
+<div className="so-dr-advice">
+
+${soAdviceMd}
+</div>
+
+${apAdviceMd}
+</div>
+<div className="col col--3">
+
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
@@ -415,15 +418,8 @@ ${secP || '*（データなし）*'}
 
 *（エビデンス・推奨グレードを記述）*
 
-### 🔗 関連ガイドライン
-
-${linksBlock}
 {/* WIKI_EDIT_END */}
 
-</div>
-<div className="col col--3">
-
-${adviceMd}
 </div>
 </div>
 `;
