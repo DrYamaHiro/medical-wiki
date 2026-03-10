@@ -395,10 +395,10 @@ ${secA || '*（データなし）*'}
 
 ${secP || '*（データなし）*'}
 
-${adviceMd}
 </div>
 <div className="col col--5">
 
+${adviceMd}
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
