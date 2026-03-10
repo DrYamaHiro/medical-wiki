@@ -123,6 +123,11 @@ const config = {
         ],
         copyright: `Copyright © ${new Date().getFullYear()} Medical Knowledge Wiki. Built with Docusaurus.`,
       },
+      docs: {
+        sidebar: {
+          hideable: true,
+        },
+      },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,

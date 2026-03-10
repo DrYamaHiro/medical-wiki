@@ -56,19 +56,28 @@
 }
 
 /* =========================================================
-   2カラムレイアウト
+   3カラムレイアウト (SOAP | 詳細解説 | Dr.Advice)
    ========================================================= */
 .row {
   align-items: flex-start;
 }
 
-.col--7 {
+/* 左カラム: SOAP カルテ本文 (5/12) */
+.col--5 {
   border-right: 2px solid var(--ifm-color-emphasis-200);
-  padding-right: 2rem !important;
+  padding-right: 1.5rem !important;
 }
 
-.col--5 {
-  padding-left: 2rem !important;
+/* 中カラム: 詳細解説 Wiki (4/12) */
+.col--4 {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  border-right: 2px solid var(--ifm-color-emphasis-200);
+}
+
+/* 右カラム: Dr.Advice (3/12) */
+.col--3 {
+  padding-left: 1.5rem !important;
 }
 
 /* =========================================================
@@ -141,16 +150,16 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
 [data-theme='dark'] h3.soap-p  { color: #fca5a5; }
 
 /* =========================================================
-   診療テンプレート本文 (.col--7 内)
+   診療テンプレート本文 (.col--5 内)
    ========================================================= */
-.col--7 p,
-.col--7 li {
+.col--5 p,
+.col--5 li {
   line-height: 1.7;
   margin-bottom: 0.3rem;
 }
 
 /* サブ見出し h4 */
-.col--7 h4 {
+.col--5 h4 {
   font-size: 0.82rem;
   font-weight: 700;
   color: var(--ifm-color-emphasis-700);
@@ -161,51 +170,52 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   display: inline-block;
 }
 
-[data-theme='dark'] .col--7 h4 {
+[data-theme='dark'] .col--5 h4 {
   background: var(--ifm-color-emphasis-200);
 }
 
 /* 処方薬の目的 (em) を薄く表示 */
-.col--7 li em {
+.col--5 li em {
   color: var(--ifm-color-emphasis-600);
   font-style: normal;
   font-size: 0.87em;
 }
 
 /* =========================================================
-   Dr.Advice blockquote (純粋 Markdown > 記法)
+   Dr.Advice blockquote (右カラム col--3)
    ========================================================= */
-.col--7 blockquote {
+.col--3 blockquote {
   background: #fffbeb;
   border-left: 4px solid #f59e0b;
   border-radius: 0 8px 8px 0;
-  padding: 0.75rem 1.25rem;
-  margin: 0.5rem 0 1rem 0;
+  padding: 0.65rem 1rem;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
 }
 
-.col--7 blockquote p {
+.col--3 blockquote p {
   color: #78350f;
-  margin-bottom: 0.4rem;
-  line-height: 1.65;
+  margin-bottom: 0.35rem;
+  line-height: 1.6;
 }
 
-.col--7 blockquote p:last-child {
+.col--3 blockquote p:last-child {
   margin-bottom: 0;
 }
 
-[data-theme='dark'] .col--7 blockquote {
+[data-theme='dark'] .col--3 blockquote {
   background: #2d1f00;
   border-color: #f59e0b;
 }
 
-[data-theme='dark'] .col--7 blockquote p {
+[data-theme='dark'] .col--3 blockquote p {
   color: #fde68a;
 }
 
 /* =========================================================
-   右カラム (教科書的詳細解説 .col--5)
+   中カラム (詳細解説 .col--4)
    ========================================================= */
-.col--5 > h2 {
+.col--4 > h2 {
   font-size: 1.05rem;
   color: var(--ifm-color-primary-dark);
   padding-bottom: 0.4rem;
@@ -213,7 +223,7 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   margin-bottom: 1.2rem;
 }
 
-.col--5 > h3 {
+.col--4 > h3 {
   font-size: 0.9rem;
   color: var(--ifm-color-emphasis-700);
   margin-top: 1.2rem;
@@ -221,7 +231,7 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
 }
 
 /* 編集ヒント (イタリック段落) */
-.col--5 > p > em:only-child {
+.col--4 > p > em:only-child {
   display: block;
   font-style: normal;
   font-size: 0.85rem;
@@ -247,16 +257,24 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
    レスポンシブ (タブレット・スマホ)
    ========================================================= */
 @media (max-width: 996px) {
-  .col--7 {
+  .col--5 {
     border-right: none;
     border-bottom: 2px solid var(--ifm-color-emphasis-200);
     padding-right: 0 !important;
     padding-bottom: 1.5rem;
     margin-bottom: 1rem;
   }
-  .col--5 {
+  .col--4 {
+    border-right: none;
+    border-bottom: 2px solid var(--ifm-color-emphasis-200);
     padding-left: 0 !important;
-    margin-top: 1rem;
+    padding-right: 0 !important;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .col--3 {
+    padding-left: 0 !important;
+    margin-top: 0.5rem;
   }
 }
 
@@ -357,7 +375,8 @@ details.so-details > :not(summary) {
   .footer,
   .table-of-contents,
   .pagination-nav,
-  .col--5,
+  .col--4,
+  .col--3,
   .toggle-id-btn {
     display: none !important;
   }
@@ -372,7 +391,7 @@ details.so-details > :not(summary) {
 
   .row { display: block !important; }
 
-  .col--7 {
+  .col--5 {
     width: 100% !important;
     max-width: 100% !important;
     flex: none !important;

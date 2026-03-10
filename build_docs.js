@@ -366,7 +366,7 @@ ${keywordsYaml}
 ---
 
 <div className="row">
-<div className="col col--7">
+<div className="col col--5">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -385,7 +385,7 @@ ${secNs || '*（データなし）*'}
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--7').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -396,9 +396,8 @@ ${secA || '*（データなし）*'}
 ${secP || '*（データなし）*'}
 
 </div>
-<div className="col col--5">
+<div className="col col--4">
 
-${adviceMd}
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
@@ -421,6 +420,10 @@ ${adviceMd}
 ${linksBlock}
 {/* WIKI_EDIT_END */}
 
+</div>
+<div className="col col--3">
+
+${adviceMd}
 </div>
 </div>
 `;
