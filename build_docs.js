@@ -404,6 +404,8 @@ ${secP || '*（データなし）*'}
 ${soAdviceMd}
 </div>
 
+<div className="ap-advice-spacer"></div>
+
 ${apAdviceMd}
 </div>
 <div className="col col--3">

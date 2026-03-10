@@ -212,12 +212,12 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   color: #fde68a;
 }
 
-/* スペーサー: details折りたたみ + IDボタン分の高さ (S/O collapsed 時に AP Dr.Advice を A/P 位置に合わせる) */
+/* スペーサー: S/O collapsed 時に AP Dr.Advice を A/P 位置に合わせる */
 .dr-advice-spacer {
-  height: 5.5rem;
+  height: 8.5rem;
 }
 
-/* S/O が展開されたらスペーサーを非表示 (SO Dr.Advice が代わりにスペースを占有) */
+/* S/O が展開されたら折りたたみスペーサーを非表示 */
 .col--5:has(details.so-details[open]) ~ .col--4 .dr-advice-spacer {
   display: none;
 }
@@ -230,6 +230,16 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
 /* S/O が展開されたら SO Dr.Advice も表示 */
 .col--5:has(details.so-details[open]) ~ .col--4 .so-dr-advice {
   display: block;
+}
+
+/* AP Dr.Advice の上スペーサー: S/O 展開時のみ表示 (IDボタン分の隙間) */
+.ap-advice-spacer {
+  display: none;
+}
+
+.col--5:has(details.so-details[open]) ~ .col--4 .ap-advice-spacer {
+  display: block;
+  height: 2rem;
 }
 
 /* =========================================================
