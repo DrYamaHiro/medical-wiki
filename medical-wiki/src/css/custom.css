@@ -212,6 +212,16 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   color: #fde68a;
 }
 
+/* スペーサー: details折りたたみ + IDボタン分の高さ (S/O collapsed 時に AP Dr.Advice を A/P 位置に合わせる) */
+.dr-advice-spacer {
+  height: 5.5rem;
+}
+
+/* S/O が展開されたらスペーサーを非表示 (SO Dr.Advice が代わりにスペースを占有) */
+.col--5:has(details.so-details[open]) ~ .col--4 .dr-advice-spacer {
+  display: none;
+}
+
 /* SO Dr.Advice: S/O折りたたみと連動して非表示 (デフォルト hidden) */
 .so-dr-advice {
   display: none;

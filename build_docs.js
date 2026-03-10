@@ -347,6 +347,10 @@ function generateMdx({ apData, soData, sidebarPosition, relatedLinks }) {
   const soAdviceMd = mkAdviceMd(soData ? soData.drAdvice : []);
   const apAdviceMd = mkAdviceMd(apData.drAdvice);
 
+  // 関連リンク
+  const linksBlock = (relatedLinks || []).map(l => `- [${l.label}](${l.url})`).join('\n')
+    || '- [日本内科学会](https://www.naika.or.jp/)';
+
   // ── MDX テンプレート (フラット構造: JSX ネスト最小化) ──────────────
   // ※ 2 レベル以上の JSX ネスト内で ::: admonition を使うと MDX v3 が
   //   クラッシュして白画面になる → wrapper div を廃止し h3.soap-* を使用
@@ -355,6 +359,7 @@ id: ${docId}
 title: "${titleYaml}"
 sidebar_label: "${labelYaml}"
 sidebar_position: ${sidebarPosition}
+hide_table_of_contents: true
 ${descYaml}
 ${keywordsYaml}
 ---
@@ -392,6 +397,8 @@ ${secP || '*（データなし）*'}
 </div>
 <div className="col col--4">
 
+<div className="dr-advice-spacer"></div>
+
 <div className="so-dr-advice">
 
 ${soAdviceMd}
@@ -418,6 +425,9 @@ ${apAdviceMd}
 
 *（エビデンス・推奨グレードを記述）*
 
+### 🔗 関連ガイドライン
+
+${linksBlock}
 {/* WIKI_EDIT_END */}
 
 </div>
