@@ -2,7 +2,7 @@
 /**
  * build_docs.js v2 — Medical Knowledge Wiki Document Parser
  *
- * ver.2.0.1.0/output/ の分割済みファイルを読み込み、
+ * ver.2.0.1.1/output/ の分割済みファイルを読み込み、
  * SOAP色分けブロック付きの見やすい MDX を medical-wiki/docs/ に生成します。
  */
 
@@ -228,10 +228,12 @@ function parseFile(content) {
   const lines  = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
   const result = { metadata: {}, sections: {}, drAdvice: [] };
 
-  let inHeader    = false;
-  let headerDone  = false;
-  let currentSec  = null;
-  let currentLines = [];
+  let inHeader      = false;
+  let headerDone    = false;
+  let currentSec    = null;
+  let currentLines  = [];
+  let currentAdvTag   = null;
+  let currentAdvLines = [];
 
   const saveSection = () => {
     if (currentSec && currentLines.length > 0) {
@@ -239,6 +241,15 @@ function parseFile(content) {
     }
     currentSec   = null;
     currentLines = [];
+  };
+
+  const saveAdvice = () => {
+    if (currentAdvTag !== null) {
+      const body = currentAdvLines.join('\n').trim();
+      if (body) result.drAdvice.push({ tag: currentAdvTag, content: body });
+    }
+    currentAdvTag   = null;
+    currentAdvLines = [];
   };
 
   for (const line of lines) {
@@ -261,27 +272,35 @@ function parseFile(content) {
     // ── 終端
     if (line.startsWith('----------------------------------------------------------------')) {
       saveSection();
+      saveAdvice();
       break;
     }
 
     // ── セクションヘッダー <X: 名前>:
     const secMatch = line.match(/^<([^>]+)>:\s*$/);
-    if (secMatch) { saveSection(); currentSec = secMatch[1].trim(); continue; }
+    if (secMatch) { saveAdvice(); saveSection(); currentSec = secMatch[1].trim(); continue; }
 
-    // ── Dr.Advice
+    // ── Dr.Advice ヘッダー
     const advMatch = line.match(/^▶ Dr\.Advice \[(.+?)\]:\s*(.*)/);
     if (advMatch) {
+      saveAdvice();
       saveSection();
-      const advContent = advMatch[2].trim();
-      if (advContent) {
-        result.drAdvice.push({ tag: advMatch[1].trim(), content: advContent });
-      }
+      currentAdvTag = advMatch[1].trim();
+      const firstLine = advMatch[2].trim();
+      if (firstLine) currentAdvLines = [firstLine];
+      continue;
+    }
+
+    // ── Dr.Advice 継続行（複数行アドバイス）
+    if (currentAdvTag !== null) {
+      currentAdvLines.push(line);
       continue;
     }
 
     if (currentSec) currentLines.push(line);
   }
   saveSection();
+  saveAdvice();
 
   return result;
 }
@@ -338,11 +357,18 @@ function generateMdx({ apData, soData, sidebarPosition, relatedLinks }) {
   const secP  = formatContent(apData.sections['P: 方針']  || '');
 
   // Dr.Advice を SO 由来と AP 由来に分離
-  const mkAdviceMd = (items) => items.length > 0
-    ? '> 💡 **Dr.Advice**\n>\n'
-      + items.map(a => `> **[${esc(a.tag)}]** ${esc(a.content)}`).join('\n>\n')
-      + '\n'
-    : '';
+  const mkAdviceMd = (items) => {
+    if (items.length === 0) return '';
+    const parts = items.map(a => {
+      if (a.content.includes('\n')) {
+        const formatted = formatContent(a.content);
+        const quoted = formatted.split('\n').map(l => l ? `> ${l}` : '>').join('\n');
+        return `> **[${esc(a.tag)}]**\n${quoted}`;
+      }
+      return `> **[${esc(a.tag)}]** ${esc(a.content)}`;
+    });
+    return '> 💡 **Dr.Advice**\n>\n' + parts.join('\n>\n') + '\n';
+  };
 
   const soAdviceMd = mkAdviceMd(soData ? soData.drAdvice : []);
   const apAdviceMd = mkAdviceMd(apData.drAdvice);
