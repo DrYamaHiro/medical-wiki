@@ -114,18 +114,24 @@ export default function ImageUploader({ docId }) {
         throw new Error(d.error?.message || `${res.status}`);
       }
       const data = await res.json();
+      const pid = data.public_id;
+      const fmt = data.format || 'png';
       const newImg = {
-        publicId: data.public_id,
-        thumb: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/c_fill,w_200,h_150/${data.public_id}.${data.format}`,
-        medium: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400/${data.public_id}.${data.format}`,
-        large: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_1200/${data.public_id}.${data.format}`,
-        format: data.format,
+        publicId: pid,
+        thumb: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/c_fill,w_200,h_150/${pid}.${fmt}`,
+        medium: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400/${pid}.${fmt}`,
+        large: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_1200/${pid}.${fmt}`,
+        // secure_url をフォールバックに使用
+        url: data.secure_url,
+        format: fmt,
       };
       setAllImages((prev) => [...prev, newImg]);
-      if (images.length === 0) setFeaturedStorage(docId, data.public_id);
+      if (images.length === 0) setFeaturedStorage(docId, pid);
       else notify(docId);
+      setError('');
     } catch (err) {
-      setError(`失敗: ${err.message}`);
+      console.error('Upload error:', err);
+      setError(`アップロード失敗: ${err.message}`);
     } finally {
       setUploading(false);
     }
@@ -155,7 +161,7 @@ export default function ImageUploader({ docId }) {
     <div className={styles.uploader}>
       {featImg && (
         <div className={styles.iconPreview}>
-          <img src={featImg.medium} alt="" className={styles.iconImage} />
+          <img src={featImg.url || featImg.medium} alt="" className={styles.iconImage} />
         </div>
       )}
       <div
