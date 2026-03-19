@@ -46,17 +46,48 @@ function kataToHira(str) {
 function buildKeywords(icdCode, nameJa, nameEn) {
   const kw = new Set();
 
-  // カタカナ語をひらがなに変換（「くらみじあ」で検索できるように）
+  // 日本語名をそのまま追加（「第1期梅毒」→「第1期梅毒」）
+  if (nameJa) kw.add(nameJa);
+
+  // 日本語名を分割して部分キーワード抽出
+  // 「第1期梅毒」→「梅毒」、「2型糖尿病」→「糖尿病」、「急性膀胱炎」→「膀胱炎」
+  const jaSegments = nameJa.split(/[\s・\/\-()（）]+|\d+|第.期/).filter(Boolean);
+  for (const seg of jaSegments) {
+    if (seg.length >= 2) kw.add(seg);
+  }
+
+  // 漢字・ひらがな連続 2文字以上を抽出（「急性上気道炎」→「急性」「上気道炎」等）
+  const kanjiRuns = nameJa.match(/[\u4e00-\u9fff\u3040-\u309f]{2,}/g) || [];
+  for (const run of kanjiRuns) {
+    kw.add(run);
+    // 「急性○○」「慢性○○」等の接頭辞を除いた核心部分も追加
+    const core = run.replace(/^(急性|慢性|亜急性|原発性|続発性|特発性|良性|悪性|型|性)/, '');
+    if (core.length >= 2 && core !== run) kw.add(core);
+  }
+
+  // カタカナ語をひらがなに変換（「クラミジア」→「くらみじあ」）
   const hira = kataToHira(nameJa);
   if (hira !== nameJa) kw.add(hira);
 
-  // カタカナ単語を個別に抽出してひらがな化（部分一致のため）
+  // カタカナ単語を個別に抽出してひらがな化
   const kataWords = nameJa.match(/[\u30a1-\u30f6ー]+/g) || [];
   for (const w of kataWords) {
-    if (w.length >= 2) kw.add(kataToHira(w));
+    if (w.length >= 2) {
+      kw.add(w);           // カタカナそのまま
+      kw.add(kataToHira(w)); // ひらがな版
+    }
   }
 
-  // ICD コード（括弧なし: A56.0, J00 など）
+  // 日本語 N-gram（部分検索対応: 2〜3文字）
+  // 「気管支喘息」→「気管」「管支」「支喘」「喘息」「気管支」「管支喘」「支喘息」
+  const jaChars = nameJa.replace(/[\s・\/\-()（）\d\[\]]/g, '');
+  for (let n = 2; n <= 3; n++) {
+    for (let i = 0; i <= jaChars.length - n; i++) {
+      kw.add(jaChars.slice(i, i + n));
+    }
+  }
+
+  // ICD コード
   kw.add(icdCode);
 
   // 英語名の各単語（2文字以上）
