@@ -8,8 +8,8 @@ description: "血中抗体陽性。"
 keywords: ["へりこばくたー・ぴろり感染症", "へりこばくたー", "ぴろり", "B96.8", "pylori"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -65,7 +65,7 @@ keywords: ["へりこばくたー・ぴろり感染症", "へりこばくたー"
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -91,7 +91,12 @@ keywords: ["へりこばくたー・ぴろり感染症", "へりこばくたー"
 - **紹介先:** 消化器内科（内視鏡・除菌依頼）
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="b968-hpylori" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -112,11 +117,9 @@ keywords: ["へりこばくたー・ぴろり感染症", "へりこばくたー"
 > **[除菌の壁]** 当院には尿素呼気試験の設備がないため、除菌が成功したかどうかの判定が困難である（便中抗原も外注対応となる）。責任を持って完結させるためにも、専門医への紹介が最も無難である。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="b968-hpylori" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -138,6 +141,8 @@ keywords: ["へりこばくたー・ぴろり感染症", "へりこばくたー"
 - [日本消化器病学会](https://www.jsge.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

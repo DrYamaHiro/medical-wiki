@@ -8,8 +8,8 @@ description: "呼吸困難、浮腫、頸静脈怒張、肺ラ音。胸部X線�
 keywords: ["I50.0", "congestive", "heart", "failure"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -63,7 +63,7 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -91,7 +91,12 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 - サムスカ錠7.5mg 1回1錠 1日1回 朝食後 7日分 *— 低Na血症時*
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="i500-congestive-heart-failure" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -112,11 +117,9 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 > **[外来の限界]** Wet&amp;Cold（低灌流・うっ血）はショックの危険があり、当院での対応は不可能である。直ちに救急要請せよ。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="i500-congestive-heart-failure" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -138,6 +141,8 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 - [日本循環器学会](https://www.j-circ.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

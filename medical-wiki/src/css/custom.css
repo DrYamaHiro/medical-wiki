@@ -1,14 +1,12 @@
 /**
- * Medical Knowledge Wiki — Custom CSS v3
- * SOAP セクション h3 バッジ + クリーンな2カラムレイアウト
- * (nested JSX 廃止 → h3.soap-* inline スタイル)
+ * Medical Knowledge Wiki — Custom CSS v4
+ * レイアウト: SOAP(5) | 右パネル(7) = [画像] + [Dr.Advice(6) | Wiki(6)]
  */
 
 /* =========================================================
    カラーシステム
    ========================================================= */
 :root {
-  /* ブランドカラー (緑基調) */
   --ifm-color-primary:         #1a7f4b;
   --ifm-color-primary-dark:    #177346;
   --ifm-color-primary-darker:  #166d42;
@@ -17,14 +15,12 @@
   --ifm-color-primary-lighter: #1e9154;
   --ifm-color-primary-lightest:#22a460;
 
-  /* SOAP セクションカラー */
   --color-s:   #3b82f6;
   --color-o:   #10b981;
   --color-ns:  #f59e0b;
   --color-a:   #8b5cf6;
   --color-p:   #ef4444;
 
-  /* SOAP 背景色 */
   --bg-s:   #eff6ff;
   --bg-o:   #ecfdf5;
   --bg-ns:  #fffbeb;
@@ -33,7 +29,6 @@
 
   --ifm-code-font-size: 93%;
   --docusaurus-highlighted-code-line-bg: rgba(0,0,0,0.08);
-
   --ifm-font-family-base: 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI',
                            'Meiryo UI', system-ui, sans-serif;
 }
@@ -56,32 +51,38 @@
 }
 
 /* =========================================================
-   3カラムレイアウト (SOAP | 詳細解説 | Dr.Advice)
+   メインレイアウト: SOAP(5) | 右パネル(7)
    ========================================================= */
-.row {
+.wiki-main {
   align-items: flex-start;
 }
 
-/* 左カラム: SOAP カルテ本文 (5/12 ≒ 41.67%) */
-.col--5 {
+/* SOAP カルテ本文 */
+.soap-col {
   border-right: 2px solid var(--ifm-color-emphasis-200);
   padding-right: 1.5rem !important;
 }
 
-/* 中カラム: Dr.Advice (3.5/12 ≒ 29.17%) */
-.col--4 {
-  flex: 0 0 29.17% !important;
-  max-width: 29.17% !important;
+/* 右パネル (画像 + Dr.Advice + Wiki) */
+.right-panel {
   padding-left: 1.5rem !important;
-  padding-right: 1.5rem !important;
+  padding-right: 0 !important;
+}
+
+/* 右パネル内の内部2カラム */
+.right-inner {
+  align-items: flex-start;
+}
+
+/* Dr.Advice カラム */
+.advice-col {
+  padding-right: 1rem !important;
   border-right: 2px solid var(--ifm-color-emphasis-200);
 }
 
-/* 右カラム: Wiki + 画像 (3.5/12 ≒ 29.17%) */
-.col--3 {
-  flex: 0 0 29.17% !important;
-  max-width: 29.17% !important;
-  padding-left: 1.5rem !important;
+/* Wiki カラム */
+.wiki-col {
+  padding-left: 1rem !important;
 }
 
 /* =========================================================
@@ -102,12 +103,10 @@ h3.soap-p {
   border-left: 4px solid;
   border-radius: 0 8px 8px 0;
   margin: 1.5rem 0 0.65rem 0;
-  /* リセット: Docusaurus デフォルトの h3 スタイルを上書き */
   border-bottom: none;
   text-transform: none;
 }
 
-/* バッジ (::before 擬似要素) — 共通 */
 h3.soap-s::before,
 h3.soap-o::before,
 h3.soap-ns::before,
@@ -126,27 +125,17 @@ h3.soap-p::before {
   letter-spacing: 0;
 }
 
-/* S — Blue */
 h3.soap-s { border-color: var(--color-s); background: var(--bg-s); color: #1d4ed8; }
 h3.soap-s::before { content: "S"; background: var(--color-s); }
-
-/* O — Emerald */
 h3.soap-o { border-color: var(--color-o); background: var(--bg-o); color: #065f46; }
 h3.soap-o::before { content: "O"; background: var(--color-o); }
-
-/* Ns — Amber */
 h3.soap-ns { border-color: var(--color-ns); background: var(--bg-ns); color: #92400e; }
 h3.soap-ns::before { content: "Ns"; background: var(--color-ns); font-size: 0.6rem; }
-
-/* A — Violet */
 h3.soap-a { border-color: var(--color-a); background: var(--bg-a); color: #5b21b6; }
 h3.soap-a::before { content: "A"; background: var(--color-a); }
-
-/* P — Red */
 h3.soap-p { border-color: var(--color-p); background: var(--bg-p); color: #991b1b; }
 h3.soap-p::before { content: "P"; background: var(--color-p); }
 
-/* ダークモード: テキスト色調整 */
 [data-theme='dark'] h3.soap-s  { color: #93c5fd; }
 [data-theme='dark'] h3.soap-o  { color: #6ee7b7; }
 [data-theme='dark'] h3.soap-ns { color: #fcd34d; }
@@ -154,16 +143,15 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
 [data-theme='dark'] h3.soap-p  { color: #fca5a5; }
 
 /* =========================================================
-   診療テンプレート本文 (.col--5 内)
+   SOAP 本文スタイル
    ========================================================= */
-.col--5 p,
-.col--5 li {
+.soap-col p,
+.soap-col li {
   line-height: 1.7;
   margin-bottom: 0.3rem;
 }
 
-/* サブ見出し h4 */
-.col--5 h4 {
+.soap-col h4 {
   font-size: 0.82rem;
   font-weight: 700;
   color: var(--ifm-color-emphasis-700);
@@ -174,21 +162,20 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   display: inline-block;
 }
 
-[data-theme='dark'] .col--5 h4 {
+[data-theme='dark'] .soap-col h4 {
   background: var(--ifm-color-emphasis-200);
 }
 
-/* 処方薬の目的 (em) を薄く表示 */
-.col--5 li em {
+.soap-col li em {
   color: var(--ifm-color-emphasis-600);
   font-style: normal;
   font-size: 0.87em;
 }
 
 /* =========================================================
-   Dr.Advice blockquote (中カラム col--4)
+   Dr.Advice blockquote
    ========================================================= */
-.col--4 blockquote {
+.advice-col blockquote {
   background: #fffbeb;
   border-left: 4px solid #f59e0b;
   border-radius: 0 8px 8px 0;
@@ -197,59 +184,55 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   font-size: 0.85rem;
 }
 
-.col--4 blockquote p {
+.advice-col blockquote p {
   color: #78350f;
   margin-bottom: 0.35rem;
   line-height: 1.6;
 }
 
-.col--4 blockquote p:last-child {
+.advice-col blockquote p:last-child {
   margin-bottom: 0;
 }
 
-[data-theme='dark'] .col--4 blockquote {
+[data-theme='dark'] .advice-col blockquote {
   background: #2d1f00;
   border-color: #f59e0b;
 }
 
-[data-theme='dark'] .col--4 blockquote p {
+[data-theme='dark'] .advice-col blockquote p {
   color: #fde68a;
 }
 
-/* スペーサー: S/O collapsed 時に AP Dr.Advice を A/P 位置に合わせる */
+/* スペーサー: S/O collapsed 時に Dr.Advice を A/P 位置に合わせる */
 .dr-advice-spacer {
   height: 8.5rem;
 }
 
-/* S/O が展開されたら折りたたみスペーサーを非表示 */
-.col--5:has(details.so-details[open]) ~ .col--4 .dr-advice-spacer {
+.soap-col:has(details.so-details[open]) ~ .right-panel .dr-advice-spacer {
   display: none;
 }
 
-/* SO Dr.Advice: S/O折りたたみと連動して非表示 (デフォルト hidden) */
 .so-dr-advice {
   display: none;
 }
 
-/* S/O が展開されたら SO Dr.Advice も表示 */
-.col--5:has(details.so-details[open]) ~ .col--4 .so-dr-advice {
+.soap-col:has(details.so-details[open]) ~ .right-panel .so-dr-advice {
   display: block;
 }
 
-/* AP Dr.Advice の上スペーサー: S/O 展開時のみ表示 (IDボタン分の隙間) */
 .ap-advice-spacer {
   display: none;
 }
 
-.col--5:has(details.so-details[open]) ~ .col--4 .ap-advice-spacer {
+.soap-col:has(details.so-details[open]) ~ .right-panel .ap-advice-spacer {
   display: block;
   height: 2rem;
 }
 
 /* =========================================================
-   右カラム (詳細解説 .col--3)
+   Wiki 詳細解説
    ========================================================= */
-.col--3 > h2 {
+.wiki-col > h2 {
   font-size: 1.05rem;
   color: var(--ifm-color-primary-dark);
   padding-bottom: 0.4rem;
@@ -257,15 +240,14 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   margin-bottom: 1.2rem;
 }
 
-.col--3 > h3 {
+.wiki-col > h3 {
   font-size: 0.9rem;
   color: var(--ifm-color-emphasis-700);
   margin-top: 1.2rem;
   margin-bottom: 0.4rem;
 }
 
-/* 編集ヒント (イタリック段落) */
-.col--3 > p > em:only-child {
+.wiki-col > p > em:only-child {
   display: block;
   font-style: normal;
   font-size: 0.85rem;
@@ -288,36 +270,36 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
 }
 
 /* =========================================================
-   レスポンシブ (タブレット・スマホ)
+   レスポンシブ
    ========================================================= */
 @media (max-width: 996px) {
-  .col--5 {
+  .soap-col {
     border-right: none;
     border-bottom: 2px solid var(--ifm-color-emphasis-200);
     padding-right: 0 !important;
     padding-bottom: 1.5rem;
     margin-bottom: 1rem;
   }
-  .col--4 {
+  .right-panel {
     flex: 0 0 100% !important;
     max-width: 100% !important;
-    border-right: none;
-    border-bottom: 2px solid var(--ifm-color-emphasis-200);
     padding-left: 0 !important;
+  }
+  .advice-col {
+    border-right: none;
+    border-bottom: 2px solid var(--ifm-color-emphasis-200);
     padding-right: 0 !important;
     padding-bottom: 1.5rem;
     margin-bottom: 1rem;
   }
-  .col--3 {
-    flex: 0 0 100% !important;
-    max-width: 100% !important;
+  .wiki-col {
     padding-left: 0 !important;
     margin-top: 0.5rem;
   }
 }
 
 /* =========================================================
-   S/O 折りたたみ (details/summary)
+   S/O 折りたたみ
    ========================================================= */
 details.so-details {
   margin: 0 0 1rem 0;
@@ -406,20 +388,18 @@ details.so-details > :not(summary) {
 }
 
 /* =========================================================
-   印刷スタイル (外来での使用を想定)
+   印刷スタイル
    ========================================================= */
 @media print {
   .navbar,
   .footer,
   .table-of-contents,
   .pagination-nav,
-  .col--4,
-  .col--3,
+  .right-panel,
   .toggle-id-btn {
     display: none !important;
   }
 
-  /* 折りたたみを展開して印刷 */
   details.so-details {
     border: none !important;
   }
@@ -427,9 +407,9 @@ details.so-details > :not(summary) {
     display: none !important;
   }
 
-  .row { display: block !important; }
+  .wiki-main { display: block !important; }
 
-  .col--5 {
+  .soap-col {
     width: 100% !important;
     max-width: 100% !important;
     flex: none !important;

@@ -8,8 +8,8 @@ description: "8週間以上続く咳嗽。胸部X線異常なし。"
 keywords: ["R05", "chronic", "cough"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -63,7 +63,7 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -91,7 +91,12 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - ムコソルバン錠15mg 1回1錠 1日3回 毎食後
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="r05-chronic-cough" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -112,11 +117,9 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 > **[CT適応]** X線で異常がなくても、気管支内病変や微小な肺癌は否定できない。「2週間治療しても改善しない慢性咳嗽」は、必ずCT依頼（紹介）を行うこと。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="r05-chronic-cough" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -138,6 +141,8 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - [日本アレルギー学会 喘息ガイドライン](https://www.jsaweb.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

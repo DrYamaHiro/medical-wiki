@@ -8,8 +8,8 @@ description: "背部の急激な疼痛。"
 keywords: ["M54.9", "acute", "back", "pain"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -75,7 +75,7 @@ CVA叩打痛: なし / 右 / 左
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -116,7 +116,12 @@ CVA叩打痛: なし / 右 / 左
 - **再診目安:** 疼痛持続時。
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="m549-acute-back-pain" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -141,11 +146,9 @@ CVA叩打痛: なし / 右 / 左
 > **[D-dimerなし]** 当院ではD-dimerが即日出ないため、解離や肺塞栓の除外には使えない。疑わしければ画像診断ができる施設へ送るのが鉄則である。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="m549-acute-back-pain" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -167,6 +170,8 @@ CVA叩打痛: なし / 右 / 左
 - [日本救急医学会](https://www.jaam.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

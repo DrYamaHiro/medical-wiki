@@ -8,8 +8,8 @@ description: "片側下肢の急激な腫脹、疼痛、色調変化。"
 keywords: ["I80.2", "dvt"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -63,7 +63,7 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -89,7 +89,12 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 - **紹介先:** 血管外科・循環器内科（DVT疑い・至急精査）
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="i802-dvt" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -110,11 +115,9 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 > **[DVT除外]** 「片足だけ急に腫れた」はDVTのRed Flagである。見逃すと肺塞栓症（致死的）に繋がるため、診断がつかなくても紹介するのが安全である。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="i802-dvt" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -136,6 +139,8 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 - [日本循環器学会](https://www.j-circ.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

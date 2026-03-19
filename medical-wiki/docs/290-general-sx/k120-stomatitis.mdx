@@ -8,8 +8,8 @@ description: "口腔粘膜のアフタ、接触痛。"
 keywords: ["K12.0", "stomatitis"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -76,7 +76,7 @@ Virchow節: 触知 / なし ；左鎖骨上窩
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -103,7 +103,12 @@ Virchow節: 触知 / なし ；左鎖骨上窩
 - **再診目安:** 2週間後。
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="k120-stomatitis" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -124,11 +129,9 @@ Virchow節: 触知 / なし ；左鎖骨上窩
 > **[難治性]** 「2週間以上治らない」「硬結がある」「出血しやすい」口内炎は口腔癌の可能性がある。漫然と軟膏を出さず、口腔外科へ紹介せよ。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="k120-stomatitis" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -150,6 +153,8 @@ Virchow節: 触知 / なし ；左鎖骨上窩
 - [日本内科学会](https://www.naika.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

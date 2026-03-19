@@ -8,8 +8,8 @@ description: "虫刺され後の激しい腫脹、水疱、硬結。遅延型反
 keywords: ["虫刺され・すとろふるす", "すとろふるす", "T14.0", "insect", "bite", "strophulus"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -42,7 +42,7 @@ keywords: ["虫刺され・すとろふるす", "すとろふるす", "T14.0", "
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -66,7 +66,12 @@ keywords: ["虫刺され・すとろふるす", "すとろふるす", "T14.0", "
 - **再診目安:** 改善なければ再診。
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="t140-insect-bite-strophulus" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -89,11 +94,9 @@ keywords: ["虫刺され・すとろふるす", "すとろふるす", "T14.0", "
 > **[痕を残さない]** 「子供だから弱い薬」でWeakランクを使うと、炎症が長引き色素沈着や硬結（痒疹）を残す。最初からStrong（リンデロンVG）で短期間に治す方が綺麗に治る。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="t140-insect-bite-strophulus" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -115,6 +118,8 @@ keywords: ["虫刺され・すとろふるす", "すとろふるす", "T14.0", "
 - [日本小児皮膚科学会](https://www.pedsderm.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

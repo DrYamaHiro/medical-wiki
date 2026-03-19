@@ -8,8 +8,8 @@ description: "発熱、消化器症状（腹痛・下痢・嘔気）、関節痛
 keywords: ["いんふるえんざB型", "いんふるえんざ", "J11", "influenza"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -79,7 +79,7 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -114,7 +114,12 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - ビオフェルミン錠 1回1錠 1日3回 毎食後 5日分
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="j11-influenza-b" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -144,11 +149,9 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 > **[B型特徴]** B型は消化器症状を伴うことが多く、脱水になりやすいため水分摂取をより強く指導せよ。脱水が著しい場合は、ラクテックによる補液を検討せよ。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="j11-influenza-b" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -170,6 +173,8 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - [日本感染症学会](https://www.kansensho.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

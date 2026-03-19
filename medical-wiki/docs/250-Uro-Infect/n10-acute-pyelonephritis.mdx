@@ -8,8 +8,8 @@ description: "38℃以上の発熱、悪寒戦慄、CVA叩打痛（背部痛）�
 keywords: ["N10", "acute", "pyelonephritis"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -68,7 +68,7 @@ keywords: ["N10", "acute", "pyelonephritis"]
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -104,7 +104,12 @@ keywords: ["N10", "acute", "pyelonephritis"]
 - **再診目安:** 翌日（状態確認）。
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="n10-acute-pyelonephritis" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -131,11 +136,9 @@ keywords: ["N10", "acute", "pyelonephritis"]
 > **[紹介の閾値]** 「吐き気で薬が飲めない」「血圧が低い」「意識が少しボーッとする」は敗血症の初期徴候（qSOFA）。当院で点滴して帰すのは危険すぎるため、直ちに救急搬送せよ。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="n10-acute-pyelonephritis" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -157,6 +160,8 @@ keywords: ["N10", "acute", "pyelonephritis"]
 - [日本泌尿器科学会](https://www.urol.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

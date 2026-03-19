@@ -8,8 +8,8 @@ description: "Hb低値、MCV高値(>100)、汎血球減少傾向。"
 keywords: ["D51", "megaloblastic", "anemia"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -66,7 +66,7 @@ keywords: ["D51", "megaloblastic", "anemia"]
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -97,7 +97,12 @@ keywords: ["D51", "megaloblastic", "anemia"]
 - **再診目安:** 1ヶ月後。
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="d51-megaloblastic-anemia" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -125,11 +130,9 @@ keywords: ["D51", "megaloblastic", "anemia"]
 > **[胃切除後]** 胃全摘後の患者は、術後数年～数十年経ってから体内のB12貯蔵が枯渇し貧血を発症する。「昔の手術だから関係ない」と思わず、手術歴を確認せよ。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="d51-megaloblastic-anemia" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -151,6 +154,8 @@ keywords: ["D51", "megaloblastic", "anemia"]
 - [日本血液学会](https://www.jshem.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

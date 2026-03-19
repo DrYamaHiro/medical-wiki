@@ -8,8 +8,8 @@ description: "以下の2項目以上を満たす場合、FHを疑う。"
 keywords: ["家族性高これすてろーる血症", "これすてろーる", "E78.0", "familial", "hypercholesterolemia", "fh"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -55,7 +55,7 @@ keywords: ["家族性高これすてろーる血症", "これすてろーる", "
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -91,7 +91,12 @@ keywords: ["家族性高これすてろーる血症", "これすてろーる", "
 - **紹介先:** 循環器内科・代謝内科（FH精査・加療依頼）
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="e780-familial-hypercholesterolemia-fh" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -120,11 +125,9 @@ keywords: ["家族性高これすてろーる血症", "これすてろーる", "
 > **[若年者のFH]** 小児や20代で見つかった場合、「若いから薬はまだいい」は間違い。FHは生まれた瞬間から血管がコレステロールに曝露され続けている。早期発見・早期治療介入こそが寿命を延ばす鍵である。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="e780-familial-hypercholesterolemia-fh" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -146,6 +149,8 @@ keywords: ["家族性高これすてろーる血症", "これすてろーる", "
 - [日本動脈硬化学会 脂質異常症ガイドライン](https://www.j-athero.org/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

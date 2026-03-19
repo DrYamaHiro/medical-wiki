@@ -8,8 +8,8 @@ description: "はっきりとしたストレス因（異動、人間関係等）
 keywords: ["F43.2", "adjustment", "disorder"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -57,7 +57,7 @@ keywords: ["F43.2", "adjustment", "disorder"]
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -86,7 +86,12 @@ keywords: ["F43.2", "adjustment", "disorder"]
 - <span className="med-id">[Doc-Check-Cert]</span> 診断書（一般・和文）
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="f432-adjustment-disorder" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -117,11 +122,9 @@ keywords: ["F43.2", "adjustment", "disorder"]
 > **[薬の限界]** 「薬は環境を変えてくれません」。会社に行くと具合が悪くなる場合、薬で無理に行かせるのではなく、環境を変える（休む）決断を促すのが医師の役割である。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="f432-adjustment-disorder" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -143,6 +146,8 @@ keywords: ["F43.2", "adjustment", "disorder"]
 - [日本精神神経学会](https://www.jspn.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

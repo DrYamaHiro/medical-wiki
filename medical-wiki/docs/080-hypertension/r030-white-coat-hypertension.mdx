@@ -8,8 +8,8 @@ description: "診察室血圧は高値(>140/90)だが、家庭血圧は正常(<1
 keywords: ["R03.0", "white", "coat", "hypertension"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -50,7 +50,7 @@ keywords: ["R03.0", "white", "coat", "hypertension"]
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -70,7 +70,12 @@ keywords: ["R03.0", "white", "coat", "hypertension"]
 - <span className="med-id">[Doc-Gen-Lifestyle]</span> 生活習慣病指導用パンフレット
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="r030-white-coat-hypertension" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -95,11 +100,9 @@ keywords: ["R03.0", "white", "coat", "hypertension"]
 > **[過降圧注意]** 診察室の数値だけで薬を出すと、自宅や職場で低血圧（ふらつき・転倒）を起こす危険がある。「お家での血圧を信じます」と伝え、測定を習慣化させよ。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="r030-white-coat-hypertension" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -121,6 +124,8 @@ keywords: ["R03.0", "white", "coat", "hypertension"]
 - [日本高血圧学会 高血圧治療ガイドライン](https://www.jpnsh.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

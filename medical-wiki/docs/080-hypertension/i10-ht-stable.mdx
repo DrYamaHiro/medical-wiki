@@ -8,8 +8,8 @@ description: "診察室血圧≧140/90、家庭血圧≧135/85。"
 keywords: ["I10", "ht", "stable"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -50,7 +50,7 @@ keywords: ["I10", "ht", "stable"]
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -83,7 +83,12 @@ keywords: ["I10", "ht", "stable"]
 - <span className="med-id">[Doc-Gen-Lifestyle]</span> 生活習慣病指導用パンフレット
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="i10-ht-stable" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -110,11 +115,9 @@ keywords: ["I10", "ht", "stable"]
 > **[75歳以上の降圧]** 高齢者の厳格な降圧（&lt;130）は、ふらつきや腎機能悪化（Jカーブ現象）を招くことがある。忍容性がなければ140台でも許容するなど、フレイル度に応じた「さじ加減」が必要。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="i10-ht-stable" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -136,6 +139,8 @@ keywords: ["I10", "ht", "stable"]
 - [日本高血圧学会 高血圧治療ガイドライン](https://www.jpnsh.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

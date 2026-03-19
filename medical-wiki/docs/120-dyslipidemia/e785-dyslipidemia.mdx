@@ -8,8 +8,8 @@ description: "LDL≧140, TG≧150, HDL<40。"
 keywords: ["E78.5", "dyslipidemia"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -55,7 +55,7 @@ keywords: ["E78.5", "dyslipidemia"]
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -94,7 +94,12 @@ keywords: ["E78.5", "dyslipidemia"]
 - **生活指導:** 脂質制限、運動療法の継続。
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="e785-dyslipidemia" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -125,11 +130,9 @@ keywords: ["E78.5", "dyslipidemia"]
 > **[非空腹時TGの価値]** 「食事をしてきたから検査は無駄」ではない。非空腹時（食後）の高TG血症は、動脈硬化惹起性の高いカイロミクロンレムナントの存在を反映しており、空腹時TGよりも心血管イベントリスクと強く相関するという報告もある。「食後の脂の処理能力を見る良い機会です」と説明し、そのまま採血せよ。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="e785-dyslipidemia" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -151,6 +154,8 @@ keywords: ["E78.5", "dyslipidemia"]
 - [日本動脈硬化学会 脂質異常症ガイドライン](https://www.j-athero.org/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

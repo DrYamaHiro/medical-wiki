@@ -8,8 +8,8 @@ description: "発熱、湿性咳嗽。聴診でコースクラックル(Coarse c
 keywords: ["J18.0", "bronchopneumonia"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -78,7 +78,7 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -105,7 +105,12 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 - ジスロマック錠250mg 1回2錠 1日1回 3日分 *— 若年者・非定型疑い*
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="j180-bronchopneumonia" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -128,11 +133,9 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 > **[病態]** 炎症の中心が肺胞（大葉性肺炎）よりも気管支～細気管支にある状態。ウイルス性やマイコプラズマの関与も多いため、患者背景（年齢・流行）に応じた薬剤選択をせよ。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="j180-bronchopneumonia" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -154,6 +157,8 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 - [日本呼吸器学会 肺炎診療ガイドライン](https://www.jrs.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

@@ -8,8 +8,8 @@ description: "そう痒、紅斑、小水疱、落屑、亀裂。"
 keywords: ["L30.9", "eczema", "hand"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -52,7 +52,7 @@ keywords: ["L30.9", "eczema", "hand"]
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -87,7 +87,12 @@ keywords: ["L30.9", "eczema", "hand"]
 - **再診目安:** 1-2週間後
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="l309-eczema-hand-eczema" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -110,11 +115,9 @@ keywords: ["L30.9", "eczema", "hand"]
 > **[皮脂欠乏性湿疹]** 高齢者の下腿や背中の痒みは乾燥が主因。ステロイドだけでなく、保湿剤を「入浴後5分以内」に全身塗布させることが最良の予防である。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="l309-eczema-hand-eczema" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -136,6 +139,8 @@ keywords: ["L30.9", "eczema", "hand"]
 - [日本皮膚科学会](https://www.dermatol.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

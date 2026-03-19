@@ -8,8 +8,8 @@ description: "38℃以上の発熱、膿性喀痰、胸痛。胸部X線で明確
 keywords: ["J15.9", "bacterial", "pneumonia"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -78,7 +78,7 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -122,7 +122,12 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 - ムコダイン錠500mg 1回1錠 1日3回 毎食後 7日分
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="j159-bacterial-pneumonia" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -145,11 +150,9 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 > **[キノロンの温存と使用]** 若年者の軽症肺炎にいきなりキノロン（レボフロキサシン）を使うと、結核の診断遅延や耐性菌リスクを招くため、まずはペニシリン系（オグサワ）を推奨する。一方、高齢者で「入院せずに外来で治したい」というニーズが強い場合は、広域スペクトルと高い組織移行性を持つキノロン系（ラスビック等）を第一選択とすることは戦略的に正しい。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="j159-bacterial-pneumonia" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -171,6 +174,8 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 - [日本呼吸器学会 肺炎診療ガイドライン](https://www.jrs.or.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

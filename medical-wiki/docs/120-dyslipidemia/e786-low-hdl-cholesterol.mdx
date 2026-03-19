@@ -8,8 +8,8 @@ description: "HDL-C < 40 mg/dL。"
 keywords: ["低HDLこれすてろーる血症", "これすてろーる", "E78.6", "low", "hdl", "cholesterol"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -55,7 +55,7 @@ keywords: ["低HDLこれすてろーる血症", "これすてろーる", "E78.6"
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -73,7 +73,12 @@ keywords: ["低HDLこれすてろーる血症", "これすてろーる", "E78.6"
 - <span className="med-id">[Doc-Gen-Lifestyle]</span> 生活習慣病指導用パンフレット
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="e786-low-hdl-cholesterol" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -100,11 +105,9 @@ keywords: ["低HDLこれすてろーる血症", "これすてろーる", "E78.6"
 > **[禁煙]** 喫煙はHDLを低下させる最大の要因の一つ。HDLを上げる特効薬はないため、「タバコを止めて歩くこと」が最良の治療である。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="e786-low-hdl-cholesterol" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -126,6 +129,8 @@ keywords: ["低HDLこれすてろーる血症", "これすてろーる", "E78.6"
 - [日本動脈硬化学会 脂質異常症ガイドライン](https://www.j-athero.org/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

@@ -8,8 +8,8 @@ description: "LDL-C ≧ 140 mg/dL。"
 keywords: ["高LDLこれすてろーる血症", "これすてろーる", "E78.0", "high", "ldl", "cholesterol"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -55,7 +55,7 @@ keywords: ["高LDLこれすてろーる血症", "これすてろーる", "E78.0"
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -86,7 +86,12 @@ keywords: ["高LDLこれすてろーる血症", "これすてろーる", "E78.0"
 - ゼチーア錠10mg 1回1錠 1日1回 朝食後 28日分
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="e780-high-ldl-cholesterol" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -113,11 +118,9 @@ keywords: ["高LDLこれすてろーる血症", "これすてろーる", "E78.0"
 > **[女性のLDL]** 閉経後女性はエストロゲン低下によりLDLが急上昇する。男性と同じ基準で即投薬する前に、まずはホルモン変化の影響であることを説明し、リスク因子（喫煙・高血圧）がなければ少し様子を見ても良いケースがある。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="e780-high-ldl-cholesterol" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -139,6 +142,8 @@ keywords: ["高LDLこれすてろーる血症", "これすてろーる", "E78.0"
 - [日本動脈硬化学会 脂質異常症ガイドライン](https://www.j-athero.org/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

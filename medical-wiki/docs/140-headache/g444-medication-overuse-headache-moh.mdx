@@ -8,8 +8,8 @@ description: "月15日以上の頭痛かつ、月10日以上（トリプタン�
 keywords: ["G44.4", "medication", "overuse", "headache", "moh"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -67,7 +67,7 @@ keywords: ["G44.4", "medication", "overuse", "headache", "moh"]
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -92,7 +92,12 @@ keywords: ["G44.4", "medication", "overuse", "headache", "moh"]
 - ツムラ五苓散(17)エキス顆粒 2.5g 1回1包 1日3回 食前 28日分
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="g444-medication-overuse-headache-moh" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -115,11 +120,9 @@ keywords: ["G44.4", "medication", "overuse", "headache", "moh"]
 > **[説得のロジック]** 「痛み止めが効かなくなった」のではなく「痛み止めが頭痛を作っている」状態であることを図解して説明せよ。「最初の2週間は辛いですが、そこを乗り越えれば本来の頭痛（もっと軽くて頻度が少ない）に戻ります」とゴールを示すことが重要。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="g444-medication-overuse-headache-moh" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -141,6 +144,8 @@ keywords: ["G44.4", "medication", "overuse", "headache", "moh"]
 - [日本頭痛学会 頭痛診療ガイドライン](https://www.jhsnet.net/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

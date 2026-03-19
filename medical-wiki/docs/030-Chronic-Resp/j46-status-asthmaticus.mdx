@@ -8,8 +8,8 @@ description: "安静時呼吸困難、会話困難、頻脈(>110)、SpO2低下(<
 keywords: ["J46", "status", "asthmaticus"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -63,7 +63,7 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -90,7 +90,12 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - ボスミン注 0.3mg 皮下または筋肉内注射 ；若年者・最重症時
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="j46-status-asthmaticus" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -111,11 +116,9 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 > **[Silent Chest]** 聴診で喘鳴が聞こえない（呼吸音がしない）場合は、気道閉塞が高度で窒息寸前の「最重症」サインである。躊躇なくアドレナリン筋注と救急搬送を行え。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="j46-status-asthmaticus" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -137,6 +140,8 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - [日本アレルギー学会 喘息ガイドライン](https://www.jsaweb.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 

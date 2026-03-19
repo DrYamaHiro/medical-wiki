@@ -8,8 +8,8 @@ description: "Medical Diet"
 keywords: ["めでぃかるだいえっと", "E66.9", "medical", "diet"]
 ---
 
-<div className="row">
-<div className="col col--5">
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
 
 <details className="so-details">
 <summary className="so-summary">📋 主訴・所見・診察前対応</summary>
@@ -41,7 +41,7 @@ keywords: ["めでぃかるだいえっと", "E66.9", "medical", "diet"]
 
 </details>
 
-<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.col--5').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
 
 <h3 className="soap-a">評価</h3>
 
@@ -75,7 +75,12 @@ keywords: ["めでぃかるだいえっと", "E66.9", "medical", "diet"]
 - <span className="med-id">[Rx-GI-Sym-Nau]</span> ナウゼリン錠10mg 1回1錠 嘔気時頓用 10回分 ；GLP-1初期の嘔気対策
 
 </div>
-<div className="col col--4">
+<div className="col col--7 right-panel">
+
+<ImageUploader docId="e669-medical-diet" />
+
+<div className="row right-inner">
+<div className="col col--6 advice-col">
 
 <div className="dr-advice-spacer"></div>
 
@@ -101,11 +106,9 @@ keywords: ["めでぃかるだいえっと", "E66.9", "medical", "diet"]
 > **[用量調整]** GLP-1製剤は消化器症状（吐き気）が出やすいため、必ず低用量（リベルサス3mg/マンジャロ2.5mg）から開始し、4週間経過後に副作用がなければ増量（7mg/5mg）を検討する。
 
 </div>
-<div className="col col--3">
+<div className="col col--6 wiki-col">
 
 {/* WIKI_EDIT_START */}
-<ImageUploader docId="e669-medical-diet" />
-
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
@@ -127,6 +130,8 @@ keywords: ["めでぃかるだいえっと", "E66.9", "medical", "diet"]
 - [日本美容医療協会](https://www.jaam.jp/)
 {/* WIKI_EDIT_END */}
 
+</div>
+</div>
 </div>
 </div>
 
