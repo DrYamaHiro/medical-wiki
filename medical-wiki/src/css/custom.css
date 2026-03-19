@@ -203,9 +203,9 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   color: #fde68a;
 }
 
-/* スペーサー: S/O collapsed 時に Dr.Advice を A/P 位置に合わせる */
+/* スペーサー: 無効化（右パネル上部に画像があるため不要） */
 .dr-advice-spacer {
-  height: 8.5rem;
+  display: none;
 }
 
 .soap-col:has(details.so-details[open]) ~ .right-panel .dr-advice-spacer {
