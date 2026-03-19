@@ -1,0 +1,268 @@
+/* ImageUploader — コンパクト右カラム用 */
+
+.container {
+  margin-bottom: 1rem;
+}
+
+/* ── メイン画像 (上部) ── */
+.featured {
+  border: 2px solid var(--ifm-color-primary-light);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  background: var(--ifm-color-emphasis-100);
+}
+
+.featuredImage {
+  width: 100%;
+  display: block;
+  object-fit: contain;
+  max-height: 300px;
+}
+
+/* ── トークン設定 ── */
+.tokenBtn {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.75rem;
+  border: 1px dashed var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-600);
+  cursor: pointer;
+  text-align: center;
+}
+
+.tokenBtn:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+.tokenInput {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.tokenInput input {
+  flex: 1;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+}
+
+.tokenInput button {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  background: var(--ifm-color-emphasis-100);
+  cursor: pointer;
+}
+
+/* ── ギャラリーヘッダー ── */
+.galleryHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.toggleBtn {
+  flex: 1;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-700);
+  cursor: pointer;
+  text-align: left;
+}
+
+.toggleBtn:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+.tokenClearBtn {
+  padding: 0.3rem;
+  font-size: 0.7rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.tokenClearBtn:hover {
+  opacity: 1;
+}
+
+/* ── ギャラリーパネル ── */
+.galleryPanel {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  background: var(--ifm-color-emphasis-100);
+}
+
+/* ── ドロップゾーン ── */
+.dropZone {
+  border: 2px dashed var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  padding: 0.8rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 0.5rem;
+  background: var(--ifm-background-color);
+}
+
+.dropZone:hover {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary-lightest);
+}
+
+.dragOver {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary-lightest);
+  transform: scale(1.01);
+}
+
+.uploading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.dropIcon {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.dropText {
+  font-size: 0.7rem;
+  color: var(--ifm-color-emphasis-500);
+}
+
+.spinner {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* ── エラー / 状態 ── */
+.error {
+  font-size: 0.72rem;
+  color: #dc2626;
+  background: #fef2f2;
+  border-radius: 4px;
+  padding: 0.3rem 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+[data-theme='dark'] .error {
+  background: #2d0f0f;
+  color: #fca5a5;
+}
+
+.loading,
+.empty {
+  font-size: 0.72rem;
+  color: var(--ifm-color-emphasis-500);
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+/* ── 画像グリッド ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.4rem;
+}
+
+.card {
+  border: 2px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--ifm-background-color);
+  transition: border-color 0.15s;
+}
+
+.card:hover {
+  border-color: var(--ifm-color-emphasis-400);
+}
+
+.cardFeatured {
+  border-color: var(--ifm-color-primary) !important;
+  box-shadow: 0 0 0 1px var(--ifm-color-primary);
+}
+
+.thumb {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.15rem 0.25rem;
+  font-size: 0.65rem;
+}
+
+.featBtn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.featBtn:disabled {
+  cursor: default;
+}
+
+.cardName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.6rem;
+}
+
+.deleteBtn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0;
+  opacity: 0.4;
+  transition: opacity 0.15s;
+}
+
+.deleteBtn:hover {
+  opacity: 1;
+}
+
+/* ── レスポンシブ ── */
+@media (max-width: 996px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  .thumb {
+    height: 60px;
+  }
+}

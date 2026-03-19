@@ -437,6 +437,8 @@ ${apAdviceMd}
 <div className="col col--3">
 
 {/* WIKI_EDIT_START */}
+<ImageUploader docId="${docId}" />
+
 ## 📖 詳細解説
 
 *最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
