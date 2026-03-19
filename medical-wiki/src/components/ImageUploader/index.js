@@ -151,7 +151,7 @@ export default function ImageUploader({ docId }) {
       fd.append('upload_preset', UPLOAD_PRESET);
       fd.append('folder', `medical-wiki/${docId}`);
       fd.append('tags', docId);
-      fd.append('return_delete_token', '1');
+      // return_delete_token は upload preset 側で設定済み
       const res = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
         { method: 'POST', body: fd }
