@@ -57,25 +57,6 @@ function setFeaturedStorage(docId, publicId) {
   notify(docId);
 }
 
-/** 削除トークン (localStorage) — アップロード後10分有効 */
-function getDeleteTokens(docId) {
-  if (typeof window === 'undefined') return {};
-  try { return JSON.parse(localStorage.getItem(`wiki_deltok_${docId}`) || '{}'); }
-  catch { return {}; }
-}
-function saveDeleteToken(docId, publicId, token) {
-  const tokens = getDeleteTokens(docId);
-  tokens[publicId] = { token, expires: Date.now() + 10 * 60 * 1000 };
-  localStorage.setItem(`wiki_deltok_${docId}`, JSON.stringify(tokens));
-}
-function getDeleteToken(docId, publicId) {
-  const tokens = getDeleteTokens(docId);
-  const entry = tokens[publicId];
-  if (!entry) return null;
-  if (Date.now() > entry.expires) return null;
-  return entry.token;
-}
-
 /** サムネイル順序 (localStorage) */
 function getOrder(docId) {
   if (typeof window === 'undefined') return [];
@@ -169,10 +150,6 @@ export default function ImageUploader({ docId }) {
         display: data.secure_url,
         format: fmt,
       };
-      // 削除トークンを保存 (10分有効)
-      if (data.delete_token) {
-        saveDeleteToken(docId, pid, data.delete_token);
-      }
       setAllImages((prev) => [...prev, newImg]);
       if (images.length === 0) setFeaturedStorage(docId, pid);
       else notify(docId);
@@ -298,30 +275,8 @@ export default function ImageUploader({ docId }) {
         const hiddenImgs = allImages.filter((i) => hidden.includes(i.publicId));
         if (hiddenImgs.length === 0) return null;
 
-        const hardDelete = async (publicId) => {
-          if (!window.confirm('Cloudinaryから完全に削除します。元に戻せません。よろしいですか？')) return;
-          const token = getDeleteToken(docId, publicId);
-          if (token) {
-            try {
-              const fd = new FormData();
-              fd.append('token', token);
-              const res = await fetch(
-                `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/delete_by_token`,
-                { method: 'POST', body: fd }
-              );
-              if (!res.ok) throw new Error(`${res.status}`);
-            } catch (err) {
-              console.error('Hard delete failed:', err);
-              alert('削除トークンの有効期限切れ（10分）です。\nCloudinaryダッシュボードから削除してください。');
-              return;
-            }
-          } else {
-            alert('削除トークンの有効期限切れ（10分）です。\nCloudinaryダッシュボードから削除してください。');
-            return;
-          }
-          // ローカル状態からも除去
-          removeHidden(docId, publicId);
-          setAllImages((prev) => prev.filter((i) => i.publicId !== publicId));
+        const hardDelete = (publicId) => {
+          window.open('https://console.cloudinary.com/console/media_library', '_blank');
         };
 
         return (
