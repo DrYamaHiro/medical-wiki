@@ -4,15 +4,41 @@ import styles from './styles.module.css';
 const CLOUD_NAME = 'dpyh1wsn8';
 const UPLOAD_PRESET = 'medical-wiki';
 
+/** Cloudinary からタグ指定で画像一覧取得 */
+async function fetchCloudinaryImages(docId) {
+  try {
+    const res = await fetch(
+      `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${docId}.json`
+    );
+    if (res.status === 404) return [];
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.resources || []).map((r) => ({
+      publicId: r.public_id,
+      thumb: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/c_fill,w_200,h_150/${r.public_id}.${r.format}`,
+      medium: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400/${r.public_id}.${r.format}`,
+      large: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_1200/${r.public_id}.${r.format}`,
+      format: r.format,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/** featured を localStorage に保存/取得 */
+function getFeatured(docId) {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(`wiki_feat_${docId}`);
+}
+function setFeaturedStorage(docId, publicId) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(`wiki_feat_${docId}`, publicId);
+  // 他コンポーネントへ通知
+  window.dispatchEvent(new CustomEvent('wiki-image-update', { detail: { docId } }));
+}
+
 /**
- * Cloudinary 画像アップロード＆ギャラリーコンポーネント
- *
- * - 上部: メイン画像（1枚）を大きく表示
- * - 下部: ギャラリー（制限なし）＋アップロード
- * - 認証不要 — unsigned upload preset 使用
- *
- * Props:
- *   docId - ドキュメントID (例: "j00-common-cold")
+ * 右カラム用: アイコン的小画像 + アップロードUI
  */
 export default function ImageUploader({ docId }) {
   const [images, setImages] = useState([]);
@@ -20,251 +46,196 @@ export default function ImageUploader({ docId }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [dragOver, setDragOver] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [galleryOpen, setGalleryOpen] = useState(false);
   const fileInputRef = useRef(null);
   const dropRef = useRef(null);
 
-  // 初期化: 画像一覧取得 + featured 復元
   useEffect(() => {
-    if (docId) {
-      fetchImages();
-      if (typeof window !== 'undefined') {
-        const saved = localStorage.getItem(`wiki_featured_${docId}`);
-        if (saved) setFeaturedId(saved);
+    if (!docId) return;
+    setFeaturedId(getFeatured(docId));
+    fetchCloudinaryImages(docId).then((imgs) => {
+      setImages(imgs);
+      if (imgs.length > 0 && !getFeatured(docId)) {
+        setFeaturedId(imgs[0].publicId);
       }
-    }
+    });
   }, [docId]);
 
-  /** Cloudinary Resource List API で既存画像を取得 */
-  const fetchImages = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${docId}.json`
-      );
-      if (res.status === 404) {
-        setImages([]);
-        return;
+  // 他コンポーネントからの更新通知を受信
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail?.docId === docId) {
+        setFeaturedId(getFeatured(docId));
+        fetchCloudinaryImages(docId).then(setImages);
       }
-      if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-      const data = await res.json();
-      const imgs = (data.resources || []).map((r) => ({
-        publicId: r.public_id,
-        url: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${r.public_id}.${r.format}`,
-        thumb: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/c_fill,w_200,h_150/${r.public_id}.${r.format}`,
-        full: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_800/${r.public_id}.${r.format}`,
-        format: r.format,
-        createdAt: r.created_at,
-      }));
-      setImages(imgs);
+    };
+    window.addEventListener('wiki-image-update', handler);
+    return () => window.removeEventListener('wiki-image-update', handler);
+  }, [docId]);
 
-      // featured が未設定 or 存在しない場合、最初の画像を設定
-      if (imgs.length > 0) {
-        const savedFeat = typeof window !== 'undefined'
-          ? localStorage.getItem(`wiki_featured_${docId}`)
-          : null;
-        if (!savedFeat || !imgs.find((i) => i.publicId === savedFeat)) {
-          setFeaturedId(imgs[0].publicId);
-        }
-      }
-    } catch (err) {
-      // 404 はまだ画像が無いだけなのでエラー表示しない
-      if (!err.message.includes('404')) {
-        console.error('Failed to fetch images:', err);
-      }
-      setImages([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /** Cloudinary Unsigned Upload */
   const uploadImage = async (file) => {
-    if (!file || !file.type.startsWith('image/')) {
-      setError('画像ファイルのみアップロード可能です。');
+    if (!file?.type.startsWith('image/')) {
+      setError('画像ファイルのみ');
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      setError('ファイルサイズは10MB以下にしてください。');
+      setError('10MB以下にしてください');
       return;
     }
-
     setUploading(true);
     setError('');
-
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', UPLOAD_PRESET);
-      formData.append('folder', `medical-wiki/${docId}`);
-      formData.append('tags', docId);
-
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', UPLOAD_PRESET);
+      fd.append('folder', `medical-wiki/${docId}`);
+      fd.append('tags', docId);
       const res = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-        { method: 'POST', body: formData }
+        { method: 'POST', body: fd }
       );
-
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error?.message || `Upload failed: ${res.status}`);
+        const d = await res.json().catch(() => ({}));
+        throw new Error(d.error?.message || `${res.status}`);
       }
-
       const data = await res.json();
       const newImg = {
         publicId: data.public_id,
-        url: data.secure_url,
         thumb: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/c_fill,w_200,h_150/${data.public_id}.${data.format}`,
-        full: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_800/${data.public_id}.${data.format}`,
+        medium: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400/${data.public_id}.${data.format}`,
+        large: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_1200/${data.public_id}.${data.format}`,
         format: data.format,
-        createdAt: data.created_at,
       };
-
-      setImages((prev) => [...prev, newImg]);
-
-      // 最初の1枚なら自動でメインに設定
+      const updated = [...images, newImg];
+      setImages(updated);
       if (images.length === 0) {
-        selectFeatured(data.public_id);
+        setFeaturedId(data.public_id);
+        setFeaturedStorage(docId, data.public_id);
       }
+      // 下のギャラリーにも通知
+      window.dispatchEvent(new CustomEvent('wiki-image-update', { detail: { docId } }));
     } catch (err) {
-      console.error('Upload failed:', err);
-      setError(`アップロード失敗: ${err.message}`);
+      setError(`失敗: ${err.message}`);
     } finally {
       setUploading(false);
     }
   };
 
-  /** メイン画像を選択 (localStorage に保存) */
-  const selectFeatured = (publicId) => {
-    setFeaturedId(publicId);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(`wiki_featured_${docId}`, publicId);
-    }
-  };
-
-  // ドラッグ&ドロップ
-  const handleDragOver = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragOver(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragOver(false);
-  }, []);
-
+  const handleDragOver = useCallback((e) => { e.preventDefault(); setDragOver(true); }, []);
+  const handleDragLeave = useCallback((e) => { e.preventDefault(); setDragOver(false); }, []);
   const handleDrop = useCallback((e) => {
     e.preventDefault();
-    e.stopPropagation();
     setDragOver(false);
-    const files = Array.from(e.dataTransfer.files).filter((f) =>
-      f.type.startsWith('image/')
-    );
-    if (files.length > 0) uploadImage(files[0]);
+    const f = Array.from(e.dataTransfer.files).find((f) => f.type.startsWith('image/'));
+    if (f) uploadImage(f);
   }, [docId, images]);
 
-  // クリップボード貼り付け
   useEffect(() => {
     const handlePaste = (e) => {
       if (!dropRef.current) return;
       const rect = dropRef.current.getBoundingClientRect();
-      const inView = rect.top < window.innerHeight && rect.bottom > 0;
-      if (!inView) return;
-
-      const items = Array.from(e.clipboardData?.items || []);
-      const imgItem = items.find((i) => i.type.startsWith('image/'));
-      if (imgItem) {
-        e.preventDefault();
-        uploadImage(imgItem.getAsFile());
-      }
+      if (rect.top > window.innerHeight || rect.bottom < 0) return;
+      const item = Array.from(e.clipboardData?.items || []).find((i) => i.type.startsWith('image/'));
+      if (item) { e.preventDefault(); uploadImage(item.getAsFile()); }
     };
     document.addEventListener('paste', handlePaste);
     return () => document.removeEventListener('paste', handlePaste);
   }, [docId, images]);
 
-  const handleFileSelect = (e) => {
-    const file = e.target.files?.[0];
-    if (file) uploadImage(file);
-    e.target.value = '';
-  };
-
-  // メイン画像
-  const featuredImg = images.find((i) => i.publicId === featuredId) || images[0];
+  const featImg = images.find((i) => i.publicId === featuredId) || images[0];
 
   return (
-    <div className={styles.container}>
-      {/* ── メイン画像 (上部) ── */}
-      {featuredImg && (
-        <div className={styles.featured}>
-          <img
-            src={featuredImg.full}
-            alt="メイン画像"
-            className={styles.featuredImage}
-          />
+    <div className={styles.uploader}>
+      {featImg && (
+        <div className={styles.iconPreview}>
+          <img src={featImg.medium} alt="" className={styles.iconImage} />
+        </div>
+      )}
+      <div
+        ref={dropRef}
+        className={`${styles.dropZone} ${dragOver ? styles.dragOver : ''} ${uploading ? styles.uploading : ''}`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={() => !uploading && fileInputRef.current?.click()}
+      >
+        {uploading
+          ? <span className={styles.dropText}>アップロード中...</span>
+          : <span className={styles.dropText}>画像追加: ドロップ / クリック / Ctrl+V</span>
+        }
+        <input ref={fileInputRef} type="file" accept="image/*"
+          onChange={(e) => { if (e.target.files?.[0]) uploadImage(e.target.files[0]); e.target.value = ''; }}
+          className={styles.hiddenInput} />
+      </div>
+      {error && <div className={styles.error}>{error}</div>}
+    </div>
+  );
+}
+
+/**
+ * 本文下用: 大きな画像表示 + サムネイル選択
+ */
+export function ImageGallery({ docId }) {
+  const [images, setImages] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const load = async () => {
+    setLoading(true);
+    const imgs = await fetchCloudinaryImages(docId);
+    setImages(imgs);
+    const feat = getFeatured(docId);
+    if (feat && imgs.find((i) => i.publicId === feat)) {
+      setSelectedId(feat);
+    } else if (imgs.length > 0) {
+      setSelectedId(imgs[0].publicId);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (docId) load();
+  }, [docId]);
+
+  // アップロード通知を受信してリフレッシュ
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail?.docId === docId) load();
+    };
+    window.addEventListener('wiki-image-update', handler);
+    return () => window.removeEventListener('wiki-image-update', handler);
+  }, [docId]);
+
+  const selectImage = (publicId) => {
+    setSelectedId(publicId);
+    setFeaturedStorage(docId, publicId);
+  };
+
+  const selectedImg = images.find((i) => i.publicId === selectedId) || images[0];
+
+  if (loading) return null;
+  if (images.length === 0) return null;
+
+  return (
+    <div className={styles.gallery}>
+      {/* 大きな画像表示 */}
+      {selectedImg && (
+        <div className={styles.largeView}>
+          <img src={selectedImg.large} alt="" className={styles.largeImage} />
         </div>
       )}
 
-      {/* ── ギャラリー & アップロード (下部) ── */}
-      <button
-        className={styles.toggleBtn}
-        onClick={() => setGalleryOpen((v) => !v)}
-      >
-        {galleryOpen ? '▲ 閉じる' : `▼ 画像 (${images.length})`}
-      </button>
-
-      {galleryOpen && (
-        <div className={styles.panel}>
-          {/* ドロップゾーン */}
-          <div
-            ref={dropRef}
-            className={`${styles.dropZone} ${dragOver ? styles.dragOver : ''} ${uploading ? styles.uploading : ''}`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={() => !uploading && fileInputRef.current?.click()}
-          >
-            {uploading ? (
-              <span className={styles.spinner}>アップロード中...</span>
-            ) : (
-              <span className={styles.dropText}>
-                画像をドロップ / クリック / Ctrl+V
-              </span>
-            )}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileSelect}
-              className={styles.hiddenInput}
-            />
-          </div>
-
-          {error && <div className={styles.error}>{error}</div>}
-          {loading && <div className={styles.info}>読み込み中...</div>}
-          {!loading && images.length === 0 && (
-            <div className={styles.info}>画像なし</div>
-          )}
-
-          {/* サムネイルグリッド */}
-          <div className={styles.grid}>
-            {images.map((img) => (
-              <div
-                key={img.publicId}
-                className={`${styles.card} ${img.publicId === featuredImg?.publicId ? styles.cardActive : ''}`}
-                onClick={() => selectFeatured(img.publicId)}
-                title="クリックでメイン画像に設定"
-              >
-                <img
-                  src={img.thumb}
-                  alt=""
-                  className={styles.thumb}
-                  loading="lazy"
-                />
-              </div>
-            ))}
-          </div>
+      {/* サムネイル選択 */}
+      {images.length > 1 && (
+        <div className={styles.thumbRow}>
+          {images.map((img) => (
+            <div
+              key={img.publicId}
+              className={`${styles.thumbCard} ${img.publicId === selectedImg?.publicId ? styles.thumbActive : ''}`}
+              onClick={() => selectImage(img.publicId)}
+            >
+              <img src={img.thumb} alt="" className={styles.thumbImg} loading="lazy" />
+            </div>
+          ))}
         </div>
       )}
     </div>

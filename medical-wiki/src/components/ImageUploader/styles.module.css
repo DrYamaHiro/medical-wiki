@@ -1,61 +1,34 @@
-/* ImageUploader — Cloudinary版・右カラム用 */
+/* ============================================
+   ImageUploader (右カラム: アイコン + アップロード)
+   ============================================ */
 
-.container {
-  margin-bottom: 1rem;
+.uploader {
+  margin-bottom: 0.75rem;
 }
 
-/* ── メイン画像 ── */
-.featured {
+/* アイコン的プレビュー */
+.iconPreview {
   border-radius: 6px;
   overflow: hidden;
-  margin-bottom: 0.5rem;
-  background: var(--ifm-color-emphasis-100);
+  margin-bottom: 0.4rem;
   border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-color-emphasis-100);
 }
 
-.featuredImage {
+.iconImage {
   width: 100%;
   display: block;
   object-fit: contain;
-  max-height: 280px;
 }
 
-/* ── トグルボタン ── */
-.toggleBtn {
-  width: 100%;
-  padding: 0.3rem 0.5rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 5px;
-  background: var(--ifm-color-emphasis-100);
-  color: var(--ifm-color-emphasis-600);
-  cursor: pointer;
-  text-align: center;
-  transition: background 0.15s;
-}
-
-.toggleBtn:hover {
-  background: var(--ifm-color-emphasis-200);
-}
-
-/* ── パネル ── */
-.panel {
-  border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 5px;
-  padding: 0.5rem;
-  margin-top: 0.3rem;
-}
-
-/* ── ドロップゾーン ── */
+/* ドロップゾーン (コンパクト) */
 .dropZone {
-  border: 2px dashed var(--ifm-color-emphasis-300);
+  border: 1.5px dashed var(--ifm-color-emphasis-300);
   border-radius: 5px;
-  padding: 0.6rem;
+  padding: 0.4rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.15s;
-  margin-bottom: 0.4rem;
 }
 
 .dropZone:hover,
@@ -70,78 +43,95 @@
 }
 
 .dropText {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--ifm-color-emphasis-500);
-}
-
-.spinner {
-  font-size: 0.7rem;
-  color: var(--ifm-color-primary);
 }
 
 .hiddenInput {
   display: none;
 }
 
-/* ── 状態表示 ── */
 .error {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: #dc2626;
-  background: #fef2f2;
-  border-radius: 4px;
-  padding: 0.25rem 0.4rem;
-  margin-bottom: 0.3rem;
+  margin-top: 0.25rem;
 }
 
 [data-theme='dark'] .error {
-  background: #2d0f0f;
   color: #fca5a5;
 }
 
-.info {
-  font-size: 0.7rem;
-  color: var(--ifm-color-emphasis-400);
-  text-align: center;
-  padding: 0.3rem 0;
+/* ============================================
+   ImageGallery (本文下: 大画像 + サムネイル)
+   ============================================ */
+
+.gallery {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--ifm-color-emphasis-200);
 }
 
-/* ── サムネイルグリッド ── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-  gap: 0.3rem;
+/* 大きな画像表示エリア */
+.largeView {
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  margin-bottom: 0.6rem;
 }
 
-.card {
-  border: 2px solid transparent;
+.largeImage {
+  width: 100%;
+  display: block;
+  object-fit: contain;
+  max-height: 600px;
+}
+
+/* サムネイル横並び */
+.thumbRow {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.3rem;
+}
+
+.thumbCard {
+  flex-shrink: 0;
+  width: 80px;
+  height: 60px;
   border-radius: 4px;
   overflow: hidden;
   cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  border: 2px solid transparent;
+  transition: border-color 0.15s, opacity 0.15s;
+  opacity: 0.7;
 }
 
-.card:hover {
+.thumbCard:hover {
+  opacity: 1;
   border-color: var(--ifm-color-emphasis-300);
 }
 
-.cardActive {
+.thumbActive {
   border-color: var(--ifm-color-primary) !important;
+  opacity: 1;
   box-shadow: 0 0 0 1px var(--ifm-color-primary);
 }
 
-.thumb {
+.thumbImg {
   width: 100%;
-  height: 55px;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
 
-/* ── レスポンシブ ── */
+/* レスポンシブ */
 @media (max-width: 996px) {
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  .largeImage {
+    max-height: 400px;
   }
-  .thumb {
+  .thumbCard {
+    width: 60px;
     height: 45px;
   }
 }

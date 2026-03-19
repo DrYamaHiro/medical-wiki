@@ -462,6 +462,8 @@ ${linksBlock}
 
 </div>
 </div>
+
+<ImageGallery docId="${docId}" />
 `;
 
   return { docId, mdx };
