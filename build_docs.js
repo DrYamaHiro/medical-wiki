@@ -498,8 +498,6 @@ ${linksBlock}
 </div>
 </div>
 </div>
-
-<ImageGallery docId="${docId}" />
 `;
 
   return { docId, mdx };
