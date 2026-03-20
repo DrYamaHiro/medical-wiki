@@ -309,6 +309,7 @@ export default function ImageUploader({ docId }) {
 // ─────────────────────────────────────────────
 export function ImageGallery({ docId }) {
   const [allImages, setAllImages] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [, forceUpdate] = useState(0);
 
@@ -329,11 +330,11 @@ export function ImageGallery({ docId }) {
   }, [docId]);
 
   const images = orderedVisibleImages(allImages, docId);
-  const featId = getFeatured(docId);
-  const selectedImg = images.find((i) => i.publicId === featId) || images[0];
+  // 下のギャラリーは独自の選択状態（右上とは独立）
+  const selectedImg = images.find((i) => i.publicId === selectedId) || images[0];
 
   const selectImage = (publicId) => {
-    setFeaturedStorage(docId, publicId);
+    setSelectedId(publicId);
   };
 
   if (loading || images.length === 0) return null;
