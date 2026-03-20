@@ -304,7 +304,60 @@ export default function ImageUploader({ docId }) {
   );
 }
 
-// ImageGallery は現在未使用だが export は維持
+// ─────────────────────────────────────────────
+// 本文下: 大きな画像 + サムネイル選択
+// ─────────────────────────────────────────────
 export function ImageGallery({ docId }) {
-  return null;
+  const [allImages, setAllImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [, forceUpdate] = useState(0);
+
+  const load = async () => {
+    setLoading(true);
+    const imgs = await fetchCloudinaryImages(docId);
+    setAllImages(imgs);
+    setLoading(false);
+  };
+
+  useEffect(() => { if (docId) load(); }, [docId]);
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail?.docId === docId) { load(); forceUpdate((n) => n + 1); }
+    };
+    window.addEventListener('wiki-image-update', handler);
+    return () => window.removeEventListener('wiki-image-update', handler);
+  }, [docId]);
+
+  const images = orderedVisibleImages(allImages, docId);
+  const featId = getFeatured(docId);
+  const selectedImg = images.find((i) => i.publicId === featId) || images[0];
+
+  const selectImage = (publicId) => {
+    setFeaturedStorage(docId, publicId);
+  };
+
+  if (loading || images.length === 0) return null;
+
+  return (
+    <div className={styles.gallery}>
+      {selectedImg && (
+        <div className={styles.largeView}>
+          <img src={selectedImg.display} alt="" className={styles.largeImage} />
+        </div>
+      )}
+      {images.length > 1 && (
+        <div className={styles.galleryThumbRow}>
+          {images.map((img) => (
+            <div
+              key={img.publicId}
+              className={`${styles.galleryThumb} ${img.publicId === selectedImg?.publicId ? styles.galleryThumbActive : ''}`}
+              onClick={() => selectImage(img.publicId)}
+            >
+              <img src={img.thumb} alt="" className={styles.galleryThumbImg} loading="lazy" />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
