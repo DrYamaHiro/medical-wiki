@@ -464,13 +464,9 @@ ${apAdviceMd}
 </div>
 <div className="col col--7 right-panel">
 
-<div className="right-layout">
-<div className="image-sidebar">
+<div className="wiki-col">
 
 <ImageUploader docId="${docId}" />
-
-</div>
-<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -494,7 +490,6 @@ ${apAdviceMd}
 ${linksBlock}
 {/* WIKI_EDIT_END */}
 
-</div>
 </div>
 </div>
 </div>
@@ -563,6 +558,30 @@ function main() {
   // intro.md を退避
   const introPath    = path.join(DOCS_DIR, 'intro.md');
   const introContent = fs.existsSync(introPath) ? fs.readFileSync(introPath, 'utf8') : null;
+
+  // ── 既存の WIKI_EDIT コンテンツを退避 ──
+  const savedWiki = {};  // { "catDir/docId.mdx": wikiContent }
+  const wikiRe = /\{\/\* WIKI_EDIT_START \*\/\}([\s\S]*?)\{\/\* WIKI_EDIT_END \*\/\}/;
+  if (fs.existsSync(DOCS_DIR)) {
+    for (const entry of fs.readdirSync(DOCS_DIR, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        const catPath = path.join(DOCS_DIR, entry.name);
+        for (const file of fs.readdirSync(catPath).filter(f => f.endsWith('.mdx'))) {
+          const filePath = path.join(catPath, file);
+          const content = fs.readFileSync(filePath, 'utf8');
+          const m = content.match(wikiRe);
+          if (m) {
+            const wikiContent = m[1];
+            const isPlaceholder = /\*（病態生理を記述）\*/.test(wikiContent);
+            if (!isPlaceholder) {
+              savedWiki[`${entry.name}/${file}`] = wikiContent;
+            }
+          }
+        }
+      }
+    }
+  }
+  console.log(`📋 Wiki コンテンツ退避: ${Object.keys(savedWiki).length} 件`);
 
   // カテゴリフォルダを再生成
   if (fs.existsSync(DOCS_DIR)) {
@@ -644,7 +663,15 @@ function main() {
         const apData = parseFile(fs.readFileSync(path.join(OUTPUT_DIR, apFile), 'utf8'));
         const { docId, mdx } = generateMdx({ apData, soData, sidebarPosition: apNum, relatedLinks });
 
-        fs.writeFileSync(path.join(catDir, `${docId}.mdx`), mdx, 'utf8');
+        // ── 退避した WIKI_EDIT コンテンツを復元 ──
+        const outPath = path.join(catDir, `${docId}.mdx`);
+        let finalMdx = mdx;
+        const wikiKey = `${catNum}-${catEng}/${docId}.mdx`;
+        if (savedWiki[wikiKey]) {
+          finalMdx = finalMdx.replace(wikiRe, `{/* WIKI_EDIT_START */}${savedWiki[wikiKey]}{/* WIKI_EDIT_END */}`);
+        }
+
+        fs.writeFileSync(outPath, finalMdx, 'utf8');
         generated++;
 
         const icd  = apData.metadata['疾患コード'] || '?';

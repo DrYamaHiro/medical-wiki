@@ -69,23 +69,9 @@
   padding-right: 0 !important;
 }
 
-/* 右パネル内のレイアウト: 画像(固定幅) + Wiki(残り) */
-.right-layout {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
-/* 画像サイドバー (固定幅) */
-.image-sidebar {
-  flex: 0 0 180px;
-  min-width: 0;
-}
-
-/* Wiki カラム (残り幅全て) */
+/* Wiki カラム (右パネル全幅) */
 .wiki-col {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
 }
 
 /* Dr.Advice: SOAP左カラム内に配置 */
@@ -282,13 +268,8 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
     max-width: 100% !important;
     padding-left: 0 !important;
   }
-  .right-layout {
-    flex-direction: column;
-  }
-  .image-sidebar {
-    flex: 0 0 auto;
+  .wiki-col {
     width: 100%;
-    max-width: 200px;
   }
 }
 
