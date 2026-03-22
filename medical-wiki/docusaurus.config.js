@@ -19,6 +19,11 @@ const config = {
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
+  // Mermaid (フローチャート・アルゴリズム図)
+  markdown: {
+    mermaid: true,
+  },
+
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang.
   i18n: {
@@ -27,6 +32,7 @@ const config = {
   },
 
   themes: [
+    '@docusaurus/theme-mermaid',
     [
       '@easyops-cn/docusaurus-search-local',
       {
