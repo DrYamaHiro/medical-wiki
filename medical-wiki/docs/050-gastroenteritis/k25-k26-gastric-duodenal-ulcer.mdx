@@ -63,6 +63,16 @@ keywords: ["胃・十二指腸潰瘍", "十二指腸潰瘍", "胃十", "十二",
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[設備制約]** 当院にはCT、エコー、上部消化管内視鏡がない。吐血、黒色便、激しい腹痛、腹膜刺激症状がある場合は、診断がつかなくても直ちに専門病院へ紹介せよ。
+>
+> **[トリアージ]** 高齢者の心窩部痛はACS（心筋梗塞）の可能性があるため、必ず心電図を確認せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -93,63 +103,45 @@ keywords: ["胃・十二指腸潰瘍", "十二指腸潰瘍", "胃十", "十二",
 - <span className="med-id">[Doc-Gen-Referral]</span> 診療情報提供書
 - **紹介先:** 消化器内科（緊急内視鏡依頼・出血疑い）
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="k25-k26-gastric-duodenal-ulcer" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[設備制約]** 当院にはCT、エコー、上部消化管内視鏡がない。吐血、黒色便、激しい腹痛、腹膜刺激症状がある場合は、診断がつかなくても直ちに専門病院へ紹介せよ。
->
-> **[トリアージ]** 高齢者の心窩部痛はACS（心筋梗塞）の可能性があるため、必ず心電図を確認せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[NSAIDs潰瘍]** 痛み止め（ロキソニン等）による潰瘍は「痛みを伴わない」ことが多く、突然の吐血で発症することがある。高齢者のNSAIDs長期投与には必ず胃薬を併用せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="k25-k26-gastric-duodenal-ulcer" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 胃酸・ペプシンによる粘膜下層以深の組織欠損
-- **二大原因**: ピロリ菌感染（胃潰瘍の約70%、十二指腸潰瘍の約90%）、NSAIDs/低用量アスピリン
-- **攻撃因子と防御因子のバランス破綻**: 酸・ペプシン（攻撃）vs 粘液・重炭酸・プロスタグランジン・血流（防御）
-- **出血・穿孔**: 潰瘍が深部に達すると露出血管からの出血（吐血・下血）、または穿孔（急性腹膜炎）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **上部消化管内視鏡**: 確定診断。潰瘍の形態・大きさ・出血の有無・生検（悪性除外 + ピロリ菌検査）
-- **出血性潰瘍の緊急内視鏡適応**: 吐血、タール便 + バイタル不安定
-- **鑑別**: 胃癌（潰瘍型）、GERD、急性膵炎、胆石症、虚血性心疾患
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **ピロリ陽性潰瘍**: 除菌療法が最優先（再発率を劇的に低下: 1年再発率 除菌成功5% vs 未除菌60-80%）
-- **PPI/P-CAB**: ボノプラザン20mg（P-CAB）が除菌率・潰瘍治癒率ともにPPIより優れる
-- **治療期間**: 胃潰瘍8週間、十二指腸潰瘍6週間のPPI/P-CAB投与
-- **NSAIDs潰瘍**: NSAIDs中止 + PPI。中止不能な場合はPPI長期併用 + COX-2選択薬への変更
-- **低用量アスピリン（LDA）潰瘍**: 心血管リスクのためLDA中止は危険 → PPI併用継続
-- **出血性潰瘍**: 内視鏡的止血（クリッピング、焼灼、エピネフリン局注）+ PPI高用量静注
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本消化器病学会 消化性潰瘍診療ガイドライン2024](https://www.jsge.or.jp/)
+- [日本消化器病学会](https://www.jsge.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

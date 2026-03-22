@@ -57,6 +57,18 @@ keywords: ["熱傷", "T20", "burn"]
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 単純X線
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[洗浄の鉄則]** 消毒薬（イソジン等）は組織毒性があり治癒を遅らせる。「大量の水道水または生食」で物理的に菌と汚れを洗い流すことが感染予防の全てである。
+>
+> **[縫合不可]** 当院には「縫合セット（針・糸）」がない。顔面、手指、関節部、および真皮縫合が必要な深い傷は、テープ固定で寄せるか、形成外科へ紹介せよ。
+>
+> **[神経損傷]** 指の側面の切創は、浅く見えても指神経が切れていることが多い。局所麻酔を打つ前に必ず「触覚検査」を行え。麻酔後は評価不能となる。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -97,29 +109,7 @@ keywords: ["熱傷", "T20", "burn"]
 - **患者指導:** ガーゼ直貼りは固着するため避ける。
 - **再診目安:** 翌日または2日後。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="t20-burn" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[洗浄の鉄則]** 消毒薬（イソジン等）は組織毒性があり治癒を遅らせる。「大量の水道水または生食」で物理的に菌と汚れを洗い流すことが感染予防の全てである。
->
-> **[縫合不可]** 当院には「縫合セット（針・糸）」がない。顔面、手指、関節部、および真皮縫合が必要な深い傷は、テープ固定で寄せるか、形成外科へ紹介せよ。
->
-> **[神経損傷]** 指の側面の切創は、浅く見えても指神経が切れていることが多い。局所麻酔を打つ前に必ず「触覚検査」を行え。麻酔後は評価不能となる。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -128,7 +118,17 @@ keywords: ["熱傷", "T20", "burn"]
 > **[ラップ療法]** 家庭用ラップでの被覆は、浸出液が貯留し細菌感染の温床になりやすいため、安易に推奨しない。清潔なドレッシング材の使用か、こまめな交換を指導せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="t20-burn" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -137,36 +137,19 @@ keywords: ["熱傷", "T20", "burn"]
 
 ### 病態生理
 
-- **深度分類:**
-  - I度（表皮）: 発赤、疼痛。数日で治癒
-  - 浅達性II度（SDB）: 水疱、強い疼痛、水疱底は赤色。2-3週で治癒
-  - 深達性II度（DDB）: 水疱、疼痛軽度、水疱底は白色。3-4週、瘢痕残存
-  - III度（全層）: 無痛、白色～褐色の壊死。植皮が必要
-- **面積評価:** 9の法則（Wallace）、手掌法（患者の手掌 = 体表面積の約1%）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **熱傷の重症度（Artzの基準）:**
-  - 軽症: II度 15%未満、III度 2%未満
-  - 中等症: II度 15-30%、III度 2-10%
-  - 重症: II度 30%以上、III度 10%以上、気道熱傷、電撃傷、化学熱傷
-- **専門施設搬送基準:** II度 10%以上、III度 2%以上、気道熱傷、顔面・手・会陰の深い熱傷、小児・高齢者
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **熱傷診療ガイドライン（日本熱傷学会2015）:**
-  - **初期冷却:** 流水で20分（氷水は禁忌: 血管収縮で組織障害悪化）
-  - **I度:** ステロイド外用（短期）、保湿
-  - **浅達性II度:** 水疱は破らず保護、被覆材（ハイドロコロイド等）、感染予防
-  - **深達性II度以上:** 専門施設紹介（植皮の判断）
-  - **輸液（広範囲熱傷）:** Parklandの公式: 4mL x 体重(kg) x 熱傷面積(%) → 最初の24時間
-- **禁忌事項:** アロエ・味噌等の民間療法は感染リスク増大、使用しない
-- **破傷風予防:** 接種歴確認
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [熱傷診療ガイドライン（日本熱傷学会）](https://www.jsbi-burn.org/)
-- [日本救急医学会](https://www.jaam.jp/)
+- [日本外傷学会](https://www.jtrauma.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

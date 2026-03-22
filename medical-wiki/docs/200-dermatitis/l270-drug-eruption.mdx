@@ -50,6 +50,16 @@ keywords: ["薬疹", "L27.0", "drug", "eruption"]
 
 - <span className="med-id">[Lab-Der-KOH]</span> 真菌鏡検(KOH法)
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[KOH即日不可の対応]** 当院ではKOH（真菌検査）が外注となるため、その場での白癬確定診断ができない。典型的な湿疹に見えても、ステロイドを塗って悪化する場合は白癬の可能性がある。「もし薬を塗って赤みや痒みが増したら、すぐに中止して再診してください」と必ず伏線を張れ。疑わしければ、初回は抗真菌薬もステロイドも使わず、保湿剤や非ステロイド系（スタデルム等）で検査結果を待つのも賢明な戦略である。
+>
+> **[FTU (Finger Tip Unit)]** 外用薬の効果が出ない最大の理由は「塗布量不足」である。チューブから「人差し指の先から第一関節まで（約0.5g）」出した量が、「大人の手のひら2枚分」の面積を塗る適量である。「ティッシュが張り付くくらい」たっぷり塗るよう指導せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -83,34 +93,24 @@ keywords: ["薬疹", "L27.0", "drug", "eruption"]
 - **患者指導:** 疑わしい薬剤を全て中止し、粘膜症状出現時は直ちに受診するよう指示。
 - **再診目安:** 1-3日後（重症化の監視）
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="l270-drug-eruption" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[KOH即日不可の対応]** 当院ではKOH（真菌検査）が外注となるため、その場での白癬確定診断ができない。典型的な湿疹に見えても、ステロイドを塗って悪化する場合は白癬の可能性がある。「もし薬を塗って赤みや痒みが増したら、すぐに中止して再診してください」と必ず伏線を張れ。疑わしければ、初回は抗真菌薬もステロイドも使わず、保湿剤や非ステロイド系（スタデルム等）で検査結果を待つのも賢明な戦略である。
->
-> **[FTU (Finger Tip Unit)]** 外用薬の効果が出ない最大の理由は「塗布量不足」である。チューブから「人差し指の先から第一関節まで（約0.5g）」出した量が、「大人の手のひら2枚分」の面積を塗る適量である。「ティッシュが張り付くくらい」たっぷり塗るよう指導せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[中止の決断]** DLST（薬剤リンパ球刺激試験）などの検査結果を待たずに、疑わしい薬は「直ちに止める」ことが最優先である。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="l270-drug-eruption" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -119,27 +119,19 @@ keywords: ["薬疹", "L27.0", "drug", "eruption"]
 
 ### 病態生理
 
-- **薬疹**は薬剤に対する免疫学的反応による皮膚障害。軽症（紅斑丘疹型）から致死的（SJS/TEN、DIHS/DRESS）まで幅広い
-- 内服開始後1-2週間での発症が多いが、数ヶ月後の場合もある（DIHS）
-- **重症薬疹**: SJS（Stevens-Johnson症候群: 皮膚剥離10%未満+粘膜障害）、TEN（中毒性表皮壊死症: 皮膚剥離10%以上。致死率20-30%）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断**: 薬剤投与開始と皮疹出現の時間的関連+被疑薬中止で改善。DLST（薬剤リンパ球刺激試験）は補助的
-- **重症薬疹の危険サイン**: 粘膜症状（口腔・眼・陰部）、水疱・表皮剥離、高熱、肝機能障害、全身症状
-- **高リスク薬剤**: カルバマゼピン（HLA-A*3101）、アロプリノール（HLA-B*5801）、抗菌薬、NSAIDs
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **原因薬剤の即座中止**: 全ての薬疹治療の基本
-- **軽症（紅斑丘疹型）**: ステロイド外用+抗ヒスタミン薬で改善
-- **SJS/TEN**: 皮膚科緊急入院。ステロイドパルス療法、IVIG（免疫グロブリン大量静注）、血漿交換。ICU管理が必要な場合あり
-- **DIHS/DRESS**: HHV-6再活性化が関与。ステロイド全身投与（急な減量で再燃するため長期漸減）
-- **被疑薬の記録**: お薬手帳・診療録に明記。再投与は絶対禁忌
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本皮膚科学会 重症薬疹診療ガイドライン](https://www.dermatol.or.jp/)
+- [日本皮膚科学会](https://www.dermatol.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

@@ -63,6 +63,16 @@ keywords: ["急性胃炎", "胃炎", "急性", "性胃", "急性胃", "性胃炎
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[設備制約]** 当院にはCT、エコー、上部消化管内視鏡がない。吐血、黒色便、激しい腹痛、腹膜刺激症状がある場合は、診断がつかなくても直ちに専門病院へ紹介せよ。
+>
+> **[トリアージ]** 高齢者の心窩部痛はACS（心筋梗塞）の可能性があるため、必ず心電図を確認せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -97,61 +107,45 @@ keywords: ["急性胃炎", "胃炎", "急性", "性胃", "急性胃", "性胃炎
 - <span className="med-id">[Doc-Gen-Referral]</span> 診療情報提供書
 - **紹介先:** 消化器内科（緊急内視鏡摘出依頼）
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="k291-acute-gastritis" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[設備制約]** 当院にはCT、エコー、上部消化管内視鏡がない。吐血、黒色便、激しい腹痛、腹膜刺激症状がある場合は、診断がつかなくても直ちに専門病院へ紹介せよ。
->
-> **[トリアージ]** 高齢者の心窩部痛はACS（心筋梗塞）の可能性があるため、必ず心電図を確認せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[アニサキス]** 「刺身を食べて数時間後の激痛」はアニサキスを強く疑う。当院では摘出できないため、診断がついた時点で即座に内視鏡可能な施設へ送れ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="k291-acute-gastritis" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 胃粘膜の急性炎症・びらん。心窩部痛・悪心・嘔吐を主徴
-- **原因**: NSAIDs（最多）、アルコール、ストレス（身体的・精神的）、ピロリ菌初感染、ウイルス感染
-- **NSAIDs起因**: COX-1阻害によるプロスタグランジン産生低下 → 粘膜防御因子減弱 → びらん・出血
-- **急性ストレス潰瘍**: 重症疾患（ICU入室、大手術、外傷、熱傷）に伴う胃粘膜虚血
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **臨床診断**: 誘因（NSAIDs、アルコール、ストレス）+ 心窩部痛 + 嘔気
-- **内視鏡**: 胃粘膜のびらん、発赤、出血。ただし軽症では施行しないことも多い
-- **鑑別**: 胃潰瘍、胃癌、急性膵炎、胆石発作、急性心筋梗塞（心窩部痛で発症することあり）
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **原因除去**: NSAIDs中止、禁酒、ストレス管理
-- **酸分泌抑制**: PPI or H2RA。ボノプラザン20mg or ファモチジン20mg 1日2回
-- **粘膜保護薬**: レバミピド100mg 1日3回、スクラルファート
-- **NSAIDs継続が必要な場合**: PPI併用（ミソプロストールも選択肢だが下痢が多い）。COX-2選択的阻害薬（セレコキシブ）への変更
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本消化器病学会 消化性潰瘍診療ガイドライン2024](https://www.jsge.or.jp/)
+- [日本消化器病学会](https://www.jsge.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

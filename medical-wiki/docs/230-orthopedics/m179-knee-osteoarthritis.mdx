@@ -50,6 +50,16 @@ keywords: ["変形性膝関節症", "変形", "形性", "性膝", "膝関", "関
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[Red Flags]** 「安静にしていても痛い（内臓痛・腫瘍・化膿性脊椎炎）」「熱がある」「尿が出にくい（馬尾症候群）」は緊急事態である。当院にはMRIがないため、これらの徴候があれば鎮痛剤で様子を見ず、直ちに専門病院へ紹介せよ。
+>
+> **[画像診断の適応]** Red Flagsがない単純な急性腰痛（ぎっくり腰）や寝違えであれば、初診時のX線撮影は医学的に必須ではない（治療方針が変わらないため）。患者が「骨折がないか心配」している場合や、高齢者（圧迫骨折リスク）の場合に撮影を行え。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -82,27 +92,7 @@ keywords: ["変形性膝関節症", "変形", "形性", "性膝", "膝関", "関
 - **患者指導:** 減量とパテラセッティング（大腿四頭筋訓練）を指導。
 - **再診目安:** 4週間後。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="m179-knee-osteoarthritis" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[Red Flags]** 「安静にしていても痛い（内臓痛・腫瘍・化膿性脊椎炎）」「熱がある」「尿が出にくい（馬尾症候群）」は緊急事態である。当院にはMRIがないため、これらの徴候があれば鎮痛剤で様子を見ず、直ちに専門病院へ紹介せよ。
->
-> **[画像診断の適応]** Red Flagsがない単純な急性腰痛（ぎっくり腰）や寝違えであれば、初診時のX線撮影は医学的に必須ではない（治療方針が変わらないため）。患者が「骨折がないか心配」している場合や、高齢者（圧迫骨折リスク）の場合に撮影を行え。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -111,7 +101,17 @@ keywords: ["変形性膝関節症", "変形", "形性", "性膝", "膝関", "関
 > **[大腿四頭筋]** 膝を守るのは筋肉である。「膝の下にタオルを入れて、押しつぶすように力を入れる（パテラセッティング）」等、痛くない範囲での筋トレを指導せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="m179-knee-osteoarthritis" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -120,21 +120,15 @@ keywords: ["変形性膝関節症", "変形", "形性", "性膝", "膝関", "関
 
 ### 病態生理
 
-- **変形性膝関節症（膝OA）**は関節軟骨の変性・摩耗+骨棘形成による退行性関節疾患。高齢者の運動器障害の最大原因
-- X線: Kellgren-Lawrence分類（0-IV）。関節裂隙狭小化、骨棘、軟骨下骨硬化
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断**: 50歳以上+膝痛+30分以下の朝のこわばり+crepitus（轢音）+X線所見
-- **鑑別**: 関節リウマチ（炎症所見、多関節）、偽痛風（CPPD結晶、X線で石灰化）、半月板損傷、膝関節周囲滑液包炎
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **運動療法**: 大腿四頭筋訓練が最もエビデンス豊富（推奨度A）。水中運動も有効
-- **体重管理**: 5%の減量で症状有意に改善
-- **薬物療法**: NSAIDs外用（ロキソプロフェンゲル等）が経口NSAIDsより安全。アセトアミノフェン。デュロキセチン（慢性疼痛に）
-- **関節内注射**: ヒアルロン酸関節内注射を1-5回連続で。ステロイド関節内注射は急性増悪時に（反復使用は軟骨障害リスク）
-- **手術**: 保存的治療で改善しない場合に人工膝関節置換術（TKA）。満足度は約80-90%
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 

@@ -50,6 +50,16 @@ keywords: ["特定健診・長寿健診", "特定健診", "長寿健診", "特�
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[結果渡し]** 当院の血液検査は外注（SRL）であるため、診断書や健診結果の即日発行は不可能である。「結果が出るまで数日かかります」と受付段階で必ず説明し、トラブルを回避せよ。
+>
+> **[健診の意義]** 健診は「異常を見つける」だけでなく、「自分の体を知り、生活習慣を見直すきっかけ」であることを伝え、結果説明の受診を促せ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -74,34 +84,24 @@ keywords: ["特定健診・長寿健診", "特定健診", "長寿健診", "特�
 - <span className="med-id">[Lab-Gen-Urine]</span> 尿定性・尿沈渣
 - <span className="med-id">[Phy-Gen-ECG]</span> 心電図（12誘導） ；基準該当時または希望時
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="z000-specific-health-checkup" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[結果渡し]** 当院の血液検査は外注（SRL）であるため、診断書や健診結果の即日発行は不可能である。「結果が出るまで数日かかります」と受付段階で必ず説明し、トラブルを回避せよ。
->
-> **[健診の意義]** 健診は「異常を見つける」だけでなく、「自分の体を知り、生活習慣を見直すきっかけ」であることを伝え、結果説明の受診を促せ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[心電図の適応]** 特定健診における心電図は「医師が必要と認めた場合」の選択項目だが、見逃し防止やベースライン把握のため、当院では可能な限り実施を推奨する運用とする。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="z000-specific-health-checkup" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -110,29 +110,19 @@ keywords: ["特定健診・長寿健診", "特定健診", "長寿健診", "特�
 
 ### 病態生理
 
-- **特定健診:** 40-74歳を対象としたメタボリックシンドローム（内臓脂肪症候群）に着目した健診（高齢者医療確保法）
-- **長寿健診（後期高齢者健診）:** 75歳以上を対象
-- **メタボリックシンドロームの診断基準（日本内科学会2005）:**
-  - 必須: 腹囲 男性85cm以上、女性90cm以上
-  - 2項目以上: TG 150以上 or HDL 40未満、BP 130/85以上、空腹時血糖 110以上
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **階層化:** 情報提供、動機づけ支援、積極的支援に振り分け
-- **特定保健指導の対象:** メタボ該当者・予備群で、服薬中でない者
-- **追加リスク:** 喫煙の有無で保健指導レベルが変動
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **特定健診・特定保健指導の成果:**
-  - メタボ該当者の減少に一定の効果（厚労省評価報告）
-  - 積極的支援による体重・腹囲の有意な改善
-- **医師の役割:** 結果説明、精密検査の勧奨、治療介入が必要な場合の診療移行
-- **第4期（2024-2029年度）の変更点:** ICT活用の推進、アウトカム評価の強化、保健指導のモデル実施の柔軟化
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [特定健康診査・特定保健指導の円滑な実施に向けた手引き（厚労省）](https://www.mhlw.go.jp/)
+- [厚生労働省 特定健康診査](https://www.mhlw.go.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

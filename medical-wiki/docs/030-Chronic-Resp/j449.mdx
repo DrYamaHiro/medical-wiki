@@ -61,6 +61,16 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
+>
+> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -88,81 +98,45 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - <span className="med-id">[Rx-Resp-COPD-Tre]</span> テリルジー
 - テリルジー100エリプタ 1キット 1日1回 吸入 *— ICS/LAMA/LABA(喘息合併時)*
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="j449" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
->
-> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[肺癌リスク]** COPD患者は肺癌のハイリスク群である。当院にはCTがないため、年に1回は胸部X線を撮影し、少しでも異常があれば直ちにCTのある施設へ紹介せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="j449" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: タバコ煙などの有害粒子・ガスへの曝露による進行性の気流制限を特徴とする疾患
-- **病態の2つの柱**:
-  1. **末梢気道病変（閉塞性細気管支炎）**: 慢性炎症 → 気道壁肥厚・線維化 → 内腔狭窄
-  2. **肺実質破壊（肺気腫）**: 好中球エラスターゼ等のプロテアーゼ過剰 → 肺胞壁破壊 → 弾性収縮力低下・ガス交換面積減少
-- **炎症カスケード**: 有害粒子吸入 → 好中球・マクロファージ活性化 → プロテアーゼ/酸化ストレス → 組織破壊（antiprotease/protease imbalance）
-- **全身性影響**: 骨格筋萎縮（サルコペニア）、骨粗鬆症、心血管疾患、抑うつ、栄養障害
-- **リスク因子**: 喫煙（最大のリスク: 喫煙者の15-20%が発症）、職業性粉塵、バイオマス燃料、alpha1-アンチトリプシン欠損症（日本では稀）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断基準（GOLD 2024 / 日本呼吸器学会COPD診断と治療のためのガイドライン2024）**:
-  - 40歳以上で喫煙歴あり（10pack-years以上）
-  - 慢性の咳嗽・喀痰・労作時呼吸困難
-  - スパイロメトリーで気管支拡張薬吸入後 FEV1/FVC 70%未満（閉塞性障害の確認）
-- **重症度分類（GOLD: FEV1 %predicted）**:
-  - GOLD 1（軽症）: 80%以上
-  - GOLD 2（中等症）: 50-79%
-  - GOLD 3（重症）: 30-49%
-  - GOLD 4（最重症）: 30%未満
-- **GOLD ABE分類（2024）**: 増悪歴と症状（mMRC/CAT）で治療群を決定
-  - A群: 症状軽度 + 増悪少ない
-  - B群: 症状強い + 増悪少ない
-  - E群: 増悪が多い（年2回以上 or 入院1回以上）
-- **鑑別**: 喘息（可逆性あり、若年発症）、ACO、気管支拡張症、結核後遺症、心不全
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **禁煙**: 最も重要な介入。FEV1低下速度を正常に近づける唯一の方法（Lung Health Study）
-- **薬物療法**:
-  - A群: SABA or SAMA頓用のみ
-  - B群: LABA or LAMA。LAMA（チオトロピウム5ug 1日1回）が第一選択（UPLIFT試験: 増悪減少）
-  - E群: LAMA + LABA。好酸球300/uL以上ならICS/LABA/LAMA（トリプル療法）
-  - トリプル療法のエビデンス: ETHOS試験（2020）でICS/LABA/LAMAがLABA/LAMAより増悪を24%減少、全死亡を減少
-- **非薬物療法**: 呼吸リハビリテーション（労作耐容能・QOL改善のエビデンスA）、栄養管理（BMI低下は予後不良因子）
-- **増悪時**: 短時間作用型気管支拡張薬の増量 + 全身性ステロイド（PSL 40mg 5日間）+ 抗菌薬（膿性痰あれば）
-- **ワクチン**: インフルエンザ（毎年）、肺炎球菌（PCV20 or PPSV23）、COVID-19
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本呼吸器学会 COPD診断と治療のためのガイドライン2024](https://www.jrs.or.jp/)
-- [GOLD 2024 Report](https://goldcopd.org/)
+- [日本アレルギー学会 喘息ガイドライン](https://www.jsaweb.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

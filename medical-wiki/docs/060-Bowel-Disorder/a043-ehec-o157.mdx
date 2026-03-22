@@ -57,6 +57,19 @@ keywords: ["腸管出血性大腸菌感染症疑い", "腸管", "管出", "出�
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[指診の重要性]** 「お尻を見られるのは恥ずかしい」と拒否する患者もいるが、直腸癌の約半数は指診で届く範囲にある。カーテンやタオルで羞恥心に配慮しつつ、可能な限り実施せよ。
+>
+> **[血便の鑑別]**
+> - **鮮血（紙に付く・ポタポタ）:** 痔核、裂肛、直腸癌
+> - **粘血便（イチゴジャム様）:** 感染性大腸炎、IBD（潰瘍性大腸炎）、アメーバ赤痢
+> - **黒色便（タール便）:** 上部消化管出血（胃潰瘍等）
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -87,30 +100,7 @@ keywords: ["腸管出血性大腸菌感染症疑い", "腸管", "管出", "出�
 - <span className="med-id">[Doc-Gen-Referral]</span> 診療情報提供書
 - **紹介先:** 消化器内科・救急（EHEC疑い・要入院管理）
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="a043-ehec-o157" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[指診の重要性]** 「お尻を見られるのは恥ずかしい」と拒否する患者もいるが、直腸癌の約半数は指診で届く範囲にある。カーテンやタオルで羞恥心に配慮しつつ、可能な限り実施せよ。
->
-> **[血便の鑑別]**
-> - **鮮血（紙に付く・ポタポタ）:** 痔核、裂肛、直腸癌
-> - **粘血便（イチゴジャム様）:** 感染性大腸炎、IBD（潰瘍性大腸炎）、アメーバ赤痢
-> - **黒色便（タール便）:** 上部消化管出血（胃潰瘍等）
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -119,36 +109,38 @@ keywords: ["腸管出血性大腸菌感染症疑い", "腸管", "管出", "出�
 > **[抗菌薬のジレンマ]** EHECに対する抗菌薬投与は議論がある。ホスミシンは比較的リスクが低いとされるが、専門医に委ねるべきである。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="a043-ehec-o157" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **病原体**: 腸管出血性大腸菌（EHEC: O157:H7が最多）。ベロ毒素（VT1/VT2）を産生
-- **潜伏期間**: 3-8日。感染量は極めて少量（100個以下）
-- **病態**: EHEC定着 → ベロ毒素産生 → 血管内皮細胞傷害 → 出血性大腸炎。毒素が血中に入ると → HUS
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **症状**: 水様便 → 血性下痢（鮮血〜粘血便）、腹痛（激しい）、発熱は軽度
-- **HUS（溶血性尿毒症症候群）**: 発症5-13日後。血小板減少 + 溶血性貧血 + 急性腎障害の三徴
-- **検査**: 便培養（ソルビトール非分解大腸菌を検出）、ベロ毒素検査
-- **鑑別**: 他の出血性腸炎、虚血性腸炎、炎症性腸疾患
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **抗菌薬**: 使用の是非は議論あり（毒素放出を助長する可能性）。日本ではFOSFOMYCIN 2-3g/日が使用されることが多い
-- **止瀉薬**: 禁忌（毒素排泄を遅延しHUSリスク上昇）
-- **支持療法**: 補液による脱水補正が基本
-- **HUS発症時**: 入院管理。血漿交換、透析の検討（専門施設へ）
-- **届出**: 三類感染症 → 直ちに保健所に届出（全数把握）。接触者調査が必要
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [国立感染症研究所 腸管出血性大腸菌感染症](https://www.niid.go.jp/)
-- [日本消化器病学会](https://www.jsge.or.jp/)
+- [日本消化器病学会 便秘ガイドライン](https://www.jsge.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

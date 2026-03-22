@@ -64,6 +64,16 @@ Mallampati分類: Class I / II / III / IV
 - <span className="med-id">[Phy-Resp-HSAT]</span> 携帯型睡眠時無呼吸検査（簡易検査）
 - <span className="med-id">[Phy-Resp-OCST]</span> 在宅睡眠時無呼吸検査（OCST/フルPSG）
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[Mallampati分類]** 開口時に口蓋垂がどれだけ見えるか。Class III（口蓋垂基部のみ）やIV（全く見えない）は気道狭窄を示唆し、SASの予測因子となる。
+>
+> **[職業運転手]** トラック、バス、タクシー等の運転業務従事者の場合、SASによる居眠り事故は社会的責任を問われる重大事案となる。「仕事を守るために検査が必要です」と説得し、未治療のまま放置させないこと。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -109,27 +119,7 @@ Mallampati分類: Class I / II / III / IV
 - <span className="med-id">[Doc-Gen-Lifestyle]</span> 生活習慣病指導用パンフレット
 - **患者指導:** 減量が根本治療であることを説明。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="g473-osas" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[Mallampati分類]** 開口時に口蓋垂がどれだけ見えるか。Class III（口蓋垂基部のみ）やIV（全く見えない）は気道狭窄を示唆し、SASの予測因子となる。
->
-> **[職業運転手]** トラック、バス、タクシー等の運転業務従事者の場合、SASによる居眠り事故は社会的責任を問われる重大事案となる。「仕事を守るために検査が必要です」と説得し、未治療のまま放置させないこと。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -138,39 +128,37 @@ Mallampati分類: Class I / II / III / IV
 > **[減量]** 体重が10%減ればAHIは約30%改善すると言われる。CPAPは対症療法に過ぎない。「痩せれば機械が取れるかもしれません」と動機づけを行い、減量指導を並行せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="g473-osas" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **OSAS**は睡眠中に上気道が反復的に閉塞し、無呼吸・低呼吸を生じる疾患。成人の約3-7%に罹患
-- **閉塞の機序**: 睡眠中の筋緊張低下→舌根・軟口蓋の後方への落ち込み→上気道閉塞→無呼吸→低酸素・高炭酸ガス→覚醒反応（arousal）→気道再開通
-- **危険因子**: 肥満（BMI 25以上、特に頸部周囲径43cm以上）、小顎症、扁桃肥大、鼻閉、加齢、男性、飲酒・鎮静薬
-- **合併症**: 高血圧（治療抵抗性の約80%にOSAS）、心房細動、冠動脈疾患、脳卒中、2型糖尿病、交通事故（居眠り運転リスク2-7倍）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **スクリーニング**: Epworthスコア（ESS）11点以上で日中過眠あり。STOP-BANGスコアで高リスク群を抽出
-- **確定診断**: 終夜ポリソムノグラフィ（PSG）が金標準。AHI（無呼吸低呼吸指数）で重症度分類
-  - 軽症: AHI 5-15/h、中等症: AHI 15-30/h、重症: AHI 30以上/h
-- **簡易検査**: 携帯型睡眠検査（OCST）。スクリーニングとして使用。AHI 40以上/hでCPAP保険適用（PSG省略可）
-- **鑑別**: 中枢性睡眠時無呼吸（心不全・脳卒中関連）、ナルコレプシー、特発性過眠症、不眠症、うつ病
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **CPAP療法**（中等症以上の第一選択）:
-  - PSGでAHI 20以上/h、またはOCSTでAHI 40以上/hで保険適用
-  - AHIを正常化し、日中眠気・QOL改善。高血圧の降圧効果（2-3mmHg）
-  - アドヒアランスが重要: 1晩4時間以上、使用日数70%以上が推奨
-- **口腔内装置（OA）**: 軽症〜中等症、CPAP不耐例に。下顎前方固定型が有効
-- **生活指導**: 減量（5-10%の体重減少でAHI 25-50%低下）、禁酒（就寝前）、側臥位睡眠、鼻閉治療
-- **外科的治療**: 小児の扁桃アデノイド摘出術。成人では口蓋垂軟口蓋咽頭形成術（UPPP）は限定的
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本呼吸器学会 睡眠時無呼吸症候群の診療ガイドライン2020](https://www.jrs.or.jp/)
 - [日本睡眠学会](https://jssr.jp/)
 {/* WIKI_EDIT_END */}
 

@@ -439,6 +439,11 @@ ${secO || '*（データなし）*'}
 
 ${secNs || '*（データなし）*'}
 
+<div className="so-dr-advice">
+
+${soAdviceMd}
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -451,26 +456,21 @@ ${secA || '*（データなし）*'}
 
 ${secP || '*（データなし）*'}
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="${docId}" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-${soAdviceMd}
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 ${apAdviceMd}
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="${docId}" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説

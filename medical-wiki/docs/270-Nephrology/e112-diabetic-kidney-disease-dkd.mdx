@@ -52,6 +52,16 @@ keywords: ["糖尿病性腎症", "糖尿", "尿病", "病性", "性腎", "腎症
 
 - <span className="med-id">[Lab-Gen-Urine]</span> 尿定性
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[設備制約]** 当院にはエコーがないため、腎後性腎不全（水腎症）や腎萎縮の評価ができない。前立腺肥大症の既往がある男性や、急激なeGFR低下例は、閉塞機転の除外のため一度は画像診断可能な施設へ紹介せよ。
+>
+> **[検査タイムラグ]** 血液検査（Cre, K）の結果は「後日」となる。「今日現在の腎機能」は分からないため、著しい体調不良（尿毒症疑い）や乏尿がある場合は、結果を待たずに総合病院へ送る判断が必要。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -85,82 +95,45 @@ keywords: ["糖尿病性腎症", "糖尿", "尿病", "病性", "性腎", "腎症
 
 - **再診目安:** 4週間後。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="e112-diabetic-kidney-disease-dkd" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[設備制約]** 当院にはエコーがないため、腎後性腎不全（水腎症）や腎萎縮の評価ができない。前立腺肥大症の既往がある男性や、急激なeGFR低下例は、閉塞機転の除外のため一度は画像診断可能な施設へ紹介せよ。
->
-> **[検査タイムラグ]** 血液検査（Cre, K）の結果は「後日」となる。「今日現在の腎機能」は分からないため、著しい体調不良（尿毒症疑い）や乏尿がある場合は、結果を待たずに総合病院へ送る判断が必要。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[ケレンディア]** 糖尿病性腎症に対し、従来のMRA（スピロノラクトン等）より高カリウム血症リスクが低く、腎保護効果が証明された薬剤。ACE/ARB+SGLT2でも蛋白尿が残る場合に追加せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="e112-diabetic-kidney-disease-dkd" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
-糖尿病性腎症（DKD）は日本における透析導入原因の第1位であり、早期発見と集学的治療が予後を左右する。
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
 
 ### 病態生理
 
-- **疫学:** 日本の透析導入原因の約40%、糖尿病患者の約30-40%が合併
-- **発症機序:**
-  - 高血糖 → AGEs蓄積、ポリオール経路活性化、PKC活性化
-  - 糸球体過剰濾過 → 糸球体肥大 → メサンギウム増殖・基底膜肥厚
-  - 糸球体硬化（結節性硬化 = Kimmelstiel-Wilson結節が特徴的）
-- **典型的経過:**
-  - 第1期: 正常アルブミン尿、GFR正常～高値
-  - 第2期: 微量アルブミン尿（30-299mg/gCr）
-  - 第3期: 顕性蛋白尿（300mg/gCr以上）
-  - 第4期: GFR低下（腎不全期）
-  - 第5期: 透析療法
-- **2型糖尿病のDKD:** 非典型的経過が多い（蛋白尿を経ずにGFR低下する症例あり）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断（臨床診断が基本）:**
-  - 糖尿病歴 + 微量アルブミン尿/蛋白尿（3ヶ月以上持続）
-  - 網膜症の合併は糖尿病性腎症を支持
-  - 尿アルブミン/Cr比: 30-299mg/gCr（微量）、300以上（顕性）
-- **腎生検の適応（非典型例）:**
-  - 糖尿病歴が短い（5年未満）のに蛋白尿がある
-  - 血尿を伴う（IgA腎症等の合併疑い）
-  - 急速なGFR低下、網膜症がない
-- **鑑別:** IgA腎症（血尿主体）、腎硬化症、膜性腎症
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **CKD診療ガイドライン2024 / 糖尿病診療ガイドライン2024:**
-  - **血糖管理:** HbA1c 7.0%未満（個別化）
-  - **血圧管理:** 130/80mmHg未満、RAS阻害薬が第一選択
-  - **SGLT2阻害薬:** eGFR 20以上のDKDで腎保護効果 → 強く推奨
-  - **GLP-1受容体作動薬:** 腎アウトカム改善のエビデンス蓄積（FLOW trial）
-  - **フィネレノン（ケレンディア）:** DKDの腎・心血管イベント抑制
-  - **脂質管理:** LDL 120mg/dL未満（冠動脈疾患合併時 70未満）
-  - **蛋白制限:** 第3期以降 0.8g/kg/日を目安
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [CKD診療ガイドライン2024（日本腎臓学会）](https://www.jsn.or.jp/)
-- [糖尿病診療ガイドライン2024（日本糖尿病学会）](https://www.jds.or.jp/)
+- [日本腎臓学会 CKD診療ガイドライン](https://www.jsn.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

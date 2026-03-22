@@ -61,6 +61,16 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
+>
+> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -90,87 +100,45 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - <span className="med-id">[Rx-Resp-Cough-Mcd]</span> ムコソルバン
 - ムコソルバン錠15mg 1回1錠 1日3回 毎食後
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="r05-chronic-cough" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
->
-> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[CT適応]** X線で異常がなくても、気管支内病変や微小な肺癌は否定できない。「2週間治療しても改善しない慢性咳嗽」は、必ずCT依頼（紹介）を行うこと。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="r05-chronic-cough" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 8週間以上持続する咳嗽（急性: 3週未満、遷延性: 3-8週、慢性: 8週以上）
-- **咳嗽の神経機構**: 咳嗽受容体（気道C線維、rapidly adapting receptors）→ 迷走神経求心路 → 延髄咳嗽中枢 → 遠心路 → 呼吸筋・声門
-- **日本における慢性咳嗽の原因頻度**:
-  1. 咳喘息: 約30-40%（最多）
-  2. アトピー咳嗽: 約15-25%
-  3. 副鼻腔気管支症候群（SBS）: 約10-15%
-  4. GERD関連咳嗽: 約5-10%（欧米ほど多くない）
-  5. 感染後咳嗽: 約10%
-  6. その他: ACE阻害薬、百日咳、肺癌、間質性肺炎、結核
-- **咳嗽過敏症候群（CHS）**: 原因にかかわらず咳嗽反射の閾値低下が共通病態として注目されている
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **初期評価のステップ**:
-  1. 胸部X線: 肺癌、結核、間質性肺炎の除外
-  2. 薬剤歴: ACE阻害薬の確認（中止後1-4週で改善）
-  3. 喫煙歴: COPD、肺癌のスクリーニング
-  4. 鼻症状の有無: 後鼻漏症候群
-- **診断的治療アルゴリズム（日本呼吸器学会 2024）**:
-  - Step 1: 胸部X線正常 + ACE阻害薬なし → Step 2へ
-  - Step 2: FeNO測定（37ppb以上なら好酸球性炎症 → 咳喘息/アトピー咳嗽を疑う）
-  - Step 3: beta2刺激薬の試験的投与（1-2週間）
-    - 有効 → 咳喘息
-    - 無効 → ICS試験投与（2-4週間）
-      - 有効 → アトピー咳嗽
-      - 無効 → GERD、後鼻漏、SBSなどを検討
-- **アトピー咳嗽の特徴**: 咽喉頭の掻痒感、アトピー素因あり、ICS有効だがbeta2刺激薬は無効、気道過敏性正常
-- **副鼻腔気管支症候群（SBS）**: 慢性副鼻腔炎 + 下気道病変（気管支拡張症等）。後鼻漏、膿性痰。マクロライド少量長期療法が有効
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **原因別治療**:
-  - 咳喘息: ICS + beta2刺激薬（詳細は咳喘息の項参照）
-  - アトピー咳嗽: ICS（第一選択）+ ヒスタミンH1受容体拮抗薬。beta2刺激薬は無効
-  - GERD: PPI（ランソプラゾール30mg or エソメプラゾール20mg）1日1回 8週間
-  - 後鼻漏: 原疾患の治療（副鼻腔炎 → マクロライド少量長期、アレルギー性鼻炎 → 鼻噴霧ステロイド + 抗ヒスタミン薬）
-  - SBS: エリスロマイシン200mg or クラリスロマイシン200mg 1日1回 長期（3-6ヶ月以上）
-- **対症療法**:
-  - 麦門冬湯: 乾性咳嗽に有効（Cochrane未登録だが国内RCTあり）
-  - メジコン: 中枢性鎮咳。原因治療と並行して使用
-- **注意**: 慢性咳嗽に対する抗菌薬の漫然投与は避ける
-- **専門医紹介**: 8週間の段階的治療で改善しない場合、HRCT、気管支鏡検査を含む精査
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本呼吸器学会 咳嗽・喀痰の診療ガイドライン2024](https://www.jrs.or.jp/)
-- [日本アレルギー学会 喘息予防・管理ガイドライン2024（JGL2024）](https://www.jsaweb.jp/)
+- [日本アレルギー学会 喘息ガイドライン](https://www.jsaweb.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

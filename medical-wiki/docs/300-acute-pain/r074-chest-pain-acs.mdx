@@ -73,6 +73,18 @@ CVA叩打痛: なし / 右 / 左
 - <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 - <span className="med-id">[Img-Gen-AbdomenXP]</span> 腹部単純X線撮影
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[Killer Chest Pain]** 胸痛・背部痛で絶対に見逃してはならない5大疾患（ACS、大動脈解離、肺塞栓、緊張性気胸、食道破裂）。当院にはCT/Echoがないため、少しでも疑わしければ「帰宅させない」覚悟が必要。
+>
+> **[Killer Abdominal Pain]** 腹部大動脈瘤破裂、上腸間膜動脈閉塞症、消化管穿孔、異所性妊娠。特に高齢者の「腹痛＋ショックバイタル」は血管系イベントを強く疑え。
+>
+> **[設備制約]** トロポニンTやDダイマーの迅速検査、およびエコー・CTがない。心電図とX線で異常がなくても、症状が強ければ「見逃し」を避けるために救急搬送を選択せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -108,36 +120,24 @@ CVA叩打痛: なし / 右 / 左
 
 - **転帰:** 救急搬送。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="r074-chest-pain-acs" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[Killer Chest Pain]** 胸痛・背部痛で絶対に見逃してはならない5大疾患（ACS、大動脈解離、肺塞栓、緊張性気胸、食道破裂）。当院にはCT/Echoがないため、少しでも疑わしければ「帰宅させない」覚悟が必要。
->
-> **[Killer Abdominal Pain]** 腹部大動脈瘤破裂、上腸間膜動脈閉塞症、消化管穿孔、異所性妊娠。特に高齢者の「腹痛＋ショックバイタル」は血管系イベントを強く疑え。
->
-> **[設備制約]** トロポニンTやDダイマーの迅速検査、およびエコー・CTがない。心電図とX線で異常がなくても、症状が強ければ「見逃し」を避けるために救急搬送を選択せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[大動脈解離]** 「移動する背部痛」「裂けるような痛み」「左右の血圧差」がある場合、大動脈解離を疑う。この場合、心筋梗塞と間違えて抗血小板薬（バイアスピリン等）やニトロを投与すると出血助長・血圧低下で致命的になる。心電図変化が乏しい胸背部痛は要注意。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="r074-chest-pain-acs" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -146,30 +146,18 @@ CVA叩打痛: なし / 右 / 左
 
 ### 病態生理
 
-- **ACS（急性冠症候群）:** 冠動脈プラークの破綻 → 血栓形成 → 心筋虚血/壊死
-  - STEMI: 完全閉塞、ST上昇
-  - NSTEMI: 亜完全閉塞、トロポニン上昇
-  - 不安定狭心症: 一過性虚血、トロポニン正常
-- **胸痛の5大致死的原因（Killer Chest Pain）:** ACS、大動脈解離、肺塞栓、緊張性気胸、食道破裂
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **ACSを疑う所見:** 胸部絞扼感・圧迫感、冷汗、嘔気、左肩・顎への放散痛、20分以上持続
-- **即時評価:** 12誘導心電図（来院10分以内）、トロポニン（高感度）、バイタルサイン
-- **HEART Score:** History, ECG, Age, Risk factors, Troponin → 低リスク（0-3）は早期退院可能
-- **鑑別:** 大動脈解離（D-dimer、造影CT）、肺塞栓（Wells score、D-dimer）、気胸（胸部X線）、肋間神経痛、GERD
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **日本循環器学会 ACS診療ガイドライン2018:**
-  - **STEMI:** Door-to-Balloon time 90分以内の緊急PCI → 即時救急搬送
-  - **NSTEMI/不安定狭心症:** リスク層別化、高リスクは早期侵襲的戦略
-  - **初期対応（プライマリケア）:** 安静、酸素（SpO2 90%未満時）、アスピリン（噛砕投与）、ニトログリセリン舌下、モルヒネ（必要時）、119番
-- **プライマリケアの役割:** ACSの迅速な認識と救急搬送。診断に迷ったらACSとして対応
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [ACS診療ガイドライン2018（日本循環器学会）](https://www.j-circ.or.jp/)
 - [日本救急医学会](https://www.jaam.jp/)
 {/* WIKI_EDIT_END */}
 

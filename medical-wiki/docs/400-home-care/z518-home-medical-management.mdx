@@ -40,6 +40,18 @@ keywords: ["在宅時医学総合管理", "在宅", "宅時", "時医", "医学"
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[初回契約]** 24時間対応体制、緊急時の連絡先、費用負担について書面を用いて説明し、同意書を取得すること。
+>
+> **[多職種連携]** ケアマネージャー、訪問看護師、薬局と情報を共有し、初回のカンファレンスを行うこと。
+>
+> **[ACP]** 初回から「死」の話をするのは繊細さが求められるが、「もしもの時、どうされたいか」を早めに共有しておくことが、家族の迷いを減らす。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -72,36 +84,24 @@ keywords: ["在宅時医学総合管理", "在宅", "宅時", "時医", "医学"
 - <span className="med-id">[Doc-Home-Nurse-Order]</span> 訪問看護指示書（定期）
 - <span className="med-id">[Doc-Home-Pharm-Order]</span> 居宅療養管理指導依頼書（薬局）
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="z518-home-medical-management" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[初回契約]** 24時間対応体制、緊急時の連絡先、費用負担について書面を用いて説明し、同意書を取得すること。
->
-> **[多職種連携]** ケアマネージャー、訪問看護師、薬局と情報を共有し、初回のカンファレンスを行うこと。
->
-> **[ACP]** 初回から「死」の話をするのは繊細さが求められるが、「もしもの時、どうされたいか」を早めに共有しておくことが、家族の迷いを減らす。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[指示書]** 訪問看護指示書の有効期間は最大6ヶ月だが、病状変化時は「特別訪問看護指示書（14日間有効）」を発行し、頻回訪問を依頼できる（月1回、条件により月2回まで）。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="z518-home-medical-management" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -110,30 +110,19 @@ keywords: ["在宅時医学総合管理", "在宅", "宅時", "時医", "医学"
 
 ### 病態生理
 
-- **在宅医療の対象:** 通院困難な患者（要介護、認知症、終末期、難病、重症心身障害児等）
-- **訪問診療 vs 往診:** 訪問診療 = 計画的・定期的な訪問、往診 = 急変時等の臨時対応
-- **在宅療養支援診療所（在支診）:** 24時間対応、緊急往診、看取りの体制を有する診療所
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **在宅医療の導入基準:** 通院困難（歩行困難、認知機能低下、家族の介護力等で判断）
-- **多職種連携:** 訪問看護、訪問薬剤、訪問リハビリ、訪問介護、ケアマネジャー
-- **在宅で管理可能な医療処置:** 中心静脈栄養、経管栄養、在宅酸素、膀胱留置カテーテル、人工呼吸器、疼痛管理（PCA等）
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **診療報酬上の要件:**
-  - 在宅時医学総合管理料（在総管）: 月2回以上の訪問診療で算定
-  - 施設入居時等医学総合管理料（施設総管）: 施設入居者
-  - 24時間連絡・往診体制の確保
-- **在宅医療の質指標:** 緊急入院率、在宅看取り率、患者・家族満足度
-- **ICT活用:** オンライン診療の併用（D to P with D, D to P）、多職種間の情報共有ツール
-- **ACPの推進:** 在宅医療の導入時から、本人の価値観・希望に基づく意思決定支援
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
 - [日本在宅医療連合学会](https://www.jahcm.org/)
-- [在宅医療テキスト 第3版（日本在宅医学会）](https://www.jahcm.org/)
 {/* WIKI_EDIT_END */}
 
 </div>

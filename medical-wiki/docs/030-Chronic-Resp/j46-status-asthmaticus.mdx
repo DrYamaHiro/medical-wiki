@@ -61,6 +61,16 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
+>
+> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -89,84 +99,45 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - <span className="med-id">[Inj-Gen-Adrenaline]</span> ボスミン(救急)
 - ボスミン注 0.3mg 皮下または筋肉内注射 ；若年者・最重症時
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="j46-status-asthmaticus" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
->
-> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[Silent Chest]** 聴診で喘鳴が聞こえない（呼吸音がしない）場合は、気道閉塞が高度で窒息寸前の「最重症」サインである。躊躇なくアドレナリン筋注と救急搬送を行え。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="j46-status-asthmaticus" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 通常の気管支拡張薬に反応しない重篤な喘息発作。致死的となりうる救急疾患
-- **病態**:
-  1. 高度な気管支平滑筋攣縮
-  2. 気道粘膜浮腫と粘液栓による気道閉塞
-  3. 著明な空気トラッピング → 過膨張 → 内因性PEEP
-  4. 呼吸筋疲労 → CO2蓄積 → 呼吸性アシドーシス → 心停止
-- **死亡リスクの高い患者像**:
-  - 過去に挿管・ICU管理歴あり
-  - 過去1年に全身ステロイドを要する増悪が2回以上
-  - SABA過剰使用（月1本以上）
-  - ICS未使用または低アドヒアランス
-  - 精神疾患合併、社会的孤立
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **重症度判定（JGL2024準拠）**:
-  - 中発作: 呼吸困難で横になれない、SpO2 91-95%、PEF 50-80%
-  - 大発作: 起座呼吸、会話困難、SpO2 90%以下、PEF 50%未満、著明なwheezes
-  - 重篤: チアノーゼ、意識障害、奇異呼吸、wheezes消失（Silent chest = 超危険）
-- **緊急搬送の絶対適応**:
-  - SpO2 90%以下が持続
-  - 意識障害
-  - 会話不能
-  - 初期治療（SABA反復吸入）で改善なし
-- **鑑別**: 気道異物、アナフィラキシー、気胸、肺塞栓、心不全（cardiac asthma）、声帯機能不全
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **クリニックでの初期対応（搬送までの時間稼ぎ）**:
-  - SABA反復吸入: サルブタモール（ベネトリン）0.3-0.5mL + 生食2mL ネブライザー、20分間隔で最大3回
-  - 酸素投与: SpO2 93-95%を目標（過度の酸素はCO2ナルコーシスに注意）
-  - 全身性ステロイド: ヒドロコルチゾン200mg静注 or mPSL 40-80mg静注（効果発現は4-6時間後だが早期投与が重要）
-  - アドレナリン皮下注: 0.3mg（0.1%製剤 0.3mL）重症例で考慮
-- **搬送先での標準治療**:
-  - 反復ネブライザー + イプラトロピウム（アトロベント）併用
-  - MgSO4 2g/20分 点滴（重症例でのエビデンスあり: Cochrane 2014）
-  - アミノフィリン点滴（250mg/20分 → 0.6mg/kg/hr）: 日本では使用頻度高い
-  - NPPV or 挿管・人工呼吸（意識障害、呼吸筋疲労時）
-- **退院後管理**: 発作の原因分析、ICS/LABA定期吸入の確実な導入、アクションプランの作成、1-2週間以内の再診
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本アレルギー学会 喘息予防・管理ガイドライン2024（JGL2024）](https://www.jsaweb.jp/)
-- [GINA Global Strategy for Asthma Management 2024 - Acute Asthma](https://ginasthma.org/)
+- [日本アレルギー学会 喘息ガイドライン](https://www.jsaweb.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

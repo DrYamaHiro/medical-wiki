@@ -58,6 +58,18 @@ keywords: ["注意欠如・多動症 (Pediatric ADHD) / 疑い・紹介", "注�
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[隠れ便秘]** 夜尿症患児の多くは「便秘」を合併している。直腸に便塊が貯留すると膀胱を圧迫し、機能的膀胱容量を減少させる。夜尿治療の前に、まず便秘を治すことが鉄則（定石）である。
+>
+> **[脊髄疾患除外]** 難治性夜尿や便秘、昼間遺尿がある場合、仙骨部（お尻の割れ目の上）を観察せよ。皮膚陥凹（ディンプル）や異常な発毛があれば、潜在性二分脊椎の可能性がありMRI（他院）が必要となる。
+>
+> **[安全確認]** 肥満児や痩せ型児では、年齢/体重別セットをそのまま適用すると過量・過小投与になるリスクがある。必ず mg/kg での用量確認を行え。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -79,29 +91,7 @@ keywords: ["注意欠如・多動症 (Pediatric ADHD) / 疑い・紹介", "注�
 - <span className="med-id">[Doc-Check-ADHD-RS]</span> ADHD-RS (小児ADHD検査用紙)
 - <span className="med-id">[Doc-Gen-Referral]</span> 診療情報提供書（小児神経科・児童精神科へ）
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="f900-pediatric-adhd" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[隠れ便秘]** 夜尿症患児の多くは「便秘」を合併している。直腸に便塊が貯留すると膀胱を圧迫し、機能的膀胱容量を減少させる。夜尿治療の前に、まず便秘を治すことが鉄則（定石）である。
->
-> **[脊髄疾患除外]** 難治性夜尿や便秘、昼間遺尿がある場合、仙骨部（お尻の割れ目の上）を観察せよ。皮膚陥凹（ディンプル）や異常な発毛があれば、潜在性二分脊椎の可能性がありMRI（他院）が必要となる。
->
-> **[安全確認]** 肥満児や痩せ型児では、年齢/体重別セットをそのまま適用すると過量・過小投与になるリスクがある。必ず mg/kg での用量確認を行え。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -110,7 +100,17 @@ keywords: ["注意欠如・多動症 (Pediatric ADHD) / 疑い・紹介", "注�
 > **[薬は魔法ではない]** 薬は「落ち着いて話を聞ける状態」を作る土台に過ぎない。重要なのは、その状態で「できたことを褒める」「成功体験を積ませる」ことである。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="f900-pediatric-adhd" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -119,35 +119,18 @@ keywords: ["注意欠如・多動症 (Pediatric ADHD) / 疑い・紹介", "注�
 
 ### 病態生理
 
-- **定義:** 不注意・多動性・衝動性を主症状とする神経発達症
-- **疫学:** 小児の約5-8%、男児に多い（2-3:1）
-- **病態:** 前頭前野を中心とするドパミン・ノルアドレナリン系の機能異常
-- **3つの主症状:**
-  - 不注意: 集中困難、忘れ物、ケアレスミス
-  - 多動性: じっとしていられない、過度におしゃべり
-  - 衝動性: 順番を待てない、質問が終わる前に答える
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **DSM-5診断基準:** 不注意/多動-衝動性の各9項目中6項目以上（17歳以上は5項目以上）、12歳以前の発症、2つ以上の場面で障害
-- **鑑別:** 知的障害、自閉スペクトラム症、不安障害、愛着障害、睡眠障害、甲状腺機能異常
-- **合併症:** 学習障害（約30%）、反抗挑発症、不安・うつ
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **ADHD診断・治療ガイドライン 第5版（日本小児神経学会）:**
-  - **プライマリケアの役割:** ADHDを疑い、専門医（小児神経科、児童精神科）へ紹介
-  - **心理社会的治療（第一選択）:** 環境調整、行動療法、ペアレントトレーニング
-  - **薬物療法（6歳以上）:**
-    - メチルフェニデート（コンサータ）: 中枢刺激薬、第一選択
-    - アトモキセチン（ストラテラ）: 非刺激薬、依存性なし
-    - グアンファシン（インチュニブ）: α2A作動薬
-    - リスデキサンフェタミン（ビバンセ）: プロドラッグ型刺激薬
-  - **コンサータの処方:** 登録医師制度（流通管理委員会への登録が必要）
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [ADHD診断・治療ガイドライン 第5版（日本小児神経学会）](https://www.childneuro.jp/)
 - [日本小児科学会](https://www.jpeds.or.jp/)
 {/* WIKI_EDIT_END */}
 

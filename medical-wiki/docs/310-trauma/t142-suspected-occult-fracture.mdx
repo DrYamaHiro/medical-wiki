@@ -57,6 +57,18 @@ keywords: ["骨折疑い・不顕性骨折", "骨折疑い", "不顕性骨折", 
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 単純X線
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[洗浄の鉄則]** 消毒薬（イソジン等）は組織毒性があり治癒を遅らせる。「大量の水道水または生食」で物理的に菌と汚れを洗い流すことが感染予防の全てである。
+>
+> **[縫合不可]** 当院には「縫合セット（針・糸）」がない。顔面、手指、関節部、および真皮縫合が必要な深い傷は、テープ固定で寄せるか、形成外科へ紹介せよ。
+>
+> **[神経損傷]** 指の側面の切創は、浅く見えても指神経が切れていることが多い。局所麻酔を打つ前に必ず「触覚検査」を行え。麻酔後は評価不能となる。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -92,29 +104,7 @@ keywords: ["骨折疑い・不顕性骨折", "骨折疑い", "不顕性骨折", 
 
 - **再診目安:** 1週間後。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="t142-suspected-occult-fracture" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[洗浄の鉄則]** 消毒薬（イソジン等）は組織毒性があり治癒を遅らせる。「大量の水道水または生食」で物理的に菌と汚れを洗い流すことが感染予防の全てである。
->
-> **[縫合不可]** 当院には「縫合セット（針・糸）」がない。顔面、手指、関節部、および真皮縫合が必要な深い傷は、テープ固定で寄せるか、形成外科へ紹介せよ。
->
-> **[神経損傷]** 指の側面の切創は、浅く見えても指神経が切れていることが多い。局所麻酔を打つ前に必ず「触覚検査」を行え。麻酔後は評価不能となる。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -124,7 +114,17 @@ keywords: ["骨折疑い・不顕性骨折", "骨折疑い", "不顕性骨折", 
 > ③大腿骨頸部骨折（嵌合型）: 歩行可能な場合でも骨折している。「転倒後の股関節痛・鼠径部痛」はMRIまで骨折除外不可能である。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="t142-suspected-occult-fracture" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -133,29 +133,19 @@ keywords: ["骨折疑い・不顕性骨折", "骨折疑い", "不顕性骨折", 
 
 ### 病態生理
 
-- **不顕性骨折:** 初回X線で描出されない骨折。受傷後10-14日でX線上に骨折線・仮骨形成が明瞭化
-- **好発部位:** 舟状骨骨折（手関節）、肋骨骨折、脊椎圧迫骨折、脛骨高原骨折、踵骨骨折
-- **ストレス骨折:** 反復する微小外力により発生（中足骨、脛骨が多い）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **臨床的骨折疑い:** 限局性圧痛（Anatomical snuffbox圧痛 → 舟状骨）、腫脹、荷重困難
-- **Ottawa Ankle Rules:** 足関節外傷でX線撮影が必要な基準（感度 98%以上）
-  - 果部の後縁6cmの骨圧痛、受傷直後4歩以上歩行不能
-- **追加検査:** MRI（最も感度が高い）、CT（骨折線の詳細評価）、骨シンチ
-- **舟状骨骨折:** 初回X線陰性でも臨床的に疑えばシーネ固定 + 2週後再X線（またはMRI）
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **マネジメント:**
-  - 臨床的に骨折が疑われる場合: X線陰性でも「骨折疑い」として固定・免荷
-  - 2週間後に再評価（再X線またはMRI/CT）
-  - 舟状骨骨折の見逃しは偽関節・無腐性壊死のリスク → 疑えば必ず固定
-- **紹介:** 関節内骨折疑い、転位骨折、整復を要する骨折、舟状骨骨折確定例
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本整形外科学会](https://www.joa.or.jp/)
+- [日本外傷学会](https://www.jtrauma.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

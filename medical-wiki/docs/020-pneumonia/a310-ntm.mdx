@@ -76,6 +76,18 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 
 - <span className="med-id">[Lab-Gen-CBC_CRP]</span> 末梢血一般(CBC), CRP
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[重症度判定]** A-DROPスコア（Age: 男性70歳/女性75歳以上, Dehydration: 脱水, Respiration: SpO2&lt;=90%, Orientation: 意識障害, Pressure: BP&lt;90/60）を確認せよ。
+>
+> **[設備制約]** 当院にはCTがないため、X線で陰影がはっきりしない場合でも、聴診所見（Crackles）やSpO2低下、CRP高値があれば肺炎を疑い治療開始、または総合病院へ紹介せよ。
+>
+> **[マイコプラズマ]** 若年者、頑固な乾性咳嗽、聴診所見とX線所見の乖離（音はきれいだが影がある）がある場合はマイコプラズマを疑う。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -104,99 +116,45 @@ WBC: ＿, CRP: ＿ (※院内迅速・即日)
 - <span className="med-id">[Doc-Gen-Referral]</span> 診療情報提供書
 - **紹介先:** 呼吸器内科専門医
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="a310-ntm" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[重症度判定]** A-DROPスコア（Age: 男性70歳/女性75歳以上, Dehydration: 脱水, Respiration: SpO2&lt;=90%, Orientation: 意識障害, Pressure: BP&lt;90/60）を確認せよ。
->
-> **[設備制約]** 当院にはCTがないため、X線で陰影がはっきりしない場合でも、聴診所見（Crackles）やSpO2低下、CRP高値があれば肺炎を疑い治療開始、または総合病院へ紹介せよ。
->
-> **[マイコプラズマ]** 若年者、頑固な乾性咳嗽、聴診所見とX線所見の乖離（音はきれいだが影がある）がある場合はマイコプラズマを疑う。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[結核除外]** 画像だけでNTMと決めつけるのは危険である。必ず喀痰検査（PCR）で結核を否定せよ。結核を見逃すと院内感染・家族内感染の大事故になる。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="a310-ntm" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 結核菌以外の抗酸菌（非結核性抗酸菌 = NTM）による慢性肺感染症
-- **主な起炎菌（日本）**:
-  - Mycobacterium avium complex（MAC）: 約80-90%（M. avium + M. intracellulare）
-  - M. kansasii: 約5%（臨床像は結核に類似、治療反応良好）
-  - M. abscessus complex: 約5%（難治性、マクロライド耐性が問題）
-- **疫学**: 日本での罹患率は10万人対14.7人（2014年調査）で増加傾向。結核を上回る
-- **好発**: 中高年女性、痩せ型、基礎疾患なし（Lady Windermere症候群）
-- **感染経路**: 環境（土壌、水系）からのエアロゾル吸入。ヒト-ヒト感染はしない
-- **病型**:
-  - 結節・気管支拡張型（NB型）: 中葉・舌区の気管支拡張 + 小結節。緩徐進行
-  - 線維空洞型（FC型）: 上葉の空洞病変。進行が速く予後不良
-- **病態**: NTMの細胞内寄生 → 肉芽腫形成 → 気管支壁破壊・気管支拡張 → 慢性的な炎症と組織破壊
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **ATS/IDSA 2020 + 日本結核・非結核性抗酸菌症学会 2023 診断基準**:
-  - 臨床的基準:
-    1. 胸部画像で結節影、多発小結節影、空洞、気管支拡張のいずれか
-    2. 他の疾患を除外
-  - 細菌学的基準（以下のいずれか）:
-    1. 喀痰から2回以上の培養陽性（異なる検体）
-    2. 気管支洗浄液から1回以上の培養陽性
-    3. 経気管支肺生検で肉芽腫 + 培養陽性
-- **必要な検査**:
-  - 喀痰抗酸菌塗抹（チール・ネルゼン染色 or 蛍光法）
-  - 喀痰抗酸菌培養（液体培養: MGIT、固形培養: 小川培地）
-  - 菌種同定（DDH法、質量分析法）
-  - 結核菌PCR（結核の除外が最優先）
-- **鑑別疾患**:
-  - 肺結核（最重要の鑑別。PCRで区別）
-  - 肺癌（結節影の鑑別）
-  - 気管支拡張症（他の原因: 先天性、免疫不全）
-  - サルコイドーシス（両側肺門リンパ節腫大）
-  - 慢性好酸球性肺炎
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **治療開始基準**: 全例で直ちに治療が必要ではない。以下を考慮して判断:
-  - 画像所見の進行、空洞の存在
-  - 喀血、呼吸機能低下
-  - 排菌量（塗抹陽性）
-  - 患者の年齢・全身状態・希望
-- **MAC症の標準治療（3剤併用）**:
-  - クラリスロマイシン（CAM）800mg/日 or アジスロマイシン（AZM）250mg/日
-  - リファンピシン（RFP）450-600mg/日（体重による）
-  - エタンブトール（EB）750mg/日（15mg/kg）
-  - 治療期間: 培養陰性化後12ヶ月以上（通常18-24ヶ月）
-- **M. abscessus complex**: マクロライド + アミカシン + イミペネムなど（専門医での管理必須）
-- **アミカシン吸入療法（ALIS）**: 難治性MAC症に対しリポソーマルアミカシン吸入が2024年から日本でも使用可能
-- **経過観察のみの場合**: 6ヶ月ごとの胸部X線 + 喀痰培養でフォロー
-- **外科治療**: 限局性病変で内科治療無効の場合に検討
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本結核・非結核性抗酸菌症学会 NTM症診療ガイドライン2023](https://www.kekkaku.gr.jp/)
-- [ATS/ERS/ESCMID/IDSA NTM Guideline 2020](https://www.atsjournals.org/)
-- [日本呼吸器学会 呼吸器感染症に関するガイドライン](https://www.jrs.or.jp/)
+- [日本呼吸器学会 肺炎診療ガイドライン](https://www.jrs.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

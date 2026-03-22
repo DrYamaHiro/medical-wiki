@@ -61,6 +61,16 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[設備制約]** 当院には心エコー、ホルター心電図、ABI測定機器がない。心雑音、不整脈、脈拍欠損、重症心不全を認めた場合は、詳細評価のため循環器専門医へ紹介せよ。
+>
+> **[BNP解釈]** 息切れの鑑別にはBNPが有用だが、外注のため結果は後日となる。急性期のトリアージは身体所見とSpO2、X線で行え。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -84,60 +94,45 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 - <span className="med-id">[Rx-IHD-AntiPlt-Asp]</span> バイアスピリン
 - バイアスピリン錠100mg 1回1錠 1日1回 朝食後 28日分
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="i702-aso-pad" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[設備制約]** 当院には心エコー、ホルター心電図、ABI測定機器がない。心雑音、不整脈、脈拍欠損、重症心不全を認めた場合は、詳細評価のため循環器専門医へ紹介せよ。
->
-> **[BNP解釈]** 息切れの鑑別にはBNPが有用だが、外注のため結果は後日となる。急性期のトリアージは身体所見とSpO2、X線で行え。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[シロスタゾール]** 血管拡張作用がありASOの症状改善に有効だが、副作用で「頻脈・頭痛」が出やすい。心不全患者には禁忌。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="i702-aso-pad" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 下肢動脈の動脈硬化性狭窄・閉塞による慢性虚血
-- **Fontaine分類**: I度（無症状）、II度（間欠性跛行）、III度（安静時疼痛）、IV度（潰瘍・壊疽）
-- **動脈硬化の全身疾患**: PAD患者の約50%に冠動脈疾患、約30%に脳血管疾患を合併
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **ABI（足関節上腕血圧比）**: 0.9以下でPADと診断。0.4以下は重症虚血（CLI）
-- **間欠性跛行**: 歩行で下肢の痛み → 休息で軽快。神経性跛行（脊柱管狭窄症: 前屈で軽快）との鑑別が重要
-- **検査**: 下肢動脈超音波、CTA/MRA
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **リスク因子管理**: 禁煙（最重要）、LDL 70mg/dL未満、HbA1c管理、降圧
-- **抗血小板薬**: アスピリン or クロピドグレル75mg/日
-- **間欠性跛行**: 運動療法（監視下歩行訓練: 週3回、30-45分。エビデンスA）、シロスタゾール100mg 1日2回（歩行距離を50-100%延長）
-- **CLI（重症虚血肢）**: 血行再建術（バイパス or EVT: 血管内治療）が必要。フットケア・潰瘍管理
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本循環器学会 末梢閉塞性動脈疾患の治療ガイドライン2024](https://www.j-circ.or.jp/)
+- [日本循環器学会](https://www.j-circ.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

@@ -77,6 +77,18 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[RedFlag]** 喉頭蓋炎の兆候（流涎、含み声、呼吸困難、吸気性喘鳴）がある場合は直ちに高次医療機関へ搬送せよ。
+>
+> **[鑑別]** Centor Criteria（発熱・咳なし・前頸部リンパ節圧痛・扁桃白苔）を確認し、細菌性（溶連菌）の可能性を見極めよ。
+>
+> **[設備制約]** 当院にはCTおよびファイバースコープがないため、喉頭蓋炎や深頸部膿瘍が疑われる場合は、身体所見のみでトリアージし、早期に専門医へ紹介せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -109,29 +121,7 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - <span className="med-id">[Div-Gen-Lac-250]</span> ラクテック(補液)
 - ラクテック注 250mL 点滴静注
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="j039-acute-tonsillitis" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[RedFlag]** 喉頭蓋炎の兆候（流涎、含み声、呼吸困難、吸気性喘鳴）がある場合は直ちに高次医療機関へ搬送せよ。
->
-> **[鑑別]** Centor Criteria（発熱・咳なし・前頸部リンパ節圧痛・扁桃白苔）を確認し、細菌性（溶連菌）の可能性を見極めよ。
->
-> **[設備制約]** 当院にはCTおよびファイバースコープがないため、喉頭蓋炎や深頸部膿瘍が疑われる場合は、身体所見のみでトリアージし、早期に専門医へ紹介せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -140,58 +130,38 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 > **[重症化]** 扁桃周囲膿瘍への進展に注意。口が開かない場合は即時耳鼻科紹介。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="j039-acute-tonsillitis" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- 口蓋扁桃はWaldeyer咽頭輪の一部で、IgAを中心とした粘膜免疫の最前線
-- 小児期（3〜10歳）に免疫学的活性が高く、加齢とともに退縮
-
-**原因微生物**
-- ウイルス性が約70〜80%：アデノウイルス、EBウイルス、エンテロウイルス、インフルエンザウイルス等
-- 細菌性は約20〜30%：GAS（最多）、C群・G群溶連菌、*Fusobacterium necrophorum*（若年成人、Lemierre症候群の原因菌）
-
-**病態の進展**
-- 扁桃陰窩への病原体侵入→炎症性サイトカイン放出→扁桃実質の充血・腫脹・膿栓形成
-- 重症例では扁桃周囲炎→扁桃周囲膿瘍へ進展
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-**細菌性を示唆する所見**
-- 急激な発症、高熱（39℃以上）、扁桃の著明な発赤・白苔・膿栓、前頸部リンパ節有痛性腫脹、咳嗽・鼻汁がない
-
-**ウイルス性を示唆する所見**
-- 鼻汁、咳嗽、嗄声、結膜炎、下痢の合併
-
-**重要な鑑別疾患**
-- **扁桃周囲膿瘍**：片側の著明な咽頭痛、開口障害、口蓋垂の健側偏位 — 穿刺排膿が必要
-- **伝染性単核球症（EBV）**：両側扁桃著明腫大、肝脾腫、異型リンパ球。AMPC/ABPC（アンピシリン）で高率に薬疹
-- **急性喉頭蓋炎**：嚥下痛・流涎・呼吸困難 — 気道緊急
-- **悪性リンパ腫・扁桃癌**：片側性の持続的扁桃腫大 → 生検を考慮
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-**抗菌薬適応**
-- GAS咽頭扁桃炎が確認または強く疑われる場合のみ投与（抗微生物薬適正使用の手引き準拠）
-- 第一選択：AMPC 500mg 1日3回 10日間
-- 治療目的：(1)症状早期改善（約1日短縮）(2)感染拡大抑制 (3)化膿性合併症予防 (4)リウマチ熱予防
-
-**ステロイド併用**
-- デキサメタゾン単回投与（0.6mg/kg、最大10mg）で咽頭痛改善が約6〜12時間早まる（Cochrane 2020）
-- ルーチン使用は非推奨。中等症〜重症の嚥下困難例で考慮
-
-**反復性扁桃炎の手術適応（Paradise Criteria）**
-- 年7回以上 × 1年間、年5回以上 × 2年連続、年3回以上 × 3年連続
-- その他：扁桃周囲膿瘍反復、扁桃肥大による睡眠時無呼吸、IgA腎症・掌蹠膿疱症の扁桃病巣感染
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [抗微生物薬適正使用の手引き（厚生労働省）](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000120172.html)
-- [日本口腔・咽頭科学会](http://www.jsop.or.jp/)
-- [日本耳鼻咽喉科頭頸部外科学会](https://www.jibika.or.jp/)
+- [日本感染症学会](https://www.kansensho.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

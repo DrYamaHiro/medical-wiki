@@ -57,6 +57,19 @@ keywords: ["感染性大腸炎", "感染", "染性", "性大", "大腸", "腸炎
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[指診の重要性]** 「お尻を見られるのは恥ずかしい」と拒否する患者もいるが、直腸癌の約半数は指診で届く範囲にある。カーテンやタオルで羞恥心に配慮しつつ、可能な限り実施せよ。
+>
+> **[血便の鑑別]**
+> - **鮮血（紙に付く・ポタポタ）:** 痔核、裂肛、直腸癌
+> - **粘血便（イチゴジャム様）:** 感染性大腸炎、IBD（潰瘍性大腸炎）、アメーバ赤痢
+> - **黒色便（タール便）:** 上部消化管出血（胃潰瘍等）
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -92,30 +105,7 @@ keywords: ["感染性大腸炎", "感染", "染性", "性大", "大腸", "腸炎
 - <span className="med-id">[Rx-Resp-Myco-Azm]</span> ジスロマック(成人)
 - ジスロマック錠250mg 1回2錠 1日1回 3日分 *— カンピロバクター疑い*
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="a049-infectious-colitis" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[指診の重要性]** 「お尻を見られるのは恥ずかしい」と拒否する患者もいるが、直腸癌の約半数は指診で届く範囲にある。カーテンやタオルで羞恥心に配慮しつつ、可能な限り実施せよ。
->
-> **[血便の鑑別]**
-> - **鮮血（紙に付く・ポタポタ）:** 痔核、裂肛、直腸癌
-> - **粘血便（イチゴジャム様）:** 感染性大腸炎、IBD（潰瘍性大腸炎）、アメーバ赤痢
-> - **黒色便（タール便）:** 上部消化管出血（胃潰瘍等）
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -124,34 +114,38 @@ keywords: ["感染性大腸炎", "感染", "染性", "性大", "大腸", "腸炎
 > **[ギラン・バレー症候群 (GBS)]** カンピロバクター腸炎の1～3週間後に、手足のしびれ・脱力（GBS）を発症することがある。「下痢が治った後に手足に力が入りにくくなったらすぐ受診を」と伝えておく。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="a049-infectious-colitis" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 細菌・ウイルスなどの感染による大腸粘膜の炎症。血便・粘血便を伴うことが特徴
-- **主な起炎菌**: カンピロバクター、サルモネラ、赤痢菌、腸管出血性大腸菌、アメーバ赤痢
-- **Clostridioides difficile感染症（CDI）**: 抗菌薬使用後に発症。偽膜性大腸炎の原因
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **臨床所見**: 下痢（水様〜血性）、腹痛、テネスムス、発熱
-- **CDI疑い**: 抗菌薬使用中〜使用後の水様性下痢。CDトキシン検査で診断
-- **鑑別**: 炎症性腸疾患（慢性再燃性）、虚血性腸炎（高齢者、左側）、大腸癌
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **軽症**: 補液 + 整腸薬で対応。多くは自然軽快
-- **中等症〜重症**: 起炎菌に応じた抗菌薬選択
-- **CDI治療**: メトロニダゾール500mg 1日3回 10日間（軽症）。バンコマイシン125mg 1日4回 10日間（中等症以上）。フィダキソマイシン200mg 1日2回 10日間（再発例）
-- **予防**: 抗菌薬適正使用がCDI予防の最大の方策
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本感染症学会 CDI診療ガイドライン2024](https://www.kansensho.or.jp/)
-- [日本消化器病学会](https://www.jsge.or.jp/)
+- [日本消化器病学会 便秘ガイドライン](https://www.jsge.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

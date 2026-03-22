@@ -73,6 +73,18 @@ CVA叩打痛: なし / 右 / 左
 - <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 - <span className="med-id">[Img-Gen-AbdomenXP]</span> 腹部単純X線撮影
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[Killer Chest Pain]** 胸痛・背部痛で絶対に見逃してはならない5大疾患（ACS、大動脈解離、肺塞栓、緊張性気胸、食道破裂）。当院にはCT/Echoがないため、少しでも疑わしければ「帰宅させない」覚悟が必要。
+>
+> **[Killer Abdominal Pain]** 腹部大動脈瘤破裂、上腸間膜動脈閉塞症、消化管穿孔、異所性妊娠。特に高齢者の「腹痛＋ショックバイタル」は血管系イベントを強く疑え。
+>
+> **[設備制約]** トロポニンTやDダイマーの迅速検査、およびエコー・CTがない。心電図とX線で異常がなくても、症状が強ければ「見逃し」を避けるために救急搬送を選択せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -115,29 +127,7 @@ CVA叩打痛: なし / 右 / 左
 
 - **再診目安:** 疼痛持続時。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="m549-acute-back-pain" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[Killer Chest Pain]** 胸痛・背部痛で絶対に見逃してはならない5大疾患（ACS、大動脈解離、肺塞栓、緊張性気胸、食道破裂）。当院にはCT/Echoがないため、少しでも疑わしければ「帰宅させない」覚悟が必要。
->
-> **[Killer Abdominal Pain]** 腹部大動脈瘤破裂、上腸間膜動脈閉塞症、消化管穿孔、異所性妊娠。特に高齢者の「腹痛＋ショックバイタル」は血管系イベントを強く疑え。
->
-> **[設備制約]** トロポニンTやDダイマーの迅速検査、およびエコー・CTがない。心電図とX線で異常がなくても、症状が強ければ「見逃し」を避けるために救急搬送を選択せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -146,7 +136,17 @@ CVA叩打痛: なし / 右 / 左
 > **[D-dimerなし]** 当院ではD-dimerが即日出ないため、解離や肺塞栓の除外には使えない。疑わしければ画像診断ができる施設へ送るのが鉄則である。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="m549-acute-back-pain" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -155,33 +155,19 @@ CVA叩打痛: なし / 右 / 左
 
 ### 病態生理
 
-- **非特異的腰背部痛が約85%:** 筋筋膜性、椎間関節性、椎間板性など（画像で特定困難）
-- **特異的原因（約15%）:** 椎間板ヘルニア、脊柱管狭窄症、圧迫骨折、感染、腫瘍
-- **自然経過:** 急性腰痛の約90%は6週間以内に改善
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **Red Flags（要緊急評価）:**
-  - 馬尾症候群: 膀胱直腸障害、サドル麻酔、両下肢筋力低下 → 緊急MRI + 外科紹介
-  - 悪性腫瘍: 癌の既往、安静時痛、体重減少、50歳以上の初発
-  - 感染（化膿性脊椎炎）: 発熱、免疫低下、IV drug use
-  - 骨折: 外傷、ステロイド使用、骨粗鬆症
-  - 大動脈疾患: 拍動性腫瘤、背部痛（解離・瘤破裂）
-- **Yellow Flags（慢性化リスク）:** 破局的思考、恐怖回避行動、職場不満、うつ
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **腰痛診療ガイドライン2019（日本整形外科学会）:**
-  - **初診時:** Red Flagsの除外 → なければ画像検査は不要（推奨グレードA）
-  - **NSAIDs:** 短期使用が有効（推奨グレードA）
-  - **アセトアミノフェン:** 効果はプラセボと差がないとのエビデンスもあるが実臨床では使用
-  - **筋弛緩薬:** チザニジン（テルネリン）の短期追加は有効
-  - **安静は推奨しない:** 可能な限り日常活動を維持（推奨グレードA）
-  - **慢性化予防:** 早期の活動再開、患者教育、心理社会的要因への対応
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [腰痛診療ガイドライン2019（日本整形外科学会）](https://www.joa.or.jp/)
+- [日本救急医学会](https://www.jaam.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

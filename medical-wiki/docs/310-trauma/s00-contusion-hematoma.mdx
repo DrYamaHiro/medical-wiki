@@ -57,6 +57,18 @@ keywords: ["打撲・皮下血腫", "打撲", "皮下血腫", "撲皮", "皮下"
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 単純X線
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[洗浄の鉄則]** 消毒薬（イソジン等）は組織毒性があり治癒を遅らせる。「大量の水道水または生食」で物理的に菌と汚れを洗い流すことが感染予防の全てである。
+>
+> **[縫合不可]** 当院には「縫合セット（針・糸）」がない。顔面、手指、関節部、および真皮縫合が必要な深い傷は、テープ固定で寄せるか、形成外科へ紹介せよ。
+>
+> **[神経損傷]** 指の側面の切創は、浅く見えても指神経が切れていることが多い。局所麻酔を打つ前に必ず「触覚検査」を行え。麻酔後は評価不能となる。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -87,36 +99,24 @@ keywords: ["打撲・皮下血腫", "打撲", "皮下血腫", "撲皮", "皮下"
 
 - **患者指導:** 頭部打撲後は当日の入浴・アルコール禁止。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="s00-contusion-hematoma" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[洗浄の鉄則]** 消毒薬（イソジン等）は組織毒性があり治癒を遅らせる。「大量の水道水または生食」で物理的に菌と汚れを洗い流すことが感染予防の全てである。
->
-> **[縫合不可]** 当院には「縫合セット（針・糸）」がない。顔面、手指、関節部、および真皮縫合が必要な深い傷は、テープ固定で寄せるか、形成外科へ紹介せよ。
->
-> **[神経損傷]** 指の側面の切創は、浅く見えても指神経が切れていることが多い。局所麻酔を打つ前に必ず「触覚検査」を行え。麻酔後は評価不能となる。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[頭部の注意]** 受傷直後のCTが正常でも、1～2ヶ月後に「ぼんやりする」「歩きにくい」等の症状が出たら慢性硬膜下血腫の可能性がある。「忘れた頃に出る症状」について家族に説明しておけ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="s00-contusion-hematoma" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -125,27 +125,19 @@ keywords: ["打撲・皮下血腫", "打撲", "皮下血腫", "撲皮", "皮下"
 
 ### 病態生理
 
-- **打撲:** 鈍的外力による軟部組織の損傷（皮膚の連続性は保たれる）
-- **皮下血腫:** 打撲により皮下の血管が断裂し、血液が組織間に貯留
-- **経過:** 受傷直後は発赤・腫脹 → 24-72時間で紫斑最大 → 1-3週間で黄色→消退
-- **コンパートメント症候群:** 四肢の打撲で区画内圧上昇 → 6P症状（Pain, Pressure, Paralysis, Paresthesia, Pallor, Pulselessness）→ 緊急筋膜切開
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **骨折の除外:** 限局性圧痛、軸圧痛陽性、変形、異常可動性 → X線撮影
-- **抗凝固薬内服者:** 軽微な外傷で大きな血腫形成、頭部打撲時の慢性硬膜下血腫リスク
-- **児童虐待の疑い:** 受傷機転と不一致な皮下出血パターン
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **RICE療法:** Rest（安静）、Ice（冷却: 受傷後48時間）、Compression（圧迫）、Elevation（挙上）
-- **消炎鎮痛:** NSAIDs外用（ロキソプロフェンテープ等）、内服
-- **経過観察:** 増大する血腫、循環障害（蒼白・冷感・感覚異常）は再診を指導
-- **頭部打撲:** 抗凝固薬内服者は頭部CT検討、受傷後2週間の経過観察指導
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本整形外科学会](https://www.joa.or.jp/)
+- [日本外傷学会](https://www.jtrauma.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

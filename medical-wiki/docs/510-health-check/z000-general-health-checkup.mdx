@@ -50,6 +50,16 @@ keywords: ["一般健診・自費健診", "一般健診", "自費健診", "一�
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[結果渡し]** 当院の血液検査は外注（SRL）であるため、診断書や健診結果の即日発行は不可能である。「結果が出るまで数日かかります」と受付段階で必ず説明し、トラブルを回避せよ。
+>
+> **[健診の意義]** 健診は「異常を見つける」だけでなく、「自分の体を知り、生活習慣を見直すきっかけ」であることを伝え、結果説明の受診を促せ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -77,34 +87,24 @@ keywords: ["一般健診・自費健診", "一般健診", "自費健診", "一�
 - <span className="med-id">[Lab-Uro-STD]</span> 性感染症(尿) ；梅毒/HIV/肝炎セットなど適宜組み合わせ
 - <span className="med-id">[Lab-GI-HP-Ab]</span> ピロリ菌検査 ；ABC検診用
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="z000-general-health-checkup" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[結果渡し]** 当院の血液検査は外注（SRL）であるため、診断書や健診結果の即日発行は不可能である。「結果が出るまで数日かかります」と受付段階で必ず説明し、トラブルを回避せよ。
->
-> **[健診の意義]** 健診は「異常を見つける」だけでなく、「自分の体を知り、生活習慣を見直すきっかけ」であることを伝え、結果説明の受診を促せ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[ABC検診]** バリウムや内視鏡ができない当院において、胃癌リスク層別化のための「ABC検診（ピロリ抗体＋ペプシノゲン法）」は有用なツールである。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="z000-general-health-checkup" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -113,28 +113,18 @@ keywords: ["一般健診・自費健診", "一般健診", "自費健診", "一�
 
 ### 病態生理
 
-- **目的:** 生活習慣病の早期発見・予防、健康状態の全体的評価
-- **一般健診（自費）:** 企業健診の代替、人間ドック、個人の希望による健康チェック
-- **基本検査項目:** 身体計測、血圧、視力・聴力、尿検査、血液検査（CBC、肝機能、脂質、血糖）、胸部X線、心電図
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **異常値の判定基準（人間ドック学会）:**
-  - 血圧: 130/85以上で要注意、140/90以上で要医療
-  - LDL: 140以上で高LDL血症
-  - HbA1c: 5.6-6.4%で要注意、6.5%以上で糖尿病疑い
-  - eGFR: 60未満でCKD疑い
-- **精密検査が必要な所見:** 胸部X線異常影、心電図異常、尿蛋白陽性
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **健診結果の説明:** 異常値の意味を平易に説明し、生活習慣の改善指導
-- **二次検査の勧奨:** 精密検査が必要な項目は受診勧奨を確実に行う
-- **がん検診との連携:** 胃がん（内視鏡/バリウム）、大腸がん（便潜血）、肺がん（胸部X線+喀痰）、乳がん（マンモグラフィ）、子宮頸がん（細胞診）
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本人間ドック学会](https://www.ningen-dock.jp/)
 - [厚生労働省 特定健康診査](https://www.mhlw.go.jp/)
 {/* WIKI_EDIT_END */}
 

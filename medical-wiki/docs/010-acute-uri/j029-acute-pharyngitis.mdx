@@ -77,6 +77,18 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[RedFlag]** 喉頭蓋炎の兆候（流涎、含み声、呼吸困難、吸気性喘鳴）がある場合は直ちに高次医療機関へ搬送せよ。
+>
+> **[鑑別]** Centor Criteria（発熱・咳なし・前頸部リンパ節圧痛・扁桃白苔）を確認し、細菌性（溶連菌）の可能性を見極めよ。
+>
+> **[設備制約]** 当院にはCTおよびファイバースコープがないため、喉頭蓋炎や深頸部膿瘍が疑われる場合は、身体所見のみでトリアージし、早期に専門医へ紹介せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -99,92 +111,45 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - メジコン錠15mg 1回2錠 1日3回 毎食後 5日分
 - トラネキサム酸錠250mg 1回2錠 1日3回 毎食後 5日分
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="j029-acute-pharyngitis" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[RedFlag]** 喉頭蓋炎の兆候（流涎、含み声、呼吸困難、吸気性喘鳴）がある場合は直ちに高次医療機関へ搬送せよ。
->
-> **[鑑別]** Centor Criteria（発熱・咳なし・前頸部リンパ節圧痛・扁桃白苔）を確認し、細菌性（溶連菌）の可能性を見極めよ。
->
-> **[設備制約]** 当院にはCTおよびファイバースコープがないため、喉頭蓋炎や深頸部膿瘍が疑われる場合は、身体所見のみでトリアージし、早期に専門医へ紹介せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[抗菌薬適正使用]** 細菌性を示唆する所見がない限りウイルス性を疑う。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="j029-acute-pharyngitis" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **ウイルス性が約70〜80%**：ライノウイルス（最多）、コロナウイルス、アデノウイルス、インフルエンザ、パラインフルエンザ、EBウイルス、コクサッキーウイルス等
-- **細菌性は約20〜30%**：GASが最多（成人の10〜15%、小児の15〜30%）。その他 C群・G群溶連菌、*Fusobacterium necrophorum*（若年成人）
-- 飛沫・接触感染により咽頭粘膜に炎症反応（血管拡張・浮腫・好中球浸潤）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-**Centor / McIsaac Score によるGAS層別化**
-
-| 項目 | 点数 |
-|------|------|
-| 発熱 38℃以上 | +1 |
-| 咳嗽がない | +1 |
-| 前頸部リンパ節の圧痛・腫脹 | +1 |
-| 扁桃の腫脹または滲出物 | +1 |
-| 年齢 3〜14歳 / 15〜44歳 / 45歳以上 | +1 / 0 / −1 |
-
-- 0〜1点：検査・抗菌薬不要
-- 2〜3点：迅速検査→陽性なら抗菌薬
-- 4〜5点：迅速検査（経験的治療も考慮）
-
-**Red Flags（緊急鑑別）**
-- **急性喉頭蓋炎**：嚥下痛が所見に比し不釣り合いに強い、含み声、流涎、吸気性喘鳴 — 気道緊急
-- **扁桃周囲膿瘍**：片側性咽頭痛、開口障害、口蓋垂偏位 — 穿刺排膿が必要
-- **深頸部膿瘍**：頸部腫脹・可動制限、高熱遷延 — 造影CTで評価
-- **Lemierre症候群**：若年成人の咽頭炎後に敗血症症状 — 造影CTで内頸静脈血栓確認
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-**抗菌薬適正使用（厚労省「手引き」準拠）**
-- 急性咽頭炎の大半はウイルス性であり抗菌薬は不要
-- 抗菌薬はGAS感染が確認または強く疑われる場合に限定
-- 迅速検査なしの経験的処方は推奨されない
-
-**GAS陽性時の治療**
-- AMPC 500mg 1日3回 10日間（第一選択）
-- ペニシリンアレルギー：セファレキシン 500mg 1日2回 10日間、またはマクロライド系
-
-**対症療法（全例）**
-- アセトアミノフェン 400〜500mg 頓用またはNSAIDs
-- 含嗽（アズレン含嗽液）、十分な水分摂取・安静
-
-**専門科紹介基準**
-- Red flagsに該当する場合、経口摂取不能による脱水、48〜72時間で改善なし
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [抗微生物薬適正使用の手引き（厚生労働省）](https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000120172.html)
-- [JAID/JSC感染症治療ガイドライン](https://www.kansensho.or.jp/modules/guidelines/index.php?content_id=2)
-- [日本耳鼻咽喉科頭頸部外科学会](https://www.jibika.or.jp/)
-- [IDSA GAS Pharyngitis Guideline](https://www.idsociety.org/practice-guideline/pharyngitis/)
+- [日本感染症学会](https://www.kansensho.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

@@ -61,6 +61,16 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[設備制約]** 当院には心エコー、ホルター心電図、ABI測定機器がない。心雑音、不整脈、脈拍欠損、重症心不全を認めた場合は、詳細評価のため循環器専門医へ紹介せよ。
+>
+> **[BNP解釈]** 息切れの鑑別にはBNPが有用だが、外注のため結果は後日となる。急性期のトリアージは身体所見とSpO2、X線で行え。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -82,62 +92,45 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 - <span className="med-id">[Doc-Gen-Referral]</span> 診療情報提供書
 - **紹介先:** 循環器内科（心エコー精査依頼）
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="i38-valvular-heart-disease" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[設備制約]** 当院には心エコー、ホルター心電図、ABI測定機器がない。心雑音、不整脈、脈拍欠損、重症心不全を認めた場合は、詳細評価のため循環器専門医へ紹介せよ。
->
-> **[BNP解釈]** 息切れの鑑別にはBNPが有用だが、外注のため結果は後日となる。急性期のトリアージは身体所見とSpO2、X線で行え。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[大動脈弁狭窄症(AS)]** 高齢者のASは進行性で突然死のリスクがある。「失神」「狭心痛」「呼吸困難」の3徴候が出たら待ったなしの手術適応である。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="i38-valvular-heart-disease" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **主な弁膜症**:
-  - 大動脈弁狭窄症（AS）: 加齢に伴う石灰化が最多。高齢化で増加中。重症ASは予後不良（症状出現後2-3年で50%死亡）
-  - 僧帽弁逆流症（MR）: 変性（僧帽弁逸脱）、虚血性（心筋梗塞後）、機能性（左室拡大）
-  - 大動脈弁逆流症（AR）: 二尖弁、感染性心内膜炎、大動脈疾患
-  - 僧帽弁狭窄症（MS）: リウマチ性（日本では減少傾向）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **聴診**: ASは駆出性収縮期雑音（右第2肋間）、MRは汎収縮期雑音（心尖部）、ARは拡張早期灌水様雑音
-- **心エコー**: 弁膜症の確定診断・重症度評価の必須検査。弁口面積、逆流量、左室機能を評価
-- **BNP**: 弁膜症の重症度・心不全合併の指標
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **AS**: 重症有症候性 → 弁置換術（外科AVR or TAVI）。TAVIは高齢・ハイリスク患者で外科と同等以上の成績
-- **MR**: 重症一次性MR → 外科手術（弁形成術が第一選択）。二次性MRは心不全治療の最適化が先
-- **プライマリケアの役割**: 聴診で心雑音発見 → 心エコー → 重症度に応じて循環器専門医紹介。感染性心内膜炎の予防（歯科処置前の抗菌薬予防投与: ハイリスク弁膜症のみ）
-- **抗凝固療法**: 機械弁はワルファリン必須（DOACは禁忌）。生体弁は術後3-6ヶ月のワルファリン後にアスピリンへ
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本循環器学会 弁膜症治療ガイドライン2024](https://www.j-circ.or.jp/)
+- [日本循環器学会](https://www.j-circ.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

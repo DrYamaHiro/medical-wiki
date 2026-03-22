@@ -61,6 +61,16 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[設備制約]** 当院には心エコー、ホルター心電図、ABI測定機器がない。心雑音、不整脈、脈拍欠損、重症心不全を認めた場合は、詳細評価のため循環器専門医へ紹介せよ。
+>
+> **[BNP解釈]** 息切れの鑑別にはBNPが有用だが、外注のため結果は後日となる。急性期のトリアージは身体所見とSpO2、X線で行え。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -86,60 +96,45 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 - <span className="med-id">[Rx-IHD-Nitro-Tab]</span> ニトロペン
 - ニトロペン舌下錠0.3mg 1回1錠 発作時舌下 10回分 *— 発作時*
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="i208-angina-pectoris" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[設備制約]** 当院には心エコー、ホルター心電図、ABI測定機器がない。心雑音、不整脈、脈拍欠損、重症心不全を認めた場合は、詳細評価のため循環器専門医へ紹介せよ。
->
-> **[BNP解釈]** 息切れの鑑別にはBNPが有用だが、外注のため結果は後日となる。急性期のトリアージは身体所見とSpO2、X線で行え。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[ニトロ指導]** 「胸が痛くなったら迷わず使う」「座って使う（起立性低血圧注意）」「5分おきに3回使っても治まらなければ救急車」の3点を徹底指導せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="i208-angina-pectoris" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 冠動脈の動脈硬化による狭窄で、心筋酸素需要増大時に心筋虚血をきたす状態
-- **病態**: 冠動脈のプラーク形成 → 内腔狭窄（通常75%以上で症状出現）→ 労作時に心筋酸素需要が供給を上回る → 胸痛
-- **安定狭心症 vs 不安定狭心症**: 安定型は労作で誘発され安静で軽快。不安定型はプラーク破裂を伴い急性冠症候群（ACS）に分類
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **典型的胸痛**: 前胸部の圧迫感・絞扼感、労作で誘発、安静またはニトロで5分以内に軽快
-- **検査**: 12誘導心電図（発作時ST低下）、運動負荷心電図、心臓超音波、冠動脈CT、冠動脈造影
-- **鑑別**: GERD、肋間神経痛、パニック障害、肺塞栓、大動脈解離、心膜炎
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **発作時**: ニトログリセリン舌下錠0.3mg（5分間隔で最大3回。無効ならACS疑いで救急搬送）
-- **二次予防**: 抗血小板薬（アスピリン100mg/日）、スタチン（LDL 70mg/dL未満を目標）、beta遮断薬、ACE-I/ARB
-- **冠血行再建**: 薬物治療でコントロール不良、3枝病変、左主幹部病変ではPCI（ステント）orCABGの適応
-- **リスク因子管理**: 高血圧、脂質異常症、糖尿病、禁煙が最重要
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本循環器学会 慢性冠動脈疾患診療ガイドライン2024](https://www.j-circ.or.jp/)
+- [日本循環器学会](https://www.j-circ.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

@@ -74,6 +74,18 @@ COVID-19 陽性 / 陰性
 - <span className="med-id">[Lab-Gen-Influenza]</span> インフルエンザ
 - <span className="med-id">[Lab-Gen-COVID]</span> COVID-19
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[トリアージの要点]**
+> ①即時対応 (重症感あり): SpO2&lt;95%、チアノーゼ、意識障害（ぐったり）、大泉門膨隆、紫斑（髄膜炎菌疑い）→ 緊急対応。
+> ②要注意 (ハイリスク): 生後3ヶ月未満の発熱、3日以上続く高熱、水分が全く取れない → 早急に検査・方針決定。
+> ③機嫌・活気が最重要: 体温の高さよりも「あやすと笑う・視線が合う」かどうかが重症度判定の核心である。
+> ④ハイリスク回避: 「親の直感」（「いつもと違う」）は有力な情報である。親の不安が強い場合は確認検査を行うことで受診の安心につながる。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -117,36 +129,24 @@ COVID-19 陽性 / 陰性
 - **患者指導:** 薬に頼らず、鼻吸引と加湿、水分摂取で経過を見るよう指導。
 - <span className="med-id">[Doc-Gen-InfectCaution]</span> 感染症説明書
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="j00-common-cold-pediatric" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[トリアージの要点]**
-> ①即時対応 (重症感あり): SpO2&lt;95%、チアノーゼ、意識障害（ぐったり）、大泉門膨隆、紫斑（髄膜炎菌疑い）→ 緊急対応。
-> ②要注意 (ハイリスク): 生後3ヶ月未満の発熱、3日以上続く高熱、水分が全く取れない → 早急に検査・方針決定。
-> ③機嫌・活気が最重要: 体温の高さよりも「あやすと笑う・視線が合う」かどうかが重症度判定の核心である。
-> ④ハイリスク回避: 「親の直感」（「いつもと違う」）は有力な情報である。親の不安が強い場合は確認検査を行うことで受診の安心につながる。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[Choosing Wisely]** 「風邪薬を飲ませても早く治るわけではない」ことを説明し、薬に頼らないケアを指導することが重要。特に「咳止め（鎮咳薬）」は乳児には呼吸抑制のリスクがあるため原則使用しない。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="j00-common-cold-pediatric" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -155,26 +155,18 @@ COVID-19 陽性 / 陰性
 
 ### 病態生理
 
-- **原因ウイルス:** ライノウイルス（最多、約40%）、コロナウイルス、RSウイルス、パラインフルエンザ、アデノウイルス等
-- **年間罹患回数:** 乳幼児は年6-8回が正常（保育園児はさらに多い）
-- **症状:** 鼻汁、鼻閉、咳嗽、咽頭痛、発熱（通常38℃台、3-5日以内に解熱）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **鑑別:** 細菌性副鼻腔炎（10日以上改善しない鼻汁）、急性中耳炎（耳痛、鼓膜発赤）、肺炎（多呼吸、陥没呼吸）、川崎病（5日以上の発熱 + 主要症状）
-- **受診の目安（保護者への指導）:** 生後3ヶ月未満の発熱、呼吸困難、水分摂取不良、意識レベル低下
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **小児抗菌薬適正使用の手引き（厚労省2017）:**
-  - **抗菌薬は不要:** ウイルス性感冒に抗菌薬は無効かつ耐性菌リスク
-  - **対症療法:** 解熱鎮痛薬（アセトアミノフェン: カロナール 10-15mg/kg/回）、鼻汁吸引
-  - **咳止め:** 中枢性鎮咳薬の小児への使用は推奨されない（特にコデイン含有は12歳未満禁忌）
-- **保護者への説明:** 「抗生物質は風邪には効きません」、経過観察のポイント、再診基準
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [小児抗菌薬適正使用の手引き（厚生労働省）](https://www.mhlw.go.jp/)
 - [日本小児科学会](https://www.jpeds.or.jp/)
 {/* WIKI_EDIT_END */}
 

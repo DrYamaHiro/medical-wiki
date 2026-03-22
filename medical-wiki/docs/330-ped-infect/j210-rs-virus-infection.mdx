@@ -74,6 +74,18 @@ COVID-19 陽性 / 陰性
 - <span className="med-id">[Lab-Gen-Influenza]</span> インフルエンザ
 - <span className="med-id">[Lab-Gen-COVID]</span> COVID-19
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[トリアージの要点]**
+> ①即時対応 (重症感あり): SpO2&lt;95%、チアノーゼ、意識障害（ぐったり）、大泉門膨隆、紫斑（髄膜炎菌疑い）→ 緊急対応。
+> ②要注意 (ハイリスク): 生後3ヶ月未満の発熱、3日以上続く高熱、水分が全く取れない → 早急に検査・方針決定。
+> ③機嫌・活気が最重要: 体温の高さよりも「あやすと笑う・視線が合う」かどうかが重症度判定の核心である。
+> ④ハイリスク回避: 「親の直感」（「いつもと違う」）は有力な情報である。親の不安が強い場合は確認検査を行うことで受診の安心につながる。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -109,36 +121,24 @@ COVID-19 陽性 / 陰性
 
 - **患者指導:** 哺乳量低下、陥没呼吸出現時は夜間でも受診するよう指導。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="j210-rs-virus-infection" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[トリアージの要点]**
-> ①即時対応 (重症感あり): SpO2&lt;95%、チアノーゼ、意識障害（ぐったり）、大泉門膨隆、紫斑（髄膜炎菌疑い）→ 緊急対応。
-> ②要注意 (ハイリスク): 生後3ヶ月未満の発熱、3日以上続く高熱、水分が全く取れない → 早急に検査・方針決定。
-> ③機嫌・活気が最重要: 体温の高さよりも「あやすと笑う・視線が合う」かどうかが重症度判定の核心である。
-> ④ハイリスク回避: 「親の直感」（「いつもと違う」）は有力な情報である。親の不安が強い場合は確認検査を行うことで受診の安心につながる。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[吸引]** 乳児は鼻呼吸しかできないため、鼻閉は哺乳障害・呼吸困難に直結する。薬よりも「こまめな鼻汁吸引（自宅含む）」が最も有効な治療である。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="j210-rs-virus-infection" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -147,26 +147,15 @@ COVID-19 陽性 / 陰性
 
 ### 病態生理
 
-- **原因:** RSウイルス（Respiratory Syncytial Virus）、秋-冬に流行
-- **初感染:** 生後6ヶ月-2歳で多くが初感染、約30%が細気管支炎を発症
-- **重症化リスク:** 早産児、先天性心疾患、ダウン症、免疫不全、生後6ヶ月未満
-- **症状:** 鼻汁から始まり、喘鳴、多呼吸、陥没呼吸、哺乳力低下へ進展
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **迅速診断:** 鼻腔吸引液のRS抗原迅速検査（外来保険適用: 1歳未満、入院患者）
-- **重症化の指標:** SpO2 95%未満、多呼吸（呼吸数 60回/分以上）、陥没呼吸、哺乳力低下
-- **鑑別:** 気管支喘息（再発性喘鳴）、マイコプラズマ肺炎、異物誤嚥
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **治療:** 対症療法が基本（特異的抗ウイルス薬なし）
-  - 鼻汁吸引（最も有効な処置）、酸素投与（SpO2 92%未満時）
-  - 輸液（経口摂取不能時）
-  - 気管支拡張薬の効果は限定的（個別に試して反応をみる）
-- **予防:** パリビズマブ（シナジス）筋注: ハイリスク児への予防投与（月1回、流行期）
-  - ニルセビマブ（ベイフォータス）: 長時間作用型抗RSV抗体（2024年承認、全新生児対象の可能性）
-- **入院適応:** SpO2低下、多呼吸、哺乳力低下、無呼吸（乳児）
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 

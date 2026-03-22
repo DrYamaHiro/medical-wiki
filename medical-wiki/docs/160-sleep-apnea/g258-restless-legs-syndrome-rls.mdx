@@ -64,6 +64,16 @@ Mallampati分類: Class I / II / III / IV
 - <span className="med-id">[Phy-Resp-HSAT]</span> 携帯型睡眠時無呼吸検査（簡易検査）
 - <span className="med-id">[Phy-Resp-OCST]</span> 在宅睡眠時無呼吸検査（OCST/フルPSG）
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[Mallampati分類]** 開口時に口蓋垂がどれだけ見えるか。Class III（口蓋垂基部のみ）やIV（全く見えない）は気道狭窄を示唆し、SASの予測因子となる。
+>
+> **[職業運転手]** トラック、バス、タクシー等の運転業務従事者の場合、SASによる居眠り事故は社会的責任を問われる重大事案となる。「仕事を守るために検査が必要です」と説得し、未治療のまま放置させないこと。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -103,27 +113,7 @@ E (Evening): 夕方～夜間に増悪
 - <span className="med-id">[Rx-Neuro-RLS-Clo]</span> クロナゼパム
 - クロナゼパム錠0.5mg 1回1錠 1日1回 就寝前 28日分 *— BZ系・頓用*
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="g258-restless-legs-syndrome-rls" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[Mallampati分類]** 開口時に口蓋垂がどれだけ見えるか。Class III（口蓋垂基部のみ）やIV（全く見えない）は気道狭窄を示唆し、SASの予測因子となる。
->
-> **[職業運転手]** トラック、バス、タクシー等の運転業務従事者の場合、SASによる居眠り事故は社会的責任を問われる重大事案となる。「仕事を守るために検査が必要です」と説得し、未治療のまま放置させないこと。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -132,43 +122,38 @@ E (Evening): 夕方～夜間に増悪
 > **[Augmentation (症状増悪)]** ドパミン作動薬（ビ・シフロール等）を長期・高用量使用すると、逆に症状が悪化・早期化（Augmentation）することがある。この場合は増量せず、α2δリガンド（ガバペン/レグナイト）への変更を検討せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="g258-restless-legs-syndrome-rls" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **RLS（むずむず脚症候群）**は下肢の不快な異常感覚と動かしたい衝動を特徴とする感覚運動障害
-- 有病率: 約2-5%。中年女性に好発。鉄欠乏・腎不全で増加
-- **病態**: 中枢ドパミン系の機能障害+脳内鉄欠乏が中核。脊髄レベルでの感覚-運動統合異常
-- **二次性RLS**: 鉄欠乏性貧血（フェリチン低下）、腎不全（透析患者の20-30%）、妊娠、薬剤性（抗うつ薬SSRI/SNRI、抗ヒスタミン薬、ドパミン拮抗薬）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **IRLSSG診断基準（5つの必須基準全てを満たす）**:
-  - (1) 下肢の不快な感覚に伴う動かしたいという強い衝動
-  - (2) 安静時・不動時に出現または増悪
-  - (3) 運動（歩行等）で部分的または完全に改善
-  - (4) 夕方〜夜間に増悪（概日リズム性）
-  - (5) 他の疾患で説明できない
-- **必須検査**: フェリチン（50ng/mL未満で鉄補充を考慮）、腎機能
-- **鑑別**: 末梢神経障害、下肢静脈瘤、こむら返り、アカシジア（抗精神病薬による）
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **鉄補充**（フェリチン75ng/mL未満の場合）: 鉄剤経口投与（クエン酸第一鉄等）。フェリチン75以上を目標
-- **薬物療法**:
-  - プラミペキソール（ビ・シフロール）0.125-0.75mg就寝前: ドパミンアゴニスト。有効だが長期使用でaugmentation（症状増悪・拡大）リスク
-  - ロチゴチン貼付剤（ニュープロパッチ）: 24時間持続型。augmentationリスクが比較的低い
-  - ガバペンチンエナカルビル（レグナイト）600mg夕食後: alpha2deltaリガンド。augmentationリスクなし。第一選択として推奨される傾向
-  - クロナゼパム0.5-1mg就寝前: 周期性四肢運動障害（PLMD）合併例に
-- **augmentation対策**: ドパミンアゴニストの使用は最小有効量で。augmentation出現時はalpha2deltaリガンドへ切り替え
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本睡眠学会 RLS診療ガイドライン](https://jssr.jp/)
-- [日本神経治療学会 標準的神経治療: RLS](https://www.jsnt.gr.jp/)
+- [日本睡眠学会](https://jssr.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

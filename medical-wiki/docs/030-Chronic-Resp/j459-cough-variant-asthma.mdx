@@ -61,6 +61,16 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
+>
+> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -92,87 +102,45 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - <span className="med-id">[Rx-Kampo-029]</span> 麦門冬湯(29)
 - ツムラ麦門冬湯(29)エキス顆粒 3.0g 1回1包 1日3回 食前
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="j459-cough-variant-asthma" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
->
-> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[診断]** 通常の咳止め（メジコン等）が無効な長引く咳は、早期に吸入薬による治療的診断（Diagnostic Therapy）を行うことが、患者の苦痛を取り除く近道である。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="j459-cough-variant-asthma" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 喘鳴や呼吸困難を伴わず、慢性咳嗽のみを唯一の症状とする喘息の亜型
-- **疫学**: 慢性咳嗽の原因として日本では最多（約30-40%）。成人女性に多い
-- **病態**:
-  - 典型的喘息と同様の気道好酸球性炎症
-  - 咳嗽受容体の感受性亢進（咳嗽閾値の低下）
-  - 気道過敏性は軽度〜中等度（典型喘息より軽い）
-  - 気管支収縮の程度が軽いため喘鳴は生じない
-- **自然経過**: 未治療の場合、約30-40%が典型的喘息（wheezing asthma）に移行する
-- **増悪因子**: 感冒後、季節の変わり目、冷気吸入、運動、湿度変化、ストレス
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断基準（日本呼吸器学会 咳嗽・喀痰の診療ガイドライン2024）**:
-  1. 喘鳴を伴わない咳嗽が8週間以上持続
-  2. 気管支拡張薬（beta2刺激薬）が有効
-  3. 気道過敏性亢進（メサコリン試験陽性）: 確認できれば確実
-  4. 聴診で喘鳴なし
-  5. スパイロメトリーは正常
-- **診断的治療**: beta2刺激薬（ツロブテロールテープ2mg or メプチン吸入）投与で1-2週間以内に咳嗽改善すれば臨床的に確定
-- **FeNO**: 37ppb以上で好酸球性気道炎症を強く示唆（補助診断として有用）
-- **鑑別疾患**:
-  - アトピー咳嗽: ICSに反応するがbeta2刺激薬は無効。気道過敏性正常
-  - GERD関連咳嗽: 胸焼け、食後悪化、PPI反応性
-  - 後鼻漏症候群: 鼻症状、咽頭の粘液付着感
-  - ACE阻害薬による咳嗽: 薬剤歴確認（乾性咳嗽の5-20%）
-  - 感染後咳嗽: 8週間以内に自然軽快
-  - 百日咳: 痙咳発作、PCR確認
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **第一選択**: 低用量ICS（フルチカゾン100ug 1日2回 or ブデソニド200ug 1日2回）
-  - ICSにより典型的喘息への移行を予防できる（Fujimura 2005）
-- **初期治療の補助**: beta2刺激薬
-  - ツロブテロールテープ 2mg 1日1回 就寝前（特に夜間咳嗽に有効）
-  - プロカテロール（メプチン）吸入: 発作時頓用
-- **効果不十分な場合**: ICS/LABA配合剤にステップアップ
-- **LTRA**: モンテルカスト10mg/日を併用（特に秋〜冬の悪化時）
-- **治療期間**: 最低2年間のICS継続が推奨（中止すると高率で再燃）
-- **注意点**:
-  - 中枢性鎮咳薬（メジコン等）は原則無効
-  - 抗菌薬も無効
-  - beta2刺激薬単独では炎症を抑えないためICS併用が必須
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本呼吸器学会 咳嗽・喀痰の診療ガイドライン2024](https://www.jrs.or.jp/)
-- [日本アレルギー学会 喘息予防・管理ガイドライン2024（JGL2024）](https://www.jsaweb.jp/)
+- [日本アレルギー学会 喘息ガイドライン](https://www.jsaweb.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

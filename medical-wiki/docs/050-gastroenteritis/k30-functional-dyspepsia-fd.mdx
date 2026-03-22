@@ -63,6 +63,16 @@ keywords: ["機能性ディスペプシア", "機能性", "機能性でぃすぺ
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[設備制約]** 当院にはCT、エコー、上部消化管内視鏡がない。吐血、黒色便、激しい腹痛、腹膜刺激症状がある場合は、診断がつかなくても直ちに専門病院へ紹介せよ。
+>
+> **[トリアージ]** 高齢者の心窩部痛はACS（心筋梗塞）の可能性があるため、必ず心電図を確認せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -90,27 +100,7 @@ keywords: ["機能性ディスペプシア", "機能性", "機能性でぃすぺ
 - <span className="med-id">[Rx-Kampo-043]</span> 六君子湯(43)
 - ツムラ六君子湯(43)エキス顆粒 2.5g 1回1包 1日3回 食前 28日分 *— 胃もたれ*
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="k30-functional-dyspepsia-fd" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[設備制約]** 当院にはCT、エコー、上部消化管内視鏡がない。吐血、黒色便、激しい腹痛、腹膜刺激症状がある場合は、診断がつかなくても直ちに専門病院へ紹介せよ。
->
-> **[トリアージ]** 高齢者の心窩部痛はACS（心筋梗塞）の可能性があるため、必ず心電図を確認せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -119,35 +109,38 @@ keywords: ["機能性ディスペプシア", "機能性", "機能性でぃすぺ
 > **[内視鏡]** 40歳以上や体重減少がある場合は、FDと決めつけず必ず消化器内科へ紹介して胃癌を除外せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="k30-functional-dyspepsia-fd" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義（Rome IV基準）**: 器質的疾患がないのに上腹部症状（心窩部痛、早期満腹感、食後膨満感、心窩部灼熱感）が慢性的に続く
-- **病態**: 胃排出遅延、胃適応性弛緩障害、内臓知覚過敏、十二指腸微小炎症、脳腸相関の異常、心理的要因
-- **亜型**: 食後愁訴症候群（PDS: 早期満腹感・食後膨満感）、心窩部痛症候群（EPS: 心窩部痛・灼熱感）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **Rome IV診断基準**: 上記症状が6ヶ月以上前に出現し、3ヶ月以上持続 + 器質的疾患の除外
-- **必要な除外検査**: 上部消化管内視鏡（胃癌・潰瘍の除外）、腹部超音波、血液検査。ピロリ菌検査
-- **鑑別**: 胃癌、胃潰瘍、GERD、胆石症、慢性膵炎、薬剤性（NSAIDs）
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **ピロリ菌陽性の場合**: 除菌療法が第一選択（除菌成功でFD症状改善のNNT=14: Cochrane 2024）
-- **PDS型**: アコチアミド（アコファイド）100mg 1日3回 食前（日本で開発されたFD治療薬。唯一のFD保険適用薬）
-- **EPS型**: PPI or P-CAB（保険適用外だが実臨床で使用）
-- **漢方**: 六君子湯（43: PDS型に有効）、半夏瀉心湯（14: EPS型に有効）
-- **消化管運動改善薬**: モサプリド5mg 1日3回
-- **心理的介入**: 認知行動療法、低用量三環系抗うつ薬（アミトリプチリン10-25mg/日）が内臓知覚過敏に有効
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本消化器病学会 機能性消化管疾患診療ガイドライン2024 ― FD](https://www.jsge.or.jp/)
+- [日本消化器病学会](https://www.jsge.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

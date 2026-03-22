@@ -57,6 +57,19 @@ keywords: ["大腸ポリープ", "大腸", "大腸ぽりーぷ", "ポリープ",
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[指診の重要性]** 「お尻を見られるのは恥ずかしい」と拒否する患者もいるが、直腸癌の約半数は指診で届く範囲にある。カーテンやタオルで羞恥心に配慮しつつ、可能な限り実施せよ。
+>
+> **[血便の鑑別]**
+> - **鮮血（紙に付く・ポタポタ）:** 痔核、裂肛、直腸癌
+> - **粘血便（イチゴジャム様）:** 感染性大腸炎、IBD（潰瘍性大腸炎）、アメーバ赤痢
+> - **黒色便（タール便）:** 上部消化管出血（胃潰瘍等）
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -77,66 +90,45 @@ keywords: ["大腸ポリープ", "大腸", "大腸ぽりーぷ", "ポリープ",
 - <span className="med-id">[Doc-Gen-Referral]</span> 診療情報提供書
 - **紹介先:** 消化器内科（大腸内視鏡精査依頼）
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="k635-colon-polyp" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[指診の重要性]** 「お尻を見られるのは恥ずかしい」と拒否する患者もいるが、直腸癌の約半数は指診で届く範囲にある。カーテンやタオルで羞恥心に配慮しつつ、可能な限り実施せよ。
->
-> **[血便の鑑別]**
-> - **鮮血（紙に付く・ポタポタ）:** 痔核、裂肛、直腸癌
-> - **粘血便（イチゴジャム様）:** 感染性大腸炎、IBD（潰瘍性大腸炎）、アメーバ赤痢
-> - **黒色便（タール便）:** 上部消化管出血（胃潰瘍等）
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[便潜血]** 「痔があるから陽性になった」は危険な思い込みである。痔があっても癌がある可能性は否定できない。「痔があるからこそ、出血の原因をはっきりさせる必要がある」と説得せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="k635-colon-polyp" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 大腸粘膜から隆起する病変の総称
-- **組織型**: 腺腫性ポリープ（最多: 腺腫-癌連鎖の前癌病変）、過形成性ポリープ（良性）、鑑状ポリープ（SSA/P: 右側結腸に多い、MSI-high経路の前癌病変）
-- **腺腫-癌連鎖（adenoma-carcinoma sequence）**: 正常粘膜 → 腺腫 → 高度異形成 → 癌。大腸癌の約80%がこの経路
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **発見**: 大腸内視鏡検査（最も正確）、便潜血検査陽性後の精査
-- **内視鏡的評価**: NBI/BLI拡大観察でJNET分類（Type 1: 過形成、Type 2A: 腺腫、Type 2B: 早期癌疑い、Type 3: 浸潤癌疑い）
-- **リスク評価**: サイズ（10mm以上で癌化リスク上昇）、絨毛成分、高度異形成
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **ポリープ切除（ポリペクトミー）**: 6mm以上の腺腫は内視鏡的切除（EMR/コールドポリペクトミー）
-- **5mm以下**: コールドフォーセプスポリペクトミーまたは経過観察
-- **切除後サーベイランス（大腸ポリープ診療ガイドライン2024）**:
-  - 低リスク（1-2個、10mm未満、低異型度）: 3年後に大腸内視鏡
-  - 高リスク（3個以上、10mm以上、高異型度、絨毛成分）: 1年後に内視鏡
-- **便潜血検査**: スクリーニングとして年1回推奨（40歳以上）
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本消化器内視鏡学会 大腸ポリープ診療ガイドライン2024](https://www.jges.net/)
-- [日本消化器病学会 大腸癌治療ガイドライン](https://www.jsge.or.jp/)
+- [日本消化器病学会 便秘ガイドライン](https://www.jsge.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

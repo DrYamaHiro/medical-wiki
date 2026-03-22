@@ -57,6 +57,18 @@ keywords: ["動物咬傷", "動物", "物咬", "咬傷", "動物咬", "物咬傷
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 単純X線
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[洗浄の鉄則]** 消毒薬（イソジン等）は組織毒性があり治癒を遅らせる。「大量の水道水または生食」で物理的に菌と汚れを洗い流すことが感染予防の全てである。
+>
+> **[縫合不可]** 当院には「縫合セット（針・糸）」がない。顔面、手指、関節部、および真皮縫合が必要な深い傷は、テープ固定で寄せるか、形成外科へ紹介せよ。
+>
+> **[神経損傷]** 指の側面の切創は、浅く見えても指神経が切れていることが多い。局所麻酔を打つ前に必ず「触覚検査」を行え。麻酔後は評価不能となる。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -91,36 +103,24 @@ keywords: ["動物咬傷", "動物", "物咬", "咬傷", "動物咬", "物咬傷
 
 - **再診目安:** 翌日（感染確認）。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="t141-animal-bites" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[洗浄の鉄則]** 消毒薬（イソジン等）は組織毒性があり治癒を遅らせる。「大量の水道水または生食」で物理的に菌と汚れを洗い流すことが感染予防の全てである。
->
-> **[縫合不可]** 当院には「縫合セット（針・糸）」がない。顔面、手指、関節部、および真皮縫合が必要な深い傷は、テープ固定で寄せるか、形成外科へ紹介せよ。
->
-> **[神経損傷]** 指の側面の切創は、浅く見えても指神経が切れていることが多い。局所麻酔を打つ前に必ず「触覚検査」を行え。麻酔後は評価不能となる。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[パスツレラ]** 猫や犬の口腔内常在菌。咬傷から数時間で「信じられないスピード」で腫れあがる。セフェム系（ケフレックス等）は効かないため、必ずペニシリン系（オーグメンチン・サワシリン）を選択せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="t141-animal-bites" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -129,27 +129,15 @@ keywords: ["動物咬傷", "動物", "物咬", "咬傷", "動物咬", "物咬傷
 
 ### 病態生理
 
-- **犬咬傷:** 挫滅創が多い。感染率 5-10%。Pasteurella属、Capnocytophaga canimorsus（脾摘後患者で致死的敗血症）
-- **猫咬傷:** 穿刺創（深部感染リスク高い）。感染率 30-50%。Pasteurella multocida（急速進行する蜂窩織炎）
-- **ヒト咬傷:** Eikenella corrodens、嫌気性菌。拳でぶつけた際の手の創（Fight bite）は腱・関節損傷注意
-- **狂犬病リスク:** 国内は清浄国だが、海外渡航歴のある場合は狂犬病暴露後予防（PEP）を考慮
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **評価:** 創の深さ、骨・腱・関節・血管・神経の損傷評価
-- **感染徴候:** 発赤拡大、膿排出、発熱（受傷後12-24時間以内の急速進行 → Pasteurella疑い）
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **創処置:**
-  - 十分な洗浄（生理食塩水で高圧洗浄）が最重要
-  - **原則縫合しない:** 猫咬傷、手の咬傷、受傷後6-12時間経過例（感染リスク高い）
-  - 顔面は美容的理由から緩やかに縫合可（ドレナージ確保）
-- **予防的抗菌薬（推奨される場合）:**
-  - 猫咬傷（全例）、手の咬傷、深い穿刺創、免疫低下者
-  - 第一選択: オーグメンチン（AMPC/CVA）3-5日間
-- **破傷風予防:** 破傷風トキソイド接種歴の確認、不明・不十分なら追加接種
-- **紹介:** 骨・腱・関節損傷疑い、顔面の大きな創、免疫低下者
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 

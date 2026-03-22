@@ -61,6 +61,16 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[設備制約]** 当院には心エコー、ホルター心電図、ABI測定機器がない。心雑音、不整脈、脈拍欠損、重症心不全を認めた場合は、詳細評価のため循環器専門医へ紹介せよ。
+>
+> **[BNP解釈]** 息切れの鑑別にはBNPが有用だが、外注のため結果は後日となる。急性期のトリアージは身体所見とSpO2、X線で行え。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -94,67 +104,45 @@ Homan's徴候: 陰性 / 陽性、皮膚: 色素沈着 / 潰瘍 / 静脈瘤
 - <span className="med-id">[Rx-AF-Rate-Dig]</span> ジゴキシン
 - ジゴキシン錠0.125mg 1回1錠 1日1回 朝食後 28日分
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="i48-atrial-fibrillation" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[設備制約]** 当院には心エコー、ホルター心電図、ABI測定機器がない。心雑音、不整脈、脈拍欠損、重症心不全を認めた場合は、詳細評価のため循環器専門医へ紹介せよ。
->
-> **[BNP解釈]** 息切れの鑑別にはBNPが有用だが、外注のため結果は後日となる。急性期のトリアージは身体所見とSpO2、X線で行え。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[出血リスク]** 抗凝固療法は脳梗塞を防ぐが、消化管出血等のリスクも高める。高齢者では転倒による頭蓋内出血にも注意が必要。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="i48-atrial-fibrillation" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 心房の無秩序な電気的興奮による不整脈。心電図でP波消失 + f波 + RR不整
-- **分類**: 発作性（7日以内に自然停止）、持続性（7日以上 or 除細動で停止）、長期持続性（1年以上）、永続性（洞調律復帰を断念）
-- **疫学**: 80歳以上の約10%。高齢化に伴い増加中。脳卒中リスクが5倍
-- **原因**: 加齢、高血圧、弁膜症、心不全、甲状腺機能亢進症、飲酒、肥満、OSA
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **心電図**: P波消失、f波（基線の細かい揺れ）、RR間隔の絶対不整
-- **CHADS2スコア（脳卒中リスク評価）**: C心不全(1) + H高血圧(1) + A 75歳以上(1) + D糖尿病(1) + S2脳卒中既往(2)。1点以上で抗凝固療法推奨
-- **CHA2DS2-VAScスコア**: より詳細な評価。日本ではCHADS2も広く使用
-- **鑑別**: 心房粗動（鋸歯状F波）、多源性心房頻拍、洞不整脈
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **抗凝固療法（最重要）**: DOAC（直接経口抗凝固薬）が第一選択
-  - エドキサバン60mg/日（30mg: 低体重、腎機能低下時）
-  - アピキサバン5mg 1日2回（2.5mg: 高齢、低体重、腎機能低下時）
-  - リバーロキサバン15mg/日（10mg: 腎機能低下時）
-  - ダビガトラン150mg 1日2回（110mg: 高齢者）
-- **心拍数コントロール（Rate control）**: beta遮断薬（ビソプロロール2.5-5mg）、Ca拮抗薬（ジルチアゼム）、ジゴキシン。安静時心拍数110bpm未満を目標（RACE II試験）
-- **リズムコントロール**: 症状が強い場合。カテーテルアブレーション（肺静脈隔離術: PVI）が薬物より有効
-- **出血リスク評価**: HAS-BLEDスコアで出血リスクを評価し抗凝固の利益/リスクを判断
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本循環器学会 不整脈薬物治療ガイドライン2024](https://www.j-circ.or.jp/)
-- [日本不整脈心電学会](https://new.jhrs.or.jp/)
+- [日本循環器学会](https://www.j-circ.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

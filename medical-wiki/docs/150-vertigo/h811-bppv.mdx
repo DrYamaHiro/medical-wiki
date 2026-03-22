@@ -57,6 +57,24 @@ Dix-Hallpike / Supine Roll test: 陽性 / 陰性
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[中枢性のRed Flags (3D)]**
+> - **Diplopia (複視):** 複視が突然出現したら脳幹・小脳障害を強く疑え。
+> - Dysarthria/Dysphagia (構語・嚥下障害): 突然の構語障害は脳卒中のレッドフラッグ。
+> - Disequilibrium (体幹失調・歩行不能): 起立・歩行が全くできないめまいは末梢性ではなく中枢性の証拠。追加で「突然発症・頭痛・意識障害・血圧異常」があればただちに救急搬送。
+>
+> **[HINTS plus]**
+> - Head Impulse Test (頭位衝動試験) 「異常 = 末梢性」: 急速な頭の動かしに対し眼球が遅れて追いかけるキャッチアップ眼球運動(Catch-up saccade)があれば「末梢性（前庭神経炎など）を示す」。
+> - Nystagmus (眼振パターン): 方向固定性の水平眼振 → 末梢性。方向交代性や垂直成分入り → 中枢性。
+> - Test of Skew (遮閉試験): 垂直方向の眼球偏倚(Skew deviation)があれば中枢性。
+> - **HINTS "plus":** 聴力低下(急性・一側性)が加わった場合も中枢性（特に後下小脳動脈梗塞）を否定できない。
+> - **臨床的意義:** HINTSはMRIを超える感度で中枢性を検出できるとされる（ただし習熟が必要）。急性前庭症候群でHINTSが「末梢性パターン」でない場合は緊急MRIを考慮せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -91,75 +109,45 @@ Dix-Hallpike / Supine Roll test: 陽性 / 陰性
 - <span className="med-id">[Rx-Kampo-017]</span> 五苓散(17)
 - ツムラ五苓散(17)エキス顆粒 2.5g 1回1包 1日3回 食前 7日分
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="h811-bppv" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[中枢性のRed Flags (3D)]**
-> - **Diplopia (複視):** 複視が突然出現したら脳幹・小脳障害を強く疑え。
-> - Dysarthria/Dysphagia (構語・嚥下障害): 突然の構語障害は脳卒中のレッドフラッグ。
-> - Disequilibrium (体幹失調・歩行不能): 起立・歩行が全くできないめまいは末梢性ではなく中枢性の証拠。追加で「突然発症・頭痛・意識障害・血圧異常」があればただちに救急搬送。
->
-> **[HINTS plus]**
-> - Head Impulse Test (頭位衝動試験) 「異常 = 末梢性」: 急速な頭の動かしに対し眼球が遅れて追いかけるキャッチアップ眼球運動(Catch-up saccade)があれば「末梢性（前庭神経炎など）を示す」。
-> - Nystagmus (眼振パターン): 方向固定性の水平眼振 → 末梢性。方向交代性や垂直成分入り → 中枢性。
-> - Test of Skew (遮閉試験): 垂直方向の眼球偏倚(Skew deviation)があれば中枢性。
-> - **HINTS "plus":** 聴力低下(急性・一側性)が加わった場合も中枢性（特に後下小脳動脈梗塞）を否定できない。
-> - **臨床的意義:** HINTSはMRIを超える感度で中枢性を検出できるとされる（ただし習熟が必要）。急性前庭症候群でHINTSが「末梢性パターン」でない場合は緊急MRIを考慮せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[薬は治さない]** BPPVの原因は「耳石の迷入（物理現象）」であり、薬で石は消えない。「薬は酔い止めに過ぎません。体操（頭位治療）で石を追い出すのが本質的な治療です」と説明し、Epley法を行うか、自宅での寝返り運動を指導せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="h811-bppv" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **BPPV**はめまいの最多原因（約30-40%）。耳石（炭酸カルシウム結晶）の半規管内迷入による
-- **機序**: 卵形嚢の耳石が剥離→半規管（後半規管が約80%）に迷入→頭位変換時に内リンパ流動→回転性めまい
-  - 半規管結石症（canalolithiasis）: 耳石が管腔内を浮遊。最も多い
-  - クプラ結石症（cupulolithiasis）: 耳石がクプラに付着。めまい持続が長い
-- 中高年女性に好発。骨粗鬆症、ビタミンD低下、頭部外傷、長期臥床が危険因子
-- **特徴**: 頭位変換から数秒の潜時後にめまい出現、1分以内に減衰、反復で慣れ（fatigue）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断**: Dix-Hallpike試験（後半規管型）、supine roll test（水平半規管型）で特徴的な眼振を誘発
-  - 後半規管型: Dix-Hallpike陽性側で上眼瞼向き回旋性眼振（潜時あり、1分以内に減衰）
-  - 水平半規管型: 仰臥位で左右に頭を向けた際の水平性眼振。方向交代性
-- **鑑別**: 中枢性めまい（小脳・脳幹梗塞: 方向固定性眼振、神経学的異常所見、HINTS所見）、メニエール病（聴覚症状）、前庭神経炎（持続性）
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **耳石置換法**（第一選択、推奨度A）:
-  - 後半規管型: **Epley法** - 1回の施行で約80%が改善。自宅でのSemont法指導も有効
-  - 水平半規管型: **Lempert法（BBQ roll法）** or **Gufoni法**
-  - 施行後の体位制限は不要（エビデンスなし）
-- **薬物療法**: めまい発作時のジフェニドール、ベタヒスチン。根本治療ではなく対症療法
-- **Brandt-Daroff法**: 自宅でのリハビリ体操。1日3セット、2週間で約70%が改善
-- **再発率**: 1年以内に約15-20%が再発。ビタミンD補充で再発率低下のエビデンスあり（Serum 25(OH)D 20ng/mL未満で補充推奨）
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本めまい平衡医学会 BPPV診療ガイドライン](https://www.memai.jp/)
+- [日本めまい平衡医学会](https://www.memai.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

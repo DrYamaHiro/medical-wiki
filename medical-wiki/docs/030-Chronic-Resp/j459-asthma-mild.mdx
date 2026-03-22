@@ -61,6 +61,16 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
+>
+> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -93,27 +103,7 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - <span className="med-id">[Rx-Der-Urt-Mon]</span> モンテルカスト
 - モンテルカスト錠10mg 1回1錠 1日1回 就寝前 *— 鼻炎合併・運動誘発時*
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="j459-asthma-mild" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
->
-> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -124,56 +114,38 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 > **[Step Down基準]** 「3～6ヶ月間」発作がなくコントロール良好な状態が続けば、減量を検討する。ただし、自己判断での中止は重篤な発作を招くため、必ず医師の指導下で慎重に行うよう釘を刺せ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="j459-asthma-mild" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 気道の慢性炎症性疾患。気道過敏性亢進と可逆性の気流制限を特徴とする
-- **病態の3要素**:
-  1. 気道炎症: 好酸球・Th2リンパ球・マスト細胞の浸潤、IL-4/IL-5/IL-13の産生亢進
-  2. 気道リモデリング: 基底膜肥厚、平滑筋肥大、杯細胞過形成（慢性化で不可逆に）
-  3. 気道過敏性: 種々の刺激に対する気管支収縮反応の亢進
-- **軽症間欠型・軽症持続型の特徴**:
-  - 症状は週1回未満（間欠型）〜週1回以上だが毎日ではない（軽症持続型）
-  - 夜間症状は月2回未満（間欠型）〜月2回以上（軽症持続型）
-  - PEF/FEV1は予測値の80%以上
-  - 日常生活への影響は軽微
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断基準（JGL2024 / GINA2024準拠）**:
-  - 発作性の呼気性喘鳴、呼吸困難、胸苦しさ、咳嗽（特に夜間・早朝）
-  - 症状の反復性・可逆性
-  - 気流制限の可逆性: beta2刺激薬吸入後FEV1が12%かつ200mL以上改善
-  - 気道過敏性試験陽性（メサコリン、ヒスタミン）
-  - 呼気NO（FeNO）37ppb以上で好酸球性気道炎症を示唆
-- **重症度分類（治療前の症状に基づく）**:
-  - ステップ1（軽症間欠型）: 週1回未満、短い増悪
-  - ステップ2（軽症持続型）: 週1回以上だが毎日ではない
-- **鑑別疾患**: COPD（喫煙歴、非可逆性）、心不全（BNP上昇）、GERD、後鼻漏、声帯機能不全、気管支結核
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **治療ステップ1（軽症間欠型）**:
-  - GINA2024推奨: 低用量ICS/ホルモテロール頓用（as-needed）= MART-like approach
-  - 日本（JGL2024）: 低用量ICS定期吸入 or ICS/LABA頓用
-  - SABA単独の定期使用は推奨されない（SYGMA試験: ICS/ホルモテロール頓用がSABA頓用より増悪を56%減少）
-- **治療ステップ2（軽症持続型）**:
-  - 第一選択: 低用量ICS（フルチカゾン100ug/日 or ブデソニド200-400ug/日）
-  - 代替: LTRA（モンテルカスト10mg/日）単独 or 低用量ICS/LABA
-- **長期管理のポイント**:
-  - 3ヶ月コントロール良好なら治療ステップダウンを検討
-  - ICSは最低用量でも継続が望ましい（完全中止すると増悪リスク上昇）
-  - 吸入指導の徹底（DPI vs pMDI、手技確認）
-  - 環境整備（ダニ対策、禁煙、ペット）
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本アレルギー学会 喘息予防・管理ガイドライン2024（JGL2024）](https://www.jsaweb.jp/)
-- [GINA Global Strategy for Asthma Management 2024](https://ginasthma.org/)
+- [日本アレルギー学会 喘息ガイドライン](https://www.jsaweb.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

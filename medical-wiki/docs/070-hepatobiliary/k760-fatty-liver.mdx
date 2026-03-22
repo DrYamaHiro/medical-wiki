@@ -56,6 +56,16 @@ keywords: ["脂肪肝・NAFLD / NASH", "脂肪肝", "NAFLD", "NASH", "脂肪", "
 - <span className="med-id">[Lab-Hep-Full]</span> 肝臓詳細セット
 - <span className="med-id">[Lab-Hep-Tumor]</span> 腫瘍マーカーセット
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[設備制約]** 当院には腹部エコーおよびCTがない。肝臓の形状評価、胆石の有無、胆管拡張の確認ができないため、身体所見で異常（黄疸、Murphy徴候、腫瘤）があれば、迷わず画像診断可能な施設へ紹介せよ。
+>
+> **[FIB-4 Index]** 脂肪肝を見たら必ずFIB-4 indexを算出せよ。スコア2.67以上の場合は肝硬変への進展リスクが高いため、肝臓専門医へ紹介すること。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -94,65 +104,45 @@ keywords: ["脂肪肝・NAFLD / NASH", "脂肪肝", "NAFLD", "NASH", "脂肪", "
 - **患者指導:** 減量目標と生活習慣改善の重要性を説明。
 - **再診目安:** 4週間後 (採血フォロー)。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="k760-fatty-liver" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[設備制約]** 当院には腹部エコーおよびCTがない。肝臓の形状評価、胆石の有無、胆管拡張の確認ができないため、身体所見で異常（黄疸、Murphy徴候、腫瘤）があれば、迷わず画像診断可能な施設へ紹介せよ。
->
-> **[FIB-4 Index]** 脂肪肝を見たら必ずFIB-4 indexを算出せよ。スコア2.67以上の場合は肝硬変への進展リスクが高いため、肝臓専門医へ紹介すること。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[画像フォロー]** 当院では画像による経過観察（脂肪沈着の改善確認）ができない。1年に1回は検診や他院でエコーを受けるよう指導せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="k760-fatty-liver" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **定義**: 2023年に国際的にNAFLD/NASHからMASLD/MASHへ名称変更。代謝異常関連脂肪性肝疾患
-- **MASLD**: 肝細胞の5%以上に脂肪沈着 + 心代謝リスク因子（肥満、糖尿病、脂質異常症、高血圧）1つ以上
-- **MASH**: MASLD + 肝細胞障害（風船様変性）+ 炎症。線維化が進行すると肝硬変・肝癌へ
-- **二段階仮説**: 1st hit（脂肪蓄積: インスリン抵抗性）→ 2nd hit（酸化ストレス、炎症、線維化）
-- **疫学**: 日本の有病率約25-30%。肥満・糖尿病の増加に伴い増加中
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断**: 腹部超音波で輝度肝（bright liver）+ アルコール摂取量が少ない（男性30g/日未満、女性20g/日未満）
-- **線維化評価**: FIB-4 index（年齢 x AST / 血小板 x ALT平方根）。1.3未満: 低リスク、2.67以上: 高リスク → 肝臓専門医紹介
-- **鑑別**: アルコール性肝障害、薬剤性肝障害、自己免疫性肝炎、ウイルス性肝炎
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **最も重要な治療**: 体重減少。7-10%の減量でMASH改善のエビデンス
-- **運動**: 有酸素運動（週150分以上）。体重減少がなくても肝脂肪を減少
-- **食事**: 地中海食パターン。果糖・加工食品の制限
-- **薬物療法**: 糖尿病合併時にGLP-1受容体作動薬（セマグルチド: 肝脂肪・炎症改善のエビデンス）、ピオグリタゾン（MASH改善のRCTあり）、SGLT2阻害薬
-- **レスメチロム（Resmetirom）**: 2024年FDA承認のMASH治療薬（甲状腺ホルモン受容体beta作動薬）。日本未承認
-- **肝癌スクリーニング**: 線維化が進行した患者は6ヶ月ごとの腹部超音波 + AFP
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本肝臓学会 NAFLD/NASH診療ガイドライン2024](https://www.jsh.or.jp/)
-- [日本消化器病学会](https://www.jsge.or.jp/)
+- [日本肝臓学会](https://www.jsh.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

@@ -57,6 +57,19 @@ keywords: ["下痢症・整腸剤処方", "下痢症", "整腸剤処方", "下�
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[指診の重要性]** 「お尻を見られるのは恥ずかしい」と拒否する患者もいるが、直腸癌の約半数は指診で届く範囲にある。カーテンやタオルで羞恥心に配慮しつつ、可能な限り実施せよ。
+>
+> **[血便の鑑別]**
+> - **鮮血（紙に付く・ポタポタ）:** 痔核、裂肛、直腸癌
+> - **粘血便（イチゴジャム様）:** 感染性大腸炎、IBD（潰瘍性大腸炎）、アメーバ赤痢
+> - **黒色便（タール便）:** 上部消化管出血（胃潰瘍等）
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -87,71 +100,45 @@ keywords: ["下痢症・整腸剤処方", "下痢症", "整腸剤処方", "下�
 - <span className="med-id">[Rx-GI-Dia-Lop]</span> ロペミン(頓用)
 - ロペミンカプセル1mg 1回1カプセル 1日2回 朝夕食後 頓用 10回分
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="r197-diarrhea-intestinal-regulation" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[指診の重要性]** 「お尻を見られるのは恥ずかしい」と拒否する患者もいるが、直腸癌の約半数は指診で届く範囲にある。カーテンやタオルで羞恥心に配慮しつつ、可能な限り実施せよ。
->
-> **[血便の鑑別]**
-> - **鮮血（紙に付く・ポタポタ）:** 痔核、裂肛、直腸癌
-> - **粘血便（イチゴジャム様）:** 感染性大腸炎、IBD（潰瘍性大腸炎）、アメーバ赤痢
-> - **黒色便（タール便）:** 上部消化管出血（胃潰瘍等）
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[ミヤBM]** 酪酸菌（宮入菌）は芽胞を形成するため胃酸や抗生物質に強く、生きたまま腸に届く。抗生剤投与時の下痢予防や、他の整腸剤が無効な場合に第一選択となる。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="r197-diarrhea-intestinal-regulation" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **下痢の病態分類**:
-  - 浸透圧性: 吸収されない溶質が腸管内に水分を引き込む（乳糖不耐症、Mg剤）
-  - 分泌性: 腸管からの水分・電解質分泌亢進（毒素型食中毒、VIPoma）
-  - 炎症性: 粘膜傷害による滲出（感染性腸炎、IBD）
-  - 運動亢進性: 腸管蠕動亢進（IBS、甲状腺機能亢進症）
-- **急性下痢（2週間未満）**: 多くは感染性。自然軽快が多い
-- **慢性下痢（4週間以上）**: IBS、IBD、薬剤性、内分泌疾患等の精査が必要
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **急性下痢の評価**: 脱水の程度、血便の有無、発熱、食事歴、薬剤歴、渡航歴
-- **慢性下痢の精査**: 血液検査（甲状腺機能、CRP、CEA）、便検査（便潜血、便培養）、大腸内視鏡
-- **薬剤性下痢の原因薬**: 抗菌薬、NSAIDs、PPI、メトホルミン、コルヒチン、Mg製剤
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **整腸薬の使い分け**:
-  - ビオフェルミンR（耐性乳酸菌）: 抗菌薬併用時に最適
-  - ミヤBM（酪酸菌）: 抗菌薬の影響を受けにくい。CDI予防効果の報告あり
-  - ラックビー（ビフィズス菌）: 一般的な整腸。胃酸に弱いため食後服用
-  - ビオスリー（ラクトミン+酪酸菌+糖化菌）: 複合型
-- **ロペラミド（ロペミン）**: 強力な止瀉薬。感染性腸炎（特に侵襲性）では使用注意
-- **経口補水療法**: OS-1、アクアライトORS。電解質バランスが調整されている
-- **食事指導**: 脱水補正を最優先。消化の良い食事から開始。乳製品は一時的に避ける
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本消化器病学会](https://www.jsge.or.jp/)
+- [日本消化器病学会 便秘ガイドライン](https://www.jsge.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

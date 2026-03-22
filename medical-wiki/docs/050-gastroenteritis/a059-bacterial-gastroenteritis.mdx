@@ -63,6 +63,16 @@ keywords: ["細菌性食中毒", "細菌", "菌性", "性食", "食中", "中毒
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[設備制約]** 当院にはCT、エコー、上部消化管内視鏡がない。吐血、黒色便、激しい腹痛、腹膜刺激症状がある場合は、診断がつかなくても直ちに専門病院へ紹介せよ。
+>
+> **[トリアージ]** 高齢者の心窩部痛はACS（心筋梗塞）の可能性があるため、必ず心電図を確認せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -86,27 +96,7 @@ keywords: ["細菌性食中毒", "細菌", "菌性", "性食", "食中", "中毒
 - <span className="med-id">[Rx-Gen-Pain-Ace]</span> アセトアミノフェン単剤(定期)
 - アセトアミノフェン錠500mg 1回1錠 1日3回 毎食後 5日分
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="a059-bacterial-gastroenteritis" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[設備制約]** 当院にはCT、エコー、上部消化管内視鏡がない。吐血、黒色便、激しい腹痛、腹膜刺激症状がある場合は、診断がつかなくても直ちに専門病院へ紹介せよ。
->
-> **[トリアージ]** 高齢者の心窩部痛はACS（心筋梗塞）の可能性があるため、必ず心電図を確認せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -115,36 +105,38 @@ keywords: ["細菌性食中毒", "細菌", "菌性", "性食", "食中", "中毒
 > **[抗菌薬の害]** サルモネラ腸炎に抗菌薬を投与すると、排菌期間が延びる（保菌者化）リスクがある。免疫不全や菌血症リスクがない限り、漫然と投与しないこと。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="a059-bacterial-gastroenteritis" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **分類**:
-  - 毒素型（嘔吐型）: 黄色ブドウ球菌（1-6時間）、セレウス菌嘔吐型（1-6時間）。食品中の毒素摂取
-  - 感染型（下痢型）: サルモネラ（8-48時間）、カンピロバクター（2-5日）、腸炎ビブリオ（8-24時間）
-  - 毒素産生型: 腸管出血性大腸菌O157（3-8日）、ウェルシュ菌（8-16時間）
-- **原因食品**: 鶏肉（カンピロバクター）、鶏卵（サルモネラ）、刺身・魚介（腸炎ビブリオ）、おにぎり・弁当（黄色ブドウ球菌）、焼肉・生レバー（O157）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **食中毒を疑う根拠**: 同一食品摂取者に複数の発症者（集団発生）
-- **検査**: 便培養（起炎菌同定）、血便があればO157検査（ベロ毒素検査）
-- **HUS（溶血性尿毒症症候群）**: O157感染後5-10日に血小板減少・溶血性貧血・急性腎障害。小児・高齢者で発症リスク高い
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **毒素型**: 自然軽快（24時間以内）。補液のみ
-- **感染型**: 多くは自然軽快。重症・免疫不全では抗菌薬（起炎菌に応じた選択）
-- **O157**: 抗菌薬投与の是非は議論あり（毒素放出を助長する可能性）。FOSFOMYCIN 2-3g/日が日本では使用されることが多い。止瀉薬は禁忌
-- **食中毒届出**: 医師は食中毒と診断（疑いを含む）した場合、直ちに保健所に届出義務（食品衛生法）
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本感染症学会 JAID/JSC感染症治療ガイドライン2024](https://www.kansensho.or.jp/)
-- [厚生労働省 食中毒対策](https://www.mhlw.go.jp/)
+- [日本消化器病学会](https://www.jsge.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

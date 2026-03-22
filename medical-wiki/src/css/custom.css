@@ -63,26 +63,68 @@
   padding-right: 1.5rem !important;
 }
 
-/* 右パネル (画像 + Dr.Advice + Wiki) */
+/* 右パネル (画像 + Wiki) */
 .right-panel {
   padding-left: 1.5rem !important;
   padding-right: 0 !important;
 }
 
-/* 右パネル内の内部2カラム */
-.right-inner {
+/* 右パネル内のレイアウト: 画像(固定幅) + Wiki(残り) */
+.right-layout {
+  display: flex;
+  gap: 1rem;
   align-items: flex-start;
 }
 
-/* Dr.Advice カラム */
-.advice-col {
-  padding-right: 1rem !important;
-  border-right: 2px solid var(--ifm-color-emphasis-200);
+/* 画像サイドバー (固定幅) */
+.image-sidebar {
+  flex: 0 0 180px;
+  min-width: 0;
 }
 
-/* Wiki カラム */
+/* Wiki カラム (残り幅全て) */
 .wiki-col {
-  padding-left: 1rem !important;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Dr.Advice: SOAP左カラム内に配置 */
+.so-dr-advice,
+.ap-dr-advice {
+  margin-top: 0.75rem;
+}
+
+.so-dr-advice blockquote,
+.ap-dr-advice blockquote {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  border-radius: 0 8px 8px 0;
+  padding: 0.65rem 1rem;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+}
+
+.so-dr-advice blockquote p,
+.ap-dr-advice blockquote p {
+  color: #78350f;
+  margin-bottom: 0.35rem;
+  line-height: 1.6;
+}
+
+.so-dr-advice blockquote p:last-child,
+.ap-dr-advice blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+[data-theme='dark'] .so-dr-advice blockquote,
+[data-theme='dark'] .ap-dr-advice blockquote {
+  background: #2d1f00;
+  border-color: #f59e0b;
+}
+
+[data-theme='dark'] .so-dr-advice blockquote p,
+[data-theme='dark'] .ap-dr-advice blockquote p {
+  color: #fde68a;
 }
 
 /* =========================================================
@@ -172,59 +214,14 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
   font-size: 0.87em;
 }
 
-/* =========================================================
-   Dr.Advice blockquote
-   ========================================================= */
-.advice-col blockquote {
-  background: #fffbeb;
-  border-left: 4px solid #f59e0b;
-  border-radius: 0 8px 8px 0;
-  padding: 0.65rem 1rem;
-  margin: 0 0 0.75rem 0;
-  font-size: 0.85rem;
-}
+/* (advice-col styles moved to so-dr-advice/ap-dr-advice above) */
 
-.advice-col blockquote p {
-  color: #78350f;
-  margin-bottom: 0.35rem;
-  line-height: 1.6;
-}
+/* S/O Dr.Advice は details 内にあるため折りたたみと連動
+   追加のCSS制御は不要 */
 
-.advice-col blockquote p:last-child {
-  margin-bottom: 0;
-}
-
-[data-theme='dark'] .advice-col blockquote {
-  background: #2d1f00;
-  border-color: #f59e0b;
-}
-
-[data-theme='dark'] .advice-col blockquote p {
-  color: #fde68a;
-}
-
-/* スペーサー: 無効化（右パネル上部に画像があるため不要） */
-.dr-advice-spacer {
-  display: none;
-}
-
-.soap-col:has(details.so-details[open]) ~ .right-panel .dr-advice-spacer {
-  display: none;
-}
-
-.so-dr-advice {
-  display: none;
-}
-
-.soap-col:has(details.so-details[open]) ~ .right-panel .so-dr-advice {
-  display: block;
-}
-
+/* レガシー互換: 旧クラス無効化 */
+.dr-advice-spacer,
 .ap-advice-spacer {
-  display: none;
-}
-
-.soap-col:has(details.so-details[open]) ~ .right-panel .ap-advice-spacer {
   display: block;
   height: 2rem;
 }
@@ -285,16 +282,13 @@ h3.soap-p::before { content: "P"; background: var(--color-p); }
     max-width: 100% !important;
     padding-left: 0 !important;
   }
-  .advice-col {
-    border-right: none;
-    border-bottom: 2px solid var(--ifm-color-emphasis-200);
-    padding-right: 0 !important;
-    padding-bottom: 1.5rem;
-    margin-bottom: 1rem;
+  .right-layout {
+    flex-direction: column;
   }
-  .wiki-col {
-    padding-left: 0 !important;
-    margin-top: 0.5rem;
+  .image-sidebar {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 200px;
   }
 }
 

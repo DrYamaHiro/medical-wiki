@@ -74,6 +74,18 @@ COVID-19 陽性 / 陰性
 - <span className="med-id">[Lab-Gen-Influenza]</span> インフルエンザ
 - <span className="med-id">[Lab-Gen-COVID]</span> COVID-19
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[トリアージの要点]**
+> ①即時対応 (重症感あり): SpO2&lt;95%、チアノーゼ、意識障害（ぐったり）、大泉門膨隆、紫斑（髄膜炎菌疑い）→ 緊急対応。
+> ②要注意 (ハイリスク): 生後3ヶ月未満の発熱、3日以上続く高熱、水分が全く取れない → 早急に検査・方針決定。
+> ③機嫌・活気が最重要: 体温の高さよりも「あやすと笑う・視線が合う」かどうかが重症度判定の核心である。
+> ④ハイリスク回避: 「親の直感」（「いつもと違う」）は有力な情報である。親の不安が強い場合は確認検査を行うことで受診の安心につながる。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -104,36 +116,24 @@ COVID-19 陽性 / 陰性
 
 - **患者指導:** 脱水予防のため、鎮痛剤を使ってから水分を与える工夫を指導。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="b084-hfmd-herpangina" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[トリアージの要点]**
-> ①即時対応 (重症感あり): SpO2&lt;95%、チアノーゼ、意識障害（ぐったり）、大泉門膨隆、紫斑（髄膜炎菌疑い）→ 緊急対応。
-> ②要注意 (ハイリスク): 生後3ヶ月未満の発熱、3日以上続く高熱、水分が全く取れない → 早急に検査・方針決定。
-> ③機嫌・活気が最重要: 体温の高さよりも「あやすと笑う・視線が合う」かどうかが重症度判定の核心である。
-> ④ハイリスク回避: 「親の直感」（「いつもと違う」）は有力な情報である。親の不安が強い場合は確認検査を行うことで受診の安心につながる。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[爪の脱落]** 手足口病の治癒後、1～2ヶ月経ってから手足の爪が浮いて剥がれることがある（爪甲脱落症）。「後遺症や栄養不足ではなく、自然な経過で生え変わる」と予め伝えておく。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="b084-hfmd-herpangina" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -142,23 +142,15 @@ COVID-19 陽性 / 陰性
 
 ### 病態生理
 
-- **病原体:** エンテロウイルス属（コクサッキーA群、エンテロウイルス71等）、夏季に流行
-- **手足口病:** 手掌、足底、口腔内に水疱性発疹、発熱は軽度（37-38℃）
-- **ヘルパンギーナ:** 口蓋弓・軟口蓋に小水疱→潰瘍、高熱（39-40℃）、咽頭痛で哺乳・摂食困難
-- **合併症（稀だが重要）:** EV71による脳炎・脳症、心筋炎、爪脱落（手足口病後1-2ヶ月）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断:** 特徴的な発疹分布と季節性で臨床診断
-- **鑑別:** ヘルペス性歯肉口内炎（歯肉の発赤・腫脹が強い）、水痘、口内炎
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **治療:** 対症療法のみ（特異的治療なし）
-  - 口腔内疼痛: アセトアミノフェン、冷たい飲食物
-  - 脱水予防: 経口補水液、少量頻回摂取
-- **出席停止:** 法定なし。発熱がなく、経口摂取が可能であれば登園可
-- **保護者への説明:** 「便からのウイルス排泄が数週間続くため、完全な隔離は不合理。手洗いの徹底を」
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 

@@ -61,6 +61,16 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 - <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
+>
+> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -94,27 +104,7 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 - <span className="med-id">[Rx-Gen-Steroid-PSL-30]</span> プレドニン30mg(6錠)
 - プレドニン錠5mg 1回6錠 1日1回 朝食後 3-5日分 *— 中発作時バースト*
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="j459-asthma-moderate" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[診断の鍵]** 当院には呼気NO(FeNO)がないため、診断は「詳細な問診（変動性）」と「スパイロメトリー（可逆性・閉塞性）」、および「治療的診断（吸入薬で良くなるか）」が主軸となる。
->
-> **[RedFlag]** 会話が途切れるほどの呼吸苦、SpO2&lt;90%、呼吸補助筋の使用は発作重積状態の可能性あり。直ちに吸入・ステロイド全身投与・搬送を考慮せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -129,65 +119,38 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 > **[高齢者の喘息]** 高齢者は感覚が鈍麻し、SpO2が低下しても苦しさを訴えないことがある（Happy Hypoxia様）。客観的指標（SpO2, 聴診）を重視せよ。また、心不全やCOPDとの鑑別・合併（ACO）にも注意が必要。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="j459-asthma-moderate" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **中等症持続型の病態**: 基本病態は軽症と同一（気道の慢性好酸球性炎症 + 気道リモデリング）だが、炎症の程度が強い
-- **特徴**:
-  - 毎日症状がある
-  - 夜間症状が週1回以上
-  - PEF/FEV1は予測値の60-80%
-  - 日常生活や睡眠に影響あり
-- **コントロール不十分の要因**:
-  - 吸入手技の不良（最大50%の患者で吸入手技に問題あり）
-  - アドヒアランス不良（自覚症状消失後の自己中断が最多）
-  - 未同定のトリガー（GERD、副鼻腔炎、アレルゲン曝露）
-  - 喫煙（ICSの効果を50%以上減弱させる）
-  - Asthma-COPD overlap（ACO）
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **コントロール不十分の判定基準（JGL2024）**:
-  - 週1回以上の昼間症状
-  - 活動制限あり
-  - 夜間症状あり
-  - 発作治療薬の使用が週1回以上
-  - PEFが予測値の80%未満
-  - 上記1項目以上該当 = コントロール不十分
-- **増悪リスク因子の評価**:
-  - 過去12ヶ月に全身ステロイドを要する増悪が1回以上
-  - FEV1低値（特に60%未満）
-  - 喫煙継続
-  - 血中好酸球高値（300/uL以上）
-  - FeNO高値（50ppb以上: 好酸球性炎症の持続）
-- **鑑別・合併**: ACO、気管支拡張症合併、アレルギー性気管支肺アスペルギルス症（ABPA）、Churg-Strauss症候群（EGPA）
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **治療ステップ3（中等症持続型）**:
-  - 第一選択: 中用量ICS/LABA配合剤
-    - フルチカゾン/サルメテロール（アドエア）250ディスカス 1回1吸入 1日2回
-    - ブデソニド/ホルモテロール（シムビコート）1回2吸入 1日2回（MART療法可能）
-    - フルチカゾンフランカルボン酸/ビランテロール（レルベア）200エリプタ 1回1吸入 1日1回
-  - 追加療法: LTRA（モンテルカスト10mg/日）、テオフィリン徐放剤
-- **MART療法（Maintenance And Reliever Therapy）**:
-  - シムビコートを定期吸入 + 発作時追加吸入として使用
-  - 1日最大8吸入まで（定期吸入含む）
-  - 従来のICS/LABA + SABA頓用より増悪を有意に減少（Kew 2013 Cochrane）
-- **ステップアップの前に確認すべき3点**:
-  1. 吸入手技は正しいか（毎回確認）
-  2. アドヒアランスは良好か（処方日数と来院間隔の整合性）
-  3. トリガーは除去されているか
-- **専門医紹介の適応**: ステップ3で3ヶ月コントロール不良、年2回以上の増悪、生物学的製剤の検討
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本アレルギー学会 喘息予防・管理ガイドライン2024（JGL2024）](https://www.jsaweb.jp/)
-- [GINA Global Strategy for Asthma Management 2024](https://ginasthma.org/)
+- [日本アレルギー学会 喘息ガイドライン](https://www.jsaweb.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

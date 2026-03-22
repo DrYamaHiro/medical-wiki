@@ -57,6 +57,24 @@ Dix-Hallpike / Supine Roll test: 陽性 / 陰性
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[中枢性のRed Flags (3D)]**
+> - **Diplopia (複視):** 複視が突然出現したら脳幹・小脳障害を強く疑え。
+> - Dysarthria/Dysphagia (構語・嚥下障害): 突然の構語障害は脳卒中のレッドフラッグ。
+> - Disequilibrium (体幹失調・歩行不能): 起立・歩行が全くできないめまいは末梢性ではなく中枢性の証拠。追加で「突然発症・頭痛・意識障害・血圧異常」があればただちに救急搬送。
+>
+> **[HINTS plus]**
+> - Head Impulse Test (頭位衝動試験) 「異常 = 末梢性」: 急速な頭の動かしに対し眼球が遅れて追いかけるキャッチアップ眼球運動(Catch-up saccade)があれば「末梢性（前庭神経炎など）を示す」。
+> - Nystagmus (眼振パターン): 方向固定性の水平眼振 → 末梢性。方向交代性や垂直成分入り → 中枢性。
+> - Test of Skew (遮閉試験): 垂直方向の眼球偏倚(Skew deviation)があれば中枢性。
+> - **HINTS "plus":** 聴力低下(急性・一側性)が加わった場合も中枢性（特に後下小脳動脈梗塞）を否定できない。
+> - **臨床的意義:** HINTSはMRIを超える感度で中枢性を検出できるとされる（ただし習熟が必要）。急性前庭症候群でHINTSが「末梢性パターン」でない場合は緊急MRIを考慮せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -86,76 +104,41 @@ Dix-Hallpike / Supine Roll test: 陽性 / 陰性
 - <span className="med-id">[Inj-GI-Sym-Met]</span> プリンペラン(制吐)
 - プリンペラン注射液10mg 1管 静脈内注射 ；嘔気時
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="h812-vestibular-neuritis" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[中枢性のRed Flags (3D)]**
-> - **Diplopia (複視):** 複視が突然出現したら脳幹・小脳障害を強く疑え。
-> - Dysarthria/Dysphagia (構語・嚥下障害): 突然の構語障害は脳卒中のレッドフラッグ。
-> - Disequilibrium (体幹失調・歩行不能): 起立・歩行が全くできないめまいは末梢性ではなく中枢性の証拠。追加で「突然発症・頭痛・意識障害・血圧異常」があればただちに救急搬送。
->
-> **[HINTS plus]**
-> - Head Impulse Test (頭位衝動試験) 「異常 = 末梢性」: 急速な頭の動かしに対し眼球が遅れて追いかけるキャッチアップ眼球運動(Catch-up saccade)があれば「末梢性（前庭神経炎など）を示す」。
-> - Nystagmus (眼振パターン): 方向固定性の水平眼振 → 末梢性。方向交代性や垂直成分入り → 中枢性。
-> - Test of Skew (遮閉試験): 垂直方向の眼球偏倚(Skew deviation)があれば中枢性。
-> - **HINTS "plus":** 聴力低下(急性・一側性)が加わった場合も中枢性（特に後下小脳動脈梗塞）を否定できない。
-> - **臨床的意義:** HINTSはMRIを超える感度で中枢性を検出できるとされる（ただし習熟が必要）。急性前庭症候群でHINTSが「末梢性パターン」でない場合は緊急MRIを考慮せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
 > **[難聴の有無]** 「聞こえはおかしくないですか？」と執拗に確認せよ。めまいに難聴を伴う場合は「突発性難聴（めまい伴う）」または「AICA領域の脳梗塞」の可能性があり、治療方針や緊急度が全く異なる。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="h812-vestibular-neuritis" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **前庭神経炎**は前庭神経の急性炎症（ウイルス性と推定）により突然の持続性回転性めまいを生じる
-- 上気道感染後1-2週間で発症することが多い。HSV-1の再活性化が関与する可能性
-- 前庭神経上枝が障害されることが多い（上半規管・外側半規管・卵形嚢）
-- **特徴**: 突然発症の激しい回転性めまいが数日〜1週間持続。聴覚症状なし。嘔気・嘔吐が強い
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断のポイント**:
-  - 突然発症の持続性回転性めまい（1日以上持続）
-  - 自発眼振: 健側向き水平回旋混合性眼振（注視抑制あり）
-  - 温度刺激検査（カロリックテスト）: 患側の半規管麻痺（CP）
-  - 聴力正常（蝸牛症状なし）
-  - **HINTS検査**（Head Impulse, Nystagmus, Test of Skew）: 末梢性を示唆する所見（HIT陽性、方向固定性眼振、skew deviation陰性）
-- **最重要の鑑別**: 小脳・脳幹梗塞（特にPICA領域梗塞）
-  - 危険な所見: HIT陰性（中枢性）、方向交代性眼振、skew deviation陽性
-  - 高齢者・血管リスク因子ありの場合は特に注意
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **急性期治療**:
-  - 制吐薬・前庭抑制薬: ジメンヒドリナート、ジフェニドール、メトクロプラミド
-  - 前庭抑制薬は急性期（48-72時間）のみ使用。長期使用は前庭代償を遅延させる
-  - ステロイド: メチルプレドニゾロンまたはプレドニゾロン短期投与。発症3日以内の投与で前庭機能回復が改善するとのRCTあり
-- **前庭リハビリテーション**（最も重要な治療）:
-  - 急性期を過ぎたら早期に開始（推奨度A）
-  - 注視安定化訓練、バランス訓練、歩行訓練
-  - 前庭代償: 中枢神経系が片側前庭機能喪失を補償する過程。完全代償に1-3ヶ月
-- **予後**: 大半は1-3ヶ月で日常生活に支障なく回復。約30-50%で患側の半規管麻痺は残存するが中枢代償で無症状化
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 

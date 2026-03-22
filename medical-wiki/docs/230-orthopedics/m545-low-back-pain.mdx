@@ -50,6 +50,16 @@ keywords: ["腰痛症・急性腰痛症", "腰痛症", "急性腰痛症", "腰�
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[Red Flags]** 「安静にしていても痛い（内臓痛・腫瘍・化膿性脊椎炎）」「熱がある」「尿が出にくい（馬尾症候群）」は緊急事態である。当院にはMRIがないため、これらの徴候があれば鎮痛剤で様子を見ず、直ちに専門病院へ紹介せよ。
+>
+> **[画像診断の適応]** Red Flagsがない単純な急性腰痛（ぎっくり腰）や寝違えであれば、初診時のX線撮影は医学的に必須ではない（治療方針が変わらないため）。患者が「骨折がないか心配」している場合や、高齢者（圧迫骨折リスク）の場合に撮影を行え。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -91,27 +101,7 @@ keywords: ["腰痛症・急性腰痛症", "腰痛症", "急性腰痛症", "腰�
 - **患者指導:** 安静にしすぎず、痛みのない範囲で動くよう指導。入浴は急性期(2日)は避ける。
 - **再診目安:** 1週間後。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="m545-low-back-pain" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[Red Flags]** 「安静にしていても痛い（内臓痛・腫瘍・化膿性脊椎炎）」「熱がある」「尿が出にくい（馬尾症候群）」は緊急事態である。当院にはMRIがないため、これらの徴候があれば鎮痛剤で様子を見ず、直ちに専門病院へ紹介せよ。
->
-> **[画像診断の適応]** Red Flagsがない単純な急性腰痛（ぎっくり腰）や寝違えであれば、初診時のX線撮影は医学的に必須ではない（治療方針が変わらないため）。患者が「骨折がないか心配」している場合や、高齢者（圧迫骨折リスク）の場合に撮影を行え。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -120,7 +110,17 @@ keywords: ["腰痛症・急性腰痛症", "腰痛症", "急性腰痛症", "腰�
 > **[入浴]** 急性期（受傷直後～2日）は炎症を助長するため長湯は避ける。慢性期は温めて血流を良くすることが推奨される。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="m545-low-back-pain" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -129,21 +129,15 @@ keywords: ["腰痛症・急性腰痛症", "腰痛症", "急性腰痛症", "腰�
 
 ### 病態生理
 
-- **腰痛症**は日本人の有訴率第1位。約85%は非特異的腰痛（画像で特定の原因が見出せない）
-- 急性腰痛（ぎっくり腰含む）は通常2-4週間で自然軽快。4週間以上持続→慢性腰痛
-- 慢性腰痛には心理社会的因子（fear-avoidance、catastrophizing）が強く関与
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **Red flags（重篤な疾患の除外）**: 安静時痛・夜間痛（腫瘍、感染）、発熱、体重減少、外傷歴+骨粗鬆症（骨折）、膀胱直腸障害（馬尾症候群→緊急）、下肢の進行性筋力低下
-- **鑑別**: 椎間板ヘルニア（SLRテスト陽性、下肢放散痛）、脊柱管狭窄症（間欠性跛行）、圧迫骨折、腎盂腎炎、大動脈瘤
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **急性腰痛**: 安静は推奨しない（できる範囲で通常活動を維持）。NSAIDs短期間+筋弛緩薬
-- **慢性腰痛**: 運動療法が最もエビデンス豊富（推奨度A）。認知行動療法、デュロキセチン30-60mg/日
-- **画像検査**: Red flagsがない限り6週間は画像不要（過剰な画像検査は不安を助長しアウトカムを悪化させうる）
-- **腰痛体操・ストレッチ**: 再発予防に有効。Williams体操、McKenzie法
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 

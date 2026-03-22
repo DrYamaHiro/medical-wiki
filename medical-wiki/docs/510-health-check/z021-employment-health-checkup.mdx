@@ -50,6 +50,16 @@ keywords: ["雇用時健診", "雇用", "用時", "時健", "健診", "雇用時
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[結果渡し]** 当院の血液検査は外注（SRL）であるため、診断書や健診結果の即日発行は不可能である。「結果が出るまで数日かかります」と受付段階で必ず説明し、トラブルを回避せよ。
+>
+> **[健診の意義]** 健診は「異常を見つける」だけでなく、「自分の体を知り、生活習慣を見直すきっかけ」であることを伝え、結果説明の受診を促せ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -75,27 +85,7 @@ keywords: ["雇用時健診", "雇用", "用時", "時健", "健診", "雇用時
 - CBC, AST, ALT, γGTP, LDL, HDL, TG, 血糖, HbA1c
 - <span className="med-id">[Lab-Gen-Urine]</span> 尿定性・尿沈渣
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="z021-employment-health-checkup" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[結果渡し]** 当院の血液検査は外注（SRL）であるため、診断書や健診結果の即日発行は不可能である。「結果が出るまで数日かかります」と受付段階で必ず説明し、トラブルを回避せよ。
->
-> **[健診の意義]** 健診は「異常を見つける」だけでなく、「自分の体を知り、生活習慣を見直すきっかけ」であることを伝え、結果説明の受診を促せ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -104,7 +94,17 @@ keywords: ["雇用時健診", "雇用", "用時", "時健", "健診", "雇用時
 > **[胸部X線]** 妊娠中または妊娠の可能性がある女性には原則実施しない。雇用主にその旨を記載して提出する。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="z021-employment-health-checkup" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -113,26 +113,19 @@ keywords: ["雇用時健診", "雇用", "用時", "時健", "健診", "雇用時
 
 ### 病態生理
 
-- **法的根拠:** 労働安全衛生規則第43条（雇入時の健康診断）
-- **対象:** 常時使用する労働者を雇い入れる際に実施
-- **必須項目（11項目）:** 既往歴・業務歴、自覚症状・他覚症状、身長・体重・BMI・腹囲、視力・聴力、胸部X線、血圧、尿検査（蛋白・糖）、血液検査（貧血、肝機能、脂質、血糖）、心電図
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **省略不可:** 雇入時健診は定期健診と異なり、年齢による省略項目がない（全項目必須）
-- **異常値判定:** 定期健診と同じ基準で判定
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **実務上の注意:**
-  - 3ヶ月以内の健診結果を提出可能（同等の項目がある場合）
-  - 結果は5年間保存義務
-  - 異常所見がある場合、医師の意見を聴取し就業上の措置を検討
-- **費用負担:** 事業者負担が原則
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [労働安全衛生法・労働安全衛生規則](https://www.mhlw.go.jp/)
+- [厚生労働省 特定健康診査](https://www.mhlw.go.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

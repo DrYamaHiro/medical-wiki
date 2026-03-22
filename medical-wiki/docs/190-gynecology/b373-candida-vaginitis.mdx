@@ -68,6 +68,16 @@ CVA叩打痛: 有 / 無 ；腎盂腎炎除外
 - <span className="med-id">[Lab-Hem-Iron]</span> 貧血・鉄代謝(Hb, Ferritin)
 - <span className="med-id">[Lab-Endo-Thy-Screen]</span> 甲状腺スクリーニング(TSH, FT4)
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[妊娠の絶対除外]** 閉経前の女性の「腹痛」「吐き気」「不正出血」を見たら、本人が否定しても医学的には「妊娠（特に異所性妊娠）」を常に疑う必要がある。当院では尿中hCGキットの常備がないため、疑わしければ問診で強く確認するか、近隣薬局で検査薬を購入して確認するよう促す、あるいは直ちに婦人科へ紹介するフローを徹底せよ。
+>
+> **[内診・エコー不可の限界]** 当院には内診台および経腟エコーがないため、子宮筋腫、卵巣嚢腫、子宮体癌などの器質的疾患の診断は不可能である。「薬で様子を見る」のは、あくまで機能性疾患（更年期・PMS等）と推定される場合に限り、不正出血が続く場合や腹痛が強い場合は、必ず婦人科専門医へ紹介せよ。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -94,27 +104,7 @@ CVA叩打痛: 有 / 無 ；腎盂腎炎除外
 - **患者指導:** 腟錠の自己挿入法を指導。再発を繰り返す場合は糖尿病等の精査を検討。
 - **再診目安:** 1週間後（改善確認）。
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="b373-candida-vaginitis" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[妊娠の絶対除外]** 閉経前の女性の「腹痛」「吐き気」「不正出血」を見たら、本人が否定しても医学的には「妊娠（特に異所性妊娠）」を常に疑う必要がある。当院では尿中hCGキットの常備がないため、疑わしければ問診で強く確認するか、近隣薬局で検査薬を購入して確認するよう促す、あるいは直ちに婦人科へ紹介するフローを徹底せよ。
->
-> **[内診・エコー不可の限界]** 当院には内診台および経腟エコーがないため、子宮筋腫、卵巣嚢腫、子宮体癌などの器質的疾患の診断は不可能である。「薬で様子を見る」のは、あくまで機能性疾患（更年期・PMS等）と推定される場合に限り、不正出血が続く場合や腹痛が強い場合は、必ず婦人科専門医へ紹介せよ。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -123,32 +113,38 @@ CVA叩打痛: 有 / 無 ；腎盂腎炎除外
 > **[ステロイド禁忌]** 痒いからといって、手持ちのステロイド軟膏を塗ると菌が増殖して劇的に悪化する。「絶対にかぶれ止め（ステロイド）は塗らないで」と釘を刺せ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="b373-candida-vaginitis" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
 
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
 ### 病態生理
 
-- **カンジダ腟炎**はCandida albicans（約80-90%）による腟・外陰の真菌感染症
-- 女性の約75%が生涯に1回は経験。約5-8%が再発性（年4回以上）
-- **誘因**: 抗菌薬使用後、妊娠、糖尿病、免疫抑制、ステロイド、高温多湿環境
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **診断**: 外陰部掻痒+白色酒粕様帯下+KOH直接鏡検で菌糸・酵母確認
-- **鑑別**: 細菌性腟症（灰白色の帯下、魚臭、clue cells）、トリコモナス腟炎（泡沫状帯下）、接触性皮膚炎
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **腟錠**: クロトリマゾール腟錠100mg x 6日間 or オキシコナゾール腟錠600mg 単回。外陰部にクリーム併用
-- **経口薬**: フルコナゾール150mg 単回投与（腟錠と同等の効果）。日本では腟カンジダに保険適用なし
-- **再発性カンジダ**: フルコナゾール150mg 週1回 x 6ヶ月の維持療法。糖尿病のスクリーニング推奨
-- **生活指導**: 通気性の良い下着、過度の洗浄を避ける
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [日本産科婦人科学会 産婦人科診療ガイドライン婦人科外来編2023](https://www.jsog.or.jp/)
+- [日本産科婦人科学会](https://www.jsog.or.jp/)
 {/* WIKI_EDIT_END */}
 
 </div>

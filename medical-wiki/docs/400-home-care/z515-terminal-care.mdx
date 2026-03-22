@@ -40,6 +40,18 @@ keywords: ["悪性腫瘍末期・緩和ケア", "悪性腫瘍末期", "緩和ケ
 
 *（データなし）*
 
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[初回契約]** 24時間対応体制、緊急時の連絡先、費用負担について書面を用いて説明し、同意書を取得すること。
+>
+> **[多職種連携]** ケアマネージャー、訪問看護師、薬局と情報を共有し、初回のカンファレンスを行うこと。
+>
+> **[ACP]** 初回から「死」の話をするのは繊細さが求められるが、「もしもの時、どうされたいか」を早めに共有しておくことが、家族の迷いを減らす。
+
+</div>
+
 </details>
 
 <button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
@@ -74,29 +86,7 @@ keywords: ["悪性腫瘍末期・緩和ケア", "悪性腫瘍末期", "緩和ケ
 - <span className="med-id">[Rx-GI-Sym-Nau]</span> ナウゼリン錠10mg 1回1錠 1日3回 ；嘔気（初期）
 - <span className="med-id">[Rx-Home-Nar-Nov]</span> ノバミン錠5mg 1回1錠 1日3回 ；嘔気・不穏
 
-</div>
-<div className="col col--7 right-panel">
-
-<ImageUploader docId="z515-terminal-care" />
-
-<div className="row right-inner">
-<div className="col col--6 advice-col">
-
-<div className="dr-advice-spacer"></div>
-
-<div className="so-dr-advice">
-
-> 💡 **Dr.Advice**
->
-> **[初回契約]** 24時間対応体制、緊急時の連絡先、費用負担について書面を用いて説明し、同意書を取得すること。
->
-> **[多職種連携]** ケアマネージャー、訪問看護師、薬局と情報を共有し、初回のカンファレンスを行うこと。
->
-> **[ACP]** 初回から「死」の話をするのは繊細さが求められるが、「もしもの時、どうされたいか」を早めに共有しておくことが、家族の迷いを減らす。
-
-</div>
-
-<div className="ap-advice-spacer"></div>
+<div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
@@ -105,7 +95,17 @@ keywords: ["悪性腫瘍末期・緩和ケア", "悪性腫瘍末期", "緩和ケ
 > **[レスキュー]** 1日定時投与量の10～20%（または1/6量）をレスキュー1回量として設定する。レスキューの使用回数が増えたら、ベースアップを検討せよ。
 
 </div>
-<div className="col col--6 wiki-col">
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="right-layout">
+<div className="image-sidebar">
+
+<ImageUploader docId="z515-terminal-care" />
+
+</div>
+<div className="wiki-col">
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説
@@ -114,33 +114,18 @@ keywords: ["悪性腫瘍末期・緩和ケア", "悪性腫瘍末期", "緩和ケ
 
 ### 病態生理
 
-- **緩和ケアの定義（WHO 2002）:** 生命を脅かす疾患に伴う問題に直面する患者・家族のQOL改善を目的としたアプローチ
-- **対象:** 悪性腫瘍末期が中心だが、心不全、COPD、腎不全等の非癌疾患にも適用
-- **疼痛の頻度:** 進行癌患者の70-80%に疼痛、適切な鎮痛で90%以上は緩和可能
+*（病態生理を記述）*
 
 ### 診断基準・鑑別疾患
 
-- **全人的苦痛（トータルペイン）の評価:**
-  - 身体的苦痛: 疼痛、呼吸困難、嘔気、倦怠感
-  - 精神的苦痛: 不安、抑うつ、不眠
-  - 社会的苦痛: 経済的問題、家族の問題
-  - スピリチュアルペイン: 生きる意味、死への恐怖
+*（診断基準・鑑別疾患を記述）*
 
 ### エビデンス・ガイドライン推奨
 
-- **がん疼痛の薬物療法に関するガイドライン2020（日本緩和医療学会）:**
-  - **WHO3段階除痛ラダー:**
-    - 第1段階: NSAIDs/アセトアミノフェン
-    - 第2段階: 弱オピオイド（トラマドール）
-    - 第3段階: 強オピオイド（モルヒネ、オキシコドン、フェンタニル、ヒドロモルフォン）
-  - **オピオイドの適切な使用:** 定時投与 + レスキュー（1日量の1/6を頓用）
-  - **副作用管理:** 便秘（ナルデメジン/マグミット）、嘔気（プロクロルペラジン、数日で耐性化）
-- **呼吸困難:** モルヒネ少量（2.5-5mg 頓用）が有効
-- **在宅緩和ケア:** 麻薬処方箋（注射剤含む）、訪問看護との連携、レスパイト入院
+*（エビデンス・推奨グレードを記述）*
 
 ### 🔗 関連ガイドライン
 
-- [がん疼痛の薬物療法に関するガイドライン2020（日本緩和医療学会）](https://www.jspm.ne.jp/)
 - [日本在宅医療連合学会](https://www.jahcm.org/)
 {/* WIKI_EDIT_END */}
 
