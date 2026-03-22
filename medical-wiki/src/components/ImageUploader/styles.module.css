@@ -21,26 +21,26 @@
   object-fit: contain;
 }
 
-/* サムネイル横並び */
+/* サムネイル横並び（メイン画像の下） */
 .thumbRow {
   display: flex;
-  gap: 0.3rem;
-  overflow-x: auto;
-  padding-bottom: 0.2rem;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 0.3rem 0;
   margin-bottom: 0.4rem;
 }
 
 .thumbCard {
   position: relative;
   flex-shrink: 0;
-  width: 52px;
-  height: 40px;
-  border-radius: 3px;
+  width: 72px;
+  height: 54px;
+  border-radius: 4px;
   overflow: hidden;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 2px solid var(--ifm-color-emphasis-200);
   transition: border-color 0.15s, opacity 0.15s;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .thumbCard:hover {

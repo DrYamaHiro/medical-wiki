@@ -218,7 +218,7 @@ export default function ImageUploader({ docId }) {
       )}
 
       {/* サムネイル一覧 (並び替え可能) */}
-      {images.length > 1 && (
+      {images.length >= 1 && (
         <div className={styles.thumbRow}>
           {images.map((img, idx) => (
             <div
