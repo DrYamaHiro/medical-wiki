@@ -196,6 +196,52 @@
   color: #fff;
 }
 
+/* チェックリスト（スコア計算ツール） */
+.checkList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.checkItem:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.checkItemActive {
+  background: var(--ifm-color-primary-lightest);
+  border-color: var(--ifm-color-primary);
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--ifm-color-primary);
+}
+
+.checkLabel {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.checkScore {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  min-width: 30px;
+  text-align: right;
+}
+
 /* レスポンシブ */
 @media (max-width: 600px) {
   .calc {
