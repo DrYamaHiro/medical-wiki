@@ -1,15 +1,35 @@
 flowchart TD
-    A[急性上気道炎の診断] --> B[対症療法開始]
-    B --> C[解熱鎮痛: アセトアミノフェン]
-    B --> D[去痰: カルボシステイン]
-    B --> E[鎮咳: デキストロメトルファン]
-    B --> F[抗炎症: トラネキサム酸]
-    B --> G[安静・水分摂取指導]
-    G --> H[3〜4日後に改善あり]
-    H -->|改善| I[経過観察・自然治癒]
-    H -->|改善なし| J[再評価]
-    J --> K[二次感染の検索]
-    K --> L[細菌性副鼻腔炎の除外]
-    K --> M[肺炎の除外]
-    L -->|疑い| N[抗菌薬追加を検討]
-    M -->|疑い| O[胸部X線・専門医紹介]
+    NOTE["※成人 15歳以上 対象"]
+    T0["急性上気道炎の診断確定"] --> T1["対症療法開始"]
+
+    subgraph 処方["対症療法（併用可）"]
+        T2["解熱鎮痛:<br/>アセトアミノフェン<br/>1回300-500mg 最大1500mg/日"]
+        T3["去痰: ムコダイン500mg<br/>1日3回"]
+        T4["鎮咳: メジコン15mg<br/>1日3回<br/>※SSRI/MAO-I併用禁忌"]
+        T5["抗炎症:<br/>トラネキサム酸"]
+        T6["漢方:<br/>葛根湯 実証・初期<br/>麻黄附子細辛湯 虚証・高齢者"]
+    end
+
+    T1 --> 処方
+    T1 --> T7["安静・水分摂取指導<br/>経口摂取困難なら点滴検討"]
+    T7 --> T8{"3-4日後の再評価"}
+    T8 -->|"改善あり"| T9["7-10日で自然治癒<br/>警告徴候時は待たず再診"]
+    T8 -->|"改善なし・悪化"| T10{"二次評価"}
+    T10 -->|"片側顔面痛 or<br/>膿性鼻汁10日以上 or<br/>二峰性悪化"| T11["副鼻腔炎疑い<br/>AMPC 1500mg/日 5-7日"]
+    T10 -->|"SpO2≦95%/湿性咳嗽<br/>持続/聴診異常"| T12["肺炎疑い<br/>胸部X線・入院検討"]
+    T10 -->|"上記なし"| T13["ウイルス性: 抗菌薬不要<br/>悪化時は再評価で方針変更"]
+    T13 -.->|"さらに悪化時"| T8
+    T9 --> T14["再診目安:<br/>高熱再燃/呼吸困難<br/>経口摂取不能/7日超遷延"]
+
+    NOTE ~~~ T0
+    style NOTE fill:#e0e0e0,stroke:#999,color:#333
+    style T0 fill:#4CAF50,stroke:#333,color:#fff
+    style T1 fill:#4CAF50,stroke:#333,color:#fff
+    style T7 fill:#4CAF50,stroke:#333,color:#fff
+    style T8 fill:#FFEB3B,stroke:#333,color:#333
+    style T9 fill:#4CAF50,stroke:#333,color:#fff
+    style T10 fill:#FFEB3B,stroke:#333,color:#333
+    style T11 fill:#FF9800,stroke:#333,color:#fff
+    style T12 fill:#f44336,stroke:#333,color:#fff
+    style T13 fill:#4CAF50,stroke:#333,color:#fff
+    style T14 fill:#e0e0e0,stroke:#333,color:#333
