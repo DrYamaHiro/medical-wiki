@@ -1,0 +1,22 @@
+{
+  "theme": "default",
+  "themeVariables": {
+    "fontSize": "44px",
+    "fontFamily": "Meiryo, 'Hiragino Sans', sans-serif",
+    "lineColor": "#424242",
+    "primaryColor": "#E3F2FD",
+    "primaryBorderColor": "#212121",
+    "primaryTextColor": "#000000",
+    "edgeLabelBackground": "#FFFFFFEE"
+  },
+  "flowchart": {
+    "useMaxWidth": false,
+    "htmlLabels": true,
+    "nodeSpacing": 40,
+    "rankSpacing": 40,
+    "padding": 20,
+    "curve": "basis",
+    "wrappingWidth": 300,
+    "diagramPadding": 10
+  }
+}

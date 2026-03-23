@@ -1,0 +1,184 @@
+/* ============================================
+   ClinicalCalc — 臨床計算ツール共通スタイル
+   ============================================ */
+
+.calc {
+  max-width: 520px;
+  margin: 1.5rem auto;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--ifm-background-color);
+}
+
+.calcHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.2rem;
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
+
+.calcTitle {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.calcSub {
+  margin: 0;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.resetBtn {
+  padding: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 4px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.resetBtn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* 入力セクション */
+.calcBody {
+  padding: 1rem 1.2rem;
+}
+
+.inputGroup {
+  margin-bottom: 1rem;
+}
+
+.inputLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: var(--ifm-font-color-base);
+}
+
+.inputUnit {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--ifm-color-emphasis-500);
+  margin-left: 0.3rem;
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inputField {
+  flex: 1;
+  padding: 0.5rem 0.7rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  text-align: right;
+  max-width: 160px;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+}
+
+.unitText {
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-600);
+  min-width: 50px;
+}
+
+/* 結果表示 */
+.result {
+  margin: 0 1.2rem 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--ifm-color-emphasis-300);
+}
+
+.resultRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.resultLabel {
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.resultValue {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+.resultJudge {
+  padding: 0.7rem 1rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* 解説テキスト */
+.note {
+  padding: 0.6rem 1.2rem 1rem;
+  font-size: 0.78rem;
+  color: var(--ifm-color-emphasis-500);
+  line-height: 1.6;
+}
+
+.note strong {
+  color: var(--ifm-font-color-base);
+}
+
+/* 判定テーブル */
+.judgeTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+  font-size: 0.8rem;
+}
+
+.judgeTable th,
+.judgeTable td {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  text-align: center;
+}
+
+.judgeTable th {
+  background: var(--ifm-color-emphasis-100);
+  font-weight: 600;
+}
+
+.judgeTable .active {
+  font-weight: 700;
+  background: var(--ifm-color-primary-lightest);
+}
+
+/* レスポンシブ */
+@media (max-width: 600px) {
+  .calc {
+    margin: 1rem 0;
+  }
+  .inputField {
+    font-size: 1rem;
+    max-width: 120px;
+  }
+}

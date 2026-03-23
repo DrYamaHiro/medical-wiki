@@ -1,42 +1,35 @@
-flowchart TD
-    NOTE["※成人 15歳以上 対象"]
-    A["急性発症の上気道症状<br/>鼻汁+咽頭痛+咳嗽"] --> B{"気道緊急評価<br/>stridor・流涎・含み声<br/>三脚位・SpO2≦95%"}
-    B -->|"あり"| C["気道確保・高次医療機関<br/>へ緊急搬送"]
-    B -->|"なし"| D{"Red Flag確認<br/>39度以上4日以上/呼吸困難<br/>項部硬直/開口障害<br/>頸部腫脹/経口摂取困難"}
-    D -->|"項部硬直・意識変容"| C
-    D -->|"頸部腫脹・開口障害<br/>口蓋垂偏位"| E["準緊急: 耳鼻科緊急紹介<br/>深頸部感染・膿瘍除外"]
-    D -->|"その他Red Flag"| F["専門医紹介・入院検討"]
-    D -->|"なし"| G{"Centor基準評価"}
-    G -->|"2点以上"| H["溶連菌迅速検査"]
-    G -->|"0-1点"| I{"インフル/COVID<br/>同時検査キット<br/>※発症12-48h推奨"}
-    H -->|"陽性"| J["溶連菌治療へ<br/>AMPC 10日間"]
-    H -->|"陰性・Centor3-4点"| K["咽頭培養提出<br/>結果待ち+対症療法"]
-    H -->|"陰性・Centor2点"| I
-    K -->|"培養陽性"| J
-    K -->|"培養陰性"| P
-    I -->|"インフル陽性"| L1["抗インフル薬治療へ"]
-    I -->|"COVID陽性"| L2["COVID治療フローへ"]
-    I -->|"陰性/検査不能"| M{"鑑別評価"}
-    M -->|"後頸部リンパ節腫脹<br/>+遷延する咽頭炎"| N["EBV感染疑い<br/>血液検査へ"]
-    M -->|"発熱なし+反復性"| O["アレルギー性鼻炎を考慮"]
-    M -->|"上記非該当"| P["急性上気道炎<br/>臨床診断 → 治療へ"]
+flowchart LR
+    A(["来院"]) --> B{"気道緊急?"}
+    B -->|あり| C["緊急搬送"]
+    B -->|なし| D{"Red Flag?"}
+    D -->|あり| E["専門医紹介"]
+    D -->|なし| F{"Centor?"}
 
-    NOTE ~~~ A
-    style NOTE fill:#e0e0e0,stroke:#999,color:#333
-    style A fill:#4CAF50,stroke:#333,color:#fff
-    style B fill:#FFEB3B,stroke:#333,color:#333
-    style C fill:#f44336,stroke:#333,color:#fff
-    style D fill:#FFEB3B,stroke:#333,color:#333
-    style E fill:#f44336,stroke:#333,color:#fff
-    style F fill:#f44336,stroke:#333,color:#fff
-    style G fill:#FFEB3B,stroke:#333,color:#333
-    style H fill:#FF9800,stroke:#333,color:#fff
-    style I fill:#FF9800,stroke:#333,color:#fff
-    style J fill:#FF9800,stroke:#333,color:#fff
-    style K fill:#FF9800,stroke:#333,color:#fff
-    style L1 fill:#FF9800,stroke:#333,color:#fff
-    style L2 fill:#FF9800,stroke:#333,color:#fff
-    style M fill:#FFEB3B,stroke:#333,color:#333
-    style N fill:#FF9800,stroke:#333,color:#fff
-    style O fill:#4CAF50,stroke:#333,color:#fff
-    style P fill:#4CAF50,stroke:#333,color:#fff
+    F -->|2点以上| G["溶連菌検査"]
+    G -->|陽性| I["AMPC処方"]
+    G -->|陰性| H
+
+    F -->|未満| H["インフル検査"]
+    H -->|陽性| J["各治療へ"]
+
+    H -->|陰性| K{"鑑別?"}
+    K -->|副鼻腔炎| L1["副鼻腔炎へ"]
+    K -->|花粉症| L2["花粉症精査"]
+    K -->|EBV| L3["EBV精査"]
+    K -->|非該当| M(["上気道炎"])
+
+    style A fill:#1565C0,stroke:#212121,color:#fff
+    style C fill:#C62828,stroke:#212121,color:#fff
+    style E fill:#B71C1C,stroke:#212121,color:#fff
+    style B fill:#F9A825,stroke:#212121,color:#000
+    style D fill:#EF6C00,stroke:#212121,color:#fff
+    style F fill:#F9A825,stroke:#212121,color:#000
+    style K fill:#7B1FA2,stroke:#212121,color:#fff
+    style G fill:#E65100,stroke:#212121,color:#fff
+    style H fill:#0277BD,stroke:#212121,color:#fff
+    style I fill:#2E7D32,stroke:#212121,color:#fff
+    style J fill:#2E7D32,stroke:#212121,color:#fff
+    style L1 fill:#6A1B9A,stroke:#212121,color:#fff
+    style L2 fill:#00695C,stroke:#212121,color:#fff
+    style L3 fill:#4527A0,stroke:#212121,color:#fff
+    style M fill:#2E7D32,stroke:#212121,color:#fff

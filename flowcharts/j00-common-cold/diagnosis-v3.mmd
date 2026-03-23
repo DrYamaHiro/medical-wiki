@@ -1,0 +1,28 @@
+flowchart TD
+    A(["上気道症状"]) --> B{"気道緊急?"}
+    B -->|あり| C["緊急搬送"]
+    B -->|なし| D{"Red Flag?"}
+    D -->|あり| E["緊急紹介"]
+    D -->|なし| G{"Centor≧2?"}
+    G -->|はい| H["溶連菌検査"]
+    G -->|いいえ| I["感染症検査"]
+    H -->|陽性| J["AMPC処方"]
+    H -->|陰性| I
+    I -->|陽性| L["各疾患治療"]
+    I -->|陰性| N{"鑑別"}
+    N -->|該当| O["専門精査"]
+    N -->|非該当| P(["上気道炎"])
+
+    style A fill:#1565C0,stroke:#212121,color:#fff
+    style C fill:#C62828,stroke:#212121,color:#fff
+    style E fill:#C62828,stroke:#212121,color:#fff
+    style B fill:#F9A825,stroke:#212121,color:#000
+    style D fill:#F9A825,stroke:#212121,color:#000
+    style G fill:#F9A825,stroke:#212121,color:#000
+    style N fill:#F9A825,stroke:#212121,color:#000
+    style H fill:#E65100,stroke:#212121,color:#fff
+    style I fill:#E65100,stroke:#212121,color:#fff
+    style J fill:#E65100,stroke:#212121,color:#fff
+    style L fill:#E65100,stroke:#212121,color:#fff
+    style O fill:#E65100,stroke:#212121,color:#fff
+    style P fill:#2E7D32,stroke:#212121,color:#fff

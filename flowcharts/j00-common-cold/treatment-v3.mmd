@@ -1,0 +1,22 @@
+flowchart TD
+    T0(["上気道炎"]) --> T1["抗菌薬不要説明"]
+    T1 --> T2["対症療法開始"]
+    T2 --> T3["安静 水分摂取"]
+    T3 --> T4{"3-4日後改善?"}
+    T4 -->|改善| T5(["自然治癒"])
+    T4 -->|改善なし| T6{"二次評価"}
+    T6 -->|膿性鼻汁10日超| T7["副鼻腔炎疑い"]
+    T6 -->|SpO2低下| T8["肺炎疑い"]
+    T6 -->|上記なし| T9["経過観察"]
+    T9 -.->|悪化| T4
+
+    style T0 fill:#2E7D32,stroke:#212121,color:#fff
+    style T1 fill:#2E7D32,stroke:#212121,color:#fff
+    style T2 fill:#E65100,stroke:#212121,color:#fff
+    style T3 fill:#2E7D32,stroke:#212121,color:#fff
+    style T5 fill:#2E7D32,stroke:#212121,color:#fff
+    style T4 fill:#F9A825,stroke:#212121,color:#000
+    style T6 fill:#F9A825,stroke:#212121,color:#000
+    style T7 fill:#E65100,stroke:#212121,color:#fff
+    style T8 fill:#C62828,stroke:#212121,color:#fff
+    style T9 fill:#558B2F,stroke:#212121,color:#fff
