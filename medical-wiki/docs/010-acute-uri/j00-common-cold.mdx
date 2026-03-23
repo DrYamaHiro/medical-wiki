@@ -8,8 +8,7 @@ description: "一般にライノウイルス、コロナウイルス（旧来型
 keywords: ["急性上気道炎", "上気道炎", "急性", "性上", "上気", "気道", "道炎", "急性上", "性上気", "上気道", "気道炎", "J00", "common", "cold"]
 ---
 
-import BrowserOnly from '@docusaurus/BrowserOnly';
-import Mermaid from '@theme/Mermaid';
+import MermaidChart from '@site/src/components/MermaidChart';
 
 <div className="row wiki-main">
 <div className="col col--5 soap-col">
@@ -234,7 +233,7 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 ### 🔀 診断フローチャート
 
-<BrowserOnly>{() => <Mermaid chart={`flowchart TD
+<MermaidChart chart={`flowchart TD
     A[急性発症の上気道症状] --> B[複数症状の確認]
     B --> C[鼻汁+咽頭痛+咳嗽]
     C --> D[Red Flag確認]
@@ -250,11 +249,11 @@ AI解析結果: 異常なし / 異常所見あり: ＿
     M --> N[発熱なし+反復性]
     N -->|該当| O[アレルギー性鼻炎を考慮]
     N -->|非該当| P[急性上気道炎と臨床診断]
-`} />}</BrowserOnly>
+`} />
 
 ### 💊 治療アルゴリズム
 
-<BrowserOnly>{() => <Mermaid chart={`flowchart TD
+<MermaidChart chart={`flowchart TD
     A[急性上気道炎の診断] --> B[対症療法開始]
     B --> C[解熱鎮痛: アセトアミノフェン]
     B --> D[去痰: カルボシステイン]
@@ -269,7 +268,7 @@ AI解析結果: 異常なし / 異常所見あり: ＿
     K --> M[肺炎の除外]
     L -->|疑い| N[抗菌薬追加を検討]
     M -->|疑い| O[胸部X線・専門医紹介]
-`} />}</BrowserOnly>
+`} />
 
 ### 🔗 関連ガイドライン
 
