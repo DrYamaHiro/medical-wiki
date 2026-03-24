@@ -584,7 +584,7 @@ function main() {
   console.log(`📋 Wiki コンテンツ退避: ${Object.keys(savedWiki).length} 件`);
 
   // カテゴリフォルダを再生成（手動管理ディレクトリは保護）
-  const PROTECTED_DIRS = ['900-Calculators'];
+  const PROTECTED_DIRS = ['900-Calculators', '999-Changelog'];
   if (fs.existsSync(DOCS_DIR)) {
     for (const entry of fs.readdirSync(DOCS_DIR, { withFileTypes: true })) {
       if (entry.isDirectory() && !PROTECTED_DIRS.includes(entry.name)) {
