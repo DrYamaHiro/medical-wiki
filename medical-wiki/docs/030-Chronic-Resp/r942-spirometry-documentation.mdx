@@ -1,11 +1,11 @@
 ---
-id: j459-exercise-induced-asthma
-title: "[J45.9] 運動誘発性喘息 / Exercise-Induced Asthma"
-sidebar_label: "[J45.9] 運動誘発性喘息"
+id: r942-spirometry-documentation
+title: "[R94.2] スパイロメトリー所見記載 / Spirometry Documentation"
+sidebar_label: "[R94.2] スパイロメトリー所見記載"
 sidebar_position: 8
 hide_table_of_contents: true
-description: "運動後5-15分で咳嗽・喘鳴・呼吸困難が出現。冷気・乾燥環境で増悪。"
-keywords: ["運動誘発性喘息", "運動", "動誘", "誘発", "発性", "性喘", "喘息", "運動誘", "動誘発", "誘発性", "発性喘", "性喘息", "J45.9", "exercise", "induced", "asthma"]
+description: "Spirometry Documentation"
+keywords: ["スパイロメトリー所見記載", "所見記載", "すぱいろめとりー所見記載", "スパイロメトリー", "すぱいろめとりー", "スパ", "パイ", "イロ", "ロメ", "メト", "トリ", "リー", "ー所", "所見", "見記", "記載", "スパイ", "パイロ", "イロメ", "ロメト", "メトリ", "トリー", "リー所", "ー所見", "所見記", "見記載", "R94.2", "spirometry", "documentation"]
 ---
 
 <div className="row wiki-main">
@@ -77,45 +77,48 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 <h3 className="soap-a">評価</h3>
 
-- **診断根拠:** 運動後5-15分で咳嗽・喘鳴・呼吸困難が出現。冷気・乾燥環境で増悪。
-- **病型区別:** EIB with asthma（基礎喘息あり）とEIB without asthma（喘息なし）を区別。前者はICS/LABAによる基礎治療の最適化を優先。
-- 重症度（ATS/ERS 2013）: 運動負荷試験でFEV1低下率 10-25%軽度、25-50%中等度、50%超重度。
-- **鑑別:** 運動誘発性喉頭閉塞症（EILO）、心因性過換気、不整脈、肥大型心筋症の除外。
+- **肺活量(VC):** ＿ L（予測値 ＿ L、%VC: ＿%）
+- **努力肺活量(FVC):** ＿ L
+- **1秒量(FEV1):** ＿ L（予測値 ＿ L、%FEV1: ＿%）
+- **1秒率(FEV1%):** ＿%
+- **判定:** 正常 / 閉塞性障害 / 拘束性障害 / 混合性障害
+- **閉塞性:** FEV1% 70%未満 → COPD、喘息等を精査
+- **拘束性:** %VC 80%未満 → 間質性肺疾患、神経筋疾患等を精査
+- **フローボリューム曲線:** 正常型 / 閉塞型（下に凸）/ 拘束型（全体縮小）
 
 <h3 className="soap-p">方針・処方</h3>
 
-- 運動前にSABA吸入で予防。持続例・基礎に喘息がある場合はICS/LABAを導入。
-- ウォーミングアップ（10-15分の段階的負荷）の指導。不応期の活用。
+- 判定に応じた精査計画を記載。
 
 #### 処方・アクション
 
-**運動前予防セット**
+**閉塞性障害精査セット**
 
-- <span className="med-id">[Rx-Resp-SABA-Sal]</span> サルブタモール（運動前予防）
-- サルタノールインヘラー100μg 運動15-30分前に2吸入 ；運動誘発性喘息の予防
-- <span className="med-id">[Rx-Resp-Crom]</span> インタール（運動前予防・代替）
-- インタール吸入液（クロモグリク酸Na）運動15-20分前に1アンプル吸入 ；SABA代替
+- <span className="med-id">[Rx-Resp-BDR]</span> 気管支拡張薬吸入後再検（気道可逆性試験）
+- サルブタモール200-400μg吸入後15-20分で再検 ；COPD vs 喘息の鑑別
+- <span className="med-id">[Rx-Resp-FeNO]</span> 呼気NO検査
+- 呼気一酸化窒素(FeNO)測定 ；好酸球性気道炎症の評価
 
-**持続例: ICS/LABA導入セット**
+**拘束性障害精査セット**
 
-- <span className="med-id">[Rx-Resp-ICS-LABA-Sym]</span> シムビコート
-- シムビコートタービュヘイラー（160/4.5μg） 1回1吸入 1日2回 朝夕 *— 喘息コントロール*
-- <span className="med-id">[Rx-Resp-LTRA-Mon]</span> モンテルカスト（代替/追加）
-- モンテルカスト錠10mg 1回1錠 1日1回 就寝前 28日分 *— SABA困難時の代替予防*
+- <span className="med-id">[Img-Resp-HRCT]</span> 胸部HRCT
+- 胸部高分解能CT ；間質性肺疾患の評価
 
 #### 指導・計画
 
-- **再診目安:** 治療開始2-4週後に効果判定。運動時の症状日誌を記録。
-- **運動選択:** 水泳・吹奏楽など高湿度環境での運動は発作リスクが低く推奨。
-- **寒冷時対策:** マスクやネックウォーマー等で気道を保護し、冷気の直接吸入を避ける。
+- **再診目安:** 精査結果に応じて1-4週後。
+- 閉塞性障害確認時は禁煙指導を併せて実施。
+- 拘束性障害確認時は呼吸器専門医への紹介を検討。
 
 <div className="ap-dr-advice">
 
 > 💡 **Dr.Advice**
 >
-> **[学校生活]** 学校生活管理指導表の記載が必要。部活動参加可否の判断を行い、適切な運動制限と予防措置を指導する。
+> **[手技]** 最低3回の測定で再現性を確認（FVCとFEV1の最大値の差が150mL以内）。
 >
-> **[ウォーミングアップ]** 10-15分の軽い有酸素運動で不応期（refractory period）を誘導すると、その後の激しい運動で発作が起きにくくなる。
+> **[COPD]** FEV1% 70%未満のみではCOPD確定できない。気管支拡張薬吸入後の再検が必要。
+>
+> **[喘息]** 喘息が疑われる場合は気道可逆性試験（β2刺激薬吸入前後のFEV1 12%以上かつ200mL以上の改善）を実施せよ。
 
 </div>
 
@@ -124,7 +127,7 @@ AI解析結果: 異常なし / 異常所見あり: ＿
 
 <div className="wiki-col">
 
-<ImageUploader docId="j459-exercise-induced-asthma" />
+<ImageUploader docId="r942-spirometry-documentation" />
 
 {/* WIKI_EDIT_START */}
 ## 📖 詳細解説

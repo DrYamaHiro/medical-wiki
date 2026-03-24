@@ -1,0 +1,149 @@
+---
+id: r943-ecg-abnormality-follow-up
+title: "[R94.3] 心電図異常（健診フォロー） / ECG Abnormality Follow-up"
+sidebar_label: "[R94.3] 心電図異常（健診フォロー）"
+sidebar_position: 7
+hide_table_of_contents: true
+description: "ECG Abnormality Follow-up"
+keywords: ["心電図異常（健診フォロー）", "心電図異常", "健診フォロー", "健診", "心電図異常（健診ふぉろー）", "フォロー", "ふぉろー", "心電", "電図", "図異", "異常", "常健", "診フ", "フォ", "ォロ", "ロー", "心電図", "電図異", "図異常", "異常健", "常健診", "健診フ", "診フォ", "フォロ", "ォロー", "R94.3", "ecg", "abnormality", "follow", "up"]
+---
+
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
+
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
+<h3 className="soap-s">主訴・ROS</h3>
+
+目的: 特定健診 / 雇用時健診 / 診断書作成 / 抗体検査 / 予防接種相談
+提出先: 会社 / 学校 / 保健所 / 保険会社 / 警察署[銃砲]
+期限: ＿月＿日までに必要
+気になる症状: 特になし / ＿
+既往歴: ＿
+
+**生活習慣**
+
+喫煙: なし / あり ＿本/日 × ＿年
+飲酒: なし / ＿合/日
+運動: なし / 週2回以上
+
+<h3 className="soap-o">所見・検査</h3>
+
+身長: ＿cm, 体重: ＿kg, BMI: ＿, 腹囲: ＿cm
+血圧: ＿/＿ mmHg, 脈拍: ＿ bpm
+視力: 右 ＿ / 左 ＿ 矯正 / 裸眼
+聴力(1000Hz): 右 ＿ / 左 ＿, (4000Hz): 右 ＿ / 左 ＿
+
+**診察**
+
+心音・呼吸音: 異常なし、貧血: 無 / 有
+
+**検査実施**
+
+胸部X線: 異常なし / ＿
+心電図: 正常洞調律 / ＿
+尿検査: 蛋白(＿) 糖(＿) 潜血(＿)
+採血: 実施済 / 項目確認 ；結果は後日
+
+<h3 className="soap-ns">診察前対応</h3>
+
+*（データなし）*
+
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[結果渡し]** 当院の血液検査は外注（SRL）であるため、診断書や健診結果の即日発行は不可能である。「結果が出るまで数日かかります」と受付段階で必ず説明し、トラブルを回避せよ。
+>
+> **[健診の意義]** 健診は「異常を見つける」だけでなく、「自分の体を知り、生活習慣を見直すきっかけ」であることを伝え、結果説明の受診を促せ。
+
+</div>
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
+<h3 className="soap-a">評価</h3>
+
+- 健診で指摘された心電図異常の二次精査。
+- **所見:** ST変化 / T波異常 / 不整脈 / QT延長 / 左室肥大 / 右脚ブロック / 左脚ブロック / WPW / Brugada型 / その他
+- **精査内容:** 安静時12誘導心電図（再検）、心エコー、Holter心電図、運動負荷心電図（必要時）
+- **判定:** 異常なし（経過観察）/ 要精査 / 要治療
+
+<h3 className="soap-p">方針・処方</h3>
+
+- 右脚ブロック単独は多くの場合良性だが、左脚ブロック・ST変化・Brugada型は循環器紹介。
+- QTc 500ms以上は薬剤性の除外と循環器紹介。
+
+#### 処方・アクション
+
+**精査セット**
+
+- <span className="med-id">[Exam-ECG-12lead]</span> 安静時12誘導心電図（再検）
+- 健診心電図との比較読影
+- <span className="med-id">[Exam-Echo-TTE]</span> 心エコー検査
+- 心機能・壁運動・弁膜症・心室肥大の評価
+- <span className="med-id">[Exam-ECG-Holter]</span> Holter心電図
+- 不整脈の頻度・種類・症状との関連を評価（必要時）
+- <span className="med-id">[Exam-ECG-ExTol]</span> 運動負荷心電図
+- ST変化の再現性・虚血評価（必要時）
+
+**循環器紹介**
+
+- <span className="med-id">[Ref-Cardio-ECG]</span> 循環器専門医紹介
+- 左脚ブロック、ST変化、Brugada型、QTc 500ms以上 → 循環器紹介
+
+#### 指導・計画
+
+- **再診目安:** 精査結果に応じて1-4週後。
+- 右脚ブロック単独で心エコー正常であれば年1回の心電図フォローで可。
+- QT延長を認めた場合は内服薬リストを確認し、被疑薬（抗精神病薬、マクロライド等）の中止を検討。
+- Brugada型心電図を認めた場合は必ず循環器専門医へ紹介。家族歴（突然死）の聴取を行う。
+
+<div className="ap-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[完全右脚ブロック]** 若年者の完全右脚ブロックは正常変異が多いが、心エコーでASDや右心負荷を除外せよ。
+>
+> **[左脚ブロック]** 左脚ブロックは器質的心疾患を示唆する。心エコー必須。
+>
+> **[Brugada]** coved型（タイプ1）ST上昇は致死性不整脈のリスク。循環器へ必ず紹介せよ。
+>
+> **[QT延長]** QTc 500ms以上は薬剤性（抗精神病薬、マクロライド等）の除外が最優先。被疑薬中止で改善するか確認せよ。
+
+</div>
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="wiki-col">
+
+<ImageUploader docId="r943-ecg-abnormality-follow-up" />
+
+{/* WIKI_EDIT_START */}
+## 📖 詳細解説
+
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
+### 病態生理
+
+*（病態生理を記述）*
+
+### 診断基準・鑑別疾患
+
+*（診断基準・鑑別疾患を記述）*
+
+### エビデンス・ガイドライン推奨
+
+*（エビデンス・推奨グレードを記述）*
+
+### 🔗 関連ガイドライン
+
+- [厚生労働省 特定健康診査](https://www.mhlw.go.jp/)
+{/* WIKI_EDIT_END */}
+
+</div>
+</div>
+</div>
