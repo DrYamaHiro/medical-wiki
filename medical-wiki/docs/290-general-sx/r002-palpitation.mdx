@@ -1,0 +1,171 @@
+---
+id: r002-palpitation
+title: "[R00.2] 動悸 / Palpitation"
+sidebar_label: "[R00.2] 動悸"
+sidebar_position: 3
+hide_table_of_contents: true
+description: "Palpitation"
+keywords: ["動悸", "R00.2", "palpitation"]
+---
+
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
+
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
+<h3 className="soap-s">主訴・ROS</h3>
+
+**全身症状**
+
+発熱: なし / 微熱 / 高熱 / 弛張熱, 期間: ＿週間
+倦怠感: なし / 朝強い / 夕方強い / 一日中 / 活動後増悪
+体重変化: なし / 減少: ＿kg[＿ヶ月で] ；意図しない減少はRedFlag
+その他: 寝汗 / 関節痛 / 皮疹
+
+**浮腫・リンパ節**
+
+浮腫: なし / 下肢 / 顔面 / 全身, 左右差: 有 / 無
+しこり: なし / 頸部 / 腋窩 / 鼠径, 痛み: 有 / 無
+
+**背景**
+
+内服薬: なし / あり: 薬剤熱・浮腫の被疑薬確認
+接触歴: 渡航歴 / 動物接触 / 生食 / 性交渉 / 結核接触
+既往歴: 癌 / 結核 / 膠原病家族歴
+
+<h3 className="soap-o">所見・検査</h3>
+
+バイタル: BT: ＿℃
+
+**頭頸部**
+
+眼瞼結膜: 正常 / 貧血, 側頭動脈: 正常 / 怒張 / 圧痛
+リンパ節: 触知せず / 軟・可動 / 硬・癒着 / 圧痛あり
+Virchow節: 触知 / なし ；左鎖骨上窩
+甲状腺: 正常 / 腫大
+
+**胸腹部・四肢**
+
+心雑音: なし / あり, 肝脾腫: なし / あり
+浮腫: Pitting / Non-pitting, 皮疹: なし / あり
+
+**院内迅速検査**
+
+尿検査
+- 蛋白(＿) 潜血(＿)
+末梢血一般(CBC), CRP
+- WBC ＿, CRP ＿, HbA1c ＿, 血糖 ＿
+
+**画像**
+
+胸部単純X線検査
+- **所見:** 異常なし / 肺門リンパ節腫脹 / 胸水
+- **AI解析結果:** 異常なし / 異常所見あり: ＿
+
+<h3 className="soap-ns">診察前対応</h3>
+
+**院内迅速検査**
+
+- <span className="med-id">[Lab-Gen-Urine]</span> 尿定性
+- <span className="med-id">[Lab-Gen-CBC_CRP]</span> 末梢血一般(CBC), CRP
+
+**画像**
+
+- <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
+
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[Red Flags]** 「意図しない体重減少」「寝汗（結核・リンパ腫）」「鎖骨上窩リンパ節腫脹（Virchow転移）」「側頭動脈の圧痛（巨細胞性動脈炎）」は危険信号。徹底的な精査が必要。
+>
+> **[設備制約]** 当院にはCT・エコーがないため、深部リンパ節、膿瘍、固形腫瘍の評価はできない。Red Flagsがある場合や、初期スクリーニングで原因不明の場合は、抱え込まずに総合病院へ紹介せよ。
+
+</div>
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
+<h3 className="soap-a">評価</h3>
+
+- 鑑別診断:
+1) 不整脈: 心房細動、期外収縮（上室性/心室性）、PSVT、WPW症候群。
+2) 頻脈性（二次性）: 甲状腺機能亢進症、貧血、脱水、発熱。
+3) 心因性: パニック障害、全般性不安障害。
+4) 薬剤性: β刺激薬、カフェイン、テオフィリン。
+- **精査:** 12誘導心電図、Holter心電図、甲状腺機能（TSH, FT4）、CBC、BNP。
+
+<h3 className="soap-p">方針・処方</h3>
+
+- 心電図で不整脈を確認し、該当疾患の治療へ移行。
+- 器質的心疾患除外のため心エコー検討（当院不可 → 循環器へ紹介）。
+- 頻脈性は原因治療を優先（甲状腺、貧血、脱水等）。
+- 心因性の場合は安心保証 + 必要に応じて精神科紹介。
+
+#### 処方・アクション
+
+**検査セット**
+
+- <span className="med-id">[Rx-Gen-Palp-ECG]</span> 12誘導心電図（安静時）
+- 全例に施行
+- <span className="med-id">[Rx-Gen-Palp-Holter]</span> Holter心電図
+- 非発作時の12誘導心電図が正常の場合、24時間記録で不整脈を捕捉
+- <span className="med-id">[Rx-Gen-Palp-Lab]</span> 血液検査
+- TSH, FT4, CBC, BNP ；二次性頻脈の除外
+
+**紹介**
+
+- <span className="med-id">[Doc-Gen-Referral]</span> 診療情報提供書（循環器内科へ: 心エコー精査、不整脈精査）
+
+#### 指導・計画
+
+- **Holter装着時の指導:** 「動悸を感じたらイベントボタンを押す」よう説明。
+- カフェイン・アルコール・睡眠不足の確認と生活指導。
+- **再診目安:** 検査結果返却時（1-2週間後）。
+
+<div className="ap-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[Red Flag]** 失神を伴う動悸、労作時の動悸＋胸痛、持続する頻脈（HR 150以上）は致死性不整脈の可能性がある。速やかに循環器へ紹介せよ。
+>
+> **[Holter]** 非発作時の12誘導心電図では異常を捉えられないことが多い。「動悸を感じたらイベントボタンを押す」よう指導してHolter検査を施行せよ。
+>
+> **[カフェイン]** 動悸の訴えでまず確認すべきはカフェイン摂取量。エナジードリンク多飲は若年者の動悸の主因。問診で必ず確認せよ。
+
+</div>
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="wiki-col">
+
+<ImageUploader docId="r002-palpitation" />
+
+{/* WIKI_EDIT_START */}
+## 📖 詳細解説
+
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
+### 病態生理
+
+*（病態生理を記述）*
+
+### 診断基準・鑑別疾患
+
+*（診断基準・鑑別疾患を記述）*
+
+### エビデンス・ガイドライン推奨
+
+*（エビデンス・推奨グレードを記述）*
+
+### 🔗 関連ガイドライン
+
+- [日本内科学会](https://www.naika.or.jp/)
+{/* WIKI_EDIT_END */}
+
+</div>
+</div>
+</div>

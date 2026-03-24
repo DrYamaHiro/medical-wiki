@@ -1,0 +1,170 @@
+---
+id: r55-syncope
+title: "[R55] 失神・意識消失 / Syncope"
+sidebar_label: "[R55] 失神・意識消失"
+sidebar_position: 4
+hide_table_of_contents: true
+description: "Syncope"
+keywords: ["失神・意識消失", "失神", "意識消失", "神意", "意識", "識消", "消失", "失神意", "神意識", "意識消", "識消失", "R55", "syncope"]
+---
+
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
+
+<details className="so-details">
+<summary className="so-summary">📋 主訴・所見・診察前対応</summary>
+
+<h3 className="soap-s">主訴・ROS</h3>
+
+**全身症状**
+
+発熱: なし / 微熱 / 高熱 / 弛張熱, 期間: ＿週間
+倦怠感: なし / 朝強い / 夕方強い / 一日中 / 活動後増悪
+体重変化: なし / 減少: ＿kg[＿ヶ月で] ；意図しない減少はRedFlag
+その他: 寝汗 / 関節痛 / 皮疹
+
+**浮腫・リンパ節**
+
+浮腫: なし / 下肢 / 顔面 / 全身, 左右差: 有 / 無
+しこり: なし / 頸部 / 腋窩 / 鼠径, 痛み: 有 / 無
+
+**背景**
+
+内服薬: なし / あり: 薬剤熱・浮腫の被疑薬確認
+接触歴: 渡航歴 / 動物接触 / 生食 / 性交渉 / 結核接触
+既往歴: 癌 / 結核 / 膠原病家族歴
+
+<h3 className="soap-o">所見・検査</h3>
+
+バイタル: BT: ＿℃
+
+**頭頸部**
+
+眼瞼結膜: 正常 / 貧血, 側頭動脈: 正常 / 怒張 / 圧痛
+リンパ節: 触知せず / 軟・可動 / 硬・癒着 / 圧痛あり
+Virchow節: 触知 / なし ；左鎖骨上窩
+甲状腺: 正常 / 腫大
+
+**胸腹部・四肢**
+
+心雑音: なし / あり, 肝脾腫: なし / あり
+浮腫: Pitting / Non-pitting, 皮疹: なし / あり
+
+**院内迅速検査**
+
+尿検査
+- 蛋白(＿) 潜血(＿)
+末梢血一般(CBC), CRP
+- WBC ＿, CRP ＿, HbA1c ＿, 血糖 ＿
+
+**画像**
+
+胸部単純X線検査
+- **所見:** 異常なし / 肺門リンパ節腫脹 / 胸水
+- **AI解析結果:** 異常なし / 異常所見あり: ＿
+
+<h3 className="soap-ns">診察前対応</h3>
+
+**院内迅速検査**
+
+- <span className="med-id">[Lab-Gen-Urine]</span> 尿定性
+- <span className="med-id">[Lab-Gen-CBC_CRP]</span> 末梢血一般(CBC), CRP
+
+**画像**
+
+- <span className="med-id">[Img-Gen-ChestXP]</span> 胸部単純X線撮影
+
+<div className="so-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[Red Flags]** 「意図しない体重減少」「寝汗（結核・リンパ腫）」「鎖骨上窩リンパ節腫脹（Virchow転移）」「側頭動脈の圧痛（巨細胞性動脈炎）」は危険信号。徹底的な精査が必要。
+>
+> **[設備制約]** 当院にはCT・エコーがないため、深部リンパ節、膿瘍、固形腫瘍の評価はできない。Red Flagsがある場合や、初期スクリーニングで原因不明の場合は、抱え込まずに総合病院へ紹介せよ。
+
+</div>
+
+</details>
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
+<h3 className="soap-a">評価</h3>
+
+- 3大分類による鑑別:
+1) 反射性（血管迷走神経性）: 最多（約60%）。長時間立位、疼痛、排尿後等の誘因。前駆症状（眼前暗黒感、悪心、発汗）あり。
+2) 起立性低血圧: 薬剤性（降圧薬、利尿薬、α遮断薬）、自律神経障害（糖尿病性）。臥位→立位で収縮期血圧20mmHg以上低下。
+3) 心原性（致死性）: 大動脈弁狭窄症、肥大型心筋症、Brugada症候群、QT延長症候群、VT/VF。
+- **リスク評価:** EGSYS score等で心原性リスクを層別化。
+
+<h3 className="soap-p">方針・処方</h3>
+
+- 心電図は全例必須。
+- 心原性を示唆する所見（労作時失神、胸痛先行、心雑音、心電図異常、家族歴の突然死）→ 循環器緊急紹介。
+- 反射性 → 誘因回避指導（長時間立位の回避、前駆症状での座位・臥位）。
+- 起立性 → 原因薬剤の調整、飲水・塩分摂取指導。
+
+#### 処方・アクション
+
+**検査セット（全例必須）**
+
+- <span className="med-id">[Rx-Gen-Sync-ECG]</span> 12誘導心電図
+- 全例に施行 ；Brugada型ST上昇、QT延長、WPW、房室ブロック等を確認
+- <span className="med-id">[Rx-Gen-Sync-Lab]</span> 血液検査
+- CBC, 血糖, 電解質, BNP ；貧血・低血糖・電解質異常・心不全の除外
+- <span className="med-id">[Rx-Gen-Sync-Ortho]</span> 起立試験
+- 臥位10分安静後→立位3分で血圧・脈拍測定 ；起立性低血圧の評価
+
+**紹介**
+
+- <span className="med-id">[Doc-Gen-Referral]</span> 診療情報提供書（循環器内科へ: 心原性失神の精査）
+
+#### 指導・計画
+
+- **反射性失神:** 誘因回避、前駆症状を感じたら即座に座位・臥位をとるよう指導。
+- **運転制限の説明:** 心原性失神では6ヶ月の運転制限（道交法）。
+- **再診目安:** 検査結果返却時。心原性が否定できない場合は速やかに紹介。
+
+<div className="ap-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[心原性除外が最優先]** 失神の85%は良性だが、心原性失神は1年死亡率20-30%。「たかが失神」と軽視するな。心電図は全例必須。
+>
+> **[運転]** 失神患者には一時的な運転制限の説明が必要（道交法）。心原性失神では6ヶ月の運転制限。説明と記録を怠るな。
+>
+> **[設備制約]** 当院にはエコー・Holter以上の精査はできない。Brugada型心電図、QT延長、労作時失神は循環器専門施設へ直ちに紹介せよ。
+
+</div>
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="wiki-col">
+
+<ImageUploader docId="r55-syncope" />
+
+{/* WIKI_EDIT_START */}
+## 📖 詳細解説
+
+*最新のガイドラインや病態生理、エビデンスをここに追記できます。ページ下部の「このページを編集」からGitHubで直接編集できます。*
+
+### 病態生理
+
+*（病態生理を記述）*
+
+### 診断基準・鑑別疾患
+
+*（診断基準・鑑別疾患を記述）*
+
+### エビデンス・ガイドライン推奨
+
+*（エビデンス・推奨グレードを記述）*
+
+### 🔗 関連ガイドライン
+
+- [日本内科学会](https://www.naika.or.jp/)
+{/* WIKI_EDIT_END */}
+
+</div>
+</div>
+</div>
