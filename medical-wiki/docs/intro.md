@@ -120,7 +120,7 @@ sidebar_position: 1
 - **臨床計算ツール9種**（CPI、久山町スコア、eGFR、BMI 等）
 - 画像アップロード機能、検索機能強化
 
-**[変更履歴の詳細はこちら →](./999-Changelog/changelog)**
+**[変更履歴の詳細はこちら →](/medical-wiki/changelog)**
 
 ---
 

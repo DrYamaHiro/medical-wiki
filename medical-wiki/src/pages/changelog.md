@@ -1,7 +1,5 @@
 ---
-id: changelog
 title: "変更履歴"
-displayed_sidebar: null
 ---
 
 # 変更履歴
