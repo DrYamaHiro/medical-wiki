@@ -1,0 +1,1714 @@
+{
+  "keywords": [
+    {
+      "term": "急性上気道炎",
+      "aliases": ["上気道炎", "かぜ", "風邪", "感冒", "かぜ症候群", "URI", "common cold"],
+      "target_docId": "j00-common-cold"
+    },
+    {
+      "term": "インフルエンザ",
+      "aliases": ["インフルエンザA型", "influenza", "Flu"],
+      "target_docId": "j10-influenza-a"
+    },
+    {
+      "term": "インフルエンザB型",
+      "aliases": ["influenza B"],
+      "target_docId": "j11-influenza-b"
+    },
+    {
+      "term": "新型コロナウイルス感染症",
+      "aliases": ["COVID-19", "コロナ", "SARS-CoV-2", "新型コロナ"],
+      "target_docId": "u071-covid-19"
+    },
+    {
+      "term": "溶連菌性咽頭炎",
+      "aliases": ["溶連菌", "GAS咽頭炎", "A群溶血性連鎖球菌", "strep throat"],
+      "target_docId": "j020-strep-throat"
+    },
+    {
+      "term": "急性咽頭炎",
+      "aliases": ["咽頭炎", "のどの痛み", "咽頭痛"],
+      "target_docId": "j029-acute-pharyngitis"
+    },
+    {
+      "term": "急性扁桃炎",
+      "aliases": ["扁桃炎", "扁桃腫大", "tonsillitis"],
+      "target_docId": "j039-acute-tonsillitis"
+    },
+    {
+      "term": "急性喉頭炎",
+      "aliases": ["喉頭炎", "声がれ", "嗄声"],
+      "target_docId": "j040-acute-laryngitis"
+    },
+    {
+      "term": "扁桃周囲膿瘍",
+      "aliases": ["peritonsillar abscess"],
+      "target_docId": "j36-peritonsillar-abscess"
+    },
+    {
+      "term": "急性喉頭蓋炎",
+      "aliases": ["喉頭蓋炎", "epiglottitis"],
+      "target_docId": "j051-acute-epiglottitis"
+    },
+    {
+      "term": "伝染性単核球症",
+      "aliases": ["EBウイルス", "EB", "infectious mononucleosis", "kissing disease"],
+      "target_docId": "b279-infectious-mononucleosis"
+    },
+    {
+      "term": "アデノウイルス",
+      "aliases": ["adenovirus", "プール熱", "咽頭結膜熱"],
+      "target_docId": "b341-adenovirus"
+    },
+    {
+      "term": "細菌性肺炎",
+      "aliases": ["肺炎", "bacterial pneumonia", "市中肺炎", "CAP"],
+      "target_docId": "j159-bacterial-pneumonia"
+    },
+    {
+      "term": "気管支肺炎",
+      "aliases": ["bronchopneumonia"],
+      "target_docId": "j180-bronchopneumonia"
+    },
+    {
+      "term": "マイコプラズマ肺炎",
+      "aliases": ["マイコプラズマ", "Mycoplasma pneumoniae", "異型肺炎"],
+      "target_docId": "j157-mycoplasma-pneumonia"
+    },
+    {
+      "term": "誤嚥性肺炎",
+      "aliases": ["aspiration pneumonia", "嚥下性肺炎"],
+      "target_docId": "j690-aspiration-pneumonia"
+    },
+    {
+      "term": "急性気管支炎",
+      "aliases": ["気管支炎", "acute bronchitis"],
+      "target_docId": "j209-acute-bronchitis"
+    },
+    {
+      "term": "非結核性抗酸菌症",
+      "aliases": ["NTM", "MAC症", "非定型抗酸菌症"],
+      "target_docId": "a310-ntm"
+    },
+    {
+      "term": "間質性肺炎",
+      "aliases": ["IP", "interstitial pneumonia", "肺線維症"],
+      "target_docId": "j849-interstitial-pneumonia"
+    },
+    {
+      "term": "A-DROP",
+      "aliases": ["A-DROPスコア", "肺炎重症度", "市中肺炎重症度"],
+      "target_docId": "adrop"
+    },
+    {
+      "term": "気管支喘息",
+      "aliases": ["喘息", "asthma", "BA", "ゼーゼー", "喘鳴", "Wheezes"],
+      "target_docId": "j459-asthma-mild"
+    },
+    {
+      "term": "気管支喘息（中等症）",
+      "aliases": ["中等症喘息"],
+      "target_docId": "j459-asthma-moderate"
+    },
+    {
+      "term": "運動誘発性喘息",
+      "aliases": ["EIA", "exercise-induced asthma", "運動誘発型気管支攣縮"],
+      "target_docId": "j459-exercise-induced-asthma"
+    },
+    {
+      "term": "喘息発作重積",
+      "aliases": ["status asthmaticus", "喘息重積"],
+      "target_docId": "j46-status-asthmaticus"
+    },
+    {
+      "term": "COPD",
+      "aliases": ["慢性閉塞性肺疾患", "肺気腫", "慢性気管支炎", "GOLD"],
+      "target_docId": "j449"
+    },
+    {
+      "term": "咳喘息",
+      "aliases": ["cough variant asthma", "CVA"],
+      "target_docId": "j459-cough-variant-asthma"
+    },
+    {
+      "term": "遷延性咳嗽",
+      "aliases": ["慢性咳嗽", "長引く咳", "chronic cough"],
+      "target_docId": "r05-chronic-cough"
+    },
+    {
+      "term": "陳旧性肺結核",
+      "aliases": ["肺結核既往", "old TB", "LTBI"],
+      "target_docId": "b909-old-pulmonary-tuberculosis"
+    },
+    {
+      "term": "スパイロメトリー",
+      "aliases": ["肺活量", "肺機能検査", "FEV1", "FVC", "%VC", "1秒率", "PEF", "ピークフロー"],
+      "target_docId": "r942-spirometry-documentation"
+    },
+    {
+      "term": "ニコチン依存症",
+      "aliases": ["禁煙外来", "チャンピックス", "バレニクリン", "ニコチンパッチ", "TDS", "ブリンクマン指数"],
+      "target_docId": "f172-nicotine-dependence-induction"
+    },
+    {
+      "term": "TDS",
+      "aliases": ["Tobacco Dependence Screener", "たばこ依存症スクリーニング"],
+      "target_docId": "tds"
+    },
+    {
+      "term": "アレルギー性鼻炎",
+      "aliases": ["花粉症", "hay fever", "allergic rhinitis", "季節性鼻炎"],
+      "target_docId": "j301-j304-allergic-rhinitis"
+    },
+    {
+      "term": "通年性アレルギー性鼻炎",
+      "aliases": ["ダニアレルギー", "ハウスダスト", "perennial rhinitis"],
+      "target_docId": "j303-perennial-allergic-rhinitis"
+    },
+    {
+      "term": "血管運動性鼻炎",
+      "aliases": ["寒暖差アレルギー", "vasomotor rhinitis"],
+      "target_docId": "j300-vasomotor-rhinitis"
+    },
+    {
+      "term": "鼻中隔弯曲症",
+      "aliases": ["鼻中隔湾曲"],
+      "target_docId": "j342-nasal-septal-deviation"
+    },
+    {
+      "term": "鼻出血",
+      "aliases": ["鼻血", "epistaxis"],
+      "target_docId": "r040-epistaxis"
+    },
+    {
+      "term": "急性副鼻腔炎",
+      "aliases": ["副鼻腔炎", "蓄膿", "sinusitis"],
+      "target_docId": "j019-acute-sinusitis"
+    },
+    {
+      "term": "慢性副鼻腔炎",
+      "aliases": ["慢性蓄膿", "後鼻漏", "chronic sinusitis"],
+      "target_docId": "j329-chronic-sinusitis"
+    },
+    {
+      "term": "舌下免疫療法（スギ）",
+      "aliases": ["シダキュア", "SLIT", "スギ花粉舌下免疫"],
+      "target_docId": "j301-slit-cedar-induction"
+    },
+    {
+      "term": "重症花粉症（ゾレア）",
+      "aliases": ["ゾレア", "オマリズマブ", "Xolair", "重症スギ花粉症"],
+      "target_docId": "j301-severe-cedar-pollinosis-xolair-induction"
+    },
+    {
+      "term": "急性胃腸炎",
+      "aliases": ["胃腸炎", "嘔吐下痢", "ウイルス性胃腸炎", "感染性胃腸炎"],
+      "target_docId": "a09-infectious-gastroenteritis"
+    },
+    {
+      "term": "ノロウイルス",
+      "aliases": ["norovirus", "ノロ"],
+      "target_docId": "a081-norovirus-gastroenteritis"
+    },
+    {
+      "term": "カンピロバクター腸炎",
+      "aliases": ["カンピロバクター", "Campylobacter"],
+      "target_docId": "a045-campylobacter-enteritis"
+    },
+    {
+      "term": "細菌性胃腸炎",
+      "aliases": ["食中毒", "食あたり"],
+      "target_docId": "a059-bacterial-gastroenteritis"
+    },
+    {
+      "term": "GERD",
+      "aliases": ["胃食道逆流症", "逆流性食道炎", "胸やけ", "呑酸"],
+      "target_docId": "k210-k219-gerd"
+    },
+    {
+      "term": "機能性ディスペプシア",
+      "aliases": ["FD", "functional dyspepsia", "PDS", "EPS", "食後愁訴症候群", "心窩部痛症候群"],
+      "target_docId": "k30-functional-dyspepsia-fd"
+    },
+    {
+      "term": "急性胃炎",
+      "aliases": ["AGML", "心窩部不快感", "胃が痛い"],
+      "target_docId": "k291-acute-gastritis"
+    },
+    {
+      "term": "慢性胃炎",
+      "aliases": ["萎縮性胃炎"],
+      "target_docId": "k295-chronic-gastritis"
+    },
+    {
+      "term": "胃十二指腸潰瘍",
+      "aliases": ["胃潰瘍", "十二指腸潰瘍", "消化性潰瘍", "GU", "DU"],
+      "target_docId": "k25-k26-gastric-duodenal-ulcer"
+    },
+    {
+      "term": "ヘリコバクター・ピロリ",
+      "aliases": ["ピロリ菌", "H.pylori", "ピロリ除菌"],
+      "target_docId": "b968-hpylori"
+    },
+    {
+      "term": "FSSG",
+      "aliases": ["FSSGスコア", "逆流症状スコア"],
+      "target_docId": "fssg"
+    },
+    {
+      "term": "過敏性腸症候群",
+      "aliases": ["IBS", "irritable bowel syndrome", "RomeⅣ"],
+      "target_docId": "k589-ibs"
+    },
+    {
+      "term": "慢性便秘症",
+      "aliases": ["便秘", "constipation"],
+      "target_docId": "k590-chronic-constipation"
+    },
+    {
+      "term": "感染性腸炎",
+      "aliases": ["infectious colitis"],
+      "target_docId": "a049-infectious-colitis"
+    },
+    {
+      "term": "腸管出血性大腸菌",
+      "aliases": ["EHEC", "O157", "HUS", "溶血性尿毒症症候群"],
+      "target_docId": "a043-ehec-o157"
+    },
+    {
+      "term": "憩室炎",
+      "aliases": ["大腸憩室炎", "diverticulitis"],
+      "target_docId": "k573-diverticulitis"
+    },
+    {
+      "term": "虚血性腸炎",
+      "aliases": ["ischemic colitis"],
+      "target_docId": "k559-ischemic-colitis"
+    },
+    {
+      "term": "内痔核",
+      "aliases": ["いぼ痔", "痔核"],
+      "target_docId": "i842-internal-hemorrhoids"
+    },
+    {
+      "term": "外痔核",
+      "aliases": ["切れ痔由来外痔核"],
+      "target_docId": "i845-external-hemorrhoids"
+    },
+    {
+      "term": "裂肛",
+      "aliases": ["切れ痔", "anal fissure"],
+      "target_docId": "k602-anal-fissure"
+    },
+    {
+      "term": "肛門周囲膿瘍",
+      "aliases": ["perianal abscess", "痔瘻"],
+      "target_docId": "k610-perianal-abscess"
+    },
+    {
+      "term": "大腸ポリープ",
+      "aliases": ["colon polyp"],
+      "target_docId": "k635-colon-polyp"
+    },
+    {
+      "term": "脂肪肝",
+      "aliases": ["NAFLD", "MASLD", "fatty liver"],
+      "target_docId": "k760-fatty-liver"
+    },
+    {
+      "term": "アルコール性肝障害",
+      "aliases": ["アルコール性肝炎", "alcoholic liver disease"],
+      "target_docId": "k70-alcoholic-liver-disease"
+    },
+    {
+      "term": "慢性肝炎",
+      "aliases": ["B型肝炎", "C型肝炎", "HBV", "HCV", "B肝", "C肝"],
+      "target_docId": "k73-chronic-hepatitis-b-c"
+    },
+    {
+      "term": "肝硬変",
+      "aliases": ["liver cirrhosis", "LC"],
+      "target_docId": "k746-liver-cirrhosis"
+    },
+    {
+      "term": "FIB-4",
+      "aliases": ["FIB-4 index", "肝線維化マーカー"],
+      "target_docId": "fib4"
+    },
+    {
+      "term": "胆石症",
+      "aliases": ["胆石", "cholelithiasis"],
+      "target_docId": "k802-cholelithiasis"
+    },
+    {
+      "term": "胆嚢炎",
+      "aliases": ["cholecystitis"],
+      "target_docId": "k810-cholecystitis"
+    },
+    {
+      "term": "慢性膵炎",
+      "aliases": ["chronic pancreatitis", "膵炎"],
+      "target_docId": "k861-chronic-pancreatitis"
+    },
+    {
+      "term": "肝血管腫",
+      "aliases": ["hepatic hemangioma"],
+      "target_docId": "d180-hepatic-hemangioma"
+    },
+    {
+      "term": "高血圧",
+      "aliases": ["HT", "hypertension", "血圧が高い"],
+      "target_docId": "i10-ht-stable"
+    },
+    {
+      "term": "治療抵抗性高血圧",
+      "aliases": ["resistant hypertension"],
+      "target_docId": "i10-ht-resistant"
+    },
+    {
+      "term": "脂質異常症",
+      "aliases": ["高脂血症", "高コレステロール", "LDL高値", "dyslipidemia", "高LDL"],
+      "target_docId": "e785-dyslipidemia"
+    },
+    {
+      "term": "高LDLコレステロール血症",
+      "aliases": ["LDL-C高値"],
+      "target_docId": "e780-high-ldl-cholesterol"
+    },
+    {
+      "term": "高トリグリセリド血症",
+      "aliases": ["高TG血症", "TG高値", "中性脂肪高値"],
+      "target_docId": "e781-hypertriglyceridemia"
+    },
+    {
+      "term": "低HDLコレステロール血症",
+      "aliases": ["HDL低値"],
+      "target_docId": "e786-low-hdl-cholesterol"
+    },
+    {
+      "term": "家族性高コレステロール血症",
+      "aliases": ["FH", "familial hypercholesterolemia", "皮膚黄色腫", "アキレス腱肥厚"],
+      "target_docId": "e780-familial-hypercholesterolemia-fh"
+    },
+    {
+      "term": "久山町スコア",
+      "aliases": ["久山町研究", "Hisayama", "動脈硬化リスク"],
+      "target_docId": "hisayama"
+    },
+    {
+      "term": "Friedewald式",
+      "aliases": ["LDL計算", "Friedewald"],
+      "target_docId": "friedewald"
+    },
+    {
+      "term": "2型糖尿病",
+      "aliases": ["DM", "T2DM", "糖尿病", "HbA1c", "type 2 diabetes", "耐糖能異常"],
+      "target_docId": "e119-2-type-2-diabetes"
+    },
+    {
+      "term": "2型糖尿病（GLP-1）",
+      "aliases": ["GLP-1受容体作動薬", "セマグルチド", "リベルサス"],
+      "target_docId": "e119-2-type-2-diabetes-glp-1"
+    },
+    {
+      "term": "1型糖尿病",
+      "aliases": ["T1DM", "type 1 diabetes"],
+      "target_docId": "e109-type-1-diabetes"
+    },
+    {
+      "term": "糖尿病性腎症",
+      "aliases": ["DKD", "diabetic kidney disease", "UACR"],
+      "target_docId": "e112-diabetic-kidney-disease-dkd"
+    },
+    {
+      "term": "CPI",
+      "aliases": ["C-peptide Index", "Cペプチドインデックス"],
+      "target_docId": "cpi"
+    },
+    {
+      "term": "インスリン療法",
+      "aliases": ["グラルギン", "ヒューマログ", "BOT", "basal-bolus"],
+      "target_docId": "e119-basal-bolus"
+    },
+    {
+      "term": "低血糖",
+      "aliases": ["hypoglycemia"],
+      "target_docId": "e162-hypoglycemia"
+    },
+    {
+      "term": "糖尿病入院基準",
+      "aliases": ["diabetes admission"],
+      "target_docId": "e140-diabetes-admission-criteria"
+    },
+    {
+      "term": "痛風発作",
+      "aliases": ["痛風", "gout", "痛風関節炎"],
+      "target_docId": "m109-e790-gout-hyperuricemia"
+    },
+    {
+      "term": "高尿酸血症",
+      "aliases": ["尿酸高値", "UA高値", "hyperuricemia"],
+      "target_docId": "m109-e790-gout-hyperuricemia"
+    },
+    {
+      "term": "肥満症",
+      "aliases": ["obesity", "BMI高値", "メディカルダイエット"],
+      "target_docId": "e669-obesity"
+    },
+    {
+      "term": "BMI",
+      "aliases": ["Body Mass Index", "体格指数"],
+      "target_docId": "bmi"
+    },
+    {
+      "term": "メタボリックシンドローム",
+      "aliases": ["MetS", "メタボ"],
+      "target_docId": "e889-metabolic-syndrome"
+    },
+    {
+      "term": "胸痛",
+      "aliases": ["chest pain", "ACS", "急性冠症候群"],
+      "target_docId": "r074-chest-pain-acs"
+    },
+    {
+      "term": "動悸",
+      "aliases": ["palpitation", "心悸亢進"],
+      "target_docId": "r002-palpitation"
+    },
+    {
+      "term": "頻脈",
+      "aliases": ["tachycardia", "AVNRT"],
+      "target_docId": "r000-r001-bradycardia-and-tachycardia"
+    },
+    {
+      "term": "徐脈",
+      "aliases": ["bradycardia"],
+      "target_docId": "r000-r001-bradycardia-and-tachycardia"
+    },
+    {
+      "term": "下腿浮腫",
+      "aliases": ["むくみ", "浮腫", "edema", "pitting edema"],
+      "target_docId": "r609-edema"
+    },
+    {
+      "term": "意識消失",
+      "aliases": ["失神", "syncope"],
+      "target_docId": "r55-syncope"
+    },
+    {
+      "term": "起立性調節障害",
+      "aliases": ["OD", "起立性低血圧", "orthostatic dysautonomia", "朝起きられない"],
+      "target_docId": "f458-od"
+    },
+    {
+      "term": "心房細動",
+      "aliases": ["AF", "Af", "atrial fibrillation", "不整脈"],
+      "target_docId": "i48-atrial-fibrillation"
+    },
+    {
+      "term": "CHADS2スコア",
+      "aliases": ["CHADS2", "CHA2DS2-VASc", "脳卒中リスク"],
+      "target_docId": "chads"
+    },
+    {
+      "term": "ワーファリン",
+      "aliases": ["ワルファリン", "warfarin", "PT-INR", "抗凝固療法"],
+      "target_docId": "i48-atrial-fibrillation-warfarin-management"
+    },
+    {
+      "term": "心不全",
+      "aliases": ["CHF", "congestive heart failure", "うっ血性心不全", "HFrEF", "HFpEF"],
+      "target_docId": "i509-chronic-heart-failure"
+    },
+    {
+      "term": "ホルター心電図",
+      "aliases": ["Holter ECG", "24時間心電図"],
+      "target_docId": "r943-ecg-abnormality-follow-up"
+    },
+    {
+      "term": "心電図異常",
+      "aliases": ["ECG異常", "ST変化", "LVH"],
+      "target_docId": "r943-ecg-abnormality-follow-up"
+    },
+    {
+      "term": "胸部異常陰影",
+      "aliases": ["CXP異常", "胸部X線異常"],
+      "target_docId": "r91-abnormal-chest-x-ray-finding-follow-up"
+    },
+    {
+      "term": "睡眠時無呼吸症候群",
+      "aliases": ["SAS", "OSA", "OSAS", "閉塞性睡眠時無呼吸", "いびき", "AHI"],
+      "target_docId": "g473-osas"
+    },
+    {
+      "term": "CPAP",
+      "aliases": ["持続陽圧呼吸療法", "シーパップ", "ASV"],
+      "target_docId": "g473-osas-cpap"
+    },
+    {
+      "term": "ESS",
+      "aliases": ["Epworth Sleepiness Scale", "エプワース眠気尺度", "日中の眠気"],
+      "target_docId": "ess"
+    },
+    {
+      "term": "STOP-BANG",
+      "aliases": ["STOP-BANGスコア", "SAS スクリーニング"],
+      "target_docId": "stopbang"
+    },
+    {
+      "term": "腹痛",
+      "aliases": ["abdominal pain", "お腹が痛い"],
+      "target_docId": "r100-acute-abdomen"
+    },
+    {
+      "term": "急性胃炎",
+      "aliases": ["AGML", "心窩部痛"],
+      "target_docId": "k291-acute-gastritis"
+    },
+    {
+      "term": "虫垂炎",
+      "aliases": ["appendicitis", "盲腸"],
+      "target_docId": "r100-acute-abdomen"
+    },
+    {
+      "term": "腹膜炎",
+      "aliases": ["peritonitis"],
+      "target_docId": "r100-acute-abdomen"
+    },
+    {
+      "term": "単純性膀胱炎",
+      "aliases": ["膀胱炎", "UTI", "cystitis", "排尿時痛", "頻尿"],
+      "target_docId": "n300-acute-cystitis"
+    },
+    {
+      "term": "急性腎盂腎炎",
+      "aliases": ["腎盂腎炎", "pyelonephritis", "CVA叩打痛"],
+      "target_docId": "n10-acute-pyelonephritis"
+    },
+    {
+      "term": "急性前立腺炎",
+      "aliases": ["前立腺炎", "acute prostatitis"],
+      "target_docId": "n410-acute-prostatitis"
+    },
+    {
+      "term": "前立腺肥大",
+      "aliases": ["BPH", "前立腺肥大症", "排尿困難", "残尿感", "IPSS"],
+      "target_docId": "n40-benign-prostatic-hyperplasia-bph"
+    },
+    {
+      "term": "IPSS",
+      "aliases": ["国際前立腺症状スコア", "International Prostate Symptom Score"],
+      "target_docId": "ipss"
+    },
+    {
+      "term": "尿路結石",
+      "aliases": ["腎結石", "尿管結石", "urolithiasis"],
+      "target_docId": "n201-ureterolithiasis"
+    },
+    {
+      "term": "過活動膀胱",
+      "aliases": ["OAB", "overactive bladder", "尿意切迫", "痙性神経因性膀胱"],
+      "target_docId": "n328-overactive-bladder-oab"
+    },
+    {
+      "term": "OABSS",
+      "aliases": ["過活動膀胱症状スコア"],
+      "target_docId": "oabss"
+    },
+    {
+      "term": "尿閉",
+      "aliases": ["弛緩性神経因性膀胱", "urinary retention"],
+      "target_docId": "r33-n312-urinary-retention-atonic-neurogenic-bladder"
+    },
+    {
+      "term": "熱傷",
+      "aliases": ["やけど", "burn", "火傷"],
+      "target_docId": "t20-burn"
+    },
+    {
+      "term": "蕁麻疹",
+      "aliases": ["じんましん", "urticaria", "膨疹"],
+      "target_docId": "l509-urticaria"
+    },
+    {
+      "term": "難治性蕁麻疹（ゾレア）",
+      "aliases": ["慢性蕁麻疹", "chronic urticaria"],
+      "target_docId": "l509-chronic-urticaria-omalizumab-induction"
+    },
+    {
+      "term": "蜂窩織炎",
+      "aliases": ["cellulitis", "セルライティス"],
+      "target_docId": "l039-cellulitis"
+    },
+    {
+      "term": "帯状疱疹",
+      "aliases": ["HZ", "herpes zoster", "ヘルペスゾスター", "VZV", "水痘帯状疱疹ウイルス", "シングリックス"],
+      "target_docId": "b029-herpes-zoster"
+    },
+    {
+      "term": "単純ヘルペス",
+      "aliases": ["HSV", "herpes simplex", "口唇ヘルペス", "単純疱疹"],
+      "target_docId": "b009-herpes-simplex-hsv"
+    },
+    {
+      "term": "PIT療法",
+      "aliases": ["再発性単純ヘルペス", "patient-initiated therapy"],
+      "target_docId": "b009-herpes-simplex-hsv"
+    },
+    {
+      "term": "性器ヘルペス",
+      "aliases": ["genital herpes", "陰部ヘルペス"],
+      "target_docId": "a600-genital-herpes"
+    },
+    {
+      "term": "アトピー性皮膚炎",
+      "aliases": ["AD", "atopic dermatitis", "アトピー"],
+      "target_docId": "l209-ad-induction-phase"
+    },
+    {
+      "term": "尋常性ざ瘡",
+      "aliases": ["ニキビ", "acne", "面皰", "コメド"],
+      "target_docId": "l700-acne-acute-phase"
+    },
+    {
+      "term": "虫刺症",
+      "aliases": ["虫刺され", "insect bite", "虫刺性皮膚炎"],
+      "target_docId": "t140-insect-bite-strophulus"
+    },
+    {
+      "term": "鶏眼",
+      "aliases": ["ウオノメ", "corn", "胼胝", "タコ"],
+      "target_docId": "l84-corn-callus"
+    },
+    {
+      "term": "接触性皮膚炎",
+      "aliases": ["かぶれ", "contact dermatitis"],
+      "target_docId": "l239-contact-dermatitis"
+    },
+    {
+      "term": "脂漏性皮膚炎",
+      "aliases": ["フケ症", "seborrheic dermatitis", "ニゾラール"],
+      "target_docId": "l219-seborrheic-dermatitis"
+    },
+    {
+      "term": "足白癬",
+      "aliases": ["水虫", "tinea pedis", "白癬"],
+      "target_docId": "b353-tinea-pedis"
+    },
+    {
+      "term": "爪白癬",
+      "aliases": ["爪水虫", "tinea unguium", "onychomycosis"],
+      "target_docId": "b351-tinea-unguium"
+    },
+    {
+      "term": "多汗症",
+      "aliases": ["手汗", "ワキ汗", "hyperhidrosis", "HDSS", "手掌多汗症", "腋窩多汗症"],
+      "target_docId": "r61-hyperhidrosis"
+    },
+    {
+      "term": "口内炎",
+      "aliases": ["アフタ性口内炎", "stomatitis"],
+      "target_docId": "k120-stomatitis"
+    },
+    {
+      "term": "湿疹",
+      "aliases": ["eczema", "手湿疹", "皮膚炎"],
+      "target_docId": "l309-eczema-hand-eczema"
+    },
+    {
+      "term": "尋常性乾癬",
+      "aliases": ["乾癬", "psoriasis", "ドボベット"],
+      "target_docId": "l400-psoriasis-vulgaris"
+    },
+    {
+      "term": "掌蹠膿疱症",
+      "aliases": ["palmoplantar pustulosis", "PPP"],
+      "target_docId": "l403-palmoplantar-pustulosis"
+    },
+    {
+      "term": "汗疹",
+      "aliases": ["あせも", "miliaria", "紅色汗疹"],
+      "target_docId": "l740-miliaria"
+    },
+    {
+      "term": "爪囲炎",
+      "aliases": ["ひょう疽", "paronychia"],
+      "target_docId": "l030-paronychia"
+    },
+    {
+      "term": "粉瘤",
+      "aliases": ["表皮嚢腫", "epidermal cyst", "アテローム"],
+      "target_docId": "l720-epidermal-cyst"
+    },
+    {
+      "term": "円形脱毛症",
+      "aliases": ["脱毛症", "alopecia areata"],
+      "target_docId": "l639-alopecia-areata"
+    },
+    {
+      "term": "水痘",
+      "aliases": ["みずぼうそう", "varicella", "水疱瘡"],
+      "target_docId": "b019-varicella"
+    },
+    {
+      "term": "薬疹",
+      "aliases": ["drug eruption", "薬剤性皮疹"],
+      "target_docId": "l270-drug-eruption"
+    },
+    {
+      "term": "伝染性膿痂疹",
+      "aliases": ["とびひ", "impetigo"],
+      "target_docId": "l010-impetigo-contagiosa"
+    },
+    {
+      "term": "淋菌性尿道炎",
+      "aliases": ["淋病", "gonorrhea", "淋菌"],
+      "target_docId": "a540-gonorrhea"
+    },
+    {
+      "term": "非淋菌性尿道炎",
+      "aliases": ["NGU", "クラミジア尿道炎"],
+      "target_docId": "n341-non-gonococcal-urethritis-cervicitis"
+    },
+    {
+      "term": "クラミジア",
+      "aliases": ["Chlamydia trachomatis", "性器クラミジア"],
+      "target_docId": "a560-chlamydia-trachomatis"
+    },
+    {
+      "term": "STD咽頭炎",
+      "aliases": ["性感染症咽頭炎", "淋菌性咽頭炎", "クラミジア咽頭炎"],
+      "target_docId": "a545-a564-std-pharyngitis"
+    },
+    {
+      "term": "細菌性腟症",
+      "aliases": ["BV", "bacterial vaginosis", "ガードネレラ", "トリコモナス"],
+      "target_docId": "n760-bacterial-vaginosis"
+    },
+    {
+      "term": "膣カンジダ",
+      "aliases": ["カンジダ膣炎", "Candida", "陰茎カンジダ"],
+      "target_docId": "b373-candida-vaginitis"
+    },
+    {
+      "term": "亀頭包皮炎",
+      "aliases": ["balanoposthitis"],
+      "target_docId": "n481-balanoposthitis"
+    },
+    {
+      "term": "尖圭コンジローマ",
+      "aliases": ["コンジローマ", "HPV", "condylomata"],
+      "target_docId": "a630-condylomata-acuminata"
+    },
+    {
+      "term": "梅毒",
+      "aliases": ["syphilis", "早期梅毒", "下疳", "TP抗体", "RPR"],
+      "target_docId": "a510-primary-syphilis"
+    },
+    {
+      "term": "睡眠障害",
+      "aliases": ["不眠", "insomnia", "入眠困難", "中途覚醒", "早期覚醒", "熟眠障害"],
+      "target_docId": "f510-insomnia"
+    },
+    {
+      "term": "頭痛",
+      "aliases": ["headache", "cephalalgia"],
+      "target_docId": "g439-migraine"
+    },
+    {
+      "term": "片頭痛",
+      "aliases": ["migraine", "偏頭痛", "拍動性頭痛"],
+      "target_docId": "g439-migraine"
+    },
+    {
+      "term": "筋緊張性頭痛",
+      "aliases": ["緊張型頭痛", "tension-type headache", "TTH"],
+      "target_docId": "g442-tension-type-headache"
+    },
+    {
+      "term": "しびれ",
+      "aliases": ["末梢神経障害", "peripheral neuropathy"],
+      "target_docId": "g629-peripheral-neuropathy"
+    },
+    {
+      "term": "めまい",
+      "aliases": ["vertigo", "dizziness", "ふらつき"],
+      "target_docId": "r42-dizziness-vertigo-nos"
+    },
+    {
+      "term": "良性発作性頭位めまい症",
+      "aliases": ["BPPV", "頭位めまい"],
+      "target_docId": "h811-bppv"
+    },
+    {
+      "term": "前庭神経炎",
+      "aliases": ["vestibular neuritis"],
+      "target_docId": "h812-vestibular-neuritis"
+    },
+    {
+      "term": "メニエール病",
+      "aliases": ["Meniere's disease"],
+      "target_docId": "h810-menieres-disease"
+    },
+    {
+      "term": "中耳炎",
+      "aliases": ["急性中耳炎", "otitis media", "鼓膜炎"],
+      "target_docId": "h669-acute-otitis-media"
+    },
+    {
+      "term": "外耳道炎",
+      "aliases": ["外耳炎", "otitis externa"],
+      "target_docId": "h609-otitis-externa"
+    },
+    {
+      "term": "耳垢栓塞",
+      "aliases": ["耳あか", "impacted cerumen"],
+      "target_docId": "h612-impacted-cerumen"
+    },
+    {
+      "term": "突発性難聴",
+      "aliases": ["sudden hearing loss", "SSHL"],
+      "target_docId": "h912-sudden-sensorineural-hearing-loss"
+    },
+    {
+      "term": "味覚障害",
+      "aliases": ["dysgeusia", "味がわからない"],
+      "target_docId": "r432-dysgeusia-taste-disorder"
+    },
+    {
+      "term": "アレルギー性結膜炎",
+      "aliases": ["結膜炎", "allergic conjunctivitis", "目のかゆみ"],
+      "target_docId": "h101-allergic-conjunctivitis"
+    },
+    {
+      "term": "麦粒腫",
+      "aliases": ["ものもらい", "stye", "hordeolum"],
+      "target_docId": "h000-hordeolum-stye"
+    },
+    {
+      "term": "霰粒腫",
+      "aliases": ["chalazion"],
+      "target_docId": "h001-chalazion"
+    },
+    {
+      "term": "骨粗鬆症",
+      "aliases": ["osteoporosis", "骨密度低下", "YAM", "DXA", "脆弱性骨折"],
+      "target_docId": "m819-osteoporosis"
+    },
+    {
+      "term": "更年期障害",
+      "aliases": ["menopausal disorder", "ホットフラッシュ", "のぼせ"],
+      "target_docId": "n951-menopausal-disorder"
+    },
+    {
+      "term": "貧血",
+      "aliases": ["anemia", "鉄欠乏性貧血", "IDA", "MCV", "MCH"],
+      "target_docId": "d509-iron-deficiency-anemia"
+    },
+    {
+      "term": "亜鉛欠乏症",
+      "aliases": ["zinc deficiency", "亜鉛欠乏"],
+      "target_docId": "e60-zinc-deficiency"
+    },
+    {
+      "term": "甲状腺機能低下症",
+      "aliases": ["hypothyroidism", "橋本病"],
+      "target_docId": "e039-hypothyroidism"
+    },
+    {
+      "term": "慢性腎臓病",
+      "aliases": ["CKD", "chronic kidney disease", "腎機能低下", "eGFR低下"],
+      "target_docId": "n189-chronic-kidney-disease-ckd"
+    },
+    {
+      "term": "eGFR",
+      "aliases": ["推算糸球体濾過量", "腎機能"],
+      "target_docId": "egfr"
+    },
+    {
+      "term": "CCr",
+      "aliases": ["クレアチニンクリアランス", "Cockcroft-Gault"],
+      "target_docId": "ccr"
+    },
+    {
+      "term": "尿検査異常",
+      "aliases": ["尿潜血", "尿蛋白", "血尿", "蛋白尿"],
+      "target_docId": "r82-abnormal-urinalysis-follow-up"
+    },
+    {
+      "term": "ネフローゼ症候群",
+      "aliases": ["nephrotic syndrome"],
+      "target_docId": "n049-nephrotic-syndrome"
+    },
+    {
+      "term": "DVT",
+      "aliases": ["深部静脈血栓症", "deep vein thrombosis", "エコノミークラス症候群"],
+      "target_docId": "i802-dvt"
+    },
+    {
+      "term": "Wells DVTスコア",
+      "aliases": ["Wellsスコア", "Wells criteria"],
+      "target_docId": "wells-dvt"
+    },
+    {
+      "term": "肺塞栓症",
+      "aliases": ["PE", "pulmonary embolism"],
+      "target_docId": "i802-dvt"
+    },
+    {
+      "term": "PHQ-9",
+      "aliases": ["PHQ9", "Patient Health Questionnaire", "うつスクリーニング"],
+      "target_docId": "phq"
+    },
+    {
+      "term": "GAD-7",
+      "aliases": ["GAD7", "全般性不安障害スクリーニング"],
+      "target_docId": "gad7"
+    },
+    {
+      "term": "EPDS",
+      "aliases": ["Edinburgh Postnatal Depression Scale", "産後うつスクリーニング"],
+      "target_docId": "epds"
+    },
+    {
+      "term": "GDS-15",
+      "aliases": ["GDS15", "高齢者うつスクリーニング", "Geriatric Depression Scale"],
+      "target_docId": "gds15"
+    },
+    {
+      "term": "HDS-R",
+      "aliases": ["HDSR", "長谷川式認知症スケール", "改訂長谷川式"],
+      "target_docId": "hdsr"
+    },
+    {
+      "term": "HEARTスコア",
+      "aliases": ["HEART score", "胸痛リスク評価"],
+      "target_docId": "heart"
+    },
+    {
+      "term": "mMRC",
+      "aliases": ["Modified Medical Research Council", "息切れスケール"],
+      "target_docId": "mmrc"
+    },
+    {
+      "term": "AUDIT-C",
+      "aliases": ["AUDITC", "アルコール使用障害スクリーニング"],
+      "target_docId": "auditc"
+    },
+    {
+      "term": "CAT",
+      "aliases": ["COPD Assessment Test", "COPDアセスメントテスト"],
+      "target_docId": "cat"
+    },
+    {
+      "term": "Centorスコア",
+      "aliases": ["Centor score", "溶連菌スコア", "McIsaac"],
+      "target_docId": "centor"
+    },
+    {
+      "term": "小児かぜ",
+      "aliases": ["小児感冒", "小児上気道炎"],
+      "target_docId": "j00-common-cold-pediatric"
+    },
+    {
+      "term": "小児喘息",
+      "aliases": ["pediatric asthma", "LTRA"],
+      "target_docId": "j459-pediatric-asthma"
+    },
+    {
+      "term": "小児急性胃腸炎",
+      "aliases": ["小児胃腸炎", "小児嘔吐下痢"],
+      "target_docId": "a09-pediatric-acute-gastroenteritis"
+    },
+    {
+      "term": "小児便秘",
+      "aliases": ["機能性便秘症（小児）"],
+      "target_docId": "k590-pediatric-constipation"
+    },
+    {
+      "term": "川崎病",
+      "aliases": ["Kawasaki disease", "イチゴ舌", "BCG発赤"],
+      "target_docId": "m303-kawasaki-disease"
+    },
+    {
+      "term": "肺炎球菌ワクチン",
+      "aliases": ["ニューモバックス", "プレベナー20", "PCV", "PPSV"],
+      "target_docId": "z259-vaccination-record"
+    },
+    {
+      "term": "帯状疱疹ワクチン",
+      "aliases": ["シングリックス", "HZ vaccine"],
+      "target_docId": "z259-vaccination-record"
+    },
+    {
+      "term": "HPVワクチン",
+      "aliases": ["ガーダシル", "子宮頸がんワクチン", "HPV4価"],
+      "target_docId": "z259-vaccination-record"
+    },
+    {
+      "term": "RSVワクチン",
+      "aliases": ["アレックスビー"],
+      "target_docId": "z259-vaccination-record"
+    },
+    {
+      "term": "健康診断",
+      "aliases": ["一般健診", "health checkup", "健診"],
+      "target_docId": "z000-general-health-checkup"
+    },
+    {
+      "term": "特定健診",
+      "aliases": ["特定健康診査", "メタボ健診"],
+      "target_docId": "z000-specific-health-checkup"
+    },
+    {
+      "term": "二次健診（心エコー）",
+      "aliases": ["心臓超音波", "echocardiography"],
+      "target_docId": "z018-secondary-screening-echocardiography"
+    },
+    {
+      "term": "二次健診（頸部エコー）",
+      "aliases": ["頸動脈エコー", "頸動脈超音波", "プラーク", "IMT"],
+      "target_docId": "z018-secondary-screening-carotid-ultrasound"
+    },
+    {
+      "term": "バラシクロビル",
+      "aliases": ["バルトレックス", "valaciclovir"],
+      "target_docId": "b029-herpes-zoster"
+    },
+    {
+      "term": "アメナリーフ",
+      "aliases": ["アメナメビル", "amenamevir"],
+      "target_docId": "b029-herpes-zoster"
+    },
+    {
+      "term": "ICS/LABA",
+      "aliases": ["吸入ステロイド", "長時間作用型β2刺激薬", "配合吸入薬"],
+      "target_docId": "j459-asthma-mild"
+    },
+    {
+      "term": "SABA",
+      "aliases": ["メプチン", "サルブタモール", "短時間作用型β2刺激薬"],
+      "target_docId": "j459-asthma-mild"
+    },
+    {
+      "term": "LTRA",
+      "aliases": ["ロイコトリエン受容体拮抗薬", "モンテルカスト", "シングレア"],
+      "target_docId": "j459-asthma-mild"
+    },
+    {
+      "term": "SGLT2阻害薬",
+      "aliases": ["SGLT2i", "フォシーガ", "ジャディアンス", "カナグル"],
+      "target_docId": "e119-2-type-2-diabetes"
+    },
+    {
+      "term": "ARB",
+      "aliases": ["アンジオテンシンII受容体拮抗薬", "オルメサルタン", "テルミサルタン"],
+      "target_docId": "i10-ht-stable"
+    },
+    {
+      "term": "ACE阻害薬",
+      "aliases": ["ACEi", "エナラプリル"],
+      "target_docId": "i10-ht-stable"
+    },
+    {
+      "term": "スタチン",
+      "aliases": ["ロスバスタチン", "アトルバスタチン", "プラバスタチン", "HMG-CoA還元酵素阻害薬"],
+      "target_docId": "e785-dyslipidemia"
+    },
+    {
+      "term": "アコチアミド",
+      "aliases": ["アコファイド"],
+      "target_docId": "k30-functional-dyspepsia-fd"
+    },
+    {
+      "term": "六君子湯",
+      "aliases": ["リックンシトウ"],
+      "target_docId": "k30-functional-dyspepsia-fd"
+    },
+    {
+      "term": "強ミノ",
+      "aliases": ["強力ネオミノファーゲンシー", "グリチルリチン"],
+      "target_docId": "z411-beauty-oral-iv-therapy"
+    },
+    {
+      "term": "プラセンタ",
+      "aliases": ["メルスモン", "ラエンネック", "placenta"],
+      "target_docId": "z413-placenta-therapy"
+    },
+    {
+      "term": "美容内服",
+      "aliases": ["美容点滴", "トランサミン", "パントール"],
+      "target_docId": "z411-beauty-oral-iv-therapy"
+    },
+    {
+      "term": "DVT",
+      "aliases": ["深部静脈血栓症"],
+      "target_docId": "i802-dvt"
+    },
+    {
+      "term": "壊死性筋膜炎",
+      "aliases": ["necrotizing fasciitis"],
+      "target_docId": "l039-cellulitis"
+    },
+    {
+      "term": "アナフィラキシー",
+      "aliases": ["anaphylaxis", "アナフィラキシーショック"],
+      "target_docId": "t782-anaphylactic-shock"
+    },
+    {
+      "term": "FeNO",
+      "aliases": ["呼気一酸化窒素", "呼気NO"],
+      "target_docId": "j459-asthma-mild"
+    },
+    {
+      "term": "QFT",
+      "aliases": ["T-SPOT", "IGRA", "結核スクリーニング"],
+      "target_docId": "b909-old-pulmonary-tuberculosis"
+    },
+    {
+      "term": "KOH検査",
+      "aliases": ["直接鏡検", "真菌検査"],
+      "target_docId": "b353-tinea-pedis"
+    },
+    {
+      "term": "デルマクイック",
+      "aliases": ["デルマクイックVZV", "デルマクイックHSV", "迅速抗原検査"],
+      "target_docId": "b029-herpes-zoster"
+    },
+    {
+      "term": "バセドウ病",
+      "aliases": ["Graves disease", "甲状腺機能亢進症"],
+      "target_docId": "e050-graves-disease"
+    },
+    {
+      "term": "橋本病",
+      "aliases": ["Hashimoto's thyroiditis", "慢性甲状腺炎"],
+      "target_docId": "e063-hashimotos-thyroiditis"
+    },
+    {
+      "term": "亜急性甲状腺炎",
+      "aliases": ["subacute thyroiditis", "de Quervain甲状腺炎"],
+      "target_docId": "e061-subacute-thyroiditis"
+    },
+    {
+      "term": "甲状腺腫瘍",
+      "aliases": ["甲状腺結節", "thyroid nodule"],
+      "target_docId": "d34-thyroid-tumor"
+    },
+    {
+      "term": "原発性アルドステロン症",
+      "aliases": ["PA", "primary aldosteronism", "アルドステロン"],
+      "target_docId": "e260-primary-aldosteronism-pa"
+    },
+    {
+      "term": "LOH症候群",
+      "aliases": ["男性更年期", "テストステロン低下"],
+      "target_docId": "e291-loh-syndrome"
+    },
+    {
+      "term": "認知症",
+      "aliases": ["アルツハイマー", "Alzheimer", "AD", "認知機能低下"],
+      "target_docId": "g309-alzheimers-disease-ad"
+    },
+    {
+      "term": "MCI",
+      "aliases": ["軽度認知障害", "mild cognitive impairment"],
+      "target_docId": "f067-mild-cognitive-impairment-mci"
+    },
+    {
+      "term": "レビー小体型認知症",
+      "aliases": ["DLB", "Lewy body dementia"],
+      "target_docId": "g318-dementia-with-lewy-bodies-dlb"
+    },
+    {
+      "term": "血管性認知症",
+      "aliases": ["VaD", "vascular dementia"],
+      "target_docId": "f015-vascular-dementia-vad"
+    },
+    {
+      "term": "うつ状態",
+      "aliases": ["うつ病", "depression", "抑うつ"],
+      "target_docId": "f329-depressive-state"
+    },
+    {
+      "term": "パニック障害",
+      "aliases": ["panic disorder", "パニック発作"],
+      "target_docId": "f410-panic-disorder"
+    },
+    {
+      "term": "全般性不安障害",
+      "aliases": ["GAD", "generalized anxiety disorder"],
+      "target_docId": "f411-generalized-anxiety-disorder-gad"
+    },
+    {
+      "term": "適応障害",
+      "aliases": ["adjustment disorder"],
+      "target_docId": "f432-adjustment-disorder"
+    },
+    {
+      "term": "心身症",
+      "aliases": ["psychosomatic disorder"],
+      "target_docId": "f54-psychosomatic-disorder"
+    },
+    {
+      "term": "ADHD",
+      "aliases": ["注意欠陥多動性障害", "attention deficit"],
+      "target_docId": "f900-adult-adhd"
+    },
+    {
+      "term": "てんかん",
+      "aliases": ["epilepsy", "痙攣"],
+      "target_docId": "g409-epilepsy"
+    },
+    {
+      "term": "群発頭痛",
+      "aliases": ["cluster headache"],
+      "target_docId": "g440-cluster-headache"
+    },
+    {
+      "term": "薬物乱用頭痛",
+      "aliases": ["MOH", "medication overuse headache"],
+      "target_docId": "g444-medication-overuse-headache-moh"
+    },
+    {
+      "term": "TIA",
+      "aliases": ["一過性脳虚血発作", "transient ischemic attack"],
+      "target_docId": "g459-tia"
+    },
+    {
+      "term": "むずむず脚症候群",
+      "aliases": ["RLS", "restless legs syndrome", "レストレスレッグス"],
+      "target_docId": "g258-restless-legs-syndrome-rls"
+    },
+    {
+      "term": "ナルコレプシー",
+      "aliases": ["narcolepsy", "過眠症"],
+      "target_docId": "g474-narcolepsy"
+    },
+    {
+      "term": "三叉神経痛",
+      "aliases": ["trigeminal neuralgia"],
+      "target_docId": "g500-trigeminal-neuralgia"
+    },
+    {
+      "term": "肋間神経痛",
+      "aliases": ["intercostal neuralgia"],
+      "target_docId": "g580-intercostal-neuralgia"
+    },
+    {
+      "term": "糖尿病性神経障害",
+      "aliases": ["diabetic neuropathy", "DPN"],
+      "target_docId": "g632-diabetic-neuropathy"
+    },
+    {
+      "term": "狭心症",
+      "aliases": ["angina pectoris", "AP"],
+      "target_docId": "i208-angina-pectoris"
+    },
+    {
+      "term": "陳旧性心筋梗塞",
+      "aliases": ["OMI", "old myocardial infarction"],
+      "target_docId": "i252-old-myocardial-infarction"
+    },
+    {
+      "term": "心臓弁膜症",
+      "aliases": ["valvular heart disease", "AS", "MR", "大動脈弁狭窄"],
+      "target_docId": "i38-valvular-heart-disease"
+    },
+    {
+      "term": "心肺停止",
+      "aliases": ["CPA", "cardiopulmonary arrest"],
+      "target_docId": "i469-cardiopulmonary-arrest-cpa"
+    },
+    {
+      "term": "心房粗動",
+      "aliases": ["AFL", "atrial flutter"],
+      "target_docId": "i48-atrial-flutter"
+    },
+    {
+      "term": "期外収縮",
+      "aliases": ["PVC", "PAC", "premature contraction", "不整脈"],
+      "target_docId": "i49-premature-contraction"
+    },
+    {
+      "term": "うっ血性心不全",
+      "aliases": ["急性心不全"],
+      "target_docId": "i500-congestive-heart-failure"
+    },
+    {
+      "term": "慢性脳血管不全",
+      "aliases": ["cerebrovascular insufficiency"],
+      "target_docId": "i678-chronic-cerebrovascular-insufficiency"
+    },
+    {
+      "term": "脳出血後遺症",
+      "aliases": ["intracerebral hemorrhage sequelae"],
+      "target_docId": "i691-intracerebral-hemorrhage-seq"
+    },
+    {
+      "term": "脳梗塞後遺症",
+      "aliases": ["cerebral infarction sequelae"],
+      "target_docId": "i693-cerebral-infarction-seq"
+    },
+    {
+      "term": "ASO",
+      "aliases": ["閉塞性動脈硬化症", "PAD", "末梢動脈疾患"],
+      "target_docId": "i702-aso-pad"
+    },
+    {
+      "term": "下肢静脈瘤",
+      "aliases": ["varicose veins"],
+      "target_docId": "i839-varicose-veins"
+    },
+    {
+      "term": "起立性低血圧",
+      "aliases": ["orthostatic hypotension"],
+      "target_docId": "i951-orthostatic-hypotension-dysautonomia"
+    },
+    {
+      "term": "低血圧",
+      "aliases": ["hypotension"],
+      "target_docId": "i959-hypotension"
+    },
+    {
+      "term": "白衣高血圧",
+      "aliases": ["white coat hypertension"],
+      "target_docId": "r030-white-coat-hypertension"
+    },
+    {
+      "term": "二次性高血圧",
+      "aliases": ["secondary hypertension"],
+      "target_docId": "i15-secondary-hypertension"
+    },
+    {
+      "term": "高血圧性心疾患",
+      "aliases": ["hypertensive heart disease"],
+      "target_docId": "i11-hypertensive-heart-disease"
+    },
+    {
+      "term": "関節リウマチ",
+      "aliases": ["RA", "rheumatoid arthritis"],
+      "target_docId": "m069-rheumatoid-arthritis-ra"
+    },
+    {
+      "term": "SLE",
+      "aliases": ["全身性エリテマトーデス", "systemic lupus erythematosus"],
+      "target_docId": "m329-sle"
+    },
+    {
+      "term": "シェーグレン症候群",
+      "aliases": ["Sjogren's syndrome", "ドライマウス", "ドライアイ"],
+      "target_docId": "m350-sjgrens-syndrome"
+    },
+    {
+      "term": "リウマチ性多発筋痛症",
+      "aliases": ["PMR", "polymyalgia rheumatica"],
+      "target_docId": "m353-polymyalgia-rheumatica-pmr"
+    },
+    {
+      "term": "変形性膝関節症",
+      "aliases": ["膝OA", "knee osteoarthritis"],
+      "target_docId": "m179-knee-osteoarthritis"
+    },
+    {
+      "term": "頸椎症",
+      "aliases": ["cervical spondylosis"],
+      "target_docId": "m478-cervical-spondylosis"
+    },
+    {
+      "term": "椎体圧迫骨折",
+      "aliases": ["圧迫骨折", "vertebral compression fracture"],
+      "target_docId": "m485-vertebral-compression-fracture"
+    },
+    {
+      "term": "腰椎椎間板ヘルニア",
+      "aliases": ["腰椎ヘルニア", "lumbar disc herniation"],
+      "target_docId": "m512-lumbar-disc-herniation"
+    },
+    {
+      "term": "腰痛",
+      "aliases": ["low back pain", "ぎっくり腰"],
+      "target_docId": "m545-low-back-pain"
+    },
+    {
+      "term": "急性腰痛",
+      "aliases": ["acute back pain"],
+      "target_docId": "m549-acute-back-pain"
+    },
+    {
+      "term": "後頭神経痛",
+      "aliases": ["occipital neuralgia"],
+      "target_docId": "m548-occipital-neuralgia"
+    },
+    {
+      "term": "ドケルバン病",
+      "aliases": ["de Quervain disease", "狭窄性腱鞘炎"],
+      "target_docId": "m654-de-quervain-disease"
+    },
+    {
+      "term": "足底腱膜炎",
+      "aliases": ["plantar fasciitis", "足底筋膜炎"],
+      "target_docId": "m722-plantar-fasciitis"
+    },
+    {
+      "term": "五十肩",
+      "aliases": ["frozen shoulder", "肩関節周囲炎"],
+      "target_docId": "m750-frozen-shoulder"
+    },
+    {
+      "term": "ステロイド性骨粗鬆症",
+      "aliases": ["GIOP", "glucocorticoid-induced osteoporosis"],
+      "target_docId": "m814-glucocorticoid-induced-osteoporosis"
+    },
+    {
+      "term": "月経困難症",
+      "aliases": ["PMS", "月経前症候群", "dysmenorrhea"],
+      "target_docId": "n946-dysmenorrhea-pms"
+    },
+    {
+      "term": "緊急避妊",
+      "aliases": ["emergency contraception", "アフターピル", "モーニングアフターピル"],
+      "target_docId": "z300-emergency-contraception"
+    },
+    {
+      "term": "乳腺炎",
+      "aliases": ["mastitis"],
+      "target_docId": "n61-mastitis"
+    },
+    {
+      "term": "夜尿症",
+      "aliases": ["おねしょ", "nocturnal enuresis"],
+      "target_docId": "n394-nocturnal-enuresis"
+    },
+    {
+      "term": "勃起不全",
+      "aliases": ["ED", "erectile dysfunction"],
+      "target_docId": "n484-erectile-dysfunction-ed"
+    },
+    {
+      "term": "慢性前立腺炎",
+      "aliases": ["CPPS", "慢性骨盤痛症候群"],
+      "target_docId": "n411-chronic-prostatitis-cpps"
+    },
+    {
+      "term": "不明熱",
+      "aliases": ["FUO", "fever of unknown origin"],
+      "target_docId": "r509-fever-of-unknown-origin-fuo"
+    },
+    {
+      "term": "全身倦怠感",
+      "aliases": ["だるい", "疲労感", "fatigue"],
+      "target_docId": "r53-general-fatigue"
+    },
+    {
+      "term": "体重減少",
+      "aliases": ["weight loss", "やせ"],
+      "target_docId": "r634-weight-loss"
+    },
+    {
+      "term": "リンパ節腫脹",
+      "aliases": ["lymphadenopathy", "リンパが腫れた"],
+      "target_docId": "r599-lymphadenopathy"
+    },
+    {
+      "term": "打撲",
+      "aliases": ["挫傷", "血腫", "contusion"],
+      "target_docId": "s00-contusion-hematoma"
+    },
+    {
+      "term": "動物咬傷",
+      "aliases": ["animal bite", "猫咬傷", "犬咬傷"],
+      "target_docId": "t141-animal-bites"
+    },
+    {
+      "term": "裂創",
+      "aliases": ["切創", "開放創", "laceration"],
+      "target_docId": "t141-open-wound-incised-laceration"
+    },
+    {
+      "term": "骨折評価",
+      "aliases": ["不顕性骨折", "occult fracture"],
+      "target_docId": "t142-occult-fracture-fracture-evaluation"
+    },
+    {
+      "term": "褥瘡",
+      "aliases": ["床ずれ", "pressure ulcer"],
+      "target_docId": "l899-pressure-ulcer"
+    },
+    {
+      "term": "STDスクリーニング",
+      "aliases": ["性病検査", "性感染症スクリーニング", "HIV"],
+      "target_docId": "z113-std-screening"
+    },
+    {
+      "term": "ヘルスメンテナンス",
+      "aliases": ["スクリーニング", "がん検診", "予防医療"],
+      "target_docId": "z139-health-maintenance-screening"
+    },
+    {
+      "term": "在宅医療",
+      "aliases": ["訪問診療", "home medical management"],
+      "target_docId": "z518-home-medical-management"
+    },
+    {
+      "term": "終末期ケア",
+      "aliases": ["ターミナルケア", "terminal care", "看取り"],
+      "target_docId": "z515-terminal-care"
+    },
+    {
+      "term": "老衰",
+      "aliases": ["senility", "end of life"],
+      "target_docId": "r54-senility-end-of-life-care"
+    },
+    {
+      "term": "介護意見書",
+      "aliases": ["主治医意見書", "要介護認定"],
+      "target_docId": "z507-opinion-letter-for-long-term-care"
+    },
+    {
+      "term": "抗凝固薬管理",
+      "aliases": ["DOAC", "抗血栓薬", "long-term anticoagulant"],
+      "target_docId": "z921-long-term-anticoagulant-management"
+    },
+    {
+      "term": "RSウイルス",
+      "aliases": ["RS virus", "RSV", "細気管支炎"],
+      "target_docId": "j210-rs-virus-infection"
+    },
+    {
+      "term": "クループ",
+      "aliases": ["croup", "犬吠様咳嗽"],
+      "target_docId": "j050-croup"
+    },
+    {
+      "term": "突発性発疹",
+      "aliases": ["exanthem subitum", "HHV-6"],
+      "target_docId": "b082-exanthem-subitum"
+    },
+    {
+      "term": "手足口病",
+      "aliases": ["HFMD", "ヘルパンギーナ", "herpangina"],
+      "target_docId": "b084-hfmd-herpangina"
+    },
+    {
+      "term": "おたふくかぜ",
+      "aliases": ["ムンプス", "mumps", "流行性耳下腺炎"],
+      "target_docId": "b269-mumps"
+    },
+    {
+      "term": "伝染性軟属腫",
+      "aliases": ["水いぼ", "molluscum contagiosum"],
+      "target_docId": "b081-molluscum-contagiosum"
+    },
+    {
+      "term": "尋常性疣贅",
+      "aliases": ["いぼ", "ウイルス性いぼ", "common warts"],
+      "target_docId": "b07-common-warts-verruca"
+    },
+    {
+      "term": "おむつかぶれ",
+      "aliases": ["おむつ皮膚炎", "diaper dermatitis"],
+      "target_docId": "l22-diaper-dermatitis"
+    },
+    {
+      "term": "小児湿疹",
+      "aliases": ["乳児湿疹", "infantile eczema"],
+      "target_docId": "l208-infantile-pediatric-eczema"
+    },
+    {
+      "term": "ITP",
+      "aliases": ["特発性血小板減少性紫斑病", "immune thrombocytopenia"],
+      "target_docId": "d693-itp"
+    },
+    {
+      "term": "MDS",
+      "aliases": ["骨髄異形成症候群", "myelodysplastic syndrome"],
+      "target_docId": "d469-mds"
+    },
+    {
+      "term": "巨赤芽球性貧血",
+      "aliases": ["ビタミンB12欠乏", "葉酸欠乏", "megaloblastic anemia"],
+      "target_docId": "d51-megaloblastic-anemia"
+    },
+    {
+      "term": "慢性疾患に伴う貧血",
+      "aliases": ["ACD", "anemia of chronic disease"],
+      "target_docId": "d638-anemia-of-chronic-disease-acd"
+    },
+    {
+      "term": "乳児健診",
+      "aliases": ["乳幼児健診"],
+      "target_docId": "z001-infant-checkup"
+    },
+    {
+      "term": "雇入時健診",
+      "aliases": ["入社時健診", "employment health checkup"],
+      "target_docId": "z021-employment-health-checkup"
+    },
+    {
+      "term": "診断書",
+      "aliases": ["medical certificate"],
+      "target_docId": "z027-medical-certificate"
+    },
+    {
+      "term": "復職判定",
+      "aliases": ["就業適性", "fitness for work"],
+      "target_docId": "z029-fitness-for-work-assessment"
+    },
+    {
+      "term": "Cheyne-Stokes呼吸",
+      "aliases": ["チェーンストークス", "CSR"],
+      "target_docId": "g473-osas-cpap"
+    },
+    {
+      "term": "ドライアイ",
+      "aliases": ["dry eye"],
+      "target_docId": "h041-dry-eye"
+    },
+    {
+      "term": "白内障",
+      "aliases": ["cataract"],
+      "target_docId": "h269-cataract"
+    },
+    {
+      "term": "神経梅毒",
+      "aliases": ["neurosyphilis"],
+      "target_docId": "a52-neurosyphilis"
+    },
+    {
+      "term": "PSA",
+      "aliases": ["前立腺特異抗原", "prostate specific antigen"],
+      "target_docId": "n40-benign-prostatic-hyperplasia-bph"
+    },
+    {
+      "term": "MAST検査",
+      "aliases": ["マスト検査", "アレルギー検査", "IgE", "特異的IgE"],
+      "target_docId": "j301-j304-allergic-rhinitis"
+    },
+    {
+      "term": "百日咳",
+      "aliases": ["pertussis", "百日咳抗体"],
+      "target_docId": "r05-chronic-cough"
+    },
+    {
+      "term": "RomeⅣ",
+      "aliases": ["RomeIV基準", "機能性消化管障害基準"],
+      "target_docId": "k589-ibs"
+    },
+    {
+      "term": "子育て相談",
+      "aliases": ["育児相談", "parenting consultation"],
+      "target_docId": "z768-parenting-consultation"
+    },
+    {
+      "term": "小児ADHD",
+      "aliases": ["pediatric ADHD"],
+      "target_docId": "f900-pediatric-adhd"
+    },
+    {
+      "term": "BPSD",
+      "aliases": ["認知症行動心理症状", "behavioral and psychological symptoms of dementia"],
+      "target_docId": "f03-bpsd-management"
+    }
+  ]
+}
