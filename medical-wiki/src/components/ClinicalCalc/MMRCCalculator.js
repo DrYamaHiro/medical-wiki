@@ -81,14 +81,14 @@ export default function MMRCCalculator() {
           fontWeight: 700,
           fontSize: '0.9rem',
         }}>
-          mMRC Grade 2以上: GOLD ABE分類においてE群（増悪群）に該当する可能性があります
+          mMRC Grade 2以上: GOLD ABE分類においてB群（症状あり）に該当します
         </div>
       )}
 
       <div className={styles.note}>
         <strong>判定基準:</strong> Grade 0-1: 軽度 / Grade 2: 中等度 / Grade 3-4: 重度<br />
         <strong>参考:</strong> Bestall JC, et al. Thorax 1999; 54(7):581-586.<br />
-        GOLD 2023ガイドラインでは、mMRC 2以上はABE分類のE群該当の指標の一つです。
+        GOLD 2023ガイドラインでは、mMRC 2以上はABE分類のB群（症状あり）に該当します。
       </div>
     </div>
   );

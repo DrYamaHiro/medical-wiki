@@ -11,8 +11,9 @@ const ITEMS = [
 
 function getJudgment(score) {
   if (score === 0) return { text: '軽症 \u2014 外来治療', color: '#2E7D32' };
-  if (score <= 2) return { text: '中等症 \u2014 外来 or 入院', color: '#F9A825' };
-  if (score === 3) return { text: '重症 \u2014 入院治療', color: '#E65100' };
+  if (score === 1) return { text: '中等症 \u2014 外来 or 入院', color: '#F9A825' };
+  if (score === 2) return { text: '中等症 \u2014 入院', color: '#E65100' };
+  if (score === 3) return { text: '重症 \u2014 入院治療', color: '#C62828' };
   return { text: '超重症 \u2014 ICU入院', color: '#C62828' };
 }
 

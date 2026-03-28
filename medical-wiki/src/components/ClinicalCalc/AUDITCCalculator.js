@@ -39,7 +39,7 @@ function getJudgment(score, sex) {
   const midMax = 7;
   if (score <= lowMax) return { text: '低リスク', color: '#2E7D32' };
   if (score <= midMax) return { text: '危険飲酒', color: '#F9A825' };
-  return { text: 'アルコール依存疑い', color: '#C62828' };
+  return { text: '高リスク飲酒。完全版AUDITでの詳細評価を推奨', color: '#C62828' };
 }
 
 export default function AUDITCCalculator() {
@@ -142,8 +142,8 @@ export default function AUDITCCalculator() {
 
       <div className={styles.note}>
         <strong>判定基準:</strong><br />
-        男性: 0-3 低リスク / 4-7 危険飲酒 / 8-12 アルコール依存疑い<br />
-        女性: 0-2 低リスク / 3-7 危険飲酒 / 8-12 アルコール依存疑い<br />
+        男性: 0-3 低リスク / 4-7 危険飲酒 / 8-12 高リスク飲酒<br />
+        女性: 0-2 低リスク / 3-7 危険飲酒 / 8-12 高リスク飲酒<br />
         <strong>注:</strong> AUDIT-Cは完全版AUDIT(10問)の最初の3問で構成される簡易スクリーニングです。
         陽性の場合は完全版AUDITでの評価を推奨します。
       </div>

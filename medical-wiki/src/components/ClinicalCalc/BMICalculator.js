@@ -17,7 +17,7 @@ import styles from './styles.module.css';
  */
 
 const BMI_CATEGORIES = [
-  { label: '低体重', min: 0, max: 18.4, color: '#0277BD' },
+  { label: '低体重', min: 0, max: 18.49, color: '#0277BD' },
   { label: '普通体重', min: 18.5, max: 24.9, color: '#2E7D32' },
   { label: '肥満1度', min: 25.0, max: 29.9, color: '#F9A825' },
   { label: '肥満2度', min: 30.0, max: 34.9, color: '#E65100' },
@@ -195,7 +195,7 @@ export default function BMICalculator() {
                   {cat.max === Infinity
                     ? `${cat.min} 以上`
                     : cat.min === 0
-                      ? `${cat.max} 未満`
+                      ? '18.5未満'
                       : `${cat.min}〜${cat.max}`}
                 </td>
                 <td>{cat.label}</td>

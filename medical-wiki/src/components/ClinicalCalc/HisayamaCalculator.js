@@ -90,8 +90,7 @@ export default function HisayamaCalculator() {
     if (score === null) return null;
     if (score <= 5) return { text: '低リスク', sub: '10年リスク 2%未満', color: '#2E7D32', mgmt: 'LDL目標 160 mg/dL未満' };
     if (score <= 10) return { text: '中リスク', sub: '10年リスク 2〜9%', color: '#E65100', mgmt: 'LDL目標 140 mg/dL未満' };
-    if (score <= 15) return { text: '高リスク', sub: '10年リスク 10〜19%', color: '#C62828', mgmt: 'LDL目標 120 mg/dL未満' };
-    return { text: '極高リスク', sub: '10年リスク 20%以上', color: '#B71C1C', mgmt: 'LDL目標 100 mg/dL未満' };
+    return { text: '高リスク', sub: '10年リスク 10%以上', color: '#C62828', mgmt: 'LDL目標 120 mg/dL未満' };
   }, [hasHistory, hasFHorACS, score]);
 
   const reset = () => {
