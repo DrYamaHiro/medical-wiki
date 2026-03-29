@@ -1,5 +1,11 @@
 {
-  "label": "💊 CS Drug Reference",
+  "label": "💊 Drug Reference（薬剤情報）",
   "position": 800,
-  "collapsed": false
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "title": "💊 Drug Reference（薬剤情報）",
+    "description": "CS Drug Reference — 薬効分類別の薬剤リファレンス。薬理・適応・用法用量・禁忌・処方のポイント・調剤薬局での採用状況を収録。",
+    "slug": "/drug-reference"
+  }
 }

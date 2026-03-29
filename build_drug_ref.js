@@ -50,23 +50,27 @@ function convertToMdx(content, category) {
     if (i < 10 && trimmed.startsWith('作成日:')) continue;
     if (i < 10 && trimmed.startsWith('薬剤数:')) continue;
 
-    // Drug entry separator
+    // Drug entry separator (two === lines surround the drug name)
     if (trimmed === '================================================================') {
-      if (inDrugEntry) {
-        mdxLines.push('</details>\n');
-        inDrugEntry = false;
-      }
-      // Check if next line is a drug name
+      // Check if this is the START of a drug entry (pattern: === / drugname / ===)
       const nextLine = (lines[i + 1] || '').trim();
-      if (nextLine && !nextLine.startsWith('CS Drug') && !nextLine.startsWith('表記ルール') && nextLine !== '') {
-        // This is a drug entry header
+      const lineAfterNext = (lines[i + 2] || '').trim();
+
+      if (nextLine && lineAfterNext === '================================================================' &&
+          !nextLine.startsWith('CS Drug') && !nextLine.startsWith('表記ルール')) {
+        // This is a drug entry header: === / name / ===
+        if (inDrugEntry) {
+          mdxLines.push('</details>\n');
+          inDrugEntry = false;
+        }
         const drugName = escapeMdx(nextLine);
         drugCount++;
         mdxLines.push(`\n<details>`);
         mdxLines.push(`<summary><strong>${drugName}</strong></summary>\n`);
         inDrugEntry = true;
-        i++; // skip the drug name line
+        i += 2; // skip the drug name line AND the closing === line
       }
+      // Otherwise it's a closing === line (already handled) or a section separator - skip it
       continue;
     }
 
