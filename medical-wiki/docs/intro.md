@@ -104,6 +104,13 @@ sidebar_position: 1
 | [600](./Emergency/i469-cardiopulmonary-arrest-cpa) | 救命救急 | 心肺停止、アナフィラキシーショック |
 | [700](./Private/z413-placenta-therapy) | 自由診療・美容 | プラセンタ療法、AGA、メディカルダイエット |
 
+### ツール・リファレンス
+
+| | カテゴリ | 内容 |
+|--|---------|------|
+| [800](/medical-wiki/drug-reference) | Drug Reference（薬剤情報） | 18カテゴリ・325薬剤の薬理・適応・用法用量・禁忌・処方のポイント |
+| [810](./Calculators/adrop) | Clinical Calculators（臨床計算ツール） | A-DROP、CHA2DS2-VASc、eGFR、BMI、PHQ-9 他26種 |
+
 ---
 
 :::caution 注意事項
