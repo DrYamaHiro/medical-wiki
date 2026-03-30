@@ -10,7 +10,7 @@ const fs   = require('fs');
 const path = require('path');
 
 const BASE_DIR   = path.join(__dirname);
-const OUTPUT_DIR = path.join(BASE_DIR, 'ver.3.0.1.4', 'output');
+const OUTPUT_DIR = path.join(BASE_DIR, 'ver.3.0.2.0', 'output');
 const DOCS_DIR   = path.join(BASE_DIR, 'medical-wiki', 'docs');
 
 // =========================================================
@@ -174,11 +174,13 @@ function formatContent(rawText) {
     if (idMatch) {
       const code = idMatch[1];
       const desc = idMatch[2].trim();
-      if (classifyId(code) === 'show' && desc) {
-        // IDコードをspan.med-idで包む（デフォルト非表示、トグルボタンで表示）
-        result.push(`- <span className="med-id">[${code}]</span> ${esc(desc)}`);
+      // ID行全体をmed-idで包む（デフォルト非表示。トグル時のみ表示）
+      // これにより【セット名】見出しとの重複が解消される
+      if (desc) {
+        result.push(`<span className="med-id">[${code}] ${esc(desc)}</span>`);
+      } else {
+        result.push(`<span className="med-id">[${code}]</span>`);
       }
-      // skip の場合は何も出力しない
       continue;
     }
 
