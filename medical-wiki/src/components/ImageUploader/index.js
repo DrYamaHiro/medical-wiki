@@ -208,12 +208,22 @@ export default function ImageUploader({ docId }) {
     }
   };
 
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
   return (
     <div className={styles.uploader}>
-      {/* メイン画像 (高解像度) */}
+      {/* メイン画像 (高解像度・クリックで拡大) */}
       {featImg && (
-        <div className={styles.mainPreview}>
+        <div className={styles.mainPreview} onClick={() => setLightboxOpen(true)} style={{cursor: 'pointer'}}>
           <img src={featImg.display} alt="" className={styles.mainImage} />
+        </div>
+      )}
+
+      {/* Lightbox オーバーレイ */}
+      {lightboxOpen && featImg && (
+        <div className={styles.lightboxOverlay} onClick={() => setLightboxOpen(false)}>
+          <img src={featImg.display} alt="" className={styles.lightboxImage} onClick={(e) => e.stopPropagation()} />
+          <button className={styles.lightboxClose} onClick={() => setLightboxOpen(false)}>✕</button>
         </div>
       )}
 
@@ -337,13 +347,23 @@ export function ImageGallery({ docId }) {
     setSelectedId(publicId);
   };
 
+  const [galleryLightbox, setGalleryLightbox] = useState(false);
+
   if (loading || images.length === 0) return null;
 
   return (
     <div className={styles.gallery}>
       {selectedImg && (
-        <div className={styles.largeView}>
+        <div className={styles.largeView} onClick={() => setGalleryLightbox(true)} style={{cursor: 'pointer'}}>
           <img src={selectedImg.display} alt="" className={styles.largeImage} />
+        </div>
+      )}
+
+      {/* Gallery Lightbox */}
+      {galleryLightbox && selectedImg && (
+        <div className={styles.lightboxOverlay} onClick={() => setGalleryLightbox(false)}>
+          <img src={selectedImg.display} alt="" className={styles.lightboxImage} onClick={(e) => e.stopPropagation()} />
+          <button className={styles.lightboxClose} onClick={() => setGalleryLightbox(false)}>✕</button>
         </div>
       )}
       {images.length > 1 && (
