@@ -1,0 +1,1 @@
+(globalThis.webpackChunkmedical_knowledge_wiki=globalThis.webpackChunkmedical_knowledge_wiki||[]).push([[5741],{45741(){}}]);

@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunkmedical_knowledge_wiki=globalThis.webpackChunkmedical_knowledge_wiki||[]).push([[1235],{8552(e){e.exports=JSON.parse('{"name":"docusaurus-plugin-content-pages","id":"default"}')}}]);

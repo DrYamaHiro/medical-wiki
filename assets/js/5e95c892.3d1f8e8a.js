@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunkmedical_knowledge_wiki=globalThis.webpackChunkmedical_knowledge_wiki||[]).push([[9647],{8122(e,a,i){i.r(a),i.d(a,{default:()=>u});i(6540);var l=i(4164),s=i(204),r=i(1769),c=i(2831),d=i(1410),n=i(4848);function u(e){return(0,n.jsx)(r.e3,{className:(0,l.A)(s.G.wrapper.docsPages),children:(0,n.jsx)(d.A,{children:(0,c.v)(e.route.routes)})})}}}]);

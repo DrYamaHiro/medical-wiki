@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkmedical_knowledge_wiki=globalThis.webpackChunkmedical_knowledge_wiki||[]).push([[2634],{29179(i,e,l){l.r(e),l.d(e,{default:()=>k});l(96540);var a=l(56347),d=l(74848);function k(){return(0,d.jsx)(a.rd,{to:"/medical-wiki/docs/intro"})}}}]);

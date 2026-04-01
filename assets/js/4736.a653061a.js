@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkmedical_knowledge_wiki=globalThis.webpackChunkmedical_knowledge_wiki||[]).push([[4736],{64736(e,a,i){i.d(a,{createRadarServices:()=>k.f});var k=i(36299);i(6902)}}]);
