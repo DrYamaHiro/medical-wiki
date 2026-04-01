@@ -26,6 +26,7 @@ export default function HisayamaCalculator() {
   const [diabetes, setDiabetes] = useState(null);
   const [tc, setTc] = useState('');
   const [hdl, setHdl] = useState('');
+  const [ldl, setLdl] = useState('');
 
   const toggleHistory = (id) => {
     setHistory((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -102,6 +103,7 @@ export default function HisayamaCalculator() {
     setDiabetes(null);
     setTc('');
     setHdl('');
+    setLdl('');
   };
 
   return (
@@ -139,17 +141,42 @@ export default function HisayamaCalculator() {
           </div>
         </div>
 
-        {/* 二次予防の場合はスコア入力不要 */}
-        {hasHistory && judge && (
-          <div className={styles.result}>
-            <div className={styles.resultJudge} style={{ background: judge.color }}>
-              {judge.text}
-              <br />
-              <span style={{ fontSize: '0.8rem', opacity: 0.9 }}>{judge.sub}</span>
-              <br />
-              <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>{judge.mgmt}</span>
+        {/* 二次予防の場合はスコア入力不要だがLDL入力は必要 */}
+        {hasHistory && (
+          <>
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>
+                LDLコレステロール<span className={styles.inputUnit}>mg/dL（実測値）</span>
+              </label>
+              <div className={styles.inputRow}>
+                <input type="number" step="1" min="10" max="400"
+                  className={styles.inputField} value={ldl}
+                  onChange={(e) => setLdl(e.target.value)} placeholder="140" />
+                <span className={styles.unitText}>mg/dL</span>
+              </div>
             </div>
-          </div>
+            {judge && (
+              <div className={styles.result}>
+                <div className={styles.resultJudge} style={{ background: judge.color }}>
+                  {judge.text}
+                  <br />
+                  <span style={{ fontSize: '0.8rem', opacity: 0.9 }}>{judge.sub}</span>
+                  <br />
+                  <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>{judge.mgmt}</span>
+                </div>
+                {ldl && (
+                  <div className={styles.resultRow} style={{ marginTop: '0.5rem' }}>
+                    <span className={styles.resultLabel}>現在のLDL-C</span>
+                    <span className={styles.resultValue} style={{
+                      color: parseFloat(ldl) >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '#C62828' : '#2E7D32'
+                    }}>
+                      {ldl} mg/dL — {parseFloat(ldl) >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '目標未達' : '目標達成'}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
         )}
 
         {/* 一次予防の場合のみスコア入力を表示 */}
@@ -237,6 +264,18 @@ export default function HisayamaCalculator() {
               </div>
             </div>
 
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>
+                LDLコレステロール<span className={styles.inputUnit}>mg/dL（実測値）</span>
+              </label>
+              <div className={styles.inputRow}>
+                <input type="number" step="1" min="10" max="400"
+                  className={styles.inputField} value={ldl}
+                  onChange={(e) => setLdl(e.target.value)} placeholder="140" />
+                <span className={styles.unitText}>mg/dL</span>
+              </div>
+            </div>
+
             {/* 一次予防の結果 */}
             <div className={styles.result}>
               <div className={styles.resultRow}>
@@ -250,13 +289,25 @@ export default function HisayamaCalculator() {
                 </span>
               </div>
               {judge && (
-                <div className={styles.resultJudge} style={{ background: judge.color }}>
-                  {judge.text}
-                  <br />
-                  <span style={{ fontSize: '0.8rem', opacity: 0.9 }}>{judge.sub}</span>
-                  <br />
-                  <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>{judge.mgmt}</span>
-                </div>
+                <>
+                  <div className={styles.resultJudge} style={{ background: judge.color }}>
+                    {judge.text}
+                    <br />
+                    <span style={{ fontSize: '0.8rem', opacity: 0.9 }}>{judge.sub}</span>
+                    <br />
+                    <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>{judge.mgmt}</span>
+                  </div>
+                  {ldl && (
+                    <div className={styles.resultRow} style={{ marginTop: '0.5rem' }}>
+                      <span className={styles.resultLabel}>現在のLDL-C</span>
+                      <span className={styles.resultValue} style={{
+                        color: parseFloat(ldl) >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '#C62828' : '#2E7D32'
+                      }}>
+                        {ldl} mg/dL — {parseFloat(ldl) >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '目標未達' : '目標達成'}
+                      </span>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </>
