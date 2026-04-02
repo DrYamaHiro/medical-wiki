@@ -1,14 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
-import { VACCINE_DATA, DATA_LAST_UPDATED, DATA_FISCAL_YEAR } from './vaccineData';
+import { VACCINE_LIST, CLINICS, DATA_LAST_UPDATED, DATA_FISCAL_YEAR } from './vaccineData';
 
 /**
  * ワクチン料金計算ツール
  *
- * ワクチン選択 → 自治体選択（契約自治体 or 未契約） → 請求額・自己負担額を自動計算
+ * 拠点選択 → ワクチン選択 → 自治体選択 → 窓口負担・請求金額を自動表示
  */
 
 const NO_CONTRACT = '__NO_CONTRACT__';
+const EXEMPT = '__EXEMPT__';
 
 const selectStyle = {
   width: '100%',
@@ -21,33 +22,83 @@ const selectStyle = {
   color: 'var(--ifm-font-color-base)',
 };
 
+const infoBoxStyle = {
+  padding: '0.5rem 0.8rem',
+  marginBottom: '1rem',
+  borderRadius: 6,
+  background: 'var(--ifm-color-emphasis-100)',
+  fontSize: '0.82rem',
+  color: 'var(--ifm-color-emphasis-600)',
+};
+
+function fmt(n) {
+  if (n === null || n === undefined) return '要確認';
+  return n.toLocaleString() + '円';
+}
+
 export default function VaccineBillingCalculator() {
-  const [selectedVaccine, setSelectedVaccine] = useState('');
+  const [clinicId, setClinicId] = useState('');
+  const [vaccineName, setVaccineName] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
+  const [isExempt, setIsExempt] = useState(false);
 
-  const vaccine = useMemo(() => {
-    if (!selectedVaccine) return null;
-    return VACCINE_DATA.find(v => v.name === selectedVaccine) || null;
-  }, [selectedVaccine]);
+  const clinic = useMemo(() =>
+    CLINICS.find(c => c.id === clinicId) || null, [clinicId]);
 
-  const matchedContract = useMemo(() => {
-    if (!vaccine || !selectedCity || selectedCity === NO_CONTRACT) return null;
-    return vaccine.contracts.find(c => c.city === selectedCity) || null;
-  }, [vaccine, selectedCity]);
+  // 選択した拠点で利用可能なワクチン（契約がある or selfPayがある）
+  const availableVaccines = useMemo(() => {
+    if (!clinicId) return VACCINE_LIST;
+    return VACCINE_LIST;
+  }, [clinicId]);
 
-  const hasContract = matchedContract !== null;
+  const vaccine = useMemo(() =>
+    VACCINE_LIST.find(v => v.name === vaccineName) || null, [vaccineName]);
+
+  // この拠点・このワクチンの契約自治体リスト
+  const contracts = useMemo(() => {
+    if (!vaccine || !clinicId) return [];
+    return vaccine.billing[clinicId] || [];
+  }, [vaccine, clinicId]);
+
+  const matched = useMemo(() => {
+    if (!selectedCity || selectedCity === NO_CONTRACT) return null;
+    return contracts.find(c => c.city === selectedCity) || null;
+  }, [contracts, selectedCity]);
+
+  const hasContract = matched !== null;
   const isNoContract = selectedCity === NO_CONTRACT;
-  const subsidy = hasContract ? matchedContract.subsidy : 0;
-  const patientPay = vaccine ? Math.max(0, vaccine.clinicPrice - subsidy) : 0;
   const showResult = vaccine && selectedCity;
 
+  // 表示する金額
+  const copay = hasContract
+    ? (isExempt && matched.copayExempt !== undefined ? matched.copayExempt : matched.copay)
+    : vaccine?.selfPay ?? null;
+  const claim = hasContract
+    ? (isExempt && matched.claimExempt !== undefined ? matched.claimExempt : matched.claim)
+    : null;
+
   const reset = () => {
-    setSelectedVaccine('');
+    setClinicId('');
+    setVaccineName('');
     setSelectedCity('');
+    setIsExempt(false);
   };
 
+  // カテゴリでグループ化
+  const categories = useMemo(() => {
+    const cats = [];
+    const seen = new Set();
+    for (const v of availableVaccines) {
+      if (!seen.has(v.category)) {
+        seen.add(v.category);
+        cats.push(v.category);
+      }
+    }
+    return cats;
+  }, [availableVaccines]);
+
   return (
-    <div className={styles.calc} style={{ maxWidth: 600 }}>
+    <div className={styles.calc} style={{ maxWidth: 620 }}>
       {/* ヘッダー */}
       <div className={styles.calcHeader}>
         <div>
@@ -59,151 +110,210 @@ export default function VaccineBillingCalculator() {
         <button className={styles.resetBtn} onClick={reset}>リセット</button>
       </div>
 
-      {/* 入力セクション */}
       <div className={styles.calcBody}>
-        {/* ワクチン選択 */}
+        {/* Step 1: 拠点選択 */}
         <div className={styles.inputGroup}>
-          <label className={styles.inputLabel}>ワクチン選択</label>
+          <label className={styles.inputLabel}>① 拠点</label>
           <select
-            value={selectedVaccine}
-            onChange={e => { setSelectedVaccine(e.target.value); setSelectedCity(''); }}
+            value={clinicId}
+            onChange={e => { setClinicId(e.target.value); setVaccineName(''); setSelectedCity(''); setIsExempt(false); }}
             style={selectStyle}
           >
-            <option value="">-- ワクチンを選択 --</option>
-            {VACCINE_DATA.map(v => (
-              <option key={v.name} value={v.name}>{v.name}</option>
+            <option value="">-- 拠点を選択 --</option>
+            {CLINICS.map(c => (
+              <option key={c.id} value={c.id}>
+                {c.name}（{c.municipality}）
+              </option>
             ))}
           </select>
         </div>
 
-        {/* ワクチン情報 */}
-        {vaccine && (
-          <>
-            <div style={{
-              padding: '0.5rem 0.8rem',
-              marginBottom: '1rem',
-              borderRadius: 6,
-              background: 'var(--ifm-color-emphasis-100)',
-              fontSize: '0.82rem',
-              color: 'var(--ifm-color-emphasis-600)',
-            }}>
-              {vaccine.notes}
-            </div>
+        {/* Step 2: ワクチン選択 */}
+        {clinicId && (
+          <div className={styles.inputGroup}>
+            <label className={styles.inputLabel}>② ワクチン</label>
+            <select
+              value={vaccineName}
+              onChange={e => { setVaccineName(e.target.value); setSelectedCity(''); setIsExempt(false); }}
+              style={selectStyle}
+            >
+              <option value="">-- ワクチンを選択 --</option>
+              {categories.map(cat => (
+                <optgroup key={cat} label={cat}>
+                  {availableVaccines.filter(v => v.category === cat).map(v => {
+                    const bc = v.billing[clinicId] || [];
+                    const tag = bc.length > 0 ? '公費あり' : '自費';
+                    return (
+                      <option key={v.name} value={v.name}>
+                        {v.name} [{tag}]
+                      </option>
+                    );
+                  })}
+                </optgroup>
+              ))}
+            </select>
+          </div>
+        )}
 
-            {/* 自治体選択 */}
-            <div className={styles.inputGroup}>
-              <label className={styles.inputLabel}>
-                患者の居住自治体
-              </label>
+        {/* ワクチン備考 */}
+        {vaccine && <div style={infoBoxStyle}>{vaccine.notes}</div>}
+
+        {/* Step 3: 自治体選択 */}
+        {vaccine && clinicId && (
+          <div className={styles.inputGroup}>
+            <label className={styles.inputLabel}>③ 患者の居住自治体</label>
+            {contracts.length > 0 ? (
               <select
                 value={selectedCity}
-                onChange={e => setSelectedCity(e.target.value)}
+                onChange={e => { setSelectedCity(e.target.value); setIsExempt(false); }}
                 style={selectStyle}
               >
                 <option value="">-- 自治体を選択 --</option>
-                {vaccine.contracts.map(c => (
+                {contracts.map(c => (
                   <option key={c.city} value={c.city}>
-                    {c.city}（助成あり: {c.subsidy.toLocaleString()}円）
+                    {c.city}（公費あり）
                   </option>
                 ))}
-                <option value={NO_CONTRACT}>
-                  その他（契約なし・全額自費）
-                </option>
+                <option value={NO_CONTRACT}>その他（契約なし・全額自費）</option>
               </select>
-            </div>
-          </>
+            ) : (
+              <div style={{ ...infoBoxStyle, background: '#FFF3E0', color: '#E65100', fontWeight: 600 }}>
+                この拠点ではこのワクチンの公費契約はありません → 全額自費
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 減免チェック */}
+        {hasContract && matched.copayExempt !== undefined && (
+          <div className={styles.inputGroup}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={isExempt}
+                onChange={e => setIsExempt(e.target.checked)}
+                className={styles.checkbox}
+              />
+              <span style={{ fontSize: '0.9rem' }}>
+                {matched.exemptNote || '生活保護・非課税世帯'}（減免対象）
+              </span>
+            </label>
+          </div>
         )}
       </div>
 
-      {/* 結果表示 */}
+      {/* ===== 結果表示 ===== */}
       {showResult && (
         <div className={styles.result}>
+          {/* 窓口負担 */}
           <div className={styles.resultRow}>
-            <span className={styles.resultLabel}>接種料金（税込）</span>
-            <span className={styles.resultValue}>
-              {vaccine.clinicPrice.toLocaleString()}円
-            </span>
-          </div>
-
-          <div className={styles.resultRow}>
-            <span className={styles.resultLabel}>
-              自治体助成
-              {hasContract && (
-                <span style={{ fontSize: '0.75rem', marginLeft: 4 }}>
-                  （{matchedContract.city}）
-                </span>
-              )}
-            </span>
+            <span className={styles.resultLabel}>窓口負担（患者支払額）</span>
             <span className={styles.resultValue} style={{
-              color: hasContract ? '#2E7D32' : 'var(--ifm-color-emphasis-400)',
+              color: copay === 0 ? '#2E7D32' : undefined,
             }}>
-              {hasContract ? `−${subsidy.toLocaleString()}円` : 'なし'}
+              {isNoContract
+                ? (vaccine.selfPay !== null ? fmt(vaccine.selfPay) : '要確認（設定価格）')
+                : fmt(copay)}
             </span>
           </div>
 
-          {hasContract && matchedContract.conditions && (
-            <div className={styles.resultRow} style={{ padding: '0.3rem 1rem' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--ifm-color-emphasis-500)' }}>
-                助成条件: {matchedContract.conditions}
-                {matchedContract.residentOnly && ' ※住民のみ対象'}
+          {/* 請求金額 */}
+          {hasContract && (
+            <div className={styles.resultRow}>
+              <span className={styles.resultLabel}>
+                自治体請求金額
+                <span style={{ fontSize: '0.75rem', marginLeft: 4 }}>
+                  （{matched.city}）
+                </span>
+              </span>
+              <span className={styles.resultValue} style={{ color: '#1565C0' }}>
+                {fmt(claim)}
               </span>
             </div>
           )}
 
+          {/* 条件 */}
+          {hasContract && matched.conditions && (
+            <div className={styles.resultRow} style={{ padding: '0.3rem 1rem' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--ifm-color-emphasis-500)' }}>
+                条件: {matched.conditions}
+              </span>
+            </div>
+          )}
+
+          {/* 償還払い注記 */}
+          {hasContract && matched.isReimbursement && (
+            <div style={{
+              padding: '0.5rem 1rem',
+              background: '#FFF8E1',
+              fontSize: '0.8rem',
+              color: '#F57F17',
+              fontWeight: 600,
+            }}>
+              ⚠ 窓口では全額自費で徴収。患者が後日、領収書+明細書で市に助成金申請するフローです
+            </div>
+          )}
+
+          {/* 判定バー */}
           <div className={styles.resultJudge} style={{
             background: hasContract ? '#1565C0' : '#E65100',
-            fontSize: '1.2rem',
+            fontSize: '1.1rem',
           }}>
-            患者自己負担: {patientPay.toLocaleString()}円
-            {isNoContract && (
-              <div style={{ fontSize: '0.75rem', fontWeight: 400, marginTop: 2 }}>
-                契約なし → 全額自費
-              </div>
-            )}
-            {hasContract && patientPay === 0 && (
-              <div style={{ fontSize: '0.75rem', fontWeight: 400, marginTop: 2 }}>
-                公費全額助成
-              </div>
-            )}
+            {isNoContract ? (
+              <>
+                全額自費: {vaccine.selfPay !== null ? fmt(vaccine.selfPay) : '要確認'}
+              </>
+            ) : hasContract ? (
+              <>
+                窓口: {fmt(copay)} ／ 請求: {fmt(claim)}
+                {isExempt && (
+                  <div style={{ fontSize: '0.75rem', fontWeight: 400, marginTop: 2 }}>
+                    減免適用
+                  </div>
+                )}
+              </>
+            ) : null}
           </div>
         </div>
       )}
 
-      {/* 契約自治体一覧テーブル（常に表示） */}
-      {vaccine && vaccine.contracts.length > 0 && (
+      {/* 契約なし＆自費も未設定の場合 */}
+      {vaccine && clinicId && contracts.length === 0 && (
+        <div className={styles.result}>
+          <div className={styles.resultJudge} style={{ background: '#E65100' }}>
+            全額自費: {vaccine.selfPay !== null ? fmt(vaccine.selfPay) : '要確認（設定価格）'}
+          </div>
+        </div>
+      )}
+
+      {/* 契約自治体一覧テーブル */}
+      {vaccine && clinicId && contracts.length > 0 && (
         <div style={{ padding: '0.5rem 1.2rem 1rem' }}>
           <details>
             <summary style={{
-              fontSize: '0.82rem',
-              fontWeight: 600,
-              cursor: 'pointer',
+              fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer',
               color: 'var(--ifm-color-primary)',
             }}>
-              契約自治体一覧（{vaccine.contracts.length}件）
+              {clinic?.name} 契約自治体一覧（{contracts.length}件）
             </summary>
             <table className={styles.judgeTable} style={{ marginTop: '0.5rem' }}>
               <thead>
                 <tr>
                   <th>自治体</th>
-                  <th>助成額</th>
+                  <th>窓口負担</th>
+                  <th>請求金額</th>
                   <th>条件</th>
-                  <th>自己負担</th>
                 </tr>
               </thead>
               <tbody>
-                {vaccine.contracts.map(c => (
+                {contracts.map(c => (
                   <tr key={c.city} className={
-                    matchedContract && matchedContract.city === c.city ? styles.active : ''
+                    matched && matched.city === c.city ? styles.active : ''
                   }>
                     <td>{c.city}</td>
-                    <td>{c.subsidy.toLocaleString()}円</td>
-                    <td style={{ fontSize: '0.75rem' }}>
-                      {c.conditions}
-                      {c.residentOnly && ' (住民のみ)'}
-                    </td>
-                    <td style={{ fontWeight: 700 }}>
-                      {Math.max(0, vaccine.clinicPrice - c.subsidy).toLocaleString()}円
-                    </td>
+                    <td>{fmt(c.copay)}</td>
+                    <td>{fmt(c.claim)}</td>
+                    <td style={{ fontSize: '0.72rem' }}>{c.conditions || ''}</td>
                   </tr>
                 ))}
               </tbody>
@@ -212,19 +322,12 @@ export default function VaccineBillingCalculator() {
         </div>
       )}
 
-      {vaccine && vaccine.contracts.length === 0 && (
-        <div className={styles.note}>
-          このワクチンは全額自費です。自治体助成の契約はありません。
-        </div>
-      )}
-
       {/* フッター */}
       <div className={styles.note}>
-        <strong>注意:</strong> 料金は{DATA_FISCAL_YEAR}時点のものです。
-        助成額・対象条件は自治体により異なり、年度途中で変更される場合があります。
-        不明な場合は患者の居住自治体に直接お問い合わせください。<br/>
-        <strong>データ編集:</strong> ワクチンの追加・料金変更・契約自治体の更新は{' '}
-        <code>vaccineData.js</code> を編集してください。
+        <strong>注意:</strong> 料金は{DATA_FISCAL_YEAR}時点です。
+        「要確認」はデータ未入力です。<br/>
+        <strong>データ編集:</strong>{' '}
+        <code>vaccineData.js</code> を編集してワクチン・料金・契約自治体を更新してください。
       </div>
     </div>
   );
