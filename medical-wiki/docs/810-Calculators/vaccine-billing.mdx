@@ -1,0 +1,37 @@
+---
+id: vaccine-billing
+title: "ワクチン料金計算"
+sidebar_label: "ワクチン料金計算"
+sidebar_position: 28
+hide_table_of_contents: true
+description: "ワクチン接種料金を自動計算。自治体助成・契約状況を反映し、患者自己負担額を表示します。"
+keywords: ["ワクチン", "予防接種", "料金", "助成", "自治体", "インフルエンザ", "肺炎球菌", "帯状疱疹", "HPV", "フルミスト", "エフルエルダ"]
+---
+import VaccineBillingCalculator from '@site/src/components/ClinicalCalc/VaccineBillingCalculator';
+
+# ワクチン料金計算ツール
+
+ワクチンを選択し、患者の居住自治体を入力すると、契約の有無・助成額・患者自己負担額を自動計算します。
+
+<VaccineBillingCalculator />
+
+## データの更新方法
+
+料金や契約自治体の変更は **[vaccineData.js](https://github.com/DrYamaHiro/medical-wiki/edit/master/medical-wiki/src/components/ClinicalCalc/vaccineData.js)** を編集してください。
+
+### 更新が必要になるタイミング
+- **年度替わり**（4月）: 自治体の助成額が変更される場合
+- **新規契約**: 新しい自治体と契約した場合
+- **新ワクチン導入**: 新しいワクチンを採用した場合
+- **料金改定**: クリニックの接種料金を変更した場合
+
+### 編集方法
+1. 上記リンクからGitHubの編集画面を開く
+2. ワクチンの追加・料金変更・契約自治体の追加を行う
+3. `DATA_LAST_UPDATED` の日付を更新日に変更する
+4. 「Commit changes」で保存 → 自動デプロイ
+
+## 関連ページ
+- [インフルエンザA型](../Acute-URI/j10-influenza-a)
+- [ワクチン接種記録](../Health-Check/z259-vaccination-record)
+- [ヘルスメンテナンス](../Health-Check/z139-health-maintenance-screening)
