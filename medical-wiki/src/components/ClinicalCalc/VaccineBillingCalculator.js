@@ -128,6 +128,21 @@ export default function VaccineBillingCalculator() {
           </select>
         </div>
 
+        {/* 拠点の注意事項 */}
+        {clinic && clinic.notice && (
+          <div style={{
+            padding: '0.5rem 0.8rem',
+            marginBottom: '1rem',
+            borderRadius: 6,
+            background: '#FFF3E0',
+            fontSize: '0.85rem',
+            color: '#E65100',
+            fontWeight: 600,
+          }}>
+            {clinic.notice}
+          </div>
+        )}
+
         {/* Step 2: ワクチン選択 */}
         {clinicId && (
           <div className={styles.inputGroup}>
