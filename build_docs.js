@@ -10,7 +10,7 @@ const fs   = require('fs');
 const path = require('path');
 
 const BASE_DIR   = path.join(__dirname);
-const OUTPUT_DIR = path.join(BASE_DIR, 'ver.3.0.2.0', 'output');
+const OUTPUT_DIR = path.join(BASE_DIR, 'ver.3.0.2.1', 'output');
 const DOCS_DIR   = path.join(BASE_DIR, 'medical-wiki', 'docs');
 
 // =========================================================
