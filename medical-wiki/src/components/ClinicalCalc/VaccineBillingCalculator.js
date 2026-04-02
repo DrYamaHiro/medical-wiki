@@ -32,9 +32,12 @@ const infoBoxStyle = {
 };
 
 function fmt(n) {
+  if (n === 'TBD') return '未決定';
   if (n === null || n === undefined) return '要確認';
   return n.toLocaleString() + '円';
 }
+
+function isTBD(n) { return n === 'TBD'; }
 
 export default function VaccineBillingCalculator() {
   const [clinicId, setClinicId] = useState('');
@@ -217,6 +220,22 @@ export default function VaccineBillingCalculator() {
         )}
       </div>
 
+      {/* ===== 未決定バナー ===== */}
+      {showResult && (isTBD(copay) || isTBD(claim) || (isNoContract && isTBD(vaccine.selfPay))) && (
+        <div style={{
+          margin: '0 1.2rem 0.5rem',
+          padding: '0.6rem 0.8rem',
+          borderRadius: 6,
+          background: '#FFF3E0',
+          border: '1px solid #FFB74D',
+          fontSize: '0.82rem',
+          color: '#E65100',
+          fontWeight: 600,
+        }}>
+          ⚠ この項目の料金はまだ確定していません（シーズン前 or 自治体未公表）。確定次第データを更新します。
+        </div>
+      )}
+
       {/* ===== 結果表示 ===== */}
       {showResult && (
         <div className={styles.result}>
@@ -227,7 +246,7 @@ export default function VaccineBillingCalculator() {
               color: copay === 0 ? '#2E7D32' : undefined,
             }}>
               {isNoContract
-                ? (vaccine.selfPay !== null ? fmt(vaccine.selfPay) : '要確認（設定価格）')
+                ? (vaccine.selfPay != null ? fmt(vaccine.selfPay) : '要確認（設定価格）')
                 : fmt(copay)}
             </span>
           </div>
@@ -276,7 +295,7 @@ export default function VaccineBillingCalculator() {
           }}>
             {isNoContract ? (
               <>
-                全額自費: {vaccine.selfPay !== null ? fmt(vaccine.selfPay) : '要確認'}
+                全額自費: {vaccine.selfPay != null ? fmt(vaccine.selfPay) : '要確認'}
               </>
             ) : hasContract ? (
               <>
@@ -296,7 +315,7 @@ export default function VaccineBillingCalculator() {
       {vaccine && clinicId && contracts.length === 0 && (
         <div className={styles.result}>
           <div className={styles.resultJudge} style={{ background: '#E65100' }}>
-            全額自費: {vaccine.selfPay !== null ? fmt(vaccine.selfPay) : '要確認（設定価格）'}
+            全額自費: {vaccine.selfPay != null ? fmt(vaccine.selfPay) : '要確認（設定価格）'}
           </div>
         </div>
       )}

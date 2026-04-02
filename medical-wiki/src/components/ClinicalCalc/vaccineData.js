@@ -11,8 +11,9 @@
  * - selfPay = 公費対象外の全額自費料金
  * - isReimbursement = true: 窓口全額自費→患者が後日自治体に助成金申請
  * - null = 未確認（「要確認」と表示）
+ * - 'TBD' = 未決定（シーズン前等、まだ決まっていない。「未決定」と表示）
  *
- * ソース: 各院事務スタッフ入力シート + Slack確認
+ * ソース: 各院事務スタッフ入力シート + Slack確認 + 自治体Webサイト調査
  */
 
 export const DATA_LAST_UPDATED = '2026-04-02';
@@ -36,28 +37,28 @@ export const VACCINE_LIST = [
   {
     name: 'インフルエンザ注射（一般・自費）',
     category: 'インフルエンザ',
-    selfPay: null, // 未決定
-    notes: '全額自費',
+    selfPay: 'TBD',
+    notes: '全額自費。料金はシーズン前に決定',
     billing: { kasai: [], minamisuna: [], 'kita-toda': [], ichikawa: [] },
   },
   {
     name: 'インフルエンザ注射（高齢者 65-74歳・定期）',
     category: 'インフルエンザ',
     selfPay: null,
-    notes: '65-74歳。窓口負担は未決定（シーズン前に確定）',
+    notes: '65-74歳。窓口負担はシーズン前に確定',
     billing: {
       kasai: [
-        { city: '江戸川区', copay: null, claim: null, conditions: '65-74歳。23区内共通' },
+        { city: '江戸川区', copay: 'TBD', claim: 'TBD', conditions: '65-74歳。23区内共通' },
       ],
       minamisuna: [],
       'kita-toda': [
-        { city: '戸田市', copay: null, claim: null, conditions: '65-74歳' },
-        { city: 'さいたま市', copay: null, claim: null, conditions: '65-74歳' },
-        { city: '川口市', copay: null, claim: null, conditions: '65-74歳' },
-        { city: '蕨市', copay: null, claim: null, conditions: '65-74歳' },
+        { city: '戸田市', copay: 'TBD', claim: 'TBD', conditions: '65-74歳' },
+        { city: 'さいたま市', copay: 'TBD', claim: 'TBD', conditions: '65-74歳' },
+        { city: '川口市', copay: 'TBD', claim: 'TBD', conditions: '65-74歳' },
+        { city: '蕨市', copay: 'TBD', claim: 'TBD', conditions: '65-74歳' },
       ],
       ichikawa: [
-        { city: '市川市', copay: null, claim: null, conditions: '65歳以上' },
+        { city: '市川市', copay: 'TBD', claim: 'TBD', conditions: '65歳以上' },
       ],
     },
   },
@@ -65,17 +66,17 @@ export const VACCINE_LIST = [
     name: 'インフルエンザ注射（高齢者 75歳以上・定期）',
     category: 'インフルエンザ',
     selfPay: null,
-    notes: '75歳以上。江戸川区は独自助成あり？ 窓口負担は未決定',
+    notes: '75歳以上。東京都は75歳以上無料の自治体あり。窓口負担はシーズン前に確定',
     billing: {
       kasai: [
-        { city: '江戸川区', copay: null, claim: null, conditions: '75歳以上。江戸川区独自助成？' },
+        { city: '江戸川区', copay: 'TBD', claim: 'TBD', conditions: '75歳以上。無料の可能性あり（自治体Web調査）' },
       ],
       minamisuna: [],
       'kita-toda': [
-        { city: '戸田市', copay: null, claim: null, conditions: '75歳以上' },
-        { city: 'さいたま市', copay: null, claim: null, conditions: '75歳以上' },
-        { city: '川口市', copay: null, claim: null, conditions: '75歳以上' },
-        { city: '蕨市', copay: null, claim: null, conditions: '75歳以上' },
+        { city: '戸田市', copay: 'TBD', claim: 'TBD', conditions: '75歳以上' },
+        { city: 'さいたま市', copay: 'TBD', claim: 'TBD', conditions: '75歳以上' },
+        { city: '川口市', copay: 'TBD', claim: 'TBD', conditions: '75歳以上' },
+        { city: '蕨市', copay: 'TBD', claim: 'TBD', conditions: '75歳以上' },
       ],
       ichikawa: [], // 市川は65歳以上で一括（上の行に含む）
     },
@@ -83,33 +84,32 @@ export const VACCINE_LIST = [
   {
     name: 'インフルエンザ注射（小児 0-12歳）',
     category: 'インフルエンザ',
-    selfPay: null,
-    notes: '市川院のみ記載あり。全額自費',
+    selfPay: 'TBD',
+    notes: '市川院のみ記載あり。全額自費。料金はシーズン前に決定',
     billing: { kasai: [], minamisuna: [], 'kita-toda': [], ichikawa: [] },
   },
   {
     name: 'フルミスト（一般・自費）',
     category: 'インフルエンザ',
-    selfPay: null, // 未決定
-    notes: '2歳以上。経鼻投与・注射不要。生ワクチン。全額自費',
+    selfPay: 'TBD',
+    notes: '2歳以上。経鼻投与・注射不要。生ワクチン。全額自費。料金はシーズン前に決定',
     billing: { kasai: [], minamisuna: [], 'kita-toda': [], ichikawa: [] },
   },
   {
     name: 'フルミスト（小児 2-18歳・公費）',
     category: 'インフルエンザ',
     selfPay: null,
-    notes: '2-18歳。経鼻投与。窓口負担は未決定',
+    notes: '2-18歳。経鼻投与。窓口負担はシーズン前に確定',
     billing: {
       kasai: [
-        { city: '江戸川区', copay: null, claim: null, conditions: '2-18歳' },
+        { city: '江戸川区', copay: 'TBD', claim: 'TBD', conditions: '2-18歳' },
       ],
       minamisuna: [],
       'kita-toda': [
-        // 北戸田シート: 公費○
-        { city: '戸田市', copay: null, claim: null, conditions: '2-18歳' },
-        { city: 'さいたま市', copay: null, claim: null, conditions: '2-18歳' },
-        { city: '川口市', copay: null, claim: null, conditions: '2-18歳' },
-        { city: '蕨市', copay: null, claim: null, conditions: '2-18歳' },
+        { city: '戸田市', copay: 'TBD', claim: 'TBD', conditions: '2-18歳' },
+        { city: 'さいたま市', copay: 'TBD', claim: 'TBD', conditions: '2-18歳' },
+        { city: '川口市', copay: 'TBD', claim: 'TBD', conditions: '2-18歳' },
+        { city: '蕨市', copay: 'TBD', claim: 'TBD', conditions: '2-18歳' },
       ],
       ichikawa: [], // 市川シート: フルミスト小児の公費記載なし
     },
@@ -117,8 +117,8 @@ export const VACCINE_LIST = [
   {
     name: 'エフルエルダ（高用量インフルエンザ・65歳以上）',
     category: 'インフルエンザ',
-    selfPay: null,
-    notes: '65歳以上。2025/2026シーズンから。全院取扱い未定',
+    selfPay: 'TBD',
+    notes: '65歳以上。2025/2026シーズンから。全院取扱い未定。自治体からの補助あり？',
     billing: { kasai: [], minamisuna: [], 'kita-toda': [], ichikawa: [] },
   },
 
@@ -128,8 +128,8 @@ export const VACCINE_LIST = [
   {
     name: '新型コロナ（一般・自費）',
     category: '新型コロナ',
-    selfPay: null,
-    notes: '全額自費',
+    selfPay: 'TBD',
+    notes: '全額自費。料金はシーズン前に決定',
     billing: { kasai: [], minamisuna: [], 'kita-toda': [], ichikawa: [] },
   },
   {
@@ -139,17 +139,17 @@ export const VACCINE_LIST = [
     notes: '65-74歳。シーズン近くに手引き届く予定',
     billing: {
       kasai: [
-        { city: '江戸川区', copay: null, claim: null, conditions: '65-74歳' },
+        { city: '江戸川区', copay: 'TBD', claim: 'TBD', conditions: '65-74歳' },
       ],
       minamisuna: [],
       'kita-toda': [
-        { city: '戸田市', copay: null, claim: null, conditions: '65-74歳' },
-        { city: 'さいたま市', copay: null, claim: null, conditions: '65-74歳' },
-        { city: '川口市', copay: null, claim: null, conditions: '65-74歳' },
-        { city: '蕨市', copay: null, claim: null, conditions: '65-74歳' },
+        { city: '戸田市', copay: 'TBD', claim: 'TBD', conditions: '65-74歳' },
+        { city: 'さいたま市', copay: 'TBD', claim: 'TBD', conditions: '65-74歳' },
+        { city: '川口市', copay: 'TBD', claim: 'TBD', conditions: '65-74歳' },
+        { city: '蕨市', copay: 'TBD', claim: 'TBD', conditions: '65-74歳' },
       ],
       ichikawa: [
-        { city: '市川市', copay: null, claim: null, conditions: '65歳以上' },
+        { city: '市川市', copay: 'TBD', claim: 'TBD', conditions: '65歳以上' },
       ],
     },
   },
@@ -160,14 +160,14 @@ export const VACCINE_LIST = [
     notes: '75歳以上。シーズン近くに手引き届く予定',
     billing: {
       kasai: [
-        { city: '江戸川区', copay: null, claim: null, conditions: '75歳以上' },
+        { city: '江戸川区', copay: 'TBD', claim: 'TBD', conditions: '75歳以上' },
       ],
       minamisuna: [],
       'kita-toda': [
-        { city: '戸田市', copay: null, claim: null, conditions: '75歳以上' },
-        { city: 'さいたま市', copay: null, claim: null, conditions: '75歳以上' },
-        { city: '川口市', copay: null, claim: null, conditions: '75歳以上' },
-        { city: '蕨市', copay: null, claim: null, conditions: '75歳以上' },
+        { city: '戸田市', copay: 'TBD', claim: 'TBD', conditions: '75歳以上' },
+        { city: 'さいたま市', copay: 'TBD', claim: 'TBD', conditions: '75歳以上' },
+        { city: '川口市', copay: 'TBD', claim: 'TBD', conditions: '75歳以上' },
+        { city: '蕨市', copay: 'TBD', claim: 'TBD', conditions: '75歳以上' },
       ],
       ichikawa: [], // 市川は65歳以上で一括
     },
