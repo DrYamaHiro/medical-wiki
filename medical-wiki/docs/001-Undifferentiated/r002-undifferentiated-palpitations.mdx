@@ -1,0 +1,164 @@
+---
+id: r002-undifferentiated-palpitations
+title: "[R00.2] 動悸精査 / Undifferentiated Palpitations - Workup"
+sidebar_label: "[R00.2] 動悸精査"
+sidebar_position: 10
+hide_table_of_contents: true
+description: "動悸の原因を不整脈・甲状腺・貧血・パニック障害まで系統的に鑑別するテンプレート。ECGでのWPW・Brugada・QT延長の見逃し防止とホルター心電図の適応判断を重点評価。"
+keywords: ["動悸", "動悸精査", "不整脈", "心房細動", "Af", "PSVT", "WPW", "Brugada", "QT延長", "甲状腺機能亢進", "パニック障害", "ホルター心電図", "palpitations", "R00.2"]
+---
+
+<div className="row wiki-main">
+<div className="col col--5 soap-col">
+
+<h3 className="soap-s">主訴・ROS</h3>
+
+主訴: 動悸 / 胸がドキドキする / 脈が飛ぶ / 脈が速い
+
+**動悸の性状**
+
+タイプ: ドキドキ速い / 脈が飛ぶ / 脈が不規則 / ドクンと強い一拍 / 胸がバクバク
+
+**発症様式・持続時間**
+
+発症: 突然始まり突然止まる（→ PSVT/Af/AFL）/ 徐々に（→ 洞性頻脈/不安）
+持続時間: 秒 / 分 / 時間 / 持続性
+頻度: 初回 / 週＿回 / 月＿回 / 毎日
+
+**誘因**
+
+労作 / カフェイン / アルコール / ストレス / 食後 / 起立時 / 特になし
+
+**随伴症状**
+
+めまい: なし / あり, 失神: なし / あり, 胸痛: なし / あり
+呼吸困難: なし / あり, 冷汗: なし / あり
+
+**既往・背景**
+
+既往: 心疾患 / 甲状腺疾患 / 貧血 / 不安障害 / なし
+内服薬: 気管支拡張薬 / 甲状腺ホルモン / カフェイン含有薬 / ホルモテロール等 / なし
+嗜好品: カフェイン摂取量（＿杯/日）/ アルコール（＿合/日）/ エナジードリンク / なし
+
+<h3 className="soap-o">所見・検査</h3>
+
+バイタル: BP: ＿/＿, HR: ＿bpm（整 / 不整）, BT: ＿℃, SpO2: ＿% (Room Air)
+
+**甲状腺・頸部**
+
+甲状腺触診: 正常 / 腫大 / 結節あり
+頸静脈怒張: なし / あり
+
+**胸部・心臓**
+
+心音: 整 / 不整, 雑音: なし / 収縮期 / 拡張期, 奔馬調律: なし / あり
+
+**四肢・全身**
+
+浮腫: なし / あり（＿）
+手指振戦: なし / あり
+眼球突出: なし / あり
+
+**12誘導ECG**（発作時が理想だが、非発作時も施行）
+
+調律: 洞調律 / 心房細動 / その他（＿）
+HR: ＿bpm, PR間隔: ＿ms, QRS幅: ＿ms, QTc: ＿ms
+δ波: なし / あり, f波: なし / あり, 鋸歯状波: なし / あり
+ST変化: なし / あり（＿）, V1-V3 coved型ST上昇: なし / あり
+
+<button className="toggle-id-btn" onClick={() => typeof document !== 'undefined' && document.querySelector('.soap-col').classList.toggle('show-ids')}>🔬 IDコード 表示/非表示</button>
+
+<h3 className="soap-a">評価</h3>
+
+- **不整脈:**
+  - 心房細動 Af: 不整 + f波（脈拍不整+RR不整）
+  - 発作性上室性頻拍 PSVT: 突然始まり突然止まる + 整な頻脈
+  - 心房粗動 AFL: 鋸歯状波（II, III, aVF）
+  - 心室期外収縮 PVC: 幅広QRS + 先行P波なし
+  - 上室期外収縮 PAC: 正常QRS + 異所性P波
+
+- **非不整脈:**
+  - 洞性頻脈: 甲状腺機能亢進 / 貧血 / 脱水 / 発熱 / 心不全 / 薬剤性
+  - パニック障害: 過換気 + 四肢しびれ + 恐怖感
+
+- **危険な不整脈:**
+  - WPW症候群: δ波 + 短PR（<120ms）+ 幅広QRS（>120ms）
+  - Brugada症候群: V1-V3のcoved型ST上昇
+  - QT延長症候群: QTc延長（>460ms女性 / >440ms男性）
+  - 肥大型心筋症: 若年 + 労作時失神 + 心雑音
+
+- **Red Flags:**
+  - ⚠ 失神を伴う動悸 → 心原性不整脈（致死的不整脈の可能性）
+  - ⚠ 労作時発症 → 器質的心疾患の除外必須
+  - ⚠ 家族歴に突然死 → WPW / Brugada / QT延長 / 肥大型心筋症
+
+<h3 className="soap-p">方針・処方</h3>
+
+- 12誘導ECGを最優先で施行。WPW・Brugada・QT延長の見逃しに注意。
+- 甲状腺・貧血・電解質の基本的スクリーニングを並行して実施。
+
+#### 検査・アクション
+
+**12誘導ECG（最重要）**
+
+<span className="med-id">[Lab-ECG-12] 12誘導心電図</span>
+
+**血液検査**
+
+<span className="med-id">[Lab-Gen-CBC] CBC（貧血除外）</span>
+<span className="med-id">[Lab-Thy-TSH] TSH</span>
+<span className="med-id">[Lab-Thy-FT4] FT4</span>
+<span className="med-id">[Lab-Gen-Chem] 生化学（電解質: K/Mg/Ca）</span>
+<span className="med-id">[Lab-Car-BNP] BNP</span>
+
+**追加検査（適宜）**
+
+<span className="med-id">[Lab-ECG-Holter] ホルター心電図 — 非発作時ECG正常 + 症状再現性あり</span>
+<span className="med-id">[Lab-Echo-TTE] 心エコー — 心雑音あり / BNP高値 / 若年の場合</span>
+
+#### 確定診断時の移行先
+
+- 心房細動 → [心房細動](../Cardiovascular/i48-atrial-fibrillation)（CHADS2-VASc評価）
+- 期外収縮 → [期外収縮](../Cardiovascular/i49-premature-contraction)
+- 心房粗動 → [心房粗動](../Cardiovascular/i48-atrial-flutter)
+- 甲状腺機能亢進 → [バセドウ病](../Endocrine/e050-graves-disease)
+- 貧血 → [鉄欠乏性貧血](../Hematology/d509-iron-deficiency-anemia)
+- パニック障害 → [パニック障害](../Psychiatry/f410-panic-disorder)
+- WPW / Brugada → **循環器専門医紹介**
+
+#### 指導・計画
+
+- **再診:** ECG・血液検査結果確認のため＿日後再診。
+- **安全指導:** 「失神を伴う動悸」「安静時にも止まらない動悸」「胸痛や呼吸困難を伴う」場合は直ちに救急受診。
+- **診断未確定時の対応:**
+  - 非発作時ECG正常 + 再発性の症状 → ホルター心電図を施行
+  - ホルター心電図で不整脈捕捉できず + 頻度が低い → イベントレコーダー検討（循環器紹介）
+  - 甲状腺・貧血・電解質すべて正常 + ECG正常 → パニック障害・不安障害の評価
+  - 動悸 + 失神既往 → 循環器専門医へ紹介（致死的不整脈の精査）
+
+<div className="ap-dr-advice">
+
+> 💡 **Dr.Advice**
+>
+> **[発作性Afの落とし穴]** 受診時のECGが洞調律でも発作性Afは否定できない。脈の不整を自覚する患者にはホルター心電図を施行せよ。未診断のAfは脳梗塞の原因となる。
+>
+> **[WPWとBrugada]** 若年者の動悸+失神既往は致死的不整脈の可能性。ECGでδ波（短PR+幅広QRS）→ WPW、V1-V3のcoved型ST上昇 → Brugadaを見逃すな。いずれも循環器専門医への紹介が必須。
+>
+> **[甲状腺を忘れるな]** 動悸+頻脈+手指振戦+体重減少+発汗過多 → 甲状腺機能亢進症。TSHは必ず確認。Af新規発症の原因が甲状腺であることも少なくない。
+
+</div>
+
+</div>
+<div className="col col--7 right-panel">
+
+<div className="wiki-col">
+
+<ImageUploader docId="r002-undifferentiated-palpitations" />
+
+{/* WIKI_EDIT_START */}
+## 📖 詳細解説
+{/* WIKI_EDIT_END */}
+
+</div>
+</div>
+</div>
