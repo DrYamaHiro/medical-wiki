@@ -1,5 +1,9 @@
 {
   "label": "810: Clinical Calculators（臨床計算ツール）",
   "position": 810,
-  "collapsed": false
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "臨床計算ツール一覧 — 身体計測・腎機能、循環器・脂質、呼吸器・感染症、肝臓・消化器、精神・認知・睡眠、泌尿器、処方支援"
+  }
 }

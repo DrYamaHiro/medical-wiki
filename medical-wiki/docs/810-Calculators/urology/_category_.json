@@ -1,5 +1,9 @@
 {
   "label": "泌尿器",
   "position": 6,
-  "collapsed": false
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "IPSS（国際前立腺症状スコア）、OABSS（過活動膀胱症状スコア）"
+  }
 }

@@ -1,5 +1,9 @@
 {
   "label": "呼吸器・感染症",
   "position": 3,
-  "collapsed": false
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Centor / McIsaac Score、A-DROP、mMRC、CAT"
+  }
 }

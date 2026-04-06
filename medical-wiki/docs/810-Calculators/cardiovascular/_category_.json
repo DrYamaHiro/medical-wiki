@@ -1,5 +1,9 @@
 {
   "label": "循環器・脂質",
   "position": 2,
-  "collapsed": false
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "久山町スコア、CHA₂DS₂-VASc、Friedewald式、HEART Score、Wells DVT"
+  }
 }

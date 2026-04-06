@@ -1,5 +1,9 @@
 {
   "label": "処方支援",
   "position": 7,
-  "collapsed": false
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "ゾレア（オマリズマブ）投与量計算、ワクチン料金計算"
+  }
 }
