@@ -1,7 +1,7 @@
 ---
 id: intro
 title: CS Medical Knowledge Wiki
-sidebar_position: 1
+sidebar_position: 0
 ---
 
 # CS Medical Knowledge Wiki
