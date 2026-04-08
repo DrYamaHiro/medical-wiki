@@ -27,6 +27,7 @@ export default function HisayamaCalculator() {
   const [tc, setTc] = useState('');
   const [hdl, setHdl] = useState('');
   const [ldl, setLdl] = useState('');
+  const [tg, setTg] = useState('');
 
   const toggleHistory = (id) => {
     setHistory((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -35,12 +36,43 @@ export default function HisayamaCalculator() {
   const hasHistory = HISTORY_ITEMS.some((item) => history[item.id]);
   const hasFHorACS = history['fh'] || history['cad'];
 
-  const tcHdlRatio = useMemo(() => {
+  // Friedewald式: TC = LDL + HDL + TG/5（TG < 400 mg/dLで有効）
+  // 入力値が揃わなくても他の値から逆算できれば補完する
+  const computed = useMemo(() => {
     const t = parseFloat(tc);
     const h = parseFloat(hdl);
-    if (!t || !h || t <= 0 || h <= 0) return null;
-    return t / h;
-  }, [tc, hdl]);
+    const l = parseFloat(ldl);
+    const g = parseFloat(tg);
+
+    const hasT = t > 0;
+    const hasH = h > 0;
+    const hasL = l > 0;
+    const hasG = g > 0 && g < 400; // Friedewaldは TG 400未満で有効
+
+    let effT = hasT ? t : null;
+    let effL = hasL ? l : null;
+    let tcSource = hasT ? 'direct' : null;
+    let ldlSource = hasL ? 'direct' : null;
+
+    // TCが未入力 → LDL + HDL + TG/5 で逆算
+    if (!hasT && hasL && hasH && hasG) {
+      effT = l + h + g / 5;
+      tcSource = 'computed';
+    }
+    // LDLが未入力 → TC - HDL - TG/5 で逆算
+    if (!hasL && hasT && hasH && hasG) {
+      effL = t - h - g / 5;
+      ldlSource = 'computed';
+    }
+
+    return { effT, effL, tcSource, ldlSource };
+  }, [tc, hdl, ldl, tg]);
+
+  const tcHdlRatio = useMemo(() => {
+    const h = parseFloat(hdl);
+    if (!computed.effT || !h || h <= 0) return null;
+    return computed.effT / h;
+  }, [computed.effT, hdl]);
 
   const score = useMemo(() => {
     if (hasHistory) return null; // 二次予防はスコア不要
@@ -104,6 +136,7 @@ export default function HisayamaCalculator() {
     setTc('');
     setHdl('');
     setLdl('');
+    setTg('');
   };
 
   return (
@@ -146,12 +179,45 @@ export default function HisayamaCalculator() {
           <>
             <div className={styles.inputGroup}>
               <label className={styles.inputLabel}>
-                LDLコレステロール<span className={styles.inputUnit}>mg/dL（実測値）</span>
+                LDLコレステロール<span className={styles.inputUnit}>mg/dL（実測値 or 逆算）</span>
               </label>
               <div className={styles.inputRow}>
                 <input type="number" step="1" min="10" max="400"
                   className={styles.inputField} value={ldl}
                   onChange={(e) => setLdl(e.target.value)} placeholder="140" />
+                <span className={styles.unitText}>mg/dL</span>
+              </div>
+            </div>
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>
+                総コレステロール<span className={styles.inputUnit}>mg/dL（任意・LDL逆算に使用）</span>
+              </label>
+              <div className={styles.inputRow}>
+                <input type="number" step="1" min="50" max="500"
+                  className={styles.inputField} value={tc}
+                  onChange={(e) => setTc(e.target.value)} placeholder="220" />
+                <span className={styles.unitText}>mg/dL</span>
+              </div>
+            </div>
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>
+                HDLコレステロール<span className={styles.inputUnit}>mg/dL（任意・LDL逆算に使用）</span>
+              </label>
+              <div className={styles.inputRow}>
+                <input type="number" step="1" min="10" max="200"
+                  className={styles.inputField} value={hdl}
+                  onChange={(e) => setHdl(e.target.value)} placeholder="55" />
+                <span className={styles.unitText}>mg/dL</span>
+              </div>
+            </div>
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>
+                中性脂肪（TG）<span className={styles.inputUnit}>mg/dL（任意・Friedewald逆算に使用、TG&lt;400で有効）</span>
+              </label>
+              <div className={styles.inputRow}>
+                <input type="number" step="1" min="10" max="1000"
+                  className={styles.inputField} value={tg}
+                  onChange={(e) => setTg(e.target.value)} placeholder="150" />
                 <span className={styles.unitText}>mg/dL</span>
               </div>
             </div>
@@ -164,13 +230,13 @@ export default function HisayamaCalculator() {
                   <br />
                   <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>{judge.mgmt}</span>
                 </div>
-                {ldl && (
+                {computed.effL !== null && (
                   <div className={styles.resultRow} style={{ marginTop: '0.5rem' }}>
-                    <span className={styles.resultLabel}>現在のLDL-C</span>
+                    <span className={styles.resultLabel}>現在のLDL-C{computed.ldlSource === 'computed' ? '（逆算）' : ''}</span>
                     <span className={styles.resultValue} style={{
-                      color: parseFloat(ldl) >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '#C62828' : '#2E7D32'
+                      color: computed.effL >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '#C62828' : '#2E7D32'
                     }}>
-                      {ldl} mg/dL — {parseFloat(ldl) >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '目標未達' : '目標達成'}
+                      {computed.effL.toFixed(0)} mg/dL — {computed.effL >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '目標未達' : '目標達成'}
                     </span>
                   </div>
                 )}
@@ -266,12 +332,24 @@ export default function HisayamaCalculator() {
 
             <div className={styles.inputGroup}>
               <label className={styles.inputLabel}>
-                LDLコレステロール<span className={styles.inputUnit}>mg/dL（実測値）</span>
+                LDLコレステロール<span className={styles.inputUnit}>mg/dL（実測値 or 逆算）</span>
               </label>
               <div className={styles.inputRow}>
                 <input type="number" step="1" min="10" max="400"
                   className={styles.inputField} value={ldl}
                   onChange={(e) => setLdl(e.target.value)} placeholder="140" />
+                <span className={styles.unitText}>mg/dL</span>
+              </div>
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>
+                中性脂肪（TG）<span className={styles.inputUnit}>mg/dL（任意・Friedewald逆算用、TG&lt;400で有効）</span>
+              </label>
+              <div className={styles.inputRow}>
+                <input type="number" step="1" min="10" max="1000"
+                  className={styles.inputField} value={tg}
+                  onChange={(e) => setTg(e.target.value)} placeholder="150" />
                 <span className={styles.unitText}>mg/dL</span>
               </div>
             </div>
@@ -283,7 +361,7 @@ export default function HisayamaCalculator() {
                 <span className={styles.resultValue}>{score !== null ? `${score} 点` : '---'}</span>
               </div>
               <div className={styles.resultRow}>
-                <span className={styles.resultLabel}>TC/HDL比</span>
+                <span className={styles.resultLabel}>TC/HDL比{computed.tcSource === 'computed' ? '（TC逆算）' : ''}</span>
                 <span className={styles.resultValue} style={{ fontSize: '1.1rem' }}>
                   {tcHdlRatio !== null ? tcHdlRatio.toFixed(2) : '---'}
                 </span>
@@ -297,13 +375,13 @@ export default function HisayamaCalculator() {
                     <br />
                     <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>{judge.mgmt}</span>
                   </div>
-                  {ldl && (
+                  {computed.effL !== null && (
                     <div className={styles.resultRow} style={{ marginTop: '0.5rem' }}>
-                      <span className={styles.resultLabel}>現在のLDL-C</span>
+                      <span className={styles.resultLabel}>現在のLDL-C{computed.ldlSource === 'computed' ? '（逆算）' : ''}</span>
                       <span className={styles.resultValue} style={{
-                        color: parseFloat(ldl) >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '#C62828' : '#2E7D32'
+                        color: computed.effL >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '#C62828' : '#2E7D32'
                       }}>
-                        {ldl} mg/dL — {parseFloat(ldl) >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '目標未達' : '目標達成'}
+                        {computed.effL.toFixed(0)} mg/dL — {computed.effL >= parseFloat(judge.mgmt.match(/\d+/)?.[0]) ? '目標未達' : '目標達成'}
                       </span>
                     </div>
                   )}
