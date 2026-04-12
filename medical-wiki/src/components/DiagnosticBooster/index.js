@@ -1,84 +1,88 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import styles from './styles.module.css';
-import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from './feverData';
+
+// Default data (fever) — used when no props are passed
+import * as feverData from './feverData';
 
 /* -------------------------------------------------------- */
 /*  Scoring: 選択された症状・所見と各鑑別の一致度を算出     */
 /* -------------------------------------------------------- */
-function score(diff, selectedSymptoms, selectedFindings) {
+function calcScore(diff, selectedSymptoms, selectedFindings) {
   let s = 0;
   const selS = new Set(selectedSymptoms);
   const selF = new Set(selectedFindings);
-
-  // 症状マッチ
   for (const sym of diff.symptoms) {
     if (selS.has(sym)) s += 2;
   }
-  // 所見マッチ（より重み高い）
   for (const f of diff.findings) {
     if (selF.has(f)) s += 3;
   }
-  // 選択された症状が疾患に含まれない場合は減点しない（候補から外さない）
   return s;
 }
 
 /* -------------------------------------------------------- */
 /*  Main Component                                          */
 /* -------------------------------------------------------- */
-export default function DiagnosticBooster() {
+export default function DiagnosticBooster({
+  symptoms: propSymptoms,
+  findings: propFindings,
+  differentials: propDiffs,
+  redFlags: propRedFlags,
+  subtitle: propSubtitle,
+}) {
+  // Use props if provided, otherwise fall back to fever data
+  const SYMPTOMS = propSymptoms || feverData.SYMPTOMS;
+  const FINDINGS = propFindings || feverData.FINDINGS;
+  const DIFFERENTIALS = propDiffs || feverData.DIFFERENTIALS;
+  const RED_FLAGS = propRedFlags || feverData.RED_FLAGS;
+  const subtitle = propSubtitle || '発熱の鑑別思考支援ツール';
+
   const [phase, setPhase] = useState(1);
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [selectedFindings, setSelectedFindings] = useState([]);
 
-  // 症状トグル
   const toggleSymptom = useCallback((id) => {
     setSelectedSymptoms((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   }, []);
 
-  // 所見トグル
   const toggleFinding = useCallback((id) => {
     setSelectedFindings((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   }, []);
 
-  // リセット
   const reset = useCallback(() => {
     setPhase(1);
     setSelectedSymptoms([]);
     setSelectedFindings([]);
   }, []);
 
-  // Phase 2: 表示する所見をフィルタ
   const visibleFindings = useMemo(() => {
     if (selectedSymptoms.length === 0) return [];
     const symSet = new Set(selectedSymptoms);
     return FINDINGS.filter(
       (f) => f.triggers.length === 0 || f.triggers.some((t) => symSet.has(t))
     );
-  }, [selectedSymptoms]);
+  }, [selectedSymptoms, FINDINGS]);
 
-  // Red Flag 検出
   const activeRedFlags = useMemo(() => {
     const allSelected = new Set([...selectedSymptoms, ...selectedFindings]);
     return RED_FLAGS.filter((rf) =>
       rf.conditions.some((c) => allSelected.has(c))
     );
-  }, [selectedSymptoms, selectedFindings]);
+  }, [selectedSymptoms, selectedFindings, RED_FLAGS]);
 
-  // 鑑別候補のスコアリング・ソート
   const rankedDiffs = useMemo(() => {
     return DIFFERENTIALS.map((d) => ({
       ...d,
-      score: score(d, selectedSymptoms, selectedFindings),
+      _score: calcScore(d, selectedSymptoms, selectedFindings),
     }))
-      .filter((d) => d.score > 0 || d.alwaysShow)
-      .sort((a, b) => b.score - a.score);
-  }, [selectedSymptoms, selectedFindings]);
+      .filter((d) => d._score > 0 || d.alwaysShow)
+      .sort((a, b) => b._score - a._score);
+  }, [selectedSymptoms, selectedFindings, DIFFERENTIALS]);
 
-  // 症状をカテゴリ別にグループ化
   const symptomGroups = useMemo(() => {
     const groups = {};
     SYMPTOMS.forEach((s) => {
@@ -86,7 +90,7 @@ export default function DiagnosticBooster() {
       groups[s.cat].push(s);
     });
     return groups;
-  }, []);
+  }, [SYMPTOMS]);
 
   return (
     <div className={styles.booster}>
@@ -94,7 +98,7 @@ export default function DiagnosticBooster() {
       <div className={styles.header}>
         <div>
           <p className={styles.title}>Diagnostic Booster</p>
-          <p className={styles.subtitle}>発熱の鑑別思考支援ツール</p>
+          <p className={styles.subtitle}>{subtitle}</p>
         </div>
         <div className={styles.headerRight}>
           <span className={styles.phaseIndicator}>

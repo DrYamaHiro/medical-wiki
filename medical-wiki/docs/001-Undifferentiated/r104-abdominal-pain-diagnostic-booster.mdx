@@ -1,0 +1,115 @@
+---
+id: r104-abdominal-pain-diagnostic-booster
+title: "[R10.4] 腹痛精査 / Abdominal Pain - Diagnostic Booster"
+sidebar_label: "[R10.4] 腹痛精査"
+sidebar_position: 6
+hide_table_of_contents: false
+description: "腹痛の鑑別診断を支援するインタラクティブツール。Killer 5疾患の除外を最優先に、部位別・症状別で20鑑別を絞り込む。"
+keywords: ["腹痛", "腹痛精査", "abdominal pain", "急性腹症", "R10.4", "diagnostic booster", "Killer", "AAA", "SMA", "穿孔", "異所性妊娠", "絞扼性イレウス"]
+---
+
+import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/abdominalPainData';
+
+# 腹痛精査 — Diagnostic Booster
+
+症状・部位・所見を選択していくと、鑑別候補がリアルタイムに絞り込まれます。
+
+<DiagnosticBooster
+  symptoms={SYMPTOMS}
+  findings={FINDINGS}
+  differentials={DIFFERENTIALS}
+  redFlags={RED_FLAGS}
+  subtitle="腹痛の鑑別思考支援ツール"
+/>
+
+---
+
+## Dr.Advice
+
+> **[Killer Abdominal Pain 5疾患]** 腹痛の初期評価では、以下の5つの致死的疾患を必ず除外せよ: (1)AAA破裂 (2)SMA閉塞（腸間膜虚血） (3)消化管穿孔 (4)異所性妊娠破裂 (5)絞扼性腸閉塞。1つでも疑ったら迷わず搬送。
+>
+> **[妊娠反応は必須]** 妊娠可能年齢の女性の腹痛では、問診で「妊娠の可能性なし」と言われても妊娠反応を確認せよ。異所性妊娠の見逃しは致命的。これはルーティンとして組み込め。
+>
+> **[Pain out of proportion]** 腹痛の訴えの割に腹部所見が乏しい（触っても柔らかい）場合、腸間膜虚血を疑え。特にAf患者、動脈硬化リスクの高い高齢者。血管系イベントは「所見が追いつかない」のが特徴。臨床的疑いだけで紹介の閾値を下げよ。
+>
+> **[高齢者の腹痛]** 高齢者は腹膜刺激徴候が出にくい（腹壁筋萎縮のため）。痛みの訴えが軽くても、頻脈・CRP上昇があれば外科的疾患を強く疑え。CTなしでの判断は限界があり、閾値を低くして紹介/搬送。
+>
+> **[腹痛の12誘導心電図]** 心窩部痛+嘔気のみで受診した患者がACSだった、という見逃しは後を絶たない。糖尿病患者・高齢者の心窩部痛では12誘導心電図を忘れるな。
+>
+> **[設備制約]** 当院にCT・MRI・エコーはないため、腹部疾患の画像評価は腹部X線に限られる。free air・鏡面像・便塊の確認は可能だが、虫垂炎・胆嚢炎・膵炎・卵巣病変の確定にはCT/エコーが必要。「疑ったら紹介」の閾値を低く保て。
+
+---
+
+## 診断フローチャート
+
+### Step 1: Killer 5疾患の除外
+
+<MermaidChart chart={`flowchart TD
+    A["腹痛患者来院"] --> B{"ショックバイタル？ HR>100 BP<90"}
+    B -- "ショック" --> C["即搬送準備 静脈路+酸素"]
+    C --> C1["拍動性腫瘤 → AAA破裂"]
+    C --> C2["妊娠可能女性 → 異所性妊娠"]
+    C --> C3["吐血/黒色便 → 消化管出血"]
+    B -- "安定" --> D{"板状硬/腹膜刺激徴候？"}
+    D -- "あり" --> E["外科緊急 穿孔/絞扼性イレウス → 搬送"]
+    D -- "なし" --> F{"妊娠可能女性？"}
+    F -- "Yes" --> G["尿妊娠反応 必須"]
+    F -- "No" --> H["部位別鑑別へ Step 2"]
+    G --> H
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style C1 fill:#ffcdd2,stroke:#c62828
+    style C2 fill:#ffcdd2,stroke:#c62828
+    style C3 fill:#ffcdd2,stroke:#c62828
+    style E fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style G fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style H fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px`} />
+
+### Step 2: 部位別鑑別
+
+<MermaidChart chart={`flowchart TD
+    START["痛みの部位は？"] --> RUQ["右季肋部"]
+    START --> EPI["心窩部"]
+    START --> RLQ["右下腹部"]
+    START --> LLQ["左下腹部"]
+    START --> PER["臍周囲"]
+    START --> LOW["下腹部"]
+    START --> BACK["腰背部/側腹部"]
+    START --> DIF["腹部全体"]
+    RUQ --> RUQ1["胆石/胆嚢炎 Murphy(+)"]
+    RUQ --> RUQ2["胆管炎 黄疸+発熱"]
+    EPI --> EPI1["胃十二指腸潰瘍"]
+    EPI --> EPI2["急性膵炎 背部放散"]
+    EPI --> EPI3["ACS心窩部型 心電図！"]
+    RLQ --> RLQ1["虫垂炎 McBurney(+)"]
+    RLQ --> RLQ2["卵巣茎捻転 突然発症"]
+    RLQ --> RLQ3["尿管結石 疝痛+血尿"]
+    LLQ --> LLQ1["憩室炎 発熱+便秘"]
+    LOW --> LOW1["膀胱炎 排尿痛"]
+    LOW --> LOW2["PID 帯下+発熱"]
+    LOW --> LOW3["異所性妊娠 妊娠反応"]
+    PER --> PER1["SMA閉塞 Af+所見乏しい"]
+    PER --> PER2["急性胃腸炎 嘔吐+下痢"]
+    BACK --> BACK1["腎盂腎炎 CVA(+)+発熱"]
+    BACK --> BACK2["尿管結石 疝痛"]
+    BACK --> BACK3["AAA破裂 拍動性腫瘤"]
+    DIF --> DIF1["腸閉塞 排ガス停止"]
+    DIF --> DIF2["穿孔 板状硬"]
+    DIF --> DIF3["汎発性腹膜炎 → 搬送"]
+    style START fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style EPI3 fill:#ffcdd2,stroke:#c62828
+    style PER1 fill:#ffcdd2,stroke:#c62828
+    style BACK3 fill:#ffcdd2,stroke:#c62828
+    style DIF2 fill:#ffcdd2,stroke:#c62828
+    style DIF3 fill:#ffcdd2,stroke:#c62828
+    style LOW3 fill:#fff9c4,stroke:#f57f17`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: 腹痛の発症様式・部位・随伴症状を選択する
+2. **Phase 2**: 選択した症状に応じて表示される身体所見を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Stepと追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
