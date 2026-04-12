@@ -1,0 +1,102 @@
+---
+id: r079-chest-pain-diagnostic-booster
+title: "[R07.9] 胸痛精査 / Chest Pain - Diagnostic Booster"
+sidebar_label: "[R07.9] 胸痛精査"
+sidebar_position: 4
+hide_table_of_contents: false
+description: "胸痛の鑑別診断を支援するインタラクティブツール。Killer 5疾患の除外を最優先に、18鑑別を絞り込む。"
+keywords: ["胸痛", "胸痛精査", "chest pain", "ACS", "大動脈解離", "肺塞栓", "気胸", "R07.9", "diagnostic booster"]
+---
+
+import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/chestPainData';
+
+# 胸痛精査 — Diagnostic Booster
+
+症状・性状・所見を選択していくと、鑑別候補がリアルタイムに絞り込まれます。
+
+<DiagnosticBooster
+  symptoms={SYMPTOMS}
+  findings={FINDINGS}
+  differentials={DIFFERENTIALS}
+  redFlags={RED_FLAGS}
+  subtitle="胸痛の鑑別思考支援ツール"
+/>
+
+---
+
+## Dr.Advice
+
+> **[Killer Chest Pain 5疾患]** 胸痛の初期評価では以下の5つを必ず除外せよ: (1)ACS (2)大動脈解離 (3)肺塞栓 (4)緊張性気胸 (5)食道破裂。1つでも疑ったら迷わず搬送。
+>
+> **[12誘導心電図は受付後10分以内]** 胸痛患者では12誘導心電図を最優先で実施。ST変化の有無でACS/解離/心膜炎の初期判断が大きく変わる。心窩部痛のみの患者でも心電図を取れ。
+>
+> **[血圧は必ず両上肢で]** 左右差>20mmHgは大動脈解離を疑う最重要所見。片腕だけの血圧測定では解離を見逃す。全ての胸痛患者で両上肢血圧を測定せよ。
+>
+> **[大動脈解離の罠]** 解離がACSに似たST変化を示すことがある。ここで誤ってアスピリンやヘパリンを投与すると致命的。血圧左右差の確認→解離除外→アスピリンの順序を厳守。
+>
+> **[非典型ACS]** 女性・高齢者・糖尿病患者では胸痛がなく、嘔気・倦怠感・息切れのみのことがある。「胸が痛くない＝ACSでない」は誤り。
+>
+> **[緊張性気胸はX線を待たない]** 呼吸音消失+気管偏位+頸静脈怒張+ショック→臨床診断で即脱気。X線撮影のために搬送が遅れることが最大のリスク。
+>
+> **[設備制約]** 当院にトロポニン迅速検査・D-dimer・心エコー・造影CTはない。「除外できない＝搬送」の原則を貫け。検査結果待ちで搬送が遅れることが最大のリスク。HEART Score 4点以上は循環器紹介。
+
+---
+
+## 診断フローチャート
+
+### Step 1: Killer 5疾患の除外
+
+<MermaidChart chart={`flowchart TD
+    A["胸痛患者来院"] --> ECG["12誘導心電図 受付後10分以内"]
+    ECG --> BP["両上肢血圧測定"]
+    BP --> B{"ショック？ ST変化？ 血圧左右差？"}
+    B -- "ST変化あり" --> C1{"血圧左右差 >20？"}
+    C1 -- "あり" --> D1["大動脈解離疑い 抗血小板薬禁忌 → 搬送"]
+    C1 -- "なし" --> D2["ACS疑い アスピリン → 搬送"]
+    B -- "ショック+呼吸音消失" --> D3["緊張性気胸 即脱気 → 搬送"]
+    B -- "突然+呼吸困難+DVTリスク" --> D4["PE疑い Wells評価 → 搬送"]
+    B -- "嘔吐後+皮下気腫" --> D5["食道破裂 → 搬送"]
+    B -- "いずれもなし" --> E["非Killer鑑別へ Step 2"]
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style D1 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style D2 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style D3 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style D4 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style D5 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style E fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px`} />
+
+### Step 2: 非Killer疾患の鑑別
+
+<MermaidChart chart={`flowchart TD
+    START["Killer除外後の胸痛"] --> Q1{"痛みの性状は？"}
+    Q1 -- "胸膜痛 深呼吸で悪化" --> PL["胸膜性"]
+    Q1 -- "圧迫/締付 労作関連" --> CA["心血管性"]
+    Q1 -- "灼熱感 食後悪化" --> GI["消化器性"]
+    Q1 -- "押すと再現" --> MS["筋骨格性"]
+    Q1 -- "動悸+過換気" --> PA["パニック/不整脈"]
+    PL --> PL1{"発熱 咳？"}
+    PL1 -- "あり" --> PL2["肺炎/胸膜炎 胸部X線"]
+    PL1 -- "なし" --> PL3["気胸 片側性皮疹→帯状疱疹"]
+    CA --> CA1{"心電図 心膜摩擦音？"}
+    CA1 -- "広範ST上昇+PR低下" --> CA2["心膜炎 NSAIDs 循環器紹介"]
+    CA1 -- "心不全徴候" --> CA3["急性心不全/心筋炎 → 紹介"]
+    CA1 -- "正常" --> CA4["HEART Score評価 安定狭心症検索"]
+    GI --> GI1["GERD PPI試験投与"]
+    MS --> MS1["筋骨格性/肋軟骨炎 NSAIDs 除外診断"]
+    PA --> PA1{"心電図でAf？"}
+    PA1 -- "あり" --> PA2["心房細動 循環器紹介"]
+    PA1 -- "なし" --> PA3["パニック障害 Killer除外後に診断"]
+    style START fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style PL2 fill:#fff9c4,stroke:#f57f17
+    style CA2 fill:#e3f2fd,stroke:#1565c0
+    style CA3 fill:#ffcdd2,stroke:#c62828`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: 胸痛の性状・部位・随伴症状・リスク因子を選択する
+2. **Phase 2**: 選択した症状に応じて表示される身体所見を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Stepと追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
