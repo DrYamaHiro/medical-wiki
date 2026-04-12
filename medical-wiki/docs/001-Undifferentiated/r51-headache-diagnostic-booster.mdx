@@ -1,0 +1,93 @@
+---
+id: r51-headache-diagnostic-booster
+title: "[R51] 頭痛精査 / Headache - Diagnostic Booster"
+sidebar_label: "[R51] 頭痛精査"
+sidebar_position: 7
+hide_table_of_contents: false
+description: "頭痛の鑑別診断を支援するインタラクティブツール。SNOOPT4フレームワークで二次性頭痛を系統的に除外。16鑑別・33症状・10所見・12 Red Flag。"
+keywords: ["頭痛", "頭痛精査", "二次性頭痛", "雷鳴頭痛", "SAH", "髄膜炎", "GCA", "片頭痛", "SNOOPT4", "headache", "R51", "diagnostic booster"]
+---
+
+import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/headacheData';
+
+# 頭痛精査 — Diagnostic Booster
+
+症状・所見を選択していくと、鑑別候補がリアルタイムに絞り込まれます。SNOOPT4フレームワークで二次性頭痛を系統的に除外します。
+
+<DiagnosticBooster
+  symptoms={SYMPTOMS}
+  findings={FINDINGS}
+  differentials={DIFFERENTIALS}
+  redFlags={RED_FLAGS}
+  subtitle="頭痛の鑑別思考支援ツール（SNOOPT4準拠）"
+/>
+
+---
+
+## Dr.Advice
+
+> **[SNOOPT4]** 二次性頭痛の除外フレームワーク: **S**ystemic（全身症状・疾患）、**N**eurological（神経症状）、**O**nset sudden（雷鳴頭痛）、**O**nset after 50（50歳以降の新規）、**P**attern change（パターン変化）、**T4**riggered by（Valsalva/体位/咳嗽/性交で誘発）。1つでも該当すれば二次性を積極的に検索せよ。
+>
+> **[雷鳴頭痛 = SAH否定まではSAH]** 「人生最悪の頭痛」「数秒でピークに達した」→ CTの感度は発症6時間以内で98-100%だが、12時間で約93%、24時間以降は急速に低下。可能な限り早期のCT紹介が必須。CT陰性でも臨床的疑いが強ければ腰椎穿刺（高次施設で）。
+>
+> **[側頭動脈炎（GCA）]** 50歳以上の新規頭痛で、側頭動脈の圧痛・索状硬化・拍動減弱があれば強く疑え。顎跛行は特異度が高い。**ESR正常でも否定不可**（生検陽性例の4-22%はESR正常）。失明は非可逆的→生検結果を待たずにプレドニゾロン先行投与を検討。
+>
+> **[Jolt accentuation]** 首を横に1秒に2-3回振って頭痛が増悪する検査。原著では感度97%だが、後続研究では50-97%とばらつきあり。項部硬直より感度が高いとされるが、片頭痛でも陽性になるため特異度は低い。陰性でも髄膜炎は否定できない。
+>
+> **[50歳以上の新規頭痛]** 全て二次性を疑え。GCA・脳腫瘍・脳血管障害が鑑別の上位。ESR必須。「歳だから」で片付けるな。
+>
+> **[「いつもの頭痛」の罠]** 片頭痛持ちの患者がSAHを発症しても「いつもの頭痛」と過小評価されることがある。「いつもと違う」「いつもより強い」は二次性のサイン。パターン変化に敏感であれ。
+>
+> **[設備制約]** 当院にCT・MRI・腰椎穿刺の設備はない。二次性頭痛を疑ったら「疑い」の段階で紹介/搬送の判断をせよ。確定診断を試みて時間を浪費しないこと。
+
+---
+
+## 診断フローチャート
+
+### Step 1: 緊急性の判断（SNOOPT4）
+
+<MermaidChart chart={`flowchart TD
+    A["頭痛患者来院"] --> B{"雷鳴頭痛？ 数秒でピーク"}
+    B -- "Yes" --> C["SAH疑い → 即CT施設へ紹介/搬送"]
+    B -- "No" --> D{"発熱+項部硬直？"}
+    D -- "あり" --> E["髄膜炎疑い → 即搬送"]
+    D -- "なし" --> F{"神経巣症状？ 麻痺/失語/瞳孔異常"}
+    F -- "あり" --> G["脳血管障害疑い → 即搬送 FAST評価"]
+    F -- "なし" --> H{"50歳以上の新規？"}
+    H -- "Yes" --> I["GCA/脳腫瘍除外 ESR+側頭動脈触診"]
+    H -- "No" --> J["一次性頭痛の鑑別へ Step 2"]
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style E fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style G fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style I fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style J fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px`} />
+
+### Step 2: 一次性頭痛の鑑別
+
+<MermaidChart chart={`flowchart TD
+    START["二次性除外後"] --> Q1{"片側？ 拍動性？"}
+    Q1 -- "片側+拍動+嘔気+光/音過敏" --> MIG["片頭痛 トリプタン"]
+    Q1 -- "両側+締め付け" --> TTH["緊張型頭痛 NSAIDs"]
+    Q1 -- "片側眼窩+流涙+鼻閉 15分-3h" --> CL["群発頭痛 酸素+トリプタン皮下注"]
+    START --> Q2{"前屈で悪化？ 膿性鼻汁？"}
+    Q2 -- "Yes" --> SIN["副鼻腔炎"]
+    START --> Q3{"鎮痛薬 月10日以上？"}
+    Q3 -- "Yes" --> MOH["薬物乱用頭痛 原因薬中止"]
+    START --> Q4{"起立で悪化 臥位で軽減？"}
+    Q4 -- "Yes" --> IH["低髄液圧性頭痛 MRI紹介"]
+    START --> Q5{"後頭部 頸部痛？"}
+    Q5 -- "Yes" --> CG["頸原性頭痛"]
+    style START fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style MIG fill:#e3f2fd,stroke:#1565c0
+    style CL fill:#f3e5f5,stroke:#7b1fa2`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: 頭痛の発症様式・性状・増悪因子・随伴症状・リスクを選択する
+2. **Phase 2**: 選択した症状に応じて表示される身体所見を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Stepと追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
