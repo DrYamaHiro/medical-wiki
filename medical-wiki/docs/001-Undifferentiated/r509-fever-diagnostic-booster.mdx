@@ -1,0 +1,176 @@
+---
+id: r509-fever-diagnostic-booster
+title: "[R50.9] 不明熱・発熱精査 / Fever - Diagnostic Booster"
+sidebar_label: "[R50.9] 不明熱・発熱精査"
+sidebar_position: 1
+hide_table_of_contents: false
+description: "発熱の鑑別診断を支援するインタラクティブツール。24鑑別・21症状・21所見・9 Red Flag。"
+keywords: ["不明熱", "発熱精査", "発熱", "鑑別", "diagnostic booster", "FUO", "fever", "R50.9"]
+---
+
+# 不明熱・発熱精査 — Diagnostic Booster
+
+症状・所見を選択していくと、鑑別候補がリアルタイムに絞り込まれます。
+
+<DiagnosticBooster />
+
+---
+
+## Dr.Advice
+
+> **[不明熱の定義]** 38.3℃以上が3週間以上持続し、適切な精査で診断未確定。古典的定義（Petersdorf & Beeson 1961）では「1週間の入院精査」、改定版（Durack & Street 1991）では「3回の外来受診 or 3日間の入院」が基準。外来では「3週間・38.3℃」を精査開始の目安とする。
+>
+> **[血液培養のタイミング]** 抗菌薬投与前に2セット（異なる部位から）採取が鉄則。1セットでは感度不十分。感染性心内膜炎疑いでは3セット。
+>
+> **[相対的徐脈]** 体温1℃上昇あたりHR 8-10上昇に留まる場合は、代表的な原因として薬剤熱・腸チフス・レジオネラ・リケッチア感染を疑う手がかりとなる。ただしβ遮断薬・Ca拮抗薬内服中の患者では薬剤性徐脈との交絡に注意。
+>
+> **[安易な抗菌薬投与を避ける]** 発熱＝感染症ではない。膠原病・悪性腫瘍・薬剤熱が原因の場合、安易な抗菌薬投与は診断を遅らせるだけでなく、薬剤熱の新たな原因にもなりうる。バイタル安定なら「培養を取って待つ」勇気を持て。
+>
+> **[高齢者の発熱]** 高齢者は発熱反応が乏しく、37℃台でも重症感染症がありうる。「熱がないから大丈夫」は危険。意識変容・食欲低下・ADL低下など非特異的変化に注意せよ。
+>
+> **[3週間ルール]** 発熱が3週間未満で自然軽快した場合、大多数はウイルス感染である。この期間に侵襲的検査を急ぐ必要は通常ない（重篤な随伴症状がない限り）。**ただし免疫不全者（化学療法中・ステロイド・生物学的製剤使用中）、渡航帰国者（マラリア等の致死的感染症）、HIV感染リスクが高い患者にはこのルールを適用しないこと。**
+>
+> **[設備制約]** 当院にCT・MRI・心エコーはなく、腹部エコーも未設置のため、深部膿瘍・感染性心内膜炎・悪性腫瘍・胆道系疾患の確定診断には高次医療機関への紹介が必要。「疑ったら紹介」の閾値を低く保て。
+
+---
+
+## 診断フローチャート
+
+### Step 1: 緊急性の判断
+
+<MermaidChart chart={`flowchart TD
+    A["発熱患者来院"] --> B{"バイタル安定？"}
+    B --> B_NOTE["qSOFA: 収縮期BP≤100 + RR≥22 + 意識変容 の2項目以上で敗血症疑い"]
+    B -- "不安定/qSOFA≥2" --> C["緊急対応 搬送準備"]
+    C --> C1["項部硬直 → 髄膜炎疑い"]
+    C --> C2["頻脈+低血圧 → 敗血症"]
+    C --> C3["SpO2低下 → 肺炎/PE"]
+    B -- "安定 qSOFA 0-1" --> D{"Red Flag所見？"}
+    D -- "あり" --> E["該当疾患の緊急精査へ"]
+    D -- "なし" --> F["通常の鑑別フローへ Step 2"]
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style B_NOTE fill:#fff,stroke:#999,stroke-dasharray:5 5
+    style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style C1 fill:#ffcdd2,stroke:#c62828
+    style C2 fill:#ffcdd2,stroke:#c62828
+    style C3 fill:#ffcdd2,stroke:#c62828
+    style F fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px`} />
+
+### Step 2: 主要随伴症状による分岐
+
+<MermaidChart chart={`flowchart TD
+    START["発熱 + 主要随伴症状は？"] --> R["呼吸器症状 咽頭痛/咳/鼻汁"]
+    START --> G["消化器症状 腹痛/下痢/嘔吐"]
+    START --> U["泌尿器症状 排尿痛/頻尿/側腹部痛"]
+    START --> S["皮膚症状 皮疹/発赤・腫脹"]
+    START --> N["神経症状 頭痛/項部硬直"]
+    START --> MSK["筋骨格 関節腫脹/疼痛"]
+    START --> SYS["全身症状のみ 盗汗/体重減少/リンパ節"]
+    style START fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style R fill:#e3f2fd,stroke:#1565c0
+    style G fill:#e8f5e9,stroke:#2e7d32
+    style U fill:#fce4ec,stroke:#c2185b
+    style S fill:#f3e5f5,stroke:#7b1fa2
+    style N fill:#ffecb3,stroke:#f57f17
+    style MSK fill:#e0f2f1,stroke:#00695c
+    style SYS fill:#efebe9,stroke:#5d4037`} />
+
+### Step 2a: 呼吸器系の鑑別
+
+<MermaidChart chart={`flowchart TD
+    R["呼吸器症状あり"] --> R0{"吸気性喘鳴/流涎/含み声？"}
+    R0 -- "あり" --> R0a["急性喉頭蓋炎疑い 気道緊急 → 即搬送"]
+    R0 -- "なし" --> R1{"咽頭痛が主体？"}
+    R1 -- "Yes" --> R2{"扁桃白苔 頸部リンパ節？"}
+    R2 -- "あり" --> R3["Centor/McIsaac Score 溶連菌迅速"]
+    R2 -- "なし" --> R4["感冒 / COVID 迅速検査"]
+    R3 --> R3a{"EBV疑い？ 肝脾腫/著明リンパ節"}
+    R3a -- "Yes" --> R3b["伝染性単核球症 AMPC禁"]
+    R3a -- "No + 開口障害" --> R3c["扁桃周囲膿瘍 耳鼻科紹介"]
+    R3a -- "No" --> R3d["溶連菌/ウイルス性"]
+    R1 -- "No" --> R5{"咳嗽が主体？"}
+    R5 -- "Yes" --> R6{"SpO2低下 肺crackles？"}
+    R6 -- "あり" --> R7["肺炎疑い 胸部X線"]
+    R6 -- "なし" --> R8["URI / 気管支炎 対症療法"]
+    style R fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style R0a fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style R7 fill:#ffcdd2,stroke:#c62828
+    style R3b fill:#fff9c4,stroke:#f57f17
+    style R3c fill:#ffcdd2,stroke:#c62828`} />
+
+### Step 2b: 消化器系の鑑別
+
+<MermaidChart chart={`flowchart TD
+    G["消化器症状あり"] --> G1{"腹膜刺激徴候？"}
+    G1 -- "あり" --> G2["外科緊急 穿孔/虫垂炎穿孔 → 搬送"]
+    G1 -- "なし" --> G3{"痛みの部位は？"}
+    G3 --> G4["右季肋部 Murphy陽性"]
+    G4 --> G4a["胆嚢炎疑い 消化器内科紹介"]
+    G3 --> G5["右下腹部 McBurney陽性"]
+    G5 --> G5a["虫垂炎疑い 外科紹介"]
+    G3 --> G6["下痢主体 血便なし"]
+    G6 --> G6a["急性胃腸炎 脱水評価"]
+    style G fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style G2 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style G4a fill:#fff9c4,stroke:#f57f17
+    style G5a fill:#fff9c4,stroke:#f57f17`} />
+
+### Step 2c: 泌尿器系の鑑別
+
+<MermaidChart chart={`flowchart TD
+    U["泌尿器症状あり"] --> U1{"CVA叩打痛 + 高熱？"}
+    U1 -- "あり" --> U2["腎盂腎炎疑い 尿検査+尿培養 抗菌薬"]
+    U1 -- "なし" --> U3{"排尿痛/頻尿のみ？"}
+    U3 -- "女性" --> U4["単純性膀胱炎 尿検査 抗菌薬"]
+    U3 -- "男性" --> U5{"直腸診: 前立腺圧痛？"}
+    U5 -- "あり" --> U6["急性前立腺炎 尿培養 ニューキノロン14日"]
+    U5 -- "なし" --> U7["複雑性UTI疑い 泌尿器科紹介"]
+    style U fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style U2 fill:#fff9c4,stroke:#f57f17
+    style U6 fill:#fff9c4,stroke:#f57f17`} />
+
+### Step 2d: 皮膚・神経・筋骨格の鑑別
+
+<MermaidChart chart={`flowchart TD
+    SK["皮膚症状あり"] --> SK1{"局所発赤・腫脹・熱感？"}
+    SK1 -- "境界明瞭 圧痛" --> SK2["蜂窩織炎 抗菌薬"]
+    SK1 -- "急速進行 水疱 握雪感" --> SK3["壊死性筋膜炎 → 即搬送"]
+    SK1 -- "片側帯状水疱" --> SK4["帯状疱疹 抗ウイルス薬"]
+    N["神経症状あり"] --> N1{"項部硬直 Jolt(+)？"}
+    N1 -- "あり" --> N2["髄膜炎疑い → 即搬送 血培+抗菌薬"]
+    N1 -- "なし" --> N3["頭痛精査 → 別ページ参照"]
+    MSK["関節症状あり"] --> MSK1{"単関節の急性腫脹+発熱？"}
+    MSK1 -- "あり" --> MSK2["化膿性関節炎疑い → 関節穿刺 整形外科紹介"]
+    MSK1 -- "多関節" --> MSK3["膠原病/ウイルス性 → 全身精査へ"]
+    style SK3 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style N2 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style MSK2 fill:#ffcdd2,stroke:#c62828`} />
+
+### Step 2e: 全身症状・長期発熱の鑑別
+
+<MermaidChart chart={`flowchart TD
+    SYS["全身症状のみ 盗汗/体重減少/リンパ節"] --> S1{"投薬歴の変更 7-10日以内？"}
+    S1 -- "Yes" --> S2["薬剤熱 相対的徐脈？ 被疑薬中止"]
+    S1 -- "No" --> S3{"リンパ節腫脹？"}
+    S3 -- "あり" --> S4{"有痛性 or 無痛性？"}
+    S4 -- "無痛性+B症状" --> S5["悪性リンパ腫疑い LDH/sIL-2R 血液内科紹介"]
+    S4 -- "有痛性" --> S6["反応性 or 感染性リンパ節炎"]
+    S3 -- "なし" --> S7{"関節痛 皮疹？"}
+    S7 -- "あり" --> S8["膠原病スクリーニング ANA/フェリチン リウマチ科紹介"]
+    S7 -- "なし" --> S9{"咳嗽2週以上 盗汗+体重減少？"}
+    S9 -- "Yes" --> S10["結核疑い 胸部X線 保健所相談+専門医療機関紹介"]
+    S9 -- "No" --> S11["上記いずれにも非該当 → 不明熱ワークアップ"]
+    style SYS fill:#efebe9,stroke:#5d4037,stroke-width:2px
+    style S5 fill:#f3e5f5,stroke:#7b1fa2
+    style S10 fill:#fff9c4,stroke:#f57f17
+    style S11 fill:#e3f2fd,stroke:#1565c0`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: 発熱に伴う随伴症状を選択する
+2. **Phase 2**: 選択した症状に応じて表示される身体所見を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Step（次のアクション）と追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
