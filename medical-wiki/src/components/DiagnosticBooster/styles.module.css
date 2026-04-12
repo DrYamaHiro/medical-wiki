@@ -1,0 +1,326 @@
+/* ============================================
+   DiagnosticBooster — 診断思考支援ツール
+   ============================================ */
+
+.booster {
+  max-width: 800px;
+  margin: 1.5rem auto;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--ifm-background-color);
+}
+
+/* ヘッダー */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.2rem;
+  background: #c62828;
+  color: #fff;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.phaseIndicator {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+
+.resetBtn {
+  padding: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 4px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.resetBtn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* Red Flag 警告 */
+.redFlagBox {
+  margin: 0;
+}
+
+.redFlagCritical {
+  padding: 0.7rem 1.2rem;
+  background: #b71c1c;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.redFlagWarning {
+  padding: 0.6rem 1.2rem;
+  background: #e65100;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+/* セクション */
+.section {
+  padding: 1rem 1.2rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.sectionTitle {
+  margin: 0 0 0.8rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+.sectionHint {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--ifm-color-emphasis-500);
+  margin-left: 0.5rem;
+}
+
+/* カテゴリグループ */
+.catGroup {
+  margin-bottom: 0.7rem;
+}
+
+.catLabel {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+/* チップ（ボタン） */
+.chipGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.chip {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+  border: 1.5px solid var(--ifm-color-emphasis-300);
+  border-radius: 20px;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.chip:hover {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary-lightest);
+}
+
+.chipActive {
+  border-color: #c62828;
+  background: #c62828;
+  color: #fff;
+}
+
+.chipActive:hover {
+  background: #d32f2f;
+  border-color: #d32f2f;
+}
+
+/* 次へボタン */
+.nextBtn {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.7rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  background: #c62828;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.nextBtn:hover {
+  background: #d32f2f;
+}
+
+/* 鑑別結果リスト */
+.diffList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.diffCard {
+  border: 1.5px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.diffCard[open] {
+  border-color: var(--ifm-color-primary);
+}
+
+.diffSummary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  background: var(--ifm-color-emphasis-100);
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.diffSummary:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+.diffRank {
+  font-weight: 700;
+  color: #c62828;
+  min-width: 28px;
+}
+
+.diffName {
+  font-weight: 700;
+  flex: 1;
+  min-width: 120px;
+}
+
+.diffCat {
+  font-size: 0.7rem;
+  color: var(--ifm-color-emphasis-500);
+  padding: 0.15rem 0.5rem;
+  background: var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+}
+
+.diffFreq {
+  font-size: 0.7rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.diffBody {
+  padding: 0.6rem 0.8rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.diffComment {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ifm-font-color-base);
+  line-height: 1.6;
+}
+
+.diffAction {
+  padding: 0.5rem 0.7rem;
+  background: #fff3e0;
+  border-left: 3px solid #e65100;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+[data-theme='dark'] .diffAction {
+  background: #3e2723;
+}
+
+.diffLink {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--ifm-color-primary);
+  text-decoration: underline;
+}
+
+/* 追加確認すべき所見 */
+.additionalCheck {
+  margin-top: 1rem;
+  padding: 0.7rem 1rem;
+  background: #e3f2fd;
+  border-radius: 8px;
+  border: 1px solid #90caf9;
+}
+
+[data-theme='dark'] .additionalCheck {
+  background: #1a237e;
+  border-color: #3949ab;
+}
+
+.additionalCheck h5 {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.additionalCheck ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.85rem;
+}
+
+.additionalCheck li {
+  margin-bottom: 0.2rem;
+}
+
+.checkReason {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-500);
+}
+
+.noResult {
+  color: var(--ifm-color-emphasis-500);
+  font-style: italic;
+}
+
+/* フッター */
+.footer {
+  padding: 0.5rem 1.2rem;
+  font-size: 0.7rem;
+  color: var(--ifm-color-emphasis-400);
+  text-align: center;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* レスポンシブ */
+@media (max-width: 600px) {
+  .booster {
+    margin: 1rem 0;
+    border-radius: 8px;
+  }
+  .chip {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+  .diffSummary {
+    font-size: 0.8rem;
+  }
+}

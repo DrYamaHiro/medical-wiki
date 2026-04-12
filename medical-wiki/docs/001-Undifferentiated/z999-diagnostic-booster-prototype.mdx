@@ -1,0 +1,156 @@
+---
+id: z999-diagnostic-booster-prototype
+title: "[PROTO] 発熱 Diagnostic Booster"
+sidebar_label: "[PROTO] 発熱 Diagnostic Booster"
+sidebar_position: 99
+hide_table_of_contents: false
+description: "発熱の鑑別診断を支援するインタラクティブツール（プロトタイプ）"
+keywords: ["diagnostic booster", "発熱", "鑑別", "fever", "prototype"]
+---
+
+# 発熱 — Diagnostic Booster (Prototype)
+
+:::caution[プロトタイプ]
+本ページはテスト用です。実用に耐えると判断された場合、既存の発熱精査ページと入れ替えます。
+:::
+
+---
+
+## インタラクティブ鑑別ツール
+
+症状をポチポチ選択していくと、鑑別候補がリアルタイムに絞り込まれます。
+
+<DiagnosticBooster />
+
+---
+
+## 診断フローチャート
+
+### Step 1: 緊急性の判断
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'16px','primaryColor':'#e8f5e9','primaryBorderColor':'#2e7d32','lineColor':'#333'}}}%%
+flowchart TD
+    A["発熱患者来院"] --> B{"バイタル安定？\nSpO2≧93%\n意識清明"}
+    B -- "不安定/意識変容" --> C["🚨 緊急対応\n搬送準備"]
+    C --> C1["項部硬直 → 髄膜炎疑い"]
+    C --> C2["頻脈+低血圧 → 敗血症"]
+    C --> C3["呼吸困難 → 肺炎/PE"]
+    B -- "安定" --> D{"Red Flag所見？"}
+    D -- "あり" --> E["⚠ 該当疾患の\n緊急精査へ"]
+    D -- "なし" --> F["通常の鑑別フローへ\n↓ Step 2"]
+
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style C1 fill:#ffcdd2,stroke:#c62828
+    style C2 fill:#ffcdd2,stroke:#c62828
+    style C3 fill:#ffcdd2,stroke:#c62828
+    style F fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+```
+
+### Step 2: 主要随伴症状による分岐
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'16px','primaryColor':'#e3f2fd','primaryBorderColor':'#1565c0','lineColor':'#333'}}}%%
+flowchart TD
+    START["発熱 + 主要随伴症状は？"] --> R["呼吸器症状\n咽頭痛/咳/鼻汁"]
+    START --> G["消化器症状\n腹痛/下痢/嘔吐"]
+    START --> U["泌尿器症状\n排尿痛/頻尿/側腹部痛"]
+    START --> S["皮膚症状\n皮疹/発赤・腫脹"]
+    START --> N["神経症状\n頭痛/項部硬直"]
+    START --> SYS["全身症状のみ\n盗汗/体重減少/リンパ節"]
+
+    style START fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style R fill:#e3f2fd,stroke:#1565c0
+    style G fill:#e8f5e9,stroke:#2e7d32
+    style U fill:#fce4ec,stroke:#c2185b
+    style S fill:#f3e5f5,stroke:#7b1fa2
+    style N fill:#ffecb3,stroke:#f57f17
+    style SYS fill:#efebe9,stroke:#5d4037
+```
+
+### Step 2a: 呼吸器系の鑑別
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'16px','primaryColor':'#e3f2fd','primaryBorderColor':'#1565c0','lineColor':'#333'}}}%%
+flowchart TD
+    R["呼吸器症状あり"] --> R1{"咽頭痛が主体？"}
+    R1 -- "Yes" --> R2{"扁桃白苔\n頸部リンパ節？"}
+    R2 -- "あり" --> R3["Centor Score\n溶連菌迅速"]
+    R2 -- "なし" --> R4["感冒 / COVID\n迅速検査"]
+    R3 --> R3a{"EBV疑い？\n肝脾腫/著明リンパ節"}
+    R3a -- "Yes" --> R3b["伝染性単核球症\nAMPC禁"]
+    R3a -- "No + 開口障害" --> R3c["扁桃周囲膿瘍\n耳鼻科紹介"]
+    R3a -- "No" --> R3d["溶連菌/ウイルス性"]
+    R1 -- "No" --> R5{"咳嗽が主体？"}
+    R5 -- "Yes" --> R6{"SpO2低下\n肺crackles？"}
+    R6 -- "あり" --> R7["肺炎疑い\n胸部X線"]
+    R6 -- "なし" --> R8["URI / 気管支炎\n対症療法"]
+
+    style R fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style R7 fill:#ffcdd2,stroke:#c62828
+    style R3b fill:#fff9c4,stroke:#f57f17
+    style R3c fill:#ffcdd2,stroke:#c62828
+```
+
+### Step 2b: 消化器系の鑑別
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'16px','primaryColor':'#e8f5e9','primaryBorderColor':'#2e7d32','lineColor':'#333'}}}%%
+flowchart TD
+    G["消化器症状あり"] --> G1{"腹膜刺激徴候？"}
+    G1 -- "あり" --> G2["🚨 外科緊急\n穿孔/虫垂炎穿孔\n→ 搬送"]
+    G1 -- "なし" --> G3{"痛みの部位は？"}
+    G3 --> G4["右季肋部\nMurphy(+)"]
+    G4 --> G4a["胆嚢炎疑い\n消化器内科紹介"]
+    G3 --> G5["右下腹部\nMcBurney(+)"]
+    G5 --> G5a["虫垂炎疑い\n外科紹介"]
+    G3 --> G6["下痢主体\n血便なし"]
+    G6 --> G6a["急性胃腸炎\n脱水評価"]
+
+    style G fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style G2 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style G4a fill:#fff9c4,stroke:#f57f17
+    style G5a fill:#fff9c4,stroke:#f57f17
+```
+
+### Step 2c: 全身症状・長期発熱の鑑別
+
+```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontSize':'16px','primaryColor':'#efebe9','primaryBorderColor':'#5d4037','lineColor':'#333'}}}%%
+flowchart TD
+    SYS["全身症状のみ\n盗汗/体重減少/リンパ節"] --> S1{"投薬歴の変更\n7-10日以内？"}
+    S1 -- "Yes" --> S2["薬剤熱\n相対的徐脈？\n被疑薬中止"]
+    S1 -- "No" --> S3{"リンパ節腫脹？"}
+    S3 -- "あり" --> S4{"有痛性 or 無痛性？"}
+    S4 -- "無痛性+B症状" --> S5["悪性リンパ腫疑い\nLDH/sIL-2R\n血液内科紹介"]
+    S4 -- "有痛性" --> S6["反応性 or\n感染性リンパ節炎"]
+    S3 -- "なし" --> S7{"関節痛\n皮疹？"}
+    S7 -- "あり" --> S8["膠原病スクリーニング\nANA/フェリチン\nリウマチ科紹介"]
+    S7 -- "なし" --> S9{"咳嗽2週以上\n盗汗+体重減少？"}
+    S9 -- "Yes" --> S10["結核疑い\n胸部X線\n保健所相談"]
+    S9 -- "No" --> S11["系統的精査\n→ 不明熱ワークアップ"]
+
+    style SYS fill:#efebe9,stroke:#5d4037,stroke-width:2px
+    style S5 fill:#f3e5f5,stroke:#7b1fa2
+    style S10 fill:#fff9c4,stroke:#f57f17
+    style S11 fill:#e3f2fd,stroke:#1565c0
+```
+
+---
+
+## 使い方
+
+1. **Phase 1**: 発熱に伴う随伴症状をポチポチ選択する
+2. **Phase 2**: 選択した症状に応じて表示される身体所見を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補には次のアクション提案、追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
+
+---
+
+:::info[今後の拡張予定]
+- 他の主訴（腹痛・頭痛・胸痛・めまい等）への展開
+- バイタルサイン入力Phase（SpO2・体温・心拍数）の追加
+- 検査結果入力によるさらなる絞り込み
+:::
