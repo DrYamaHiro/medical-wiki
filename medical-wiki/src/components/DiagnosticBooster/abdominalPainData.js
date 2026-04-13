@@ -1,6 +1,6 @@
 /**
- * Diagnostic Booster — Undifferentiated Abdominal Pain Data v2
- * 監査v1指摘 A-L 全件対応済み
+ * Diagnostic Booster — Undifferentiated Abdominal Pain Data v3
+ * 3-agent retroaudit 全指摘対応済み
  */
 
 export const SYMPTOMS = [
@@ -70,8 +70,8 @@ export const DIFFERENTIALS = [
     freq: '低頻度',
     symptoms: ['sudden_onset', 'periumbilical', 'nausea_vomiting', 'diffuse'],
     findings: ['pain_out_of_proportion', 'tachycardia'],
-    redFlags: ['shock_signs'],
-    nextStep: '臨床的疑いだけで紹介/搬送の閾値を下げよ。造影CTが確定診断。乳酸値上昇は遅発性。',
+    redFlags: ['shock_signs', 'pain_out_of_proportion'],
+    nextStep: '臨床的疑いだけで紹介/搬送の閾値を下げよ。造影CTが確定診断。乳酸値上昇は遅発性。Pain out of proportionは最重要サイン。',
     link: null,
     comment: 'Pain out of proportion（痛みの割に所見が乏しい）が最大の手がかり。Af・動脈硬化リスクの高齢者。血管系イベントは「所見が追いつかない」。',
   },
@@ -85,7 +85,7 @@ export const DIFFERENTIALS = [
     redFlags: ['board_like', 'peritoneal_signs'],
     nextStep: '腹部X線（立位: free air）。即外科紹介/搬送。',
     link: null,
-    comment: '板状硬+free air=穿孔。NSAIDs・ステロイド・潰瘍歴がリスク。穿孔直後は「突然よくなった→直後に急激悪化」のパターンあり。',
+    comment: '板状硬+free air=穿孔。NSAIDs・ステロイド・潰瘍歴がリスク。被蓋穿孔では一時的に症状軽減することがあるが、直後に急激悪化する。',
   },
   {
     id: 'ectopic_pregnancy',
@@ -144,7 +144,7 @@ export const DIFFERENTIALS = [
     symptoms: ['ruq', 'epigastric', 'colicky', 'nausea_vomiting'],
     findings: ['murphy_sign'],
     redFlags: [],
-    nextStep: '消化器内科紹介（エコー評価が必要）。鎮痙薬（ブスコパン）で一時的緩和。',
+    nextStep: '消化器内科紹介（エコー評価が必要）。鎮痙薬（ブスコパン※緑内障・前立腺肥大に禁忌）で一時的緩和。',
     link: '/docs/070-Hepatobiliary',
     comment: '脂肪食後の右季肋部疝痛が典型。発熱がなければ胆嚢炎ではなく胆石発作。',
   },
@@ -153,7 +153,7 @@ export const DIFFERENTIALS = [
     name: '急性膵炎',
     cat: '消化器 / 緊急',
     freq: '中頻度',
-    symptoms: ['epigastric', 'back_pain', 'nausea_vomiting', 'constant'],
+    symptoms: ['epigastric', 'back_pain', 'nausea_vomiting', 'constant', 'diffuse'],
     findings: ['epigastric_tenderness'],
     redFlags: [],
     nextStep: '採血（アミラーゼ・リパーゼ）。CT施設へ紹介（重症度判定にCTが必須）。絶飲食・補液。',
@@ -168,7 +168,7 @@ export const DIFFERENTIALS = [
     symptoms: ['epigastric', 'nausea_vomiting', 'bloody_stool'],
     findings: ['epigastric_tenderness'],
     redFlags: [],
-    nextStep: 'PPI投与。黒色便/吐血→緊急内視鏡可能施設へ紹介。',
+    nextStep: 'PPI投与。活動性出血疑い（黒色便/吐血）→PPI静注+緊急内視鏡可能施設へ紹介（止血が優先）。',
     link: '/docs/050-Gastroenteritis',
     comment: 'NSAIDs・H.pylori・ストレスがリスク。黒色便は上部消化管出血を示唆。穿孔→消化管穿孔の項参照。',
   },
@@ -189,12 +189,12 @@ export const DIFFERENTIALS = [
     name: '大腸憩室炎',
     cat: '消化器',
     freq: '中頻度',
-    symptoms: ['llq', 'fever', 'constant'],
+    symptoms: ['llq', 'rlq', 'fever', 'constant'],
     findings: ['tenderness_llq', 'peritoneal_signs'],
     redFlags: [],
     nextStep: '採血（WBC/CRP）。CT施設へ紹介（穿孔・膿瘍の評価）。軽症なら外来抗菌薬。',
     link: null,
-    comment: '左下腹部痛+発熱+便秘傾向。「左側の虫垂炎」。高齢者に多い。穿孔・膿瘍形成で外科緊急。',
+    comment: '左下腹部痛+発熱+便秘傾向。「左側の虫垂炎」。日本人では右側（上行結腸）憩室炎も多い点に注意。穿孔・膿瘍形成で外科緊急。',
   },
   {
     id: 'ureterolithiasis',
@@ -204,7 +204,7 @@ export const DIFFERENTIALS = [
     symptoms: ['colicky', 'back_pain', 'flank_pain', 'dysuria', 'rlq', 'llq'],
     findings: ['cva_tenderness'],
     redFlags: [],
-    nextStep: '尿検査（血尿）。鎮痛（NSAIDs坐薬）。CT施設へ紹介（結石の位置・サイズ評価）。',
+    nextStep: '尿検査（血尿）。鎮痛（NSAIDs坐薬※腎障害・消化性潰瘍に注意）。CT施設へ紹介（結石の位置・サイズ評価）。再受診基準: 38℃以上の発熱→腎盂腎炎/敗血症の可能性→即再受診。',
     link: '/docs/250-Urinary-Tract/n201-ureterolithiasis',
     comment: '突然の側腹部〜鼠径部への放散する疝痛。体動で落ち着かない（もがく）。尿潜血陽性が参考。右尿管結石は右下腹部痛として来院することあり。',
   },
@@ -282,6 +282,18 @@ export const DIFFERENTIALS = [
     comment: '最も多い腹痛原因の1つ。ただし「便秘」で片付ける前に器質的疾患（大腸癌など）の除外を。50歳以上の新規便秘は要精査。',
   },
   {
+    id: 'cholangitis',
+    name: '急性胆管炎',
+    cat: '外科 / 緊急',
+    freq: '低〜中頻度',
+    symptoms: ['ruq', 'fever', 'jaundice', 'nausea_vomiting', 'shock_signs'],
+    findings: ['murphy_sign', 'jaundice_sign', 'hypotension', 'tachycardia'],
+    redFlags: ['hypotension'],
+    nextStep: 'Charcot三徴（痛み+発熱+黄疸）で疑う。Reynolds五徴（+ショック+意識障害）は重症。採血（肝胆道系酵素・ビリルビン・炎症）。即消化器内科/外科紹介（ERCP/PTCDが必要）。',
+    link: '/docs/070-Hepatobiliary',
+    comment: '胆嚢炎からの進展or総胆管結石が原因。敗血症に急速進展しうるKiller disease。Reynolds五徴は死亡率高い。',
+  },
+  {
     id: 'ibs',
     name: '過敏性腸症候群（IBS）',
     cat: '消化器（機能性）',
@@ -346,6 +358,11 @@ export const RED_FLAGS = [
     conditions: ['no_flatus'],
     message: '排ガス停止: 腸閉塞を考慮。腹部X線・外科紹介。',
     severity: 'warning',
+  },
+  {
+    conditions: ['pain_out_of_proportion'],
+    message: 'Pain out of proportion（痛みの割に所見が乏しい）: SMA閉塞（腸間膜虚血）を疑う。Af・動脈硬化リスクの高齢者で特に注意。臨床的疑いで即紹介/搬送。',
+    severity: 'critical',
   },
   {
     conditions: ['jaundice', 'fever'],

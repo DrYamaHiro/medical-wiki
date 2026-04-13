@@ -1,9 +1,8 @@
 /**
- * Diagnostic Booster — Undifferentiated Fever Data
- * 監査済み: 2026-04-12 (3-agent multi-perspective audit)
+ * Diagnostic Booster — Undifferentiated Fever Data v3
+ * 3-agent retroaudit 全指摘対応済み
  */
 
-// Phase 1: 随伴症状
 export const SYMPTOMS = [
   { id: 'sore_throat', label: '咽頭痛', cat: '呼吸器' },
   { id: 'cough', label: '咳嗽', cat: '呼吸器' },
@@ -19,7 +18,7 @@ export const SYMPTOMS = [
   { id: 'flank_pain', label: '側腹部痛・CVA叩打痛', cat: '泌尿器' },
   { id: 'rash', label: '皮疹', cat: '皮膚' },
   { id: 'skin_redness', label: '皮膚の局所発赤・腫脹・熱感', cat: '皮膚' },
-  { id: 'joint_pain', label: '関節痛', cat: '筋骨格' },
+  { id: 'joint_pain', label: '関節痛（単関節/多関節）', cat: '筋骨格' },
   { id: 'lymphadenopathy', label: 'リンパ節腫脹', cat: '全身' },
   { id: 'weight_loss', label: '体重減少', cat: '全身' },
   { id: 'night_sweats', label: '盗汗', cat: '全身' },
@@ -28,7 +27,6 @@ export const SYMPTOMS = [
   { id: 'trismus', label: '開口障害', cat: '耳鼻' },
 ];
 
-// Phase 2: 身体所見（triggersが空=常時表示）
 export const FINDINGS = [
   { id: 'tonsillar_exudate', label: '扁桃白苔・滲出物', triggers: ['sore_throat'] },
   { id: 'cervical_lymph', label: '頸部リンパ節腫脹・圧痛', triggers: ['sore_throat', 'lymphadenopathy'] },
@@ -46,14 +44,14 @@ export const FINDINGS = [
   { id: 'maculopapular_rash', label: '斑状丘疹状皮疹', triggers: ['rash'] },
   { id: 'vesicular_rash', label: '水疱性皮疹（帯状・片側性）', triggers: ['rash'] },
   { id: 'cellulitis_signs', label: '皮膚発赤・腫脹・熱感・境界明瞭', triggers: ['skin_redness'] },
-  { id: 'joint_swelling', label: '関節腫脹・発赤', triggers: ['joint_pain'] },
+  { id: 'necrotizing_signs', label: '急速進行・水疱・握雪感・不釣り合いな疼痛', triggers: ['skin_redness'] },
+  { id: 'joint_swelling', label: '関節腫脹・発赤・熱感（単関節）', triggers: ['joint_pain'] },
   { id: 'meningeal_signs', label: '髄膜刺激徴候（Kernig/Brudzinski）', triggers: ['headache', 'neck_stiffness', 'altered_mental'] },
   { id: 'osler_janeway', label: 'Osler結節/Janeway病変', triggers: ['chest_pain', 'rash'] },
   { id: 'strawberry_tongue', label: '苺舌', triggers: ['sore_throat', 'rash'] },
   { id: 'thyroid_enlargement', label: '甲状腺腫大・圧痛', triggers: ['palpitations'] },
 ];
 
-// 鑑別疾患データ
 export const DIFFERENTIALS = [
   {
     id: 'common_cold',
@@ -63,7 +61,7 @@ export const DIFFERENTIALS = [
     symptoms: ['sore_throat', 'cough', 'rhinorrhea', 'headache'],
     findings: [],
     redFlags: [],
-    nextStep: '対症療法。抗菌薬不要。',
+    nextStep: '対症療法。抗菌薬不要。再受診基準: 3日以上の高熱持続、呼吸困難出現、症状が7-10日で改善しない場合。',
     link: '/docs/010-Acute-URI/j00-common-cold',
     comment: '最も頻度が高い。2-3日でピークを過ぎ、7-10日で軽快が典型。遷延する場合は二次感染や他疾患を考慮。',
   },
@@ -75,9 +73,9 @@ export const DIFFERENTIALS = [
     symptoms: ['cough', 'headache', 'joint_pain', 'sore_throat', 'rhinorrhea'],
     findings: [],
     redFlags: ['dyspnea', 'altered_mental'],
-    nextStep: '迅速抗原検査。発症48時間以内なら抗ウイルス薬。',
+    nextStep: '迅速抗原検査。発症48時間以内なら抗ウイルス薬。再受診基準: 呼吸困難出現、意識朦朧、経口摂取不能。',
     link: '/docs/010-Acute-URI/j10-influenza-a',
-    comment: '急激な発症、高熱、全身倦怠感、筋肉痛が特徴。流行期の事前確率を考慮。',
+    comment: '急激な発症、高熱、全身倦怠感、筋肉痛・関節痛が特徴。流行期の事前確率を考慮。',
   },
   {
     id: 'covid19',
@@ -87,7 +85,7 @@ export const DIFFERENTIALS = [
     symptoms: ['cough', 'sore_throat', 'headache', 'dyspnea', 'rhinorrhea'],
     findings: [],
     redFlags: ['dyspnea'],
-    nextStep: '抗原検査。SpO2モニタリング。Day 7-10の増悪に注意。',
+    nextStep: '抗原検査。SpO2モニタリング。再受診基準: Day 7-10で呼吸困難・SpO2低下出現時は即受診。',
     link: '/docs/010-Acute-URI/u071-covid-19',
     comment: '現行株では鼻汁・咽頭痛が主要症状。呼吸困難はDay 7-10に進行しうる。',
   },
@@ -99,7 +97,7 @@ export const DIFFERENTIALS = [
     symptoms: ['sore_throat', 'headache'],
     findings: ['tonsillar_exudate', 'cervical_lymph', 'strawberry_tongue'],
     redFlags: [],
-    nextStep: 'Centor/McIsaac Score評価。迅速抗原検査。',
+    nextStep: 'Centor/McIsaac Score評価。迅速抗原検査。陽性ならアモキシシリン10日間（ペニシリンアレルギー時はセファレキシンまたはクラリスロマイシン）。EBV合併疑い時はセファレキシンを選択。',
     link: '/docs/010-Acute-URI/j020-strep-throat',
     comment: '咳嗽がないことがポイント（Centor基準）。扁桃白苔+頸部リンパ節+発熱+咳なし。',
   },
@@ -110,10 +108,10 @@ export const DIFFERENTIALS = [
     freq: '低〜中頻度',
     symptoms: ['sore_throat', 'trismus'],
     findings: ['unilateral_tonsil', 'cervical_lymph'],
-    redFlags: [],
-    nextStep: '耳鼻咽喉科へ紹介（穿刺ドレナージ・切開排膿が必要）。',
+    redFlags: ['trismus'],
+    nextStep: '耳鼻咽喉科へ紹介（穿刺ドレナージ・切開排膿が必要）。気道狭窄リスクあり。',
     link: '/docs/010-Acute-URI/j36-peritonsillar-abscess',
-    comment: '片側の強い咽頭痛+開口障害+口蓋垂偏位。溶連菌咽頭炎の合併症として発症。',
+    comment: '片側の強い咽頭痛+開口障害+口蓋垂偏位。溶連菌咽頭炎の合併症として発症。重度の開口障害+嚥下困難+流涎は気道緊急。',
   },
   {
     id: 'infectious_mono',
@@ -123,9 +121,9 @@ export const DIFFERENTIALS = [
     symptoms: ['sore_throat', 'lymphadenopathy', 'rash'],
     findings: ['tonsillar_exudate', 'cervical_lymph', 'hepatosplenomegaly'],
     redFlags: [],
-    nextStep: '異型リンパ球確認（外注）。VCA-IgM/EBNA-IgG。AMPCは投与しないこと。',
+    nextStep: '異型リンパ球確認（外注）。VCA-IgM/EBNA-IgG。アミノペニシリン系（AMPC/ABPC）は投与しないこと（高率に薬疹誘発）。',
     link: '/docs/010-Acute-URI/b279-infectious-mononucleosis',
-    comment: '若年者。頸部リンパ節腫脹著明。脾腫注意。AMPC投与で薬疹誘発。',
+    comment: '若年者。頸部リンパ節腫脹著明。脾腫注意（接触性スポーツ4週間禁止）。AMPC/ABPC投与で薬疹誘発。',
   },
   {
     id: 'pneumonia',
@@ -135,9 +133,9 @@ export const DIFFERENTIALS = [
     symptoms: ['cough', 'dyspnea', 'chest_pain'],
     findings: ['crackles'],
     redFlags: ['dyspnea', 'altered_mental'],
-    nextStep: '胸部X線。A-DROP評価。血液培養（重症時）。',
+    nextStep: '胸部X線。A-DROP評価。血液培養（重症時）。A-DROP 2点以上は紹介。',
     link: '/docs/020-Pneumonia',
-    comment: '高齢者では発熱がないことも。SpO2低下に注意。A-DROP2点以上で紹介。',
+    comment: '高齢者では発熱がないことも。SpO2低下に注意。',
   },
   {
     id: 'uti',
@@ -147,7 +145,7 @@ export const DIFFERENTIALS = [
     symptoms: ['dysuria', 'flank_pain', 'vomiting', 'abdominal_pain'],
     findings: ['cva_tenderness'],
     redFlags: ['altered_mental'],
-    nextStep: '尿検査・尿培養。腎盂腎炎はCVA叩打痛+高熱で疑う。',
+    nextStep: '尿検査・尿培養。腎盂腎炎はCVA叩打痛+高熱で疑う。嘔吐で経口摂取不能・敗血症徴候→紹介。',
     link: '/docs/250-Urinary-Tract/n10-acute-pyelonephritis',
     comment: '女性に多い。高熱+CVA叩打痛=腎盂腎炎を強く疑う。男性は前立腺炎も鑑別。',
   },
@@ -159,7 +157,7 @@ export const DIFFERENTIALS = [
     symptoms: ['abdominal_pain', 'diarrhea', 'vomiting'],
     findings: [],
     redFlags: ['altered_mental'],
-    nextStep: '脱水評価。整腸剤・補液。血便があれば細菌性を考慮。',
+    nextStep: '脱水評価。整腸剤・補液。血便→細菌性を考慮。再受診基準: 経口摂取不能24h以上、血便、意識朦朧。',
     link: '/docs/050-Gastroenteritis',
     comment: 'ウイルス性が多い。血便・持続する高熱は細菌性を疑う。',
   },
@@ -193,11 +191,11 @@ export const DIFFERENTIALS = [
     cat: '感染症（細菌）',
     freq: '高頻度',
     symptoms: ['skin_redness'],
-    findings: ['cellulitis_signs'],
-    redFlags: [],
-    nextStep: '抗菌薬（セファレキシン or アモキシシリン/クラブラン酸）。壊死性筋膜炎の除外。',
+    findings: ['cellulitis_signs', 'necrotizing_signs'],
+    redFlags: ['necrotizing_signs'],
+    nextStep: '第一選択: セファレキシン。咬傷・嫌気性菌混合感染疑い: アモキシシリン/クラブラン酸。再受診基準: 急速拡大・水疱・握雪感→壊死性筋膜炎疑い→緊急搬送。',
     link: '/docs/210-Skin-Infect',
-    comment: '境界明瞭な発赤・腫脹・熱感・疼痛。急速進行・水疱・握雪感は壊死性筋膜炎→緊急搬送。',
+    comment: '境界明瞭な発赤・腫脹・熱感・疼痛。急速進行・水疱・握雪感・不釣り合いな疼痛は壊死性筋膜炎→緊急搬送。',
   },
   {
     id: 'herpes_zoster',
@@ -207,9 +205,9 @@ export const DIFFERENTIALS = [
     symptoms: ['rash'],
     findings: ['vesicular_rash'],
     redFlags: [],
-    nextStep: '抗ウイルス薬（バラシクロビル）72時間以内。播種性は搬送。',
+    nextStep: 'バラシクロビル1000mg×3回/日×7日間。72時間以内に開始。腎機能障害時は減量。三叉神経第1枝領域（Hutchinson徴候: 鼻尖の水疱）→眼部帯状疱疹→即日眼科紹介。播種性は搬送。',
     link: null,
-    comment: '片側のデルマトームに沿う水疱。免疫低下者では播種性（全身散布）に注意。',
+    comment: '片側のデルマトームに沿う水疱。免疫低下者では播種性（全身散布）に注意。眼部帯状疱疹は失明リスク→眼科緊急。',
   },
   {
     id: 'meningitis',
@@ -221,7 +219,7 @@ export const DIFFERENTIALS = [
     redFlags: ['altered_mental', 'neck_stiffness', 'meningeal_signs'],
     nextStep: '緊急搬送。可能であれば搬送前に血液培養+経験的抗菌薬投与を考慮。',
     link: null,
-    comment: 'Jolt accentuationはスクリーニングとして有用（感度は報告により異なる）。項部硬直+意識変容は即搬送。',
+    comment: 'Jolt accentuationはスクリーニングとして有用（感度は報告により異なるが、陰性でも髄膜炎は否定できない）。項部硬直+意識変容は即搬送。',
   },
   {
     id: 'infective_endocarditis',
@@ -233,7 +231,19 @@ export const DIFFERENTIALS = [
     redFlags: ['new_murmur', 'osler_janeway'],
     nextStep: '血液培養3セット。循環器専門医紹介（経食道心エコー必要）。',
     link: null,
-    comment: 'デバイス留置・歯科治療後・IV drug use歴で事前確率上昇。',
+    comment: 'デバイス留置・歯科治療後・IV drug use歴で事前確率上昇。不明熱の鑑別として常に考慮。',
+  },
+  {
+    id: 'septic_arthritis',
+    name: '化膿性関節炎',
+    cat: '整形外科 / 緊急',
+    freq: '低〜中頻度',
+    symptoms: ['joint_pain'],
+    findings: ['joint_swelling'],
+    redFlags: ['joint_swelling'],
+    nextStep: '単関節の急性腫脹+発熱→化膿性関節炎を疑う。関節穿刺（グラム染色・培養）→整形外科紹介。遅れると関節破壊。',
+    link: null,
+    comment: '単関節の急性発熱+腫脹+疼痛+可動域制限。膝が最多。関節穿刺で膿性関節液+グラム陽性球菌が診断的。治療の遅れは不可逆的関節破壊→整形外科緊急。',
   },
   {
     id: 'acute_prostatitis',
@@ -243,9 +253,9 @@ export const DIFFERENTIALS = [
     symptoms: ['dysuria', 'abdominal_pain'],
     findings: [],
     redFlags: [],
-    nextStep: '尿検査・尿培養。直腸診（前立腺圧痛）。ニューキノロン14日間。',
+    nextStep: '尿検査・尿培養。直腸診（前立腺圧痛、強いマッサージは菌血症リスク）。レボフロキサシン等のニューキノロン2-4週間（※腱断裂リスク〔高齢者・ステロイド併用〕に注意）。',
     link: '/docs/260-Prostate/n410-acute-prostatitis',
-    comment: '男性の発熱+排尿障害。直腸診で前立腺の腫大・圧痛。強いマッサージは菌血症リスク。',
+    comment: '男性の発熱+排尿障害。直腸診で前立腺の腫大・圧痛。',
   },
   {
     id: 'adult_still',
@@ -255,7 +265,7 @@ export const DIFFERENTIALS = [
     symptoms: ['joint_pain', 'rash', 'sore_throat', 'weight_loss'],
     findings: ['maculopapular_rash', 'joint_swelling', 'hepatosplenomegaly'],
     redFlags: [],
-    nextStep: 'フェリチン（著明高値>1000が診断的）。リウマチ科紹介。',
+    nextStep: 'フェリチン（著明高値>1000は強く示唆。HLH/MASとの鑑別にも重要）。リウマチ科紹介。',
     link: null,
     comment: '弛張熱+サーモンピンク疹+関節痛+咽頭痛+フェリチン著増。ANA/RF陰性。',
   },
@@ -293,7 +303,7 @@ export const DIFFERENTIALS = [
     redFlags: [],
     nextStep: '被疑薬中止。48-72時間で解熱確認。',
     link: '/docs/200-Dermatitis/l270-drug-eruption',
-    comment: '初回投与後7-10日（再投与時はより早期）。相対的徐脈が手がかり。好酸球増多。全身状態は比較的良好。',
+    comment: '初回投与後5-28日（典型的には7-10日、再投与時はより早期）。相対的徐脈が手がかり。好酸球増多。全身状態は比較的良好。',
     alwaysShow: true,
   },
   {
@@ -304,9 +314,9 @@ export const DIFFERENTIALS = [
     symptoms: ['cough', 'night_sweats', 'weight_loss'],
     findings: [],
     redFlags: [],
-    nextStep: '胸部X線。結核疑いの時点で保健所相談＋専門医療機関紹介。喀痰抗酸菌検査（3連痰）は専門施設で。',
+    nextStep: '胸部X線。結核疑いの時点で保健所相談＋専門医療機関紹介。喀痰抗酸菌検査は専門施設で。喀血時は止血処置+紹介。',
     link: null,
-    comment: '2週間以上の咳嗽+盗汗+体重減少で疑う。日本は結核中蔓延国。高齢者・免疫低下者に注意。',
+    comment: '2週間以上の咳嗽+盗汗+体重減少で疑う。日本は結核中蔓延国。高齢者・免疫低下者に注意。院内感染リスクあり→マスク着用+隔離。',
   },
   {
     id: 'secondary_bacterial',
@@ -340,13 +350,12 @@ export const DIFFERENTIALS = [
     symptoms: ['dyspnea', 'chest_pain', 'palpitations'],
     findings: [],
     redFlags: ['dyspnea'],
-    nextStep: 'D-dimer。Wells Score評価。高リスクなら造影CT可能施設へ紹介/搬送。',
+    nextStep: 'Wells Score評価。D-dimer・造影CTは当院測定不可のため、Wells高リスクなら臨床判断で即搬送。',
     link: null,
     comment: '突然の呼吸困難+胸痛+頻脈。長期臥床・手術後・下肢腫脹がリスク。発熱は軽度のことが多い。',
   },
 ];
 
-// Red Flag 定義
 export const RED_FLAGS = [
   {
     conditions: ['altered_mental'],
@@ -355,7 +364,7 @@ export const RED_FLAGS = [
   },
   {
     conditions: ['neck_stiffness'],
-    message: '項部硬直: 髄膜炎を疑う。Jolt accentuation・Kernig徴候を確認。',
+    message: '項部硬直: 髄膜炎を疑う。Jolt accentuation・Kernig徴候を確認。陰性でも髄膜炎は否定できない。',
     severity: 'critical',
   },
   {
@@ -379,6 +388,16 @@ export const RED_FLAGS = [
     severity: 'critical',
   },
   {
+    conditions: ['necrotizing_signs'],
+    message: '壊死性筋膜炎を疑う所見（急速進行・水疱・握雪感・不釣り合いな疼痛）: 緊急搬送。時間単位で進行し致死的。',
+    severity: 'critical',
+  },
+  {
+    conditions: ['joint_swelling'],
+    message: '単関節の急性腫脹+発熱: 化膿性関節炎を疑う。関節穿刺→整形外科紹介。遅れると関節破壊。',
+    severity: 'warning',
+  },
+  {
     conditions: ['murphy_sign'],
     message: 'Murphy徴候陽性: 急性胆嚢炎を疑う。外科/消化器内科へ紹介。',
     severity: 'warning',
@@ -391,6 +410,11 @@ export const RED_FLAGS = [
   {
     conditions: ['petechiae'],
     message: '点状出血: DIC・血小板減少・髄膜炎菌血症を考慮。CBC+凝固採血。',
+    severity: 'warning',
+  },
+  {
+    conditions: ['trismus'],
+    message: '開口障害: 扁桃周囲膿瘍による気道狭窄リスクを考慮。耳鼻咽喉科紹介。',
     severity: 'warning',
   },
 ];

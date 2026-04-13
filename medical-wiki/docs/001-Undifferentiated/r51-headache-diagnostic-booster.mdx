@@ -4,29 +4,29 @@ title: "[R51] 頭痛精査 / Headache - Diagnostic Booster"
 sidebar_label: "[R51] 頭痛精査"
 sidebar_position: 7
 hide_table_of_contents: false
-description: "頭痛の鑑別診断を支援するインタラクティブツール。SNOOPT4フレームワークで二次性頭痛を系統的に除外。16鑑別・33症状・10所見・12 Red Flag。"
-keywords: ["頭痛", "頭痛精査", "二次性頭痛", "雷鳴頭痛", "SAH", "髄膜炎", "GCA", "片頭痛", "SNOOPT4", "headache", "R51", "diagnostic booster"]
+description: "頭痛の鑑別診断を支援するインタラクティブツール。SNOOP T4フレームワークで二次性頭痛を系統的に除外。"
+keywords: ["頭痛", "頭痛精査", "二次性頭痛", "雷鳴頭痛", "SAH", "髄膜炎", "GCA", "片頭痛", "SNOOP T4", "headache", "R51", "diagnostic booster"]
 ---
 
 import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/headacheData';
 
 # 頭痛精査 — Diagnostic Booster
 
-症状・所見を選択していくと、鑑別候補がリアルタイムに絞り込まれます。SNOOPT4フレームワークで二次性頭痛を系統的に除外します。
+症状・所見を選択していくと、鑑別候補がリアルタイムに絞り込まれます。SNOOP T4フレームワークで二次性頭痛を系統的に除外します。
 
 <DiagnosticBooster
   symptoms={SYMPTOMS}
   findings={FINDINGS}
   differentials={DIFFERENTIALS}
   redFlags={RED_FLAGS}
-  subtitle="頭痛の鑑別思考支援ツール（SNOOPT4準拠）"
+  subtitle="頭痛の鑑別思考支援ツール（SNOOP T4準拠）"
 />
 
 ---
 
 ## Dr.Advice
 
-> **[SNOOPT4]** 二次性頭痛の除外フレームワーク: **S**ystemic（全身症状・疾患）、**N**eurological（神経症状）、**O**nset sudden（雷鳴頭痛）、**O**nset after 50（50歳以降の新規）、**P**attern change（パターン変化）、**T4**riggered by（Valsalva/体位/咳嗽/性交で誘発）。1つでも該当すれば二次性を積極的に検索せよ。
+> **[SNOOP T4]** 二次性頭痛の除外フレームワーク: **S**ystemic（全身症状・疾患）、**N**eurological（神経症状）、**O**nset sudden（雷鳴頭痛）、**O**nset after 50（50歳以降の新規）、**P**attern change（パターン変化）、**T4**riggered by（Valsalva/体位/咳嗽/性交で誘発）。1つでも該当すれば二次性を積極的に検索せよ。
 >
 > **[雷鳴頭痛 = SAH否定まではSAH]** 「人生最悪の頭痛」「数秒でピークに達した」→ CTの感度は発症6時間以内で98-100%だが、12時間で約93%、24時間以降は急速に低下。可能な限り早期のCT紹介が必須。CT陰性でも臨床的疑いが強ければ腰椎穿刺（高次施設で）。
 >
@@ -44,7 +44,7 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
 
 ## 診断フローチャート
 
-### Step 1: 緊急性の判断（SNOOPT4）
+### Step 1: 緊急性の判断（SNOOP T4）
 
 <MermaidChart chart={`flowchart TD
     A["頭痛患者来院"] --> B{"雷鳴頭痛？ 数秒でピーク"}
