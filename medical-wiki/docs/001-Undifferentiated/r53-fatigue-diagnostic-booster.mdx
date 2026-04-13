@@ -1,0 +1,83 @@
+---
+id: r53-fatigue-diagnostic-booster
+title: "[R53] 全身倦怠感・疲労精査 / Fatigue - Diagnostic Booster"
+sidebar_label: "[R53] 全身倦怠感・疲労精査"
+sidebar_position: 2
+hide_table_of_contents: false
+description: "倦怠感の鑑別診断を支援するインタラクティブツール。器質的疾患の除外からうつ病・CFS/MEまで系統的に鑑別。"
+keywords: ["倦怠感", "疲労", "だるい", "fatigue", "甲状腺", "貧血", "うつ", "副腎不全", "CFS", "R53", "diagnostic booster"]
+---
+
+import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/fatigueData';
+
+# 全身倦怠感・疲労精査 — Diagnostic Booster
+
+倦怠感の期間・性状・随伴症状を選択していくと、鑑別候補がリアルタイムに絞り込まれます。
+
+<DiagnosticBooster
+  symptoms={SYMPTOMS}
+  findings={FINDINGS}
+  differentials={DIFFERENTIALS}
+  redFlags={RED_FLAGS}
+  subtitle="倦怠感の鑑別思考支援ツール"
+/>
+
+---
+
+## Dr.Advice
+
+> **[最低限のスクリーニング]** 「だるい」は最も非特異的な主訴。最低限のスクリーニング（CBC/TSH/HbA1c/BNP/肝腎機能/フェリチン/尿検査）で主要な器質的疾患の8割は拾える。
+>
+> **[甲状腺を忘れるな]** 倦怠感の原因として最も見逃されやすい。寒がり+便秘+体重増加+皮膚乾燥+脱毛→TSHチェック。深部腱反射の弛緩相遅延（アキレス腱反射で確認）は診察室で確認可能な特徴的所見。
+>
+> **[副腎不全]** 見逃されやすい。ステロイド長期使用歴、低Na、好酸球増多、低血圧、色素沈着があれば早朝コルチゾールを追加。副腎クリーゼ（ショック+低Na）は致死的→即搬送。
+>
+> **[うつ病とのダブル診断]** 「うつだろう」で甲状腺機能低下症を見逃すな。器質的疾患の除外を先に行い、並行してPHQ-2スクリーニング。PHQ-2&ge;3→PHQ-9で詳細評価。
+>
+> **[慢性疲労症候群]** 6ヶ月以上の疲労+労作後の極端な消耗（PEM）+睡眠で回復しない+認知障害 or 起立不耐。「異常なし=気のせい」ではない。全ての器質的疾患を除外してからの診断。
+>
+> **[設備制約]** 当院に心エコー・腹部エコー・PSGはない。スクリーニング検査（血液・尿・胸部X線・心電図）で異常を拾い、精査が必要なら適切な科に紹介。
+
+---
+
+## 診断フローチャート
+
+### Step 1: 器質的疾患の除外
+
+<MermaidChart chart={`flowchart TD
+    A["倦怠感患者来院"] --> B["スクリーニング検査<br>CBC/TSH/HbA1c/BNP<br>肝腎機能/フェリチン<br>尿検査/胸部X線/心電図"]
+    B --> C{"検査異常あり？"}
+    C -- "TSH高値" --> D1["甲状腺機能低下症"]
+    C -- "Hb低値" --> D2["貧血<br>→ 原因検索"]
+    C -- "HbA1c高値" --> D3["糖尿病"]
+    C -- "BNP高値" --> D4["心不全<br>→ 循環器紹介"]
+    C -- "肝腎異常" --> D5["肝疾患/CKD"]
+    C -- "全て正常" --> E["Step 2へ"]
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style E fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px`} />
+
+### Step 2: 精神・睡眠・機能性の鑑別
+
+<MermaidChart chart={`flowchart TD
+    START["器質的疾患除外後"] --> Q1{"PHQ-2&ge;3？<br>（気分の落ち込み<br>+興味の喪失）"}
+    Q1 -- "Yes" --> DEP["うつ病疑い<br>→ PHQ-9で詳細評価<br>精神科/心療内科紹介"]
+    Q1 -- "No" --> Q2{"いびき+<br>日中傾眠+<br>肥満？"}
+    Q2 -- "Yes" --> OSA["OSAS疑い<br>→ ESS評価<br>PSG紹介"]
+    Q2 -- "No" --> Q3{"6ヶ月以上+<br>労作後に極端に悪化+<br>睡眠で回復しない？"}
+    Q3 -- "Yes" --> CFS["CFS/ME疑い<br>（除外診断）<br>→ 専門外来紹介"]
+    Q3 -- "No" --> Q4{"薬剤歴？<br>β遮断薬/スタチン/<br>抗ヒスタミン薬等"}
+    Q4 -- "Yes" --> DRG["薬剤性倦怠感<br>用量調整/代替薬"]
+    Q4 -- "No" --> Q5["生活指導<br>（睡眠衛生/運動/ストレス管理）<br>4週間後再評価"]
+    style START fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style DEP fill:#e3f2fd,stroke:#1565c0
+    style CFS fill:#f3e5f5,stroke:#7b1fa2`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: 倦怠感の期間・性状・随伴症状を選択する
+2. **Phase 2**: 選択した症状に応じて表示される身体所見を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Stepと追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
