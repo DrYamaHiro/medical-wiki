@@ -11,11 +11,11 @@
 |---|---|
 | 最新テンプレートを見る | `ver.3.0.2.2/output/` （`00-INDEX.txt` から開始） |
 | テンプレートの変更点を確認 | 各バージョンの `.txt` ファイル（例: `ver.3.0.2.0.txt`） |
-| フィードバックを確認 | `feedbacks/` （日付ベース） |
+| フィードバックを確認 | `feedbacks/` （日付ベース）→ [INDEX/feedback_rules.md](INDEX/feedback_rules.md) |
 | テンプレート修正の既知課題 | `SOAP_ISSUES_MEMO.md` |
+| Wiki更新 | `medical-wiki/` → 下記「Wiki更新ルール」参照 |
 | コラム・掲示物を作る | `op-ed/` → [INDEX/op_ed_rules.md](INDEX/op_ed_rules.md) |
-| 薬剤を調べる | `aeon_ph/drugs/` （RX-01〜15カテゴリ別） |
-| Wiki更新 | `medical-wiki/` → `引継ぎ手順書.md` |
+| 薬剤を調べる | `aeon_ph/drugs/` （RX-01〜18カテゴリ別） |
 | 伊藤先生のテンプレート・提案 | `CS_Temp_Ito/` |
 | MR勉強会の記録 | `MR-study-logs/` |
 | フローチャート | `flowcharts/` |
@@ -27,14 +27,58 @@
 **最新版: `ver.3.0.2.2/output/`**
 
 各バージョンフォルダの `output/` 内に番号付きテンプレートファイル群が格納。
+
+**マスターファイル（ver.3.0.2.2）:**
 - `00-INDEX.txt` — テンプレート全体の目次（**テンプレート内のINDEX。このファイルとは別物**）
 - `01-MASTER-CONTAINER-CLASSIFICATION.txt` — マスターコンテナ分類
 - `02-DIAGNOSTIC-PROTOCOL-ROS-MAP.txt` — 診断プロトコル・ROSマップ
 - `03-DOCTOR-ADVICE-COLLECTION.txt` — Dr.Adviceコレクション
+- `04-MASTER-THERAPEUTIC-ITEMS.txt` — マスター治療項目一覧
+- `05-MASTER-CATEGORY1-MEDICATIONS.txt` — カテゴリ1: 処方薬
+- `06-MASTER-CATEGORY2-TESTS.txt` — カテゴリ2: 検査
+- `07-MASTER-CATEGORY3-PROCEDURES.txt` — カテゴリ3: 処置
+- `08-MASTER-CATEGORY4-DOCUMENTS.txt` — カテゴリ4: 文書
 - `NNN-AP-XX.txt` — Assessment/Plan（評価・方針）
 - `NNN-SO-XX.txt` — Subjective/Objective（主訴・所見）
 
 バージョン系譜: `2.0.1.0` → `2.0.1.1` → `3.0.0.0` → `3.0.1.0`〜`3.0.1.4` → `3.0.2.0` → `3.0.2.1` → **`3.0.2.2`**
+
+---
+
+## Wiki更新ルール（重要）
+
+### 公開URL
+https://dryamahiro.github.io/medical-wiki/
+
+### 他者変更の上書き防止
+
+Wiki修正をデプロイする前に、**必ず以下のチェックを実施**すること:
+
+```bash
+git fetch origin
+git log --oneline HEAD..origin/master   # 他者の新コミットがないか確認
+```
+
+- **origin に自分が把握していないコミットがある場合** → wikiの修正を一旦保留し報告。他者による修正内容を確認した上で、追記する形で統合するか、改めて書き直すかを検討する。
+- `WIKI_EDIT_START` / `WIKI_EDIT_END` マーカーの外（SOAP部分）は `update_wiki.js` が保護する領域。マーカーを削除・移動しないこと。
+- 対象ファイルの最終更新を `git log -- <path>` で確認し、自分が把握していないタイミングでの更新がないかチェック。
+
+### 医学監査の義務
+
+Wiki・SOAPテンプレート・薬剤リファレンスの変更は、**必ず複数の独立したAI監査エージェントによるレビュー**を通すこと。単一エージェントの監査では指摘漏れが発生することが確認されている。
+
+- **推奨**: 3エージェント並列（臨床妥当性 / 薬理学・AMS / 医療安全・フォーマット）
+- **最低**: 2エージェント（統合監査を2つ独立して実施）
+- **合格基準**: 全エージェントが "APPROVED" を返すまで修正→再監査を繰り返す
+- 詳細: [INDEX/feedback_rules.md](INDEX/feedback_rules.md) の「3. 医学監査（多段レビュー）」参照
+
+### デプロイフロー
+
+1. `git fetch origin` で他者変更を確認
+2. コンフリクトがあれば解消（他者変更を優先）
+3. 変更案を作成 → 複数AI監査（全APPROVED まで繰り返し）
+4. `WIKI_EDIT_START/END` 内のみ編集（SOAP側は触らない）
+5. コミット → push → GitHub Actions が自動デプロイ
 
 ---
 
@@ -62,13 +106,22 @@
 
 ### aeon_ph/（薬剤リファレンス）
 - `CS-Drug-Reference_FRAMEWORK.md` — フレームワーク設計書
-- `drugs/` — カテゴリ別薬剤データ（`RX-01_infection` 〜 `RX-15_kampo`）
+- `drugs/` — カテゴリ別薬剤データ（`RX-01_infection` 〜 `RX-18_others`）
 - `aeon_pharmacy_log.tsv` / `aeon_pharmacy_substitution.tsv` — 薬局ログ・代替薬
 
 ### medical-wiki/（Docusaurus医療Wiki）
-- Node.jsプロジェクト（Docusaurus v3）
+- Node.jsプロジェクト（Docusaurus v3.7）
 - 公開URL: https://dryamahiro.github.io/medical-wiki/
 - セットアップ・デプロイ手順: `引継ぎ手順書.md`
+- **Diagnostic Booster**: 001-Undifferentiated コンテナに搭載された診断思考支援ツール
+  - Reactコンポーネント: `src/components/DiagnosticBooster/`
+  - 症状・所見データ: `feverData.js`, `abdominalPainData.js`, `chestPainData.js`, `headacheData.js`, `dizzinessData.js`
+  - 3エージェント並列監査で医学的品質を担保
+
+### feedbacks/（フィードバック）
+- 未処理FB: `feedbacks/` 直下
+- 反映済み: `feedbacks/applied/YYYY-MM-DD_applied/`
+- 処理ルール: [INDEX/feedback_rules.md](INDEX/feedback_rules.md)
 
 ---
 
