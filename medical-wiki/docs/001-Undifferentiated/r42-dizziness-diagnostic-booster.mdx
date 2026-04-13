@@ -1,0 +1,93 @@
+---
+id: r42-dizziness-diagnostic-booster
+title: "[R42] めまい精査 / Dizziness - Diagnostic Booster"
+sidebar_label: "[R42] めまい精査"
+sidebar_position: 5
+hide_table_of_contents: false
+description: "めまいの鑑別診断を支援するインタラクティブツール。HINTS examで中枢性vs末梢性を鑑別し、Killer Dizziness（小脳梗塞・脳幹梗塞）を除外。14鑑別・24症状・11所見・11 Red Flag。"
+keywords: ["めまい", "めまい精査", "dizziness", "vertigo", "BPPV", "メニエール", "HINTS", "小脳梗塞", "R42", "diagnostic booster"]
+---
+
+import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/dizzinessData';
+
+# めまい精査 — Diagnostic Booster
+
+症状・所見を選択していくと、鑑別候補がリアルタイムに絞り込まれます。HINTS examで中枢性vs末梢性を系統的に鑑別します。
+
+<DiagnosticBooster
+  symptoms={SYMPTOMS}
+  findings={FINDINGS}
+  differentials={DIFFERENTIALS}
+  redFlags={RED_FLAGS}
+  subtitle="めまいの鑑別思考支援ツール（HINTS準拠）"
+/>
+
+---
+
+## Dr.Advice
+
+> **[HINTSの威力と限界]** HINTS exam（Head Impulse / Nystagmus / Test of Skew）は急性持続性めまいにおいて発症48h以内のMRI-DWI（感度83%）よりも高い感度（100%）を示す（Kattah JC et al. Stroke 2009）。ただしこの精度は**訓練を受けた神経内科/救急専門医が実施した場合**のデータであり、非訓練者では偽陰性/偽陽性が増加する。**HINTS陰性でも臨床的に中枢性を疑えば搬送をためらわないこと。**
+>
+> **[小脳梗塞の落とし穴]** めまい診療で最も怖いのは「よくあるめまい」として帰宅させた小脳梗塞。初期にはBPPVやメニエールに酷似し、歩行障害も軽微なことがある。「いつものめまいと違う」「嘔吐が止まらない」「まっすぐ歩けない」→即日画像精査。
+>
+> **[BPPVの非典型パターンに注意]** Dix-Hallpike陽性の典型パターン（上眼瞼向き回旋性眼振＋潜時2-5秒＋1分以内に消失）ならBPPV確定。しかし、潜時なし・減衰しない眼振・下眼瞼向き眼振は中枢性を疑うパターン→HINTS exam実施またはCT/MRI施設へ紹介。
+>
+> **[起立性低血圧の背後]** 単純な脱水だけでなく、消化管出血（黒色便確認）、副腎不全、パーキンソン病、薬剤性（降圧薬・α遮断薬・三環系・BZD）を鑑別。高齢者の「立ちくらみ」は必ず臥位・立位血圧を測定せよ。
+>
+> **[帰宅時の安全指導]** めまいで帰宅させる際は以下を必ず指導: (1)「ろれつが回らない」「手足が動きにくい」「物が二重に見える」が出現したら即救急要請 (2)めまい症状がある間は自動車運転禁止 (3)転倒予防（急な頭位変換を避ける・夜間トイレ移動時に注意・入浴時の注意） (4)BPPVなら数日〜2週で改善、改善しなければ再診。
+>
+> **[設備制約]** 当院にCT・MRI・聴力検査はない。中枢性めまいを疑ったら「疑い」の段階で紹介/搬送の判断をせよ。
+
+---
+
+## 診断フローチャート
+
+### Step 1: 中枢性の除外
+
+<MermaidChart chart={`flowchart TD
+    A["めまい患者来院"] --> B{"神経巣症状？ 複視/構音障害/嚥下障害/麻痺"}
+    B -- "あり" --> C["脳幹梗塞疑い → 即搬送"]
+    B -- "なし" --> D{"急性持続性めまい？ 突然発症+数日持続"}
+    D -- "Yes" --> E["HINTS exam 実施"]
+    E --> E1{"HIT陰性 + 方向交代性眼振 + skew deviation"}
+    E1 -- "中枢パターン" --> F["小脳/脳幹梗塞疑い → 即搬送"]
+    E1 -- "末梢パターン HIT陽性" --> G["前庭神経炎疑い"]
+    D -- "No" --> H["性状・持続時間で分類 Step 2"]
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style F fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style G fill:#e3f2fd,stroke:#1565c0
+    style H fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px`} />
+
+### Step 2: 性状・持続時間による分類
+
+<MermaidChart chart={`flowchart TD
+    START["めまいの性状は？"] --> V["回転性 vertigo"]
+    START --> F["浮動性 ふわふわ"]
+    START --> P["前失神 立ちくらみ"]
+    V --> V1{"頭位変換で誘発？ 秒で消失？"}
+    V1 -- "Yes" --> V2["BPPV Dix-Hallpike → Epley法"]
+    V1 -- "No 数時間+聴力低下+耳鳴" --> V3["メニエール病 耳鼻科紹介"]
+    V1 -- "No 反復+頭痛" --> V4["前庭性片頭痛 トリプタン"]
+    F --> F1{"慢性？ 視覚刺激で悪化？"}
+    F1 -- "Yes" --> F2["PPPD 除外診断"]
+    F1 -- "No 薬剤歴？" --> F3["薬剤性めまい 用量調整"]
+    F --> F4["貧血 CBC確認"]
+    P --> P1{"起立時？ 臥位→立位で血圧低下？"}
+    P1 -- "Yes" --> P2["起立性低血圧 原因検索"]
+    P1 -- "No 動悸あり？" --> P3["不整脈 12誘導心電図"]
+    P1 -- "No" --> P4["低血糖 血糖測定"]
+    style START fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style V2 fill:#e3f2fd,stroke:#1565c0
+    style V3 fill:#e3f2fd,stroke:#1565c0
+    style P2 fill:#fff9c4,stroke:#f57f17`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: めまいの性状・発症様式・持続時間・随伴症状を選択する
+2. **Phase 2**: 選択した症状に応じて表示される身体所見（HINTS exam・Dix-Hallpike等）を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Stepと追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
