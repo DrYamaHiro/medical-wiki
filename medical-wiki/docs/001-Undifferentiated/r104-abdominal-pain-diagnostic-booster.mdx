@@ -45,16 +45,16 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
 ### Step 1: Killer 5疾患の除外
 
 <MermaidChart chart={`flowchart TD
-    A["腹痛患者来院"] --> B{"ショックバイタル？ HR>100 BP<90"}
-    B -- "ショック" --> C["即搬送準備 静脈路+酸素"]
-    C --> C1["拍動性腫瘤 → AAA破裂"]
-    C --> C2["妊娠可能女性 → 異所性妊娠"]
-    C --> C3["吐血/黒色便 → 消化管出血"]
-    B -- "安定" --> D{"板状硬/腹膜刺激徴候？"}
-    D -- "あり" --> E["外科緊急 穿孔/絞扼性イレウス → 搬送"]
-    D -- "なし" --> F{"妊娠可能女性？"}
+    A["腹痛患者来院"] --> B{"ショックバイタル？<br>HR>100 / BP<90"}
+    B -- "ショック" --> C["即搬送準備<br>静脈路+酸素"]
+    C --> C1["拍動性腫瘤<br>→ AAA破裂"]
+    C --> C2["妊娠可能女性<br>→ 異所性妊娠"]
+    C --> C3["吐血/黒色便<br>→ 消化管出血"]
+    B -- "安定" --> D{"板状硬 / 腹膜刺激徴候<br>（筋性防御・反跳痛）？"}
+    D -- "あり" --> E["外科緊急<br>穿孔/絞扼性イレウス<br>→ 搬送"]
+    D -- "なし" --> F{"妊娠可能年齢の女性？"}
     F -- "Yes" --> G["尿妊娠反応 必須"]
-    F -- "No" --> H["部位別鑑別へ Step 2"]
+    F -- "No" --> H["部位別鑑別へ<br>Step 2"]
     G --> H
     style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
@@ -65,43 +65,45 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
     style G fill:#fff9c4,stroke:#f57f17,stroke-width:2px
     style H fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px`} />
 
-### Step 2: 部位別鑑別
+### Step 2a: 部位別鑑別（上腹部・側腹部）
 
 <MermaidChart chart={`flowchart TD
-    START["痛みの部位は？"] --> RUQ["右季肋部"]
+    START["痛みの部位は？<br>（上腹部・側腹部）"] --> RUQ["右季肋部"]
     START --> EPI["心窩部"]
-    START --> RLQ["右下腹部"]
-    START --> LLQ["左下腹部"]
-    START --> PER["臍周囲"]
-    START --> LOW["下腹部"]
-    START --> BACK["腰背部/側腹部"]
-    START --> DIF["腹部全体"]
-    RUQ --> RUQ1["胆石/胆嚢炎 Murphy(+)"]
-    RUQ --> RUQ2["胆管炎 黄疸+発熱"]
+    START --> BACK["腰背部<br>側腹部"]
+    RUQ --> RUQ1["胆石/胆嚢炎<br>Murphy徴候<br>（右季肋部で深吸気停止）"]
+    RUQ --> RUQ2["胆管炎<br>黄疸+発熱"]
     EPI --> EPI1["胃十二指腸潰瘍"]
-    EPI --> EPI2["急性膵炎 背部放散"]
-    EPI --> EPI3["ACS心窩部型 心電図！"]
-    RLQ --> RLQ1["虫垂炎 McBurney(+)"]
-    RLQ --> RLQ2["卵巣茎捻転 突然発症"]
-    RLQ --> RLQ3["尿管結石 疝痛+血尿"]
-    LLQ --> LLQ1["憩室炎 発熱+便秘"]
-    LOW --> LOW1["膀胱炎 排尿痛"]
-    LOW --> LOW2["PID 帯下+発熱"]
-    LOW --> LOW3["異所性妊娠 妊娠反応"]
-    PER --> PER1["SMA閉塞 Af+所見乏しい"]
-    PER --> PER2["急性胃腸炎 嘔吐+下痢"]
-    BACK --> BACK1["腎盂腎炎 CVA(+)+発熱"]
-    BACK --> BACK2["尿管結石 疝痛"]
-    BACK --> BACK3["AAA破裂 拍動性腫瘤"]
-    DIF --> DIF1["腸閉塞 排ガス停止"]
-    DIF --> DIF2["穿孔 板状硬"]
-    DIF --> DIF3["汎発性腹膜炎 → 搬送"]
+    EPI --> EPI2["急性膵炎<br>背部への放散"]
+    EPI --> EPI3["ACS心窩部痛型<br>心電図を忘れるな"]
+    BACK --> BACK1["腎盂腎炎<br>CVA叩打痛+発熱"]
+    BACK --> BACK2["尿管結石<br>疝痛+血尿"]
+    BACK --> BACK3["AAA破裂<br>拍動性腫瘤"]
     style START fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style EPI3 fill:#ffcdd2,stroke:#c62828
+    style BACK3 fill:#ffcdd2,stroke:#c62828`} />
+
+### Step 2b: 部位別鑑別（下腹部・臍周囲・全体）
+
+<MermaidChart chart={`flowchart TD
+    START2["痛みの部位は？<br>（下腹部・全体）"] --> RLQ["右下腹部"]
+    START2 --> LLQ["左下腹部"]
+    START2 --> LOW["下腹部"]
+    START2 --> PER["臍周囲"]
+    START2 --> DIF["腹部全体"]
+    RLQ --> RLQ1["虫垂炎<br>McBurney圧痛<br>（右下腹部の圧痛点）"]
+    RLQ --> RLQ2["卵巣茎捻転<br>突然発症"]
+    LLQ --> LLQ1["憩室炎<br>発熱+便秘"]
+    LOW --> LOW1["膀胱炎<br>排尿痛"]
+    LOW --> LOW2["PID<br>（骨盤内炎症性疾患）<br>帯下+発熱"]
+    LOW --> LOW3["異所性妊娠<br>妊娠反応確認"]
+    PER --> PER1["SMA閉塞<br>（腸間膜虚血）<br>Af+所見乏しい"]
+    PER --> PER2["急性胃腸炎<br>嘔吐+下痢"]
+    DIF --> DIF1["腸閉塞<br>排ガス停止"]
+    DIF --> DIF2["穿孔<br>板状硬"]
+    style START2 fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style PER1 fill:#ffcdd2,stroke:#c62828
-    style BACK3 fill:#ffcdd2,stroke:#c62828
     style DIF2 fill:#ffcdd2,stroke:#c62828
-    style DIF3 fill:#ffcdd2,stroke:#c62828
     style LOW3 fill:#fff9c4,stroke:#f57f17`} />
 
 ---

@@ -47,16 +47,16 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
 ### Step 1: Killer 5疾患の除外
 
 <MermaidChart chart={`flowchart TD
-    A["胸痛患者来院"] --> ECG["12誘導心電図 受付後10分以内"]
-    ECG --> BP["両上肢血圧測定"]
-    BP --> B{"ショック？ ST変化？ 血圧左右差？"}
+    A["胸痛患者来院"] --> ECG["12誘導心電図<br>受付後10分以内"]
+    ECG --> BP["両上肢血圧測定<br>（左右差確認）"]
+    BP --> B{"ショック？<br>ST変化？<br>血圧左右差？"}
     B -- "ST変化あり" --> C1{"血圧左右差 >20？"}
-    C1 -- "あり" --> D1["大動脈解離疑い 抗血小板薬禁忌 → 搬送"]
-    C1 -- "なし" --> D2["ACS疑い アスピリン → 搬送"]
-    B -- "ショック+呼吸音消失" --> D3["緊張性気胸 即脱気 → 搬送"]
-    B -- "突然+呼吸困難+DVTリスク" --> D4["PE疑い Wells評価 → 搬送"]
-    B -- "嘔吐後+皮下気腫" --> D5["食道破裂 → 搬送"]
-    B -- "いずれもなし" --> E["非Killer鑑別へ Step 2"]
+    C1 -- "あり" --> D1["大動脈解離疑い<br>抗血小板薬禁忌<br>→ 搬送"]
+    C1 -- "なし" --> D2["ACS疑い<br>アスピリン<br>→ 搬送"]
+    B -- "ショック+<br>呼吸音消失" --> D3["緊張性気胸<br>即脱気 → 搬送"]
+    B -- "突然+呼吸困難<br>+DVTリスク" --> D4["PE（肺塞栓）疑い<br>Wells評価 → 搬送"]
+    B -- "嘔吐後+<br>皮下気腫" --> D5["食道破裂<br>→ 搬送"]
+    B -- "いずれもなし" --> E["非Killer鑑別へ<br>Step 2"]
     style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style D1 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
     style D2 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
@@ -69,23 +69,23 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
 
 <MermaidChart chart={`flowchart TD
     START["Killer除外後の胸痛"] --> Q1{"痛みの性状は？"}
-    Q1 -- "胸膜痛 深呼吸で悪化" --> PL["胸膜性"]
-    Q1 -- "圧迫/締付 労作関連" --> CA["心血管性"]
-    Q1 -- "灼熱感 食後悪化" --> GI["消化器性"]
+    Q1 -- "深呼吸で悪化" --> PL["胸膜性"]
+    Q1 -- "圧迫/締付<br>労作関連" --> CA["心血管性"]
+    Q1 -- "灼熱感<br>食後悪化" --> GI["消化器性"]
     Q1 -- "押すと再現" --> MS["筋骨格性"]
-    Q1 -- "動悸+過換気" --> PA["パニック/不整脈"]
-    PL --> PL1{"発熱 咳？"}
-    PL1 -- "あり" --> PL2["肺炎/胸膜炎 胸部X線"]
-    PL1 -- "なし" --> PL3["気胸 片側性皮疹→帯状疱疹"]
-    CA --> CA1{"心電図 心膜摩擦音？"}
-    CA1 -- "広範ST上昇+PR低下" --> CA2["心膜炎 NSAIDs 循環器紹介"]
-    CA1 -- "心不全徴候" --> CA3["急性心不全/心筋炎 → 紹介"]
-    CA1 -- "正常" --> CA4["HEART Score評価 安定狭心症検索"]
-    GI --> GI1["GERD PPI試験投与"]
-    MS --> MS1["筋骨格性/肋軟骨炎 NSAIDs 除外診断"]
-    PA --> PA1{"心電図でAf？"}
-    PA1 -- "あり" --> PA2["心房細動 循環器紹介"]
-    PA1 -- "なし" --> PA3["パニック障害 Killer除外後に診断"]
+    Q1 -- "動悸+過換気" --> PA["パニック/<br>不整脈"]
+    PL --> PL1{"発熱・咳？"}
+    PL1 -- "あり" --> PL2["肺炎/胸膜炎<br>胸部X線"]
+    PL1 -- "なし" --> PL3["気胸<br>片側性皮疹→帯状疱疹"]
+    CA --> CA1{"心電図<br>心膜摩擦音<br>（聴診で摩擦音）？"}
+    CA1 -- "広範ST上昇<br>+PR低下" --> CA2["心膜炎<br>NSAIDs<br>循環器紹介"]
+    CA1 -- "心不全徴候" --> CA3["急性心不全/<br>心筋炎 → 紹介"]
+    CA1 -- "正常" --> CA4["HEART Score評価<br>安定狭心症検索"]
+    GI --> GI1["GERD<br>PPI試験投与"]
+    MS --> MS1["筋骨格性/<br>肋軟骨炎<br>NSAIDs"]
+    PA --> PA1{"心電図でAf<br>（心房細動）？"}
+    PA1 -- "あり" --> PA2["心房細動<br>循環器紹介"]
+    PA1 -- "なし" --> PA3["パニック障害<br>Killer除外後に診断"]
     style START fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style PL2 fill:#fff9c4,stroke:#f57f17
     style CA2 fill:#e3f2fd,stroke:#1565c0

@@ -47,15 +47,15 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
 ### Step 1: 緊急性の判断（SNOOP T4）
 
 <MermaidChart chart={`flowchart TD
-    A["頭痛患者来院"] --> B{"雷鳴頭痛？ 数秒でピーク"}
-    B -- "Yes" --> C["SAH疑い → 即CT施設へ紹介/搬送"]
-    B -- "No" --> D{"発熱+項部硬直？"}
-    D -- "あり" --> E["髄膜炎疑い → 即搬送"]
-    D -- "なし" --> F{"神経巣症状？ 麻痺/失語/瞳孔異常"}
-    F -- "あり" --> G["脳血管障害疑い → 即搬送 FAST評価"]
-    F -- "なし" --> H{"50歳以上の新規？"}
-    H -- "Yes" --> I["GCA/脳腫瘍除外 ESR+側頭動脈触診"]
-    H -- "No" --> J["一次性頭痛の鑑別へ Step 2"]
+    A["頭痛患者来院"] --> B{"雷鳴頭痛？<br>数秒でピーク"}
+    B -- "Yes" --> C["SAH<br>（くも膜下出血）疑い<br>→ 即CT施設へ"]
+    B -- "No" --> D{"発熱+<br>項部硬直<br>（首が硬い）？"}
+    D -- "あり" --> E["髄膜炎疑い<br>→ 即搬送"]
+    D -- "なし" --> F{"神経巣症状？<br>麻痺/失語/瞳孔異常"}
+    F -- "あり" --> G["脳血管障害疑い<br>→ 即搬送<br>FAST評価"]
+    F -- "なし" --> H{"50歳以上の<br>新規頭痛？"}
+    H -- "Yes" --> I["GCA<br>（側頭動脈炎）/<br>脳腫瘍除外<br>ESR+側頭動脈触診"]
+    H -- "No" --> J["一次性頭痛の<br>鑑別へ Step 2"]
     style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
     style E fill:#ffcdd2,stroke:#c62828,stroke-width:3px
@@ -66,17 +66,17 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
 ### Step 2: 一次性頭痛の鑑別
 
 <MermaidChart chart={`flowchart TD
-    START["二次性除外後"] --> Q1{"片側？ 拍動性？"}
-    Q1 -- "片側+拍動+嘔気+光/音過敏" --> MIG["片頭痛 トリプタン"]
-    Q1 -- "両側+締め付け" --> TTH["緊張型頭痛 NSAIDs"]
-    Q1 -- "片側眼窩+流涙+鼻閉 15分-3h" --> CL["群発頭痛 酸素+トリプタン皮下注"]
-    START --> Q2{"前屈で悪化？ 膿性鼻汁？"}
+    START["二次性除外後"] --> Q1{"片側？<br>拍動性？"}
+    Q1 -- "片側+拍動<br>+嘔気+光/音過敏" --> MIG["片頭痛<br>トリプタン"]
+    Q1 -- "両側+締め付け" --> TTH["緊張型頭痛<br>NSAIDs"]
+    Q1 -- "片側眼窩<br>+流涙+鼻閉<br>15分-3h" --> CL["群発頭痛<br>酸素+トリプタン皮下注"]
+    START --> Q2{"前屈で悪化？<br>膿性鼻汁？"}
     Q2 -- "Yes" --> SIN["副鼻腔炎"]
-    START --> Q3{"鎮痛薬 月10日以上？"}
-    Q3 -- "Yes" --> MOH["薬物乱用頭痛 原因薬中止"]
-    START --> Q4{"起立で悪化 臥位で軽減？"}
-    Q4 -- "Yes" --> IH["低髄液圧性頭痛 MRI紹介"]
-    START --> Q5{"後頭部 頸部痛？"}
+    START --> Q3{"鎮痛薬<br>月10日以上？"}
+    Q3 -- "Yes" --> MOH["薬物乱用頭痛<br>原因薬中止"]
+    START --> Q4{"起立で悪化<br>臥位で軽減？"}
+    Q4 -- "Yes" --> IH["低髄液圧性頭痛<br>MRI紹介"]
+    START --> Q5{"後頭部<br>頸部痛？"}
     Q5 -- "Yes" --> CG["頸原性頭痛"]
     style START fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
     style MIG fill:#e3f2fd,stroke:#1565c0

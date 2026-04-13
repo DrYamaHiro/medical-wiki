@@ -45,13 +45,13 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
 ### Step 1: 緊急性の判断
 
 <MermaidChart chart={`flowchart TD
-    A["皮疹患者来院"] --> B{"Nikolsky sign陽性？ 粘膜びらん？"}
-    B -- "あり" --> C["SJS/TEN疑い 被疑薬中止 即日皮膚科紹介"]
-    B -- "なし" --> D{"紫斑+発熱？"}
-    D -- "あり" --> E["DIC/血管炎/髄膜炎菌 CBC+凝固 搬送検討"]
-    D -- "なし" --> F{"ステロイドで悪化/再燃？"}
-    F -- "あり" --> G["tinea incognito疑い ステロイド中止+KOH"]
-    F -- "なし" --> H["形態学的鑑別へ Step 2"]
+    A["皮疹患者来院"] --> B{"Nikolsky sign陽性？<br>（正常皮膚を擦ると剥離）<br>粘膜びらん？"}
+    B -- "あり" --> C["SJS/TEN疑い<br>被疑薬中止<br>即日皮膚科紹介"]
+    B -- "なし" --> D{"紫斑<br>（圧迫で消退しない）<br>+発熱？"}
+    D -- "あり" --> E["DIC/血管炎<br>CBC+凝固<br>搬送検討"]
+    D -- "なし" --> F{"ステロイドで<br>悪化/再燃？"}
+    F -- "あり" --> G["tinea incognito疑い<br>（白癬のステロイド修飾）<br>ステロイド中止+KOH"]
+    F -- "なし" --> H["形態学的鑑別へ<br>Step 2"]
     style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
     style E fill:#ffcdd2,stroke:#c62828,stroke-width:3px
@@ -61,23 +61,24 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
 ### Step 2: 原発疹の形態による分類
 
 <MermaidChart chart={`flowchart TD
-    START["原発疹の形態は？"] --> ER["紅斑 赤い斑"]
-    START --> PA["丘疹 ブツブツ"]
+    START["原発疹の形態は？"] --> ER["紅斑<br>（赤い斑）"]
     START --> VE["水疱"]
-    START --> WH["膨疹 一過性膨隆"]
-    START --> PU["紫斑"]
-    ER --> ER1{"環状？ 辺縁隆起+中心治癒？"}
-    ER1 -- "Yes" --> ER2["白癬 KOH提出"]
-    ER1 -- "No 鱗屑+伸側" --> ER3["乾癬 Auspitz sign"]
-    ER1 -- "No 脂漏部位" --> ER4["脂漏性皮膚炎"]
-    ER1 -- "No 対称+薬剤歴" --> ER5["薬疹"]
-    ER1 -- "No 手掌足底" --> ER6["梅毒バラ疹 RPR/TPHA"]
-    VE --> VE1{"デルマトーム？ 片側帯状？"}
-    VE1 -- "Yes" --> VE2["帯状疱疹 バラシクロビル"]
-    VE1 -- "No 口唇/陰部 再発性" --> VE3["単純ヘルペス"]
+    START --> WH["膨疹<br>（一過性の膨隆）"]
+    START --> PU["紫斑<br>（圧迫で消退しない）"]
+    ER --> ER1{"環状？<br>辺縁隆起+中心治癒？"}
+    ER1 -- "Yes" --> ER2["白癬<br>KOH提出"]
+    ER1 -- "No" --> ER9{"鱗屑+伸側？"}
+    ER9 -- "Yes" --> ER3["乾癬<br>Auspitz sign<br>（鱗屑剥離で点状出血）"]
+    ER9 -- "No" --> ER10{"手掌・足底？"}
+    ER10 -- "Yes" --> ER6["梅毒バラ疹<br>RPR/TPHA提出"]
+    ER10 -- "No 薬剤歴" --> ER5["薬疹"]
+    ER10 -- "No 脂漏部位" --> ER4["脂漏性皮膚炎"]
+    VE --> VE1{"片側帯状？<br>（デルマトーム）"}
+    VE1 -- "Yes" --> VE2["帯状疱疹<br>バラシクロビル"]
+    VE1 -- "No 口唇/陰部" --> VE3["単純ヘルペス"]
     VE1 -- "No 散在+粘膜" --> VE4["SJS/TEN除外"]
-    WH --> WH1["蕁麻疹 24h消退？ 抗ヒスタミン"]
-    PU --> PU1["紫斑 CBC+凝固 血管炎/ITP/DIC"]
+    WH --> WH1["蕁麻疹<br>24h以内に消退？<br>抗ヒスタミン"]
+    PU --> PU1["CBC+凝固<br>血管炎/ITP/DIC"]
     style START fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style ER6 fill:#fff9c4,stroke:#f57f17
     style VE4 fill:#ffcdd2,stroke:#c62828

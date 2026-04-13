@@ -45,14 +45,14 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
 ### Step 1: 中枢性の除外
 
 <MermaidChart chart={`flowchart TD
-    A["めまい患者来院"] --> B{"神経巣症状？ 複視/構音障害/嚥下障害/麻痺"}
-    B -- "あり" --> C["脳幹梗塞疑い → 即搬送"]
-    B -- "なし" --> D{"急性持続性めまい？ 突然発症+数日持続"}
-    D -- "Yes" --> E["HINTS exam 実施"]
-    E --> E1{"HIT陰性 + 方向交代性眼振 + skew deviation"}
-    E1 -- "中枢パターン" --> F["小脳/脳幹梗塞疑い → 即搬送"]
-    E1 -- "末梢パターン HIT陽性" --> G["前庭神経炎疑い"]
-    D -- "No" --> H["性状・持続時間で分類 Step 2"]
+    A["めまい患者来院"] --> B{"神経巣症状？<br>複視/構音障害<br>嚥下障害/麻痺"}
+    B -- "あり" --> C["脳幹梗塞疑い<br>→ 即搬送"]
+    B -- "なし" --> D{"急性持続性めまい？<br>突然発症+数日持続"}
+    D -- "Yes" --> E["HINTS exam 実施<br>（頭部衝動/眼振/斜偏倚）"]
+    E --> E1{"HIT陰性<br>+ 方向交代性眼振<br>+ skew deviation<br>（交代遮蔽で垂直偏位）"}
+    E1 -- "中枢パターン" --> F["小脳/脳幹梗塞疑い<br>→ 即搬送"]
+    E1 -- "末梢パターン<br>HIT陽性" --> G["前庭神経炎疑い"]
+    D -- "No" --> H["性状・持続時間で<br>分類 Step 2"]
     style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
     style F fill:#ffcdd2,stroke:#c62828,stroke-width:3px
@@ -62,21 +62,21 @@ import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/componen
 ### Step 2: 性状・持続時間による分類
 
 <MermaidChart chart={`flowchart TD
-    START["めまいの性状は？"] --> V["回転性 vertigo"]
-    START --> F["浮動性 ふわふわ"]
-    START --> P["前失神 立ちくらみ"]
-    V --> V1{"頭位変換で誘発？ 秒で消失？"}
-    V1 -- "Yes" --> V2["BPPV Dix-Hallpike → Epley法"]
-    V1 -- "No 数時間+聴力低下+耳鳴" --> V3["メニエール病 耳鼻科紹介"]
-    V1 -- "No 反復+頭痛" --> V4["前庭性片頭痛 トリプタン"]
-    F --> F1{"慢性？ 視覚刺激で悪化？"}
-    F1 -- "Yes" --> F2["PPPD 除外診断"]
-    F1 -- "No 薬剤歴？" --> F3["薬剤性めまい 用量調整"]
-    F --> F4["貧血 CBC確認"]
-    P --> P1{"起立時？ 臥位→立位で血圧低下？"}
-    P1 -- "Yes" --> P2["起立性低血圧 原因検索"]
-    P1 -- "No 動悸あり？" --> P3["不整脈 12誘導心電図"]
-    P1 -- "No" --> P4["低血糖 血糖測定"]
+    START["めまいの性状は？"] --> V["回転性<br>（グルグル）"]
+    START --> FL["浮動性<br>（ふわふわ）"]
+    START --> P["前失神<br>（立ちくらみ）"]
+    V --> V1{"頭位変換で誘発？<br>秒で消失？"}
+    V1 -- "Yes" --> V2["BPPV<br>Dix-Hallpike<br>→ Epley法<br>（耳石置換術）"]
+    V1 -- "No<br>数時間+聴力低下+耳鳴" --> V3["メニエール病<br>耳鼻科紹介"]
+    V1 -- "No<br>反復+頭痛" --> V4["前庭性片頭痛<br>トリプタン"]
+    FL --> F1{"慢性？<br>視覚刺激で悪化？"}
+    F1 -- "Yes" --> F2["PPPD<br>（持続性知覚性<br>姿勢誘発めまい）<br>除外診断"]
+    F1 -- "No 薬剤歴？" --> F3["薬剤性めまい<br>用量調整"]
+    FL --> F4["貧血<br>CBC確認"]
+    P --> P1{"起立時？<br>臥位→立位で<br>血圧低下？"}
+    P1 -- "Yes" --> P2["起立性低血圧<br>原因検索"]
+    P1 -- "No 動悸あり？" --> P3["不整脈<br>12誘導心電図"]
+    P1 -- "No" --> P4["低血糖<br>血糖測定"]
     style START fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style V2 fill:#e3f2fd,stroke:#1565c0
     style V3 fill:#e3f2fd,stroke:#1565c0
