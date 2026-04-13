@@ -1,0 +1,85 @@
+---
+id: r55-syncope-diagnostic-booster
+title: "[R55] 失神精査 / Syncope - Diagnostic Booster"
+sidebar_label: "[R55] 失神精査"
+sidebar_position: 12
+hide_table_of_contents: false
+description: "失神の鑑別診断を支援するインタラクティブツール。心原性失神の系統的除外を最優先に、反射性・起立性・てんかんを鑑別。"
+keywords: ["失神", "syncope", "心原性失神", "血管迷走神経性失神", "起立性低血圧", "Brugada", "QT延長", "R55", "diagnostic booster"]
+---
+
+import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/syncopeData';
+
+# 失神精査 — Diagnostic Booster
+
+失神の状況・前駆症状・所見を選択していくと、鑑別候補がリアルタイムに絞り込まれます。心原性失神の除外を最優先とします。
+
+<DiagnosticBooster
+  symptoms={SYMPTOMS}
+  findings={FINDINGS}
+  differentials={DIFFERENTIALS}
+  redFlags={RED_FLAGS}
+  subtitle="失神の鑑別思考支援ツール（ESC 2018準拠）"
+/>
+
+---
+
+## Dr.Advice
+
+> **[労作時失神は帰さない]** 運動中・労作中の失神は大動脈弁狭窄症（AS）、肥大型心筋症（HOCM）、冠動脈疾患など致死的疾患を示唆する。心エコーが施行できるまで運動制限を指示し、速やかに循環器紹介。
+>
+> **[ECGチェックリスト]** 失神患者のECGで必ず確認: (1)QTc延長（男>440ms 女>460ms） (2)δ波+短PR（WPW） (3)V1-V3 coved型ST上昇（Brugada） (4)異常Q波（陳旧性MI） (5)高度房室ブロック (6)二束ブロック・交代性脚ブロック。1つでも該当すれば循環器紹介。
+>
+> **[VVSの診断は除外診断]** 典型的な前駆症状（冷汗+嘔気+眼前暗黒感）+誘因（長時間立位/疼痛/採血時）があっても、まず心原性を除外してから「血管迷走神経性」と診断せよ。若年者でもHCMやQT延長は起こり得る。
+>
+> **[ESC 2018 高リスク基準]** 以下のいずれかで高リスク: ECG異常 / 労作時・臥位での失神 / 前駆症状なしの突然の意識消失 / 新規心雑音 / 収縮期BP<90 / 心不全既往 / 失神直前の動悸。高リスクは循環器紹介または救急搬送。
+>
+> **[帰宅時安全指導]** 全ての失神患者に対し: (1)原因確定まで自動車運転禁止（道交法上の申告義務の可能性に言及） (2)入浴は一人で長時間行わない（溺水リスク、シャワー推奨） (3)高所作業・危険機械操作を禁止 (4)心原性疑いは公共交通機関/付き添いでの帰宅 (5)再発・胸痛・呼吸困難・運動中のふらつき→即救急受診。
+>
+> **[設備制約]** 当院に心エコー・ホルター心電図・脳波はない。12誘導ECGでスクリーニングし、異常あれば循環器紹介。ECG正常でも高リスク基準該当なら紹介/搬送。
+
+---
+
+## 診断フローチャート
+
+### Step 1: 心原性の除外（最優先）
+
+<MermaidChart chart={`flowchart TD
+    A["失神患者来院"] --> ECG["12誘導ECG<br>（最優先で施行）"]
+    ECG --> B{"ECG異常？<br>QTc延長/δ波/<br>Brugada/AVブロック/<br>脚ブロック/異常Q波"}
+    B -- "異常あり" --> C["心原性失神疑い<br>→ 循環器紹介/搬送"]
+    B -- "異常なし" --> D{"ESC高リスク基準？<br>労作時/臥位/前駆なし/<br>心雑音/低血圧/心疾患既往"}
+    D -- "該当あり" --> E["高リスク<br>→ 循環器紹介"]
+    D -- "該当なし" --> F["反射性/起立性の<br>鑑別へ Step 2"]
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style E fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style F fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px`} />
+
+### Step 2: 非心原性の鑑別
+
+<MermaidChart chart={`flowchart TD
+    START["心原性除外後"] --> Q1{"前駆症状あり？<br>冷汗/嘔気/<br>眼前暗黒感"}
+    Q1 -- "あり+誘因<br>（長時間立位/<br>疼痛/採血）" --> VVS["血管迷走神経性失神<br>（最多・予後良好）<br>除外診断"]
+    Q1 -- "あり+特定状況<br>（排尿後/咳後/食後）" --> SIT["状況失神"]
+    Q1 -- "なし" --> Q2{"起立時に発症？<br>臥位→立位で<br>血圧低下？"}
+    Q2 -- "Yes" --> OH["起立性低血圧<br>原因検索<br>（薬剤/脱水/出血）"]
+    Q2 -- "No" --> Q3{"けいれん目撃？<br>意識回復に<br>時間がかかる？"}
+    Q3 -- "Yes" --> EP["てんかん鑑別<br>→ 神経内科紹介"]
+    Q3 -- "No" --> Q4{"頸部回旋で<br>誘発？"}
+    Q4 -- "Yes" --> CS["頸動脈洞症候群<br>→ 循環器紹介"]
+    Q4 -- "No" --> RE["薬剤歴確認<br>→ 薬剤性失神"]
+    style START fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style VVS fill:#e3f2fd,stroke:#1565c0
+    style OH fill:#fff9c4,stroke:#f57f17
+    style EP fill:#f3e5f5,stroke:#7b1fa2`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: 失神の状況・前駆症状・随伴症状・リスクを選択する
+2. **Phase 2**: 選択した症状に応じて表示されるECG所見・身体所見を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Stepと追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
