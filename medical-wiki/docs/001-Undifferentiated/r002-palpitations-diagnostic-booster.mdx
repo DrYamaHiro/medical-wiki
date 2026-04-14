@@ -1,0 +1,89 @@
+---
+id: r002-palpitations-diagnostic-booster
+title: "[R00.2] 動悸精査 / Palpitations - Diagnostic Booster"
+sidebar_label: "[R00.2] 動悸精査"
+sidebar_position: 10
+hide_table_of_contents: false
+description: "動悸の鑑別診断を支援するインタラクティブツール。ECGでの危険な不整脈基盤の見逃し防止、甲状腺・貧血・パニック障害の系統的鑑別。"
+keywords: ["動悸", "不整脈", "心房細動", "WPW", "Brugada", "QT延長", "palpitations", "R00.2", "diagnostic booster"]
+---
+
+import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/palpitationsData';
+
+# 動悸精査 — Diagnostic Booster
+
+動悸の性状・発症様式・随伴症状を選択していくと、鑑別候補がリアルタイムに絞り込まれます。
+
+<DiagnosticBooster
+  symptoms={SYMPTOMS}
+  findings={FINDINGS}
+  differentials={DIFFERENTIALS}
+  redFlags={RED_FLAGS}
+  subtitle="動悸の鑑別思考支援ツール"
+/>
+
+---
+
+## Dr.Advice
+
+> **[ECGチェックリスト]** 動悸患者のECGで必ず確認: (1)Af（f波+RR不整） (2)AFL（鋸歯状波） (3)PSVT（整な狭QRS頻脈） (4)PVC/PAC (5)δ波+短PR（WPW） (6)Brugada型ST上昇 (7)QTc延長。1つでも危険所見があれば循環器紹介。
+>
+> **[WPW+Afの禁忌薬]** WPW症候群にAfが合併した場合、β遮断薬・Ca拮抗薬（ベラパミル等）・ジギタリスは副伝導路の伝導を促進しVFを誘発しうるため禁忌。δ波を見たらこれらの薬剤は使用するな。
+>
+> **[発作性Afの落とし穴]** 受診時の洞調律でも発作性Afは否定できない。脈の不整を自覚する患者にはホルター心電図を施行せよ（当院不可→循環器紹介）。未診断のAfは脳梗塞の原因となる。
+>
+> **[甲状腺を忘れるな]** 動悸+頻脈+手指振戦+体重減少+発汗過多→甲状腺機能亢進症。TSHは動悸患者で必ずチェック。Af新規発症の原因が甲状腺であることも少なくない。
+>
+> **[パニック障害は最後の診断]** 「動悸+過換気+不安」→パニックと決めつけない。初発時はECG+TSH+CBCで器質的疾患を必ず除外してからパニック障害と診断せよ。
+>
+> **[設備制約]** 当院に心エコー・ホルター心電図はない。12誘導ECGでスクリーニングし、異常あれば循環器紹介。非発作時ECG正常+再発性→ホルター/イベントレコーダー目的で循環器紹介。
+
+---
+
+## 診断フローチャート
+
+### Step 1: 12誘導ECGの評価
+
+<MermaidChart chart={`flowchart TD
+    A["動悸患者来院"] --> ECG["12誘導ECG<br>（最優先で施行）"]
+    ECG --> B{"ECG異常？"}
+    B -- "Af/AFL" --> C1["心房細動/粗動<br>CHA2DS2-VASc評価<br>循環器紹介"]
+    B -- "δ波+短PR" --> C2["WPW症候群<br>β遮断薬/Ca拮抗薬禁忌<br>循環器紹介"]
+    B -- "Brugada型" --> C3["Brugada症候群<br>即循環器紹介"]
+    B -- "QTc延長" --> C4["QT延長症候群<br>誘発薬中止<br>循環器紹介"]
+    B -- "洞性頻脈" --> D["洞性頻脈の<br>原因検索 Step 2"]
+    B -- "正常" --> E{"失神既往<br>or 高リスク？"}
+    E -- "Yes" --> F["循環器紹介<br>（ホルター）"]
+    E -- "No" --> G["基本検査<br>TSH/CBC/電解質<br>Step 2"]
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C2 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style C3 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style C4 fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style D fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style G fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px`} />
+
+### Step 2: 非不整脈性の鑑別
+
+<MermaidChart chart={`flowchart TD
+    START["ECG正常 or<br>洞性頻脈"] --> Q1{"TSH低値？<br>振戦/体重減少/<br>暑がり？"}
+    Q1 -- "Yes" --> TH["甲状腺機能亢進症<br>チアマゾール開始"]
+    Q1 -- "No" --> Q2{"Hb低値？<br>蒼白？"}
+    Q2 -- "Yes" --> AN["貧血<br>→ 原因検索"]
+    Q2 -- "No" --> Q3{"過換気+不安+<br>四肢しびれ？"}
+    Q3 -- "Yes" --> PD["パニック障害<br>（除外診断）<br>精神科紹介"]
+    Q3 -- "No" --> Q4{"カフェイン/<br>アルコール/<br>薬剤歴？"}
+    Q4 -- "Yes" --> SUB["物質/薬剤誘発性<br>減量/中止指導"]
+    Q4 -- "No" --> Q5["基本検査全て正常<br>→ 経過観察<br>再発性ならホルター<br>（循環器紹介）"]
+    style START fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style TH fill:#e3f2fd,stroke:#1565c0
+    style PD fill:#f3e5f5,stroke:#7b1fa2`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: 動悸の性状・発症様式・随伴症状を選択する
+2. **Phase 2**: 選択した症状に応じて表示されるECG所見・身体所見を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Stepと追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
