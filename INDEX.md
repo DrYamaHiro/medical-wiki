@@ -5,15 +5,6 @@
 
 ---
 
-## 禁止事項（CLAUDE.md より再掲）
-
-- **`引継ぎ手順書.md` を読まないこと。** 日常の情報は本INDEX.mdで完結する
-- **Docusaurusビルド（`npm run build` 等）は原則禁止。** デプロイは `git push origin master` → GitHub Actions。ただし `build_docs.js` 等のMDX生成スクリプトは妥当性がある場合に条件付き許可
-- **`git push --force` / `git reset --hard` を実行しないこと。** 他者変更を不可逆的に破壊する
-- **患者個人情報をファイルに記録しないこと。** 症例記載は匿名化・一般化必須
-
----
-
 ## クイックルーティング
 
 | やりたいこと | 参照先 |
@@ -22,7 +13,7 @@
 | テンプレートの変更点を確認 | 各バージョンの `.txt` ファイル（例: `ver.3.0.2.0.txt`） |
 | フィードバックを確認 | `feedbacks/` （日付ベース）→ [INDEX/feedback_rules.md](INDEX/feedback_rules.md) |
 | テンプレート修正の既知課題 | `SOAP_ISSUES_MEMO.md` |
-| Wiki更新・デプロイ | `medical-wiki/` → 下記「Wiki更新ルール」参照 |
+| Wiki更新 | `medical-wiki/` → 下記「Wiki更新ルール」参照 |
 | コラム・掲示物を作る | `op-ed/` → [INDEX/op_ed_rules.md](INDEX/op_ed_rules.md) |
 | 薬剤を調べる | `aeon_ph/drugs/` （RX-01〜18カテゴリ別） |
 | 伊藤先生のテンプレート・提案 | `CS_Temp_Ito/` |
@@ -88,20 +79,7 @@ Wiki・SOAPテンプレート・薬剤リファレンスの変更は、**必ず�
 2. コンフリクトがあれば解消（他者変更を優先）
 3. 変更案を作成 → 複数AI監査（全APPROVED まで繰り返し）
 4. `WIKI_EDIT_START/END` 内のみ編集（SOAP側は触らない）
-5. コミット → `git push origin master` → GitHub Actions が自動でビルド&デプロイ
-   - ローカルで `npm run build` や `npx docusaurus deploy` を実行する必要はない（Google Driveストリーミング上では正常動作しない）
-   - push後、GitHub Actionsの完了を待てば公開URLに反映される
-   - `master` 直接コミット（feature branch不要）
-   - `medical-wiki/` 配下に変更がない場合、GitHub Actionsのデプロイは発動しない（`workflow_dispatch` で手動トリガー可能）
-
-### 検索キーワードの設計（build_docs.js / build_drug_ref.js 共通）
-
-Drug Reference（rx-*.mdx）に薬剤を手動追加した場合は `node update_drug_keywords.js` を実行してキーワードを再生成すること。
-
-- カタカナ → ひらがな変換（`kataToHira`）
-- 2〜3文字 N-gram（部分検索対応）
-- 英語名の単語分割
-- 上記は `build_docs.js`（臨床テンプレート）と同一設計。Drug Reference側は `build_drug_ref.js` / `update_drug_keywords.js` が担当
+5. コミット → push → GitHub Actions が自動デプロイ
 
 ---
 
@@ -135,12 +113,11 @@ Drug Reference（rx-*.mdx）に薬剤を手動追加した場合は `node update
 ### medical-wiki/（Docusaurus医療Wiki）
 - Node.jsプロジェクト（Docusaurus v3.7）
 - 公開URL: https://dryamahiro.github.io/medical-wiki/
-- **デプロイ**: `master`にpushすればGitHub Actionsが自動ビルド&デプロイ（上記「デプロイフロー」参照）
+- セットアップ・デプロイ手順: `引継ぎ手順書.md`
 - **Diagnostic Booster**: 001-Undifferentiated コンテナに搭載された診断思考支援ツール
   - Reactコンポーネント: `src/components/DiagnosticBooster/`
-  - 症状・所見データ: `feverData.js`, `abdominalPainData.js`, `chestPainData.js`, `headacheData.js`, `dizzinessData.js`, `fatigueData.js`, `lymphadenopathyData.js`, `palpitationsData.js`, `polyarthralgiaData.js`, `rashData.js`, `syncopeData.js`, `weightLossData.js`
+  - 症状・所見データ: `feverData.js`, `abdominalPainData.js`, `chestPainData.js`, `headacheData.js`, `dizzinessData.js`
   - 3エージェント並列監査で医学的品質を担保
-- **臨床計算ツール**: `docs/810-Calculators/` 配下に循環器・消化器・泌尿器・精神科・呼吸器・処方支援等のサブカテゴリ
 
 ### feedbacks/（フィードバック）
 - 未処理FB: `feedbacks/` 直下
@@ -154,10 +131,9 @@ Drug Reference（rx-*.mdx）に薬剤を手動追加した場合は `node update
 | ファイル | 用途 |
 |---|---|
 | `create_v3.js` | v3テンプレート生成 |
-| `build_docs.js` | MDXファイル自動生成（検索キーワード含む） |
+| `build_docs.js` | MDXファイル自動生成 |
 | `update_wiki.js` | Wikiバージョンアップ（マーカー保護付き） |
-| `build_drug_ref.js` | 薬剤リファレンス生成（検索キーワード含む） |
-| `update_drug_keywords.js` | Drug Referenceキーワード再生成（手動追加時に使用） |
+| `build_drug_ref.js` | 薬剤リファレンス生成 |
 | `keyword-dictionary.json` | キーワード辞書 |
 
 ---
@@ -169,12 +145,7 @@ Drug Reference（rx-*.mdx）に薬剤を手動追加した場合は `node update
 | [INDEX/template_rules.md](INDEX/template_rules.md) | テンプレートフォーマット・修正ルール・禁止事項 |
 | [INDEX/op_ed_rules.md](INDEX/op_ed_rules.md) | コラム・掲示物の制作ルール・デザイン仕様 |
 | [INDEX/feedback_rules.md](INDEX/feedback_rules.md) | フィードバック処理ルール・医学監査フロー |
-
----
-
-## 引継ぎ手順書について
-
-`引継ぎ手順書.md` はオーナー不在時の緊急引継ぎ専用文書。**通常運用では参照しないこと。AIエージェントも読まないこと。**
+| [INDEX/search_improvement_plan.md](INDEX/search_improvement_plan.md) | 検索改善プラン・実施状況・トラブル記録 |
 
 ---
 
