@@ -1,0 +1,95 @@
+---
+id: m2550-polyarthralgia-diagnostic-booster
+title: "[M25.50] 関節痛・多関節精査 / Polyarthralgia - Diagnostic Booster"
+sidebar_label: "[M25.50] 関節痛・多関節精査"
+sidebar_position: 11
+hide_table_of_contents: false
+description: "関節痛の鑑別診断を支援するインタラクティブツール。炎症性vs非炎症性を系統的に鑑別し、化膿性関節炎の緊急除外を最優先に。"
+keywords: ["関節痛", "多関節痛", "RA", "SLE", "PMR", "化膿性関節炎", "痛風", "polyarthralgia", "M25.50", "diagnostic booster"]
+---
+
+import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/polyarthralgiaData';
+
+# 関節痛・多関節精査 — Diagnostic Booster
+
+関節の数・分布・こわばり・随伴症状を選択していくと、鑑別候補がリアルタイムに絞り込まれます。
+
+<DiagnosticBooster
+  symptoms={SYMPTOMS}
+  findings={FINDINGS}
+  differentials={DIFFERENTIALS}
+  redFlags={RED_FLAGS}
+  subtitle="関節痛の鑑別思考支援ツール（炎症性vs非炎症性）"
+/>
+
+---
+
+## Dr.Advice
+
+> **[炎症性 vs 非炎症性]** 朝のこわばりが30分以上持続すれば炎症性を疑え。30分未満なら非炎症性（OA）。CRP/ESRの上昇も炎症性の傍証。この分岐が鑑別の出発点。
+>
+> **[抗CCP抗体]** RF陰性でも抗CCP抗体陽性なら早期RAの可能性が高い（特異度95-99%）。RF陰性=RA否定ではない。両方提出が原則。
+>
+> **[化膿性関節炎は時間勝負]** 単関節の急性発赤・腫脹・発熱→可及的速やかに（当日中に）関節穿刺が必要。24-48時間の遅延で不可逆的関節破壊が進行。即日整形外科紹介。
+>
+> **[PMRの背後のGCA]** PMRの15-20%にGCA（巨細胞性動脈炎）が合併。頭痛・視力障害・顎跛行があれば即日眼科+リウマチ科紹介。失明は非可逆的→生検結果を待たずにステロイド先行投与を検討。
+>
+> **[DIP関節の法則]** DIP関節が侵されるのはOA（Heberden結節）と乾癬性関節炎（PsA）。RAはDIPを侵さない。DIPの関節炎を見たらPsAを想起（爪変化も確認）。
+>
+> **[設備制約]** 当院では関節穿刺・関節エコーは不可。触診+血液検査+X線でスクリーニングし、化膿性疑い→即日整形外科紹介、膠原病疑い→リウマチ科紹介。
+
+---
+
+## 診断フローチャート
+
+### Step 1: 緊急除外+炎症性 vs 非炎症性
+
+<MermaidChart chart={`flowchart TD
+    A["関節痛患者来院"] --> B{"単関節+急性+<br>腫脹+発熱？"}
+    B -- "Yes" --> C["化膿性関節炎疑い<br>即日整形外科紹介<br>（関節穿刺）"]
+    B -- "No" --> D{"朝のこわばり<br>30分以上？<br>CRP/ESR上昇？"}
+    D -- "Yes" --> E["炎症性関節炎<br>Step 2a"]
+    D -- "No" --> F["非炎症性<br>（OA等）Step 2b"]
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style E fill:#e3f2fd,stroke:#1565c0
+    style F fill:#e8f5e9,stroke:#2e7d32`} />
+
+### Step 2a: 炎症性関節炎の鑑別
+
+<MermaidChart chart={`flowchart TD
+    START["炎症性関節炎"] --> Q1{"多関節+対称+<br>小関節（MP/PIP）？"}
+    Q1 -- "Yes" --> RA["RA疑い<br>RF+抗CCP抗体<br>→ リウマチ科紹介"]
+    Q1 -- "No" --> Q2{"50歳以上+<br>肩帯・腰帯？"}
+    Q2 -- "Yes" --> PMR["PMR疑い<br>ESR+プレドニゾロン<br>GCA合併に注意"]
+    Q2 -- "No" --> Q3{"若年女性+<br>蝶形紅斑+<br>多系統？"}
+    Q3 -- "Yes" --> SLE["SLE疑い<br>ANA+抗dsDNA"]
+    Q3 -- "No" --> Q4{"先行感染<br>（尿道炎/腸炎）？"}
+    Q4 -- "Yes" --> REA["反応性関節炎"]
+    Q4 -- "No" --> Q5{"DIP+乾癬？<br>爪変化？"}
+    Q5 -- "Yes" --> PSA["乾癬性関節炎<br>リウマチ科/皮膚科"]
+    Q5 -- "No" --> Q6["ウイルス性？<br>（一過性 2-6週で軽快）"]
+    style START fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style RA fill:#e3f2fd,stroke:#1565c0
+    style PMR fill:#fff9c4,stroke:#f57f17`} />
+
+### Step 2b: 非炎症性・結晶性の鑑別
+
+<MermaidChart chart={`flowchart TD
+    START2["非炎症性 or<br>単関節急性"] --> Q1{"第1MTP関節<br>（足の親指付根）<br>急性発赤？<br>尿酸高値？"}
+    Q1 -- "Yes" --> GOUT["痛風<br>NSAIDs/コルヒチン"]
+    Q1 -- "No 膝+高齢" --> CPPD["偽痛風<br>X線で石灰化<br>整形外科紹介"]
+    Q1 -- "No" --> Q2{"DIP/膝/股<br>こわばり短い<br>高齢者"}
+    Q2 -- "Yes" --> OA["変形性関節症<br>NSAIDs+運動療法"]
+    style START2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style GOUT fill:#fff9c4,stroke:#f57f17`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: 関節の数・分布・こわばり・随伴症状を選択する
+2. **Phase 2**: 選択した症状に応じて表示される身体所見を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Stepと追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
