@@ -13,6 +13,24 @@ const BASE_DIR   = path.join(__dirname);
 const OUTPUT_DIR = path.join(BASE_DIR, 'ver.3.0.2.1', 'output');
 const DOCS_DIR   = path.join(BASE_DIR, 'medical-wiki', 'docs');
 
+// --- keyword-dictionary.json の読み込み ---
+const KEYWORD_DICT_PATH = path.join(BASE_DIR, 'keyword-dictionary.json');
+const ALIAS_MAP = {};
+try {
+  const dictData = JSON.parse(fs.readFileSync(KEYWORD_DICT_PATH, 'utf8'));
+  for (const entry of dictData.keywords || []) {
+    if (entry.target_docId) {
+      ALIAS_MAP[entry.target_docId] = {
+        aliases: entry.aliases || [],
+        urgency: entry.urgency || 'routine',
+      };
+    }
+  }
+  console.log(`[INFO] keyword-dictionary.json loaded: ${Object.keys(ALIAS_MAP).length} entries`);
+} catch (e) {
+  console.warn(`[WARN] keyword-dictionary.json not found or invalid: ${e.message}`);
+}
+
 // =========================================================
 // ユーティリティ
 // =========================================================
@@ -43,29 +61,27 @@ function kataToHira(str) {
  * 疾患名・ICD・英語名から検索キーワード配列を生成
  * カタカナ語のひらがな読み / ICD番号 / 英語略称 を含める
  */
-function buildKeywords(icdCode, nameJa, nameEn) {
+function buildKeywords(icdCode, nameJa, nameEn, docId) {
   const kw = new Set();
 
-  // 日本語名をそのまま追加（「第1期梅毒」→「第1期梅毒」）
+  // 日本語名をそのまま追加
   if (nameJa) kw.add(nameJa);
 
   // 日本語名を分割して部分キーワード抽出
-  // 「第1期梅毒」→「梅毒」、「2型糖尿病」→「糖尿病」、「急性膀胱炎」→「膀胱炎」
   const jaSegments = nameJa.split(/[\s・\/\-()（）]+|\d+|第.期/).filter(Boolean);
   for (const seg of jaSegments) {
     if (seg.length >= 2) kw.add(seg);
   }
 
-  // 漢字・ひらがな連続 2文字以上を抽出（「急性上気道炎」→「急性」「上気道炎」等）
+  // 漢字・ひらがな連続 2文字以上を抽出 + 接頭辞除去
   const kanjiRuns = nameJa.match(/[\u4e00-\u9fff\u3040-\u309f]{2,}/g) || [];
   for (const run of kanjiRuns) {
     kw.add(run);
-    // 「急性○○」「慢性○○」等の接頭辞を除いた核心部分も追加
     const core = run.replace(/^(急性|慢性|亜急性|原発性|続発性|特発性|良性|悪性|型|性)/, '');
     if (core.length >= 2 && core !== run) kw.add(core);
   }
 
-  // カタカナ語をひらがなに変換（「クラミジア」→「くらみじあ」）
+  // カタカナ語をひらがなに変換
   const hira = kataToHira(nameJa);
   if (hira !== nameJa) kw.add(hira);
 
@@ -73,18 +89,15 @@ function buildKeywords(icdCode, nameJa, nameEn) {
   const kataWords = nameJa.match(/[\u30a1-\u30f6ー]+/g) || [];
   for (const w of kataWords) {
     if (w.length >= 2) {
-      kw.add(w);           // カタカナそのまま
-      kw.add(kataToHira(w)); // ひらがな版
+      kw.add(w);
+      kw.add(kataToHira(w));
     }
   }
 
-  // 日本語 N-gram（部分検索対応: 2〜3文字）
-  // 「気管支喘息」→「気管」「管支」「支喘」「喘息」「気管支」「管支喘」「支喘息」
+  // 日本語 N-gram（3文字のみ。2文字はノイズが多いため除去）
   const jaChars = nameJa.replace(/[\s・\/\-()（）\d\[\]]/g, '');
-  for (let n = 2; n <= 3; n++) {
-    for (let i = 0; i <= jaChars.length - n; i++) {
-      kw.add(jaChars.slice(i, i + n));
-    }
+  for (let i = 0; i <= jaChars.length - 3; i++) {
+    kw.add(jaChars.slice(i, i + 3));
   }
 
   // ICD コード
@@ -93,6 +106,17 @@ function buildKeywords(icdCode, nameJa, nameEn) {
   // 英語名の各単語（2文字以上）
   const enWords = nameEn.split(/[\s\/\-().,]+/).filter(w => w.length >= 2);
   for (const w of enWords) kw.add(w.toLowerCase());
+
+  // keyword-dictionary.json からエイリアスを追加
+  const dictEntry = ALIAS_MAP[docId];
+  if (dictEntry && dictEntry.aliases) {
+    for (const alias of dictEntry.aliases) {
+      kw.add(alias);
+      // エイリアスのカタカナ→ひらがな変換も追加
+      const aliasHira = kataToHira(alias);
+      if (aliasHira !== alias) kw.add(aliasHira);
+    }
+  }
 
   return [...kw].filter(Boolean);
 }
@@ -373,7 +397,7 @@ function generateMdx({ apData, soData, sidebarPosition, relatedLinks }) {
     : '';
 
   // 検索キーワード（ひらがな読み・ICD・英語名）
-  const keywords = buildKeywords(icdCode, nameJa, nameEn);
+  const keywords = buildKeywords(icdCode, nameJa, nameEn, docId);
   const keywordsYaml = keywords.length > 0
     ? `keywords: [${keywords.map(k => `"${k.replace(/"/g, '\\"')}"`).join(', ')}]`
     : '';
