@@ -222,7 +222,8 @@
         "慢性閉塞性肺疾患",
         "肺気腫",
         "慢性気管支炎",
-        "GOLD"
+        "GOLD",
+        "COPD"
       ],
       "target_docId": "j449"
     },
@@ -405,7 +406,8 @@
         "胃食道逆流症",
         "逆流性食道炎",
         "胸やけ",
-        "呑酸"
+        "呑酸",
+        "GERD"
       ],
       "target_docId": "k210-k219-gerd"
     },
@@ -639,7 +641,8 @@
     {
       "term": "治療抵抗性高血圧",
       "aliases": [
-        "resistant hypertension"
+        "resistant hypertension",
+        "HT"
       ],
       "target_docId": "i10-ht-resistant"
     },
@@ -721,7 +724,8 @@
       "aliases": [
         "GLP-1受容体作動薬",
         "セマグルチド",
-        "リベルサス"
+        "リベルサス",
+        "DM"
       ],
       "target_docId": "e119-2-type-2-diabetes-glp-1"
     },
@@ -756,7 +760,8 @@
         "グラルギン",
         "ヒューマログ",
         "BOT",
-        "basal-bolus"
+        "basal-bolus",
+        "DM"
       ],
       "target_docId": "e119-basal-bolus"
     },
@@ -1661,7 +1666,8 @@
       "aliases": [
         "深部静脈血栓症",
         "deep vein thrombosis",
-        "エコノミークラス症候群"
+        "エコノミークラス症候群",
+        "DVT"
       ],
       "target_docId": "i802-dvt",
       "urgency": "urgent"
@@ -2099,7 +2105,8 @@
       "term": "LOH症候群",
       "aliases": [
         "男性更年期",
-        "テストステロン低下"
+        "テストステロン低下",
+        "LOH"
       ],
       "target_docId": "e291-loh-syndrome"
     },
@@ -2117,7 +2124,8 @@
       "term": "MCI",
       "aliases": [
         "軽度認知障害",
-        "mild cognitive impairment"
+        "mild cognitive impairment",
+        "MCI"
       ],
       "target_docId": "f067-mild-cognitive-impairment-mci"
     },
@@ -2180,7 +2188,8 @@
       "term": "ADHD",
       "aliases": [
         "注意欠陥多動性障害",
-        "attention deficit"
+        "attention deficit",
+        "ADHD"
       ],
       "target_docId": "f900-adult-adhd"
     },
@@ -2342,7 +2351,8 @@
       "aliases": [
         "閉塞性動脈硬化症",
         "PAD",
-        "末梢動脈疾患"
+        "末梢動脈疾患",
+        "ASO"
       ],
       "target_docId": "i702-aso-pad"
     },
@@ -2400,7 +2410,8 @@
       "term": "SLE",
       "aliases": [
         "全身性エリテマトーデス",
-        "systemic lupus erythematosus"
+        "systemic lupus erythematosus",
+        "SLE"
       ],
       "target_docId": "m329-sle"
     },
@@ -2425,7 +2436,8 @@
       "term": "変形性膝関節症",
       "aliases": [
         "膝OA",
-        "knee osteoarthritis"
+        "knee osteoarthritis",
+        "OA"
       ],
       "target_docId": "m179-knee-osteoarthritis"
     },
@@ -2771,7 +2783,8 @@
       "term": "ITP",
       "aliases": [
         "特発性血小板減少性紫斑病",
-        "immune thrombocytopenia"
+        "immune thrombocytopenia",
+        "ITP"
       ],
       "target_docId": "d693-itp"
     },
@@ -2779,7 +2792,8 @@
       "term": "MDS",
       "aliases": [
         "骨髄異形成症候群",
-        "myelodysplastic syndrome"
+        "myelodysplastic syndrome",
+        "MDS"
       ],
       "target_docId": "d469-mds"
     },
