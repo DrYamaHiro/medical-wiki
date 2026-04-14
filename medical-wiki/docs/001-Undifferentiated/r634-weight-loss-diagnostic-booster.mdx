@@ -1,0 +1,84 @@
+---
+id: r634-weight-loss-diagnostic-booster
+title: "[R63.4] 体重減少精査 / Weight Loss - Diagnostic Booster"
+sidebar_label: "[R63.4] 体重減少精査"
+sidebar_position: 3
+hide_table_of_contents: false
+description: "非意図的体重減少の鑑別診断を支援するインタラクティブツール。悪性腫瘍・内分泌・消化器・精神・社会的要因を網羅的に鑑別。"
+keywords: ["体重減少", "やせ", "悪性腫瘍", "甲状腺", "フレイル", "weight loss", "R63.4", "diagnostic booster"]
+---
+
+import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/weightLossData';
+
+# 体重減少精査 — Diagnostic Booster
+
+食欲・消化器症状・全身症状を選択していくと、鑑別候補がリアルタイムに絞り込まれます。
+
+<DiagnosticBooster
+  symptoms={SYMPTOMS}
+  findings={FINDINGS}
+  differentials={DIFFERENTIALS}
+  redFlags={RED_FLAGS}
+  subtitle="体重減少の鑑別思考支援ツール"
+/>
+
+---
+
+## Dr.Advice
+
+> **[6ヶ月5%ルール]** 6ヶ月で体重の5%以上の非意図的減少は、悪性腫瘍の確率が有意に上昇。この閾値を超えたら必ず系統的な精査を開始せよ。
+>
+> **[食欲保持 vs 食欲低下]** 食べているのに痩せる→甲状腺機能亢進症・糖尿病悪化・吸収不良を優先。食欲低下を伴う→悪性腫瘍・うつ病を優先。この分岐が鑑別の出発点。
+>
+> **[腫瘍マーカーの限界]** CEA/CA19-9陰性でも悪性腫瘍は除外できない。体重減少が持続する場合は画像・内視鏡での精査が必要。腫瘍マーカーで安心して精査を止めるな。
+>
+> **[高齢者の社会的要因]** 高齢者では社会的要因（独居・買い物困難・義歯不適合・経済的問題）が体重減少の最大原因のことが少なくない。検査の前に生活状況を確認せよ。配食サービス・介護保険・地域包括支援センターの活用を検討。
+>
+> **[設備制約]** 当院にCT・内視鏡・腹部エコーはない。便潜血+血液検査+胸部X線でスクリーニングし、異常や持続する場合は適切な科に紹介。
+
+---
+
+## 診断フローチャート
+
+### Step 1: 悪性腫瘍の除外
+
+<MermaidChart chart={`flowchart TD
+    A["非意図的体重減少<br>6ヶ月で5%以上"] --> B["スクリーニング<br>CBC/CRP/LDH/肝腎/TSH<br>HbA1c/便潜血/胸部X線"]
+    B --> C{"便潜血陽性？<br>黄疸？<br>鎖骨上窩リンパ節？"}
+    C -- "あり" --> D["消化器癌/悪性腫瘍<br>を強く疑う<br>→ CT/内視鏡紹介"]
+    C -- "なし" --> E{"食欲は？"}
+    E -- "保持<br>（食べているのに痩せる）" --> F["甲状腺/DM/吸収不良<br>Step 2a"]
+    E -- "低下" --> G["悪性腫瘍/うつ病<br>社会的要因<br>Step 2b"]
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style D fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style F fill:#e3f2fd,stroke:#1565c0
+    style G fill:#e8f5e9,stroke:#2e7d32`} />
+
+### Step 2: 食欲による分岐
+
+<MermaidChart chart={`flowchart TD
+    F["食欲保持で体重減少"] --> F1{"TSH低値？<br>振戦/発汗/暑がり"}
+    F1 -- "Yes" --> TH["甲状腺機能亢進症"]
+    F1 -- "No" --> F2{"口渇/多飲/多尿？<br>HbA1c高値？"}
+    F2 -- "Yes" --> DM["糖尿病悪化"]
+    F2 -- "No" --> F3{"脂肪便？<br>下痢？"}
+    F3 -- "Yes" --> MA["吸収不良症候群<br>消化器紹介"]
+    G["食欲低下で体重減少"] --> G1{"気分の落ち込み？<br>PHQ-2&ge;3？"}
+    G1 -- "Yes" --> DEP["うつ病<br>PHQ-9→精神科紹介"]
+    G1 -- "No" --> G2{"高齢者？<br>独居/調理困難？"}
+    G2 -- "Yes" --> FRA["フレイル/社会的要因<br>介護・配食サービス"]
+    G2 -- "No" --> G3["悪性腫瘍精査<br>CEA/CA19-9<br>CT/内視鏡紹介"]
+    style F fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style G fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style TH fill:#e3f2fd,stroke:#1565c0
+    style G3 fill:#fff9c4,stroke:#f57f17`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: 食欲・消化器症状・全身症状・精神症状・社会的要因を選択する
+2. **Phase 2**: 選択した症状に応じて表示される身体所見を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Stepと追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
