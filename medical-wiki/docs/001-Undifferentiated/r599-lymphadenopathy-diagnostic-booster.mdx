@@ -1,0 +1,86 @@
+---
+id: r599-lymphadenopathy-diagnostic-booster
+title: "[R59.9] リンパ節腫脹精査 / Lymphadenopathy - Diagnostic Booster"
+sidebar_label: "[R59.9] リンパ節腫脹精査"
+sidebar_position: 8
+hide_table_of_contents: false
+description: "リンパ節腫脹の鑑別診断を支援するインタラクティブツール。鎖骨上窩・B症状・4週間ルールで悪性を除外。"
+keywords: ["リンパ節腫脹", "リンパ節", "悪性リンパ腫", "鎖骨上窩", "Virchow", "sIL-2R", "lymphadenopathy", "R59.9", "diagnostic booster"]
+---
+
+import { SYMPTOMS, FINDINGS, DIFFERENTIALS, RED_FLAGS } from '@site/src/components/DiagnosticBooster/lymphadenopathyData';
+
+# リンパ節腫脹精査 — Diagnostic Booster
+
+リンパ節の部位・性状・随伴症状を選択していくと、鑑別候補がリアルタイムに絞り込まれます。
+
+<DiagnosticBooster
+  symptoms={SYMPTOMS}
+  findings={FINDINGS}
+  differentials={DIFFERENTIALS}
+  redFlags={RED_FLAGS}
+  subtitle="リンパ節腫脹の鑑別思考支援ツール"
+/>
+
+---
+
+## Dr.Advice
+
+> **[鎖骨上窩の法則]** 鎖骨上窩リンパ節腫脹は悪性腫瘍の確率が最も高い。左（Virchowリンパ節）=消化器癌（胃癌が典型）、右=肺癌/縦隔腫瘍。発見したら速やかに精査紹介。
+>
+> **[4週間ルール]** 明らかな感染源なくリンパ節腫脹が4週間以上持続する場合、経過観察の延長ではなく生検を検討せよ。特に2cm超+増大傾向。「もう少し様子を見よう」が診断の遅れにつながる。
+>
+> **[sIL-2Rの限界]** 悪性リンパ腫のスクリーニングとして有用だが、アグレッシブリンパ腫では感度80-90%に対し、インドレントリンパ腫では50-60%と低い。正常値でも悪性リンパ腫は否定できない。自己免疫疾患や感染症でも上昇するため、あくまで補助的指標。
+>
+> **[リンパ節の性状]** 硬い+不動=転移性。弾性硬+可動=リンパ腫。柔らかい+圧痛=反応性/感染性。触診の所見が鑑別を大きく左右する。
+>
+> **[設備制約]** 当院ではリンパ節生検・腹部エコーは不可。触診+血液検査+胸部X線でスクリーニングし、生検が必要な場合は血液内科紹介。
+
+---
+
+## 診断フローチャート
+
+### Step 1: 悪性の除外
+
+<MermaidChart chart={`flowchart TD
+    A["リンパ節腫脹<br>患者来院"] --> B{"鎖骨上窩？"}
+    B -- "Yes" --> C["悪性腫瘍を強く疑う<br>左=消化器癌（Virchow）<br>右=肺癌/縦隔腫瘍<br>→ 速やかにCT紹介"]
+    B -- "No" --> D{"硬い+不動？"}
+    D -- "Yes" --> E["転移性を疑う<br>→ 原発巣検索<br>CT紹介"]
+    D -- "No" --> F{"B症状？<br>（38℃以上の発熱<br>盗汗・体重減少）"}
+    F -- "あり" --> G["悪性リンパ腫疑い<br>LDH/sIL-2R<br>→ 血液内科紹介"]
+    F -- "なし" --> H["感染性/反応性の<br>鑑別へ Step 2"]
+    style A fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style E fill:#ffcdd2,stroke:#c62828,stroke-width:3px
+    style G fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style H fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px`} />
+
+### Step 2: 感染性/反応性の鑑別
+
+<MermaidChart chart={`flowchart TD
+    START["悪性除外後"] --> Q1{"感染巣あり？<br>（咽頭炎/歯科/皮膚）"}
+    Q1 -- "Yes" --> R["反応性<br>原発巣治療<br>2-4週で縮小→経過観察"]
+    Q1 -- "No" --> Q2{"全身性？<br>発熱+咽頭炎+肝脾腫？"}
+    Q2 -- "Yes 若年者" --> EBV["伝染性単核球症<br>VCA-IgM"]
+    Q2 -- "Yes リスク行動" --> HIV["HIV検査"]
+    Q2 -- "No" --> Q3{"猫との接触歴？"}
+    Q3 -- "Yes" --> CAT["猫ひっかき病"]
+    Q3 -- "No" --> Q4{"手掌・足底の紅斑？<br>性行為歴？"}
+    Q4 -- "Yes" --> SYP["梅毒<br>RPR/TPHA提出"]
+    Q4 -- "No" --> Q5{"4週間以上持続？"}
+    Q5 -- "Yes" --> BX["4週間ルール<br>→ 生検検討<br>血液内科紹介"]
+    Q5 -- "No" --> OBS["経過観察<br>2-4週で再評価"]
+    style START fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style BX fill:#fff9c4,stroke:#f57f17
+    style SYP fill:#fff9c4,stroke:#f57f17`} />
+
+---
+
+## 使い方
+
+1. **Phase 1**: リンパ節の部位・性状・B症状・随伴症状を選択する
+2. **Phase 2**: 選択した症状に応じて表示される身体所見（硬さ・脾腫等）を選択する
+3. **Phase 3**: 鑑別候補が一致度順に表示される。各候補にはNext Stepと追加確認すべき所見が表示される
+
+Red Flag所見が選択されると、画面上部に即座に警告が表示されます。
