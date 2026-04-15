@@ -3,7 +3,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Medical Knowledge Wiki',
+  title: 'CS Medical Knowledge Wiki',
   tagline: '医療知識ナレッジベース — 診療テンプレート＆教科書的解説',
   favicon: 'img/favicon.ico',
 
@@ -82,18 +82,12 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'Medical Wiki',
+        title: 'CS Medical Knowledge Wiki',
         logo: {
-          alt: 'Medical Wiki Logo',
-          src: 'img/logo.svg',
+          alt: 'CureStation Logo',
+          src: 'img/logo-cs.png',
         },
         items: [
-          {
-            type: 'docSidebar',
-            sidebarId: 'medicalSidebar',
-            position: 'left',
-            label: '📋 診療テンプレート',
-          },
           {
             href: 'https://github.com/dryamahiro/medical-wiki',
             label: 'GitHub',
