@@ -126,6 +126,23 @@ rx-*.mdxの薬剤キーワードは手動追加スクリプト（上記Phase 2-2
 
 ## トラブル記録と回避策
 
+### T0: Google Driveストリーミング上でのデプロイ方法（最重要）
+
+**正しいデプロイ方法:**
+1. MDXファイルやJSファイルを**個別にWrite/Edit**で直接書き込む（これは問題なく動作する）
+2. `git add 対象ファイル名` で**明示的に**ステージ
+3. `git commit` → `git push origin master`
+4. GitHub Actionsが自動でビルド&デプロイ
+
+**失敗するパターン:**
+- `build_docs.js` 等のディレクトリ全走査スクリプトを実行 → EPERM/EINVAL
+- `npm run build` / `npx docusaurus build` を実行 → node_modulesアクセスで失敗
+- `git add -A` / `git add .` → Driveの同期遅延で実在ファイルが「削除」と誤認される
+
+**核心**: Google Driveストリーミング上では「ファイルの個別読み書き」は安定動作するが、「ディレクトリの全走査・再構築」は不安定。ローカルへのコピーは不要。対象ファイルを直接編集してpushすればGitHub Actionsがビルドする。
+
+---
+
 ### T1: Google Driveストリーミング上でのbuild_docs.js実行失敗
 
 **発生**: 2026-04-14 Phase 1実装時
