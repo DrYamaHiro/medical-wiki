@@ -20,4 +20,4 @@
 | ファイル | 理由 |
 |---|---|
 | 2026-04-13-1046.txt | CPAP加算の運用議論。Wiki/SOAPへの直接反映対象ではない（運用課題）。CPAPトラブルシューティング情報のWiki追記は将来検討 |
-| blumenthal-et-al-2026-*.pdf | ACC/AHAガイドライン文献。参照資料として保管中。反映検討は別途 |
+| blumenthal-et-al-2026-*.pdf | 2026 ACC/AHA脂質異常症ガイドライン。Wiki e785-dyslipidemia + SOAP 120-AP-01/03 に反映済み |
