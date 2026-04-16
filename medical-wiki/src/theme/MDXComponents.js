@@ -4,6 +4,7 @@ import ImageUploader from '@site/src/components/ImageUploader';
 import { ImageGallery } from '@site/src/components/ImageUploader';
 import DiagnosticBooster from '@site/src/components/DiagnosticBooster';
 import MermaidChart from '@site/src/components/MermaidChart';
+import DupixentCalculator from '@site/src/components/ClinicalCalc/DupixentCalculator';
 
 export default {
   ...MDXComponents,
@@ -11,4 +12,5 @@ export default {
   ImageGallery,
   DiagnosticBooster,
   MermaidChart,
+  DupixentCalculator,
 };
