@@ -143,6 +143,17 @@ rx-*.mdxの薬剤キーワードは手動追加スクリプト（上記Phase 2-2
 
 ---
 
+### T0b: git addでのパス大文字/小文字の不一致によるサイレント失敗
+
+**発生**: 2026-04-17 ACC/AHAガイドライン反映時
+**症状**: `git add medical-wiki/docs/120-Dyslipidemia/e785-dyslipidemia.mdx` が成功したように見えるが、実際にはステージされない。コミットメッセージにはファイル名が含まれるが、diffには含まれない
+**原因**: 実際のディレクトリ名は `120-dyslipidemia`（小文字）だが、`120-Dyslipidemia`（大文字）でgit addを実行。Google DriveのFATベースのケース処理とgitのcase-sensitive動作の不一致
+**対策**: `git add` 時はTabキー補完を使い、実際のファイルシステム上のパスと一致させること。コミット後に `git show --stat` で意図したファイルが含まれているか必ず確認
+
+**やってはいけないこと**: パスを手打ちで大文字/小文字を想像で入力すること
+
+---
+
 ### T1: Google Driveストリーミング上でのbuild_docs.js実行失敗
 
 **発生**: 2026-04-14 Phase 1実装時
