@@ -2929,6 +2929,156 @@
         "behavioral and psychological symptoms of dementia"
       ],
       "target_docId": "f03-bpsd-management"
+    },
+    {
+      "term": "パクスロビド",
+      "aliases": ["paxlovid", "ニルマトレルビル", "ぱくすろびど"],
+      "target_docId": "u071-covid-19"
+    },
+    {
+      "term": "レイボー",
+      "aliases": ["ラスミジタン", "lasmiditan", "れいぼー", "ジタン系"],
+      "target_docId": "g439-migraine"
+    },
+    {
+      "term": "ナルティーク",
+      "aliases": ["アトゲパント", "atogepant", "なるてぃーく", "ゲパント系"],
+      "target_docId": "g439-migraine"
+    },
+    {
+      "term": "エナジア",
+      "aliases": ["enerzair", "えなじあ", "モメタゾン/グリコピロニウム/インダカテロール"],
+      "target_docId": "j459-asthma-moderate"
+    },
+    {
+      "term": "ウルティブロ",
+      "aliases": ["ultibro", "うるてぃぶろ", "グリコピロニウム/インダカテロール"],
+      "target_docId": "j449"
+    },
+    {
+      "term": "スピオルト",
+      "aliases": ["spiriolto", "すぴおると", "チオトロピウム/オロダテロール"],
+      "target_docId": "j449"
+    },
+    {
+      "term": "ビレーズトリ",
+      "aliases": ["breztri", "びれーずとり", "ブデソニド/グリコピロニウム/ホルモテロール"],
+      "target_docId": "j449"
+    },
+    {
+      "term": "アニュイティ",
+      "aliases": ["anuity", "あにゅいてぃ", "フルチカゾンフランカルボン酸エステル"],
+      "target_docId": "j459-asthma-mild"
+    },
+    {
+      "term": "ディレグラ",
+      "aliases": ["dilegra", "でぃれぐら", "フェキソフェナジン/プソイドエフェドリン"],
+      "target_docId": "j301-j304-allergic-rhinitis"
+    },
+    {
+      "term": "ミティキュア",
+      "aliases": ["miticure", "みてぃきゅあ", "ダニ舌下錠", "ダニSLIT"],
+      "target_docId": "j301-slit-cedar-induction"
+    },
+    {
+      "term": "エピペン",
+      "aliases": ["epipen", "えぴぺん", "アドレナリン自己注射"],
+      "target_docId": "j301-slit-cedar-induction"
+    },
+    {
+      "term": "モイゼルト",
+      "aliases": ["difamilast", "もいぜると", "ジファミラスト", "PDE4阻害"],
+      "target_docId": "l209-ad-proactive-phase"
+    },
+    {
+      "term": "デュピクセント",
+      "aliases": ["dupixent", "でゅぴくせんと", "デュピルマブ", "dupilumab", "IL-4/13阻害"],
+      "target_docId": "l209-ad-proactive-phase"
+    },
+    {
+      "term": "アポハイドローション",
+      "aliases": ["apohydro", "あぽはいどろーしょん", "オキシブチニン塩化物ローション", "手掌多汗症"],
+      "target_docId": "r61-hyperhidrosis"
+    },
+    {
+      "term": "ロケルマ",
+      "aliases": ["lokelma", "ろけるま", "ジルコニウムシクロケイ酸ナトリウム", "高カリウム血症"],
+      "target_docId": "n189-chronic-kidney-disease-ckd"
+    },
+    {
+      "term": "リオナ",
+      "aliases": ["riona", "りおな", "クエン酸第二鉄", "ferric citrate"],
+      "target_docId": "d509-iron-deficiency-anemia"
+    },
+    {
+      "term": "リリカ",
+      "aliases": ["lyrica", "りりか", "プレガバリン", "pregabalin", "神経障害性疼痛"],
+      "target_docId": "b029-herpes-zoster"
+    },
+    {
+      "term": "タリージェ",
+      "aliases": ["tarlige", "たりーじぇ", "ミロガバリン", "mirogabalin"],
+      "target_docId": "b029-herpes-zoster"
+    },
+    {
+      "term": "アミティーザ",
+      "aliases": ["amitiza", "あみてぃーざ", "ルビプロストン", "lubiprostone"],
+      "target_docId": "k590-chronic-constipation"
+    },
+    {
+      "term": "ラクツロース",
+      "aliases": ["lactulose", "らくつろーす", "モニラック"],
+      "target_docId": "k590-pediatric-constipation"
+    },
+    {
+      "term": "クラリチン",
+      "aliases": ["claritin", "くらりちん", "ロラタジン", "loratadine"],
+      "target_docId": "j301-j304-allergic-rhinitis"
+    },
+    {
+      "term": "ゾレア",
+      "aliases": ["xolair", "ぞれあ", "オマリズマブ", "omalizumab", "抗IgE抗体"],
+      "target_docId": "j301-severe-cedar-pollinosis-xolair-induction"
+    },
+    {
+      "term": "ロセフィン",
+      "aliases": ["rocephin", "ろせふぃん", "セフトリアキソン", "ceftriaxone", "CTRX"],
+      "target_docId": "n10-acute-pyelonephritis"
+    },
+    {
+      "term": "プロバンサイン",
+      "aliases": ["pro-banthine", "ぷろばんさいん", "プロパンテリン", "propantheline", "多汗症"],
+      "target_docId": "r61-hyperhidrosis"
+    },
+    {
+      "term": "桂枝加芍薬湯",
+      "aliases": ["けいしかしゃくやくとう", "keishikashakuyakuto", "ツムラ60"],
+      "target_docId": "k589-ibs"
+    },
+    {
+      "term": "デュアック",
+      "aliases": ["duac", "でゅあっく", "BPO+クリンダマイシン"],
+      "target_docId": "l700-acne-acute-phase"
+    },
+    {
+      "term": "ガチフロ点眼",
+      "aliases": ["がちふろ", "ガチフロキサシン", "gatifloxacin"],
+      "target_docId": "h000-hordeolum-stye"
+    },
+    {
+      "term": "ムコスタ点眼",
+      "aliases": ["むこすた点眼", "レバミピド点眼", "rebamipide eye drops"],
+      "target_docId": "h041-dry-eye"
+    },
+    {
+      "term": "パルミコート吸入液",
+      "aliases": ["ぱるみこーと", "ブデソニド吸入液", "budesonide inhalation"],
+      "target_docId": "j459-pediatric-asthma"
+    },
+    {
+      "term": "プランルカスト",
+      "aliases": ["ぷらんるかすと", "オノン", "pranlukast"],
+      "target_docId": "j459-pediatric-asthma"
     }
   ]
 }
