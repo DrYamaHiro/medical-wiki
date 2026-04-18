@@ -67,21 +67,15 @@ const BSA_PARTS = [
 
 // ========== 投与量計算 ==========
 
-function calcDose(indication, ageGroup, weight, adultWeightCat) {
+function calcDose(indication, ageGroup, weight) {
   // === アトピー性皮膚炎 ===
   if (indication === 'ad') {
+    // 成人: 体重によらず一律（添付文書準拠）
     if (ageGroup === 'adult') {
-      if (adultWeightCat === 'over60') {
-        return {
-          loading: 600, loadingNote: '（300mg×2本を2箇所に注射）',
-          maintenance: 300, interval: 2, pen: '300mgペン',
-          notes: '初回のみ600mg、以降300mg 2週間隔',
-        };
-      }
       return {
-        loading: 400, loadingNote: '（200mg×2本を2箇所に注射）',
-        maintenance: 200, interval: 2, pen: '200mgペン',
-        notes: '初回のみ400mg、以降200mg 2週間隔（体重30〜60kg未満）',
+        loading: 600, loadingNote: '（300mg×2本を2箇所に注射）',
+        maintenance: 300, interval: 2, pen: '300mgペン',
+        notes: '初回のみ600mg、以降300mg 2週間隔（体重によらず一律）',
       };
     }
     const w = parseFloat(weight);
@@ -306,7 +300,6 @@ export default function DupixentCalculator() {
   const [indication, setIndication] = useState('ad');
   const [ageGroup, setAgeGroup] = useState('adult');
   const [weight, setWeight] = useState('');
-  const [adultWeightCat, setAdultWeightCat] = useState('over60');
 
   // --- 評価ツール ---
   const [assessTab, setAssessTab] = useState(null); // null | 'iga' | 'easi' | 'bsa'
@@ -320,12 +313,10 @@ export default function DupixentCalculator() {
   });
 
   // --- 投与量ロジック ---
-  const showAdultWeightToggle = indication === 'ad' && ageGroup === 'adult';
-
   const needsWeight = useMemo(() => {
     if (indication === 'crsnp' || indication === 'pn') return false;
     if (indication === 'ad') {
-      if (ageGroup === 'adult') return false;
+      if (ageGroup === 'adult') return false; // 成人は一律用量
       return true;
     }
     if (indication === 'asthma') return ageGroup === 'child_6_11';
@@ -339,12 +330,9 @@ export default function DupixentCalculator() {
   }, [indication]);
 
   const result = useMemo(() => {
-    if (showAdultWeightToggle) {
-      return calcDose(indication, ageGroup, null, adultWeightCat);
-    }
     if (needsWeight && (!weight || parseFloat(weight) <= 0)) return null;
-    return calcDose(indication, ageGroup, weight, null);
-  }, [indication, ageGroup, weight, needsWeight, showAdultWeightToggle, adultWeightCat]);
+    return calcDose(indication, ageGroup, weight);
+  }, [indication, ageGroup, weight, needsWeight]);
 
   // --- EASI ---
   const easiTotal = useMemo(() => calcEasiTotal(easiScores), [easiScores]);
@@ -358,13 +346,11 @@ export default function DupixentCalculator() {
   // --- ハンドラ ---
   const resetDosing = useCallback(() => {
     setWeight('');
-    setAdultWeightCat('over60');
   }, []);
 
   const handleIndicationChange = useCallback((key) => {
     setIndication(key);
     setWeight('');
-    setAdultWeightCat('over60');
     if (key === 'crsnp' || key === 'pn') setAgeGroup('adult');
   }, []);
 
@@ -437,30 +423,7 @@ export default function DupixentCalculator() {
           </div>
         </div>
 
-        {/* 成人AD: 体重カテゴリトグル */}
-        {showAdultWeightToggle && (
-          <div className={styles.inputGroup}>
-            <label className={styles.inputLabel}>体重区分</label>
-            <div className={styles.toggleGroup}>
-              <button
-                className={`${styles.toggleBtn} ${adultWeightCat === 'over60' ? styles.toggleBtnActive : ''}`}
-                onClick={() => setAdultWeightCat('over60')}
-                style={{ fontSize: '0.85rem', padding: '0.35rem 0.8rem' }}
-              >
-                60kg以上
-              </button>
-              <button
-                className={`${styles.toggleBtn} ${adultWeightCat === 'under60' ? styles.toggleBtnActive : ''}`}
-                onClick={() => setAdultWeightCat('under60')}
-                style={{ fontSize: '0.85rem', padding: '0.35rem 0.8rem' }}
-              >
-                30〜60kg未満
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* 小児: 体重入力 */}
+        {/* 体重入力（小児のみ — 成人は一律用量のため不要） */}
         {needsWeight && (
           <div className={styles.inputGroup}>
             <label className={styles.inputLabel}>
