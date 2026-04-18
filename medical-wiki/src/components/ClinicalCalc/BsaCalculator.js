@@ -71,7 +71,44 @@ function BodyDiagram({ selected, onToggle }) {
   );
 }
 
+const CONDITIONS = [
+  { key: 'ad', label: 'アトピー性皮膚炎' },
+  { key: 'burn', label: '熱傷' },
+  { key: 'psoriasis', label: '乾癬' },
+  { key: 'general', label: '汎用' },
+];
+
+function getSeverity(total, condition) {
+  if (total === 0) return { text: '患部をクリックしてください', color: '#757575' };
+
+  if (condition === 'ad') {
+    if (total < 10) return { text: '軽症（BSA 10%未満）', color: '#ff9800' };
+    return { text: '中等症以上（BSA≧10%）— 生物学的製剤の適応検討', color: '#f44336' };
+  }
+  if (condition === 'burn') {
+    if (total < 10) return { text: '小範囲熱傷（TBSA 10%未満）', color: '#ff9800' };
+    if (total < 20) return { text: '中範囲熱傷（TBSA 10-19%）— 輸液療法を考慮', color: '#e65100' };
+    if (total < 50) return { text: '広範囲熱傷（TBSA 20-49%）— 熱傷専門施設へ', color: '#c62828' };
+    return { text: '超広範囲熱傷（TBSA 50%以上）— 救命救急対応', color: '#b71c1c' };
+  }
+  if (condition === 'psoriasis') {
+    if (total < 3) return { text: '軽症（BSA 3%未満）', color: '#8bc34a' };
+    if (total < 10) return { text: '中等症（BSA 3-10%）', color: '#ff9800' };
+    return { text: '重症（BSA 10%以上）— 全身療法・生物学的製剤を検討', color: '#f44336' };
+  }
+  // general
+  return { text: `BSA ${total}%`, color: total < 10 ? '#ff9800' : '#f44336' };
+}
+
+function getNote(condition) {
+  if (condition === 'ad') return '最適使用推進ガイドライン: BSA≧10% が生物学的製剤の適応基準の一つ';
+  if (condition === 'burn') return 'Parkland公式: 輸液量(mL) = 4 × 体重(kg) × TBSA(%) — TBSA≧20%で適用。顔面・手・足・会陰・関節の熱傷は面積に関わらず重症';
+  if (condition === 'psoriasis') return 'BSA 3%未満=軽症、3-10%=中等症、10%以上=重症。PASI・DLQIと併せて治療方針を決定';
+  return '';
+}
+
 export default function BsaCalculator() {
+  const [condition, setCondition] = useState('ad');
   const [selected, setSelected] = useState(() => {
     const init = {};
     BSA_PARTS.forEach(p => { init[p.key] = false; });
@@ -83,6 +120,8 @@ export default function BsaCalculator() {
   }, []);
 
   const total = useMemo(() => BSA_PARTS.reduce((s, p) => s + (selected[p.key] ? p.bsa : 0), 0), [selected]);
+
+  const severity = getSeverity(total, condition);
 
   const reset = useCallback(() => {
     setSelected(() => {
@@ -103,6 +142,21 @@ export default function BsaCalculator() {
       </div>
 
       <div className={styles.calcBody}>
+        {/* 疾患選択 */}
+        <div className={styles.inputGroup}>
+          <label className={styles.inputLabel}>疾患（重症度基準の切替）</label>
+          <div className={styles.toggleGroup} style={{ flexWrap: 'wrap' }}>
+            {CONDITIONS.map(c => (
+              <button key={c.key}
+                className={`${styles.toggleBtn} ${condition === c.key ? styles.toggleBtnActive : ''}`}
+                onClick={() => setCondition(c.key)}
+                style={{ fontSize: '0.78rem', padding: '0.3rem 0.6rem', marginBottom: '0.3rem' }}>
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <BodyDiagram selected={selected} onToggle={toggle} />
         <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
           <button onClick={() => toggle('perineum')}
@@ -133,20 +187,21 @@ export default function BsaCalculator() {
           <span className={styles.resultLabel}>BSA（体表面積）</span>
           <span className={styles.resultValue}>{total}%</span>
         </div>
-        <div className={styles.resultJudge} style={{
-          background: total === 0 ? '#757575' : total < 10 ? '#ff9800' : '#f44336',
-        }}>
-          {total === 0 && '患部をクリックしてください'}
-          {total > 0 && total < 10 && '軽症（BSA 10%未満）'}
-          {total >= 10 && '中等症以上（BSA≧10%）'}
+        <div className={styles.resultJudge} style={{ background: severity.color }}>
+          {severity.text}
         </div>
       </div>
+
+      {total > 0 && getNote(condition) && (
+        <div style={{ padding: '0 1.2rem 0.3rem', fontSize: '0.75rem', color: 'var(--ifm-color-emphasis-600)', fontWeight: 600 }}>
+          {getNote(condition)}
+        </div>
+      )}
 
       <div className={styles.note}>
         <strong>BSA について:</strong><br />
         ・成人の体表面積をRule of Nines（9の法則）で概算<br />
         ・各部位 9%ずつ（頭頸部・各上肢・胸部・腹部・背部上・腰臀部・各大腿・各下腿）+ 会陰部 1% = 合計100%<br />
-        ・アトピー性皮膚炎: BSA≧10% は中等症〜重症の基準（最適使用推進ガイドライン）<br />
         ・手掌法: 患者の片手掌面積 ≒ BSA 1% として概算することも可能<br />
         ・小児では体表面積の比率が異なる（頭部が大きく下肢が小さい）ため注意
       </div>
