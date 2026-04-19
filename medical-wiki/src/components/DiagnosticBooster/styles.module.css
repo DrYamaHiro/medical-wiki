@@ -83,6 +83,17 @@
   border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
+/* 症状消失警告 */
+.resolvedWarning {
+  padding: 0.5rem 0.8rem;
+  margin-bottom: 0.5rem;
+  background: #ff8f00;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.82rem;
+  border-radius: 4px;
+}
+
 /* セクション */
 .section {
   padding: 1rem 1.2rem;

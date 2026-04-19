@@ -6,16 +6,36 @@ import * as feverData from './feverData';
 
 /* -------------------------------------------------------- */
 /*  Scoring: 選択された症状・所見と各鑑別の一致度を算出     */
+/*  v2: プライマリケア頻度 + Red Flag連動の重み付け         */
 /* -------------------------------------------------------- */
-function calcScore(diff, selectedSymptoms, selectedFindings) {
-  let s = 0;
+function calcScore(diff, selectedSymptoms, selectedFindings, hasActiveRedFlags) {
+  let matchCount = 0;
   const selS = new Set(selectedSymptoms);
   const selF = new Set(selectedFindings);
   for (const sym of diff.symptoms) {
-    if (selS.has(sym)) s += 2;
+    if (selS.has(sym)) matchCount += 2;
   }
   for (const f of diff.findings) {
-    if (selF.has(f)) s += 3;
+    if (selF.has(f)) matchCount += 3;
+  }
+
+  // プライマリケア頻度重み付け（デフォルト5=中頻度）
+  const prev = diff.prevalenceWeight ?? 5;
+  // 重症度重み付け（デフォルト3=保守的安全側）
+  const sev = diff.severityWeight ?? 3;
+
+  let s;
+  if (hasActiveRedFlags) {
+    // Red Flagがある場合:
+    // 1) 重症度でベーススコアを乗算（sev>=4の緊急疾患はマッチ数の差を覆せる）
+    // 2) 頻度はわずかに加味（同重症度内での順位付け）
+    // 3) sev>=4の疾患にはフロアスコア20を保証（top-3に入りやすくする）
+    const floor = sev >= 4 ? 20 : 0;
+    s = Math.max(matchCount * (1 + sev * 0.4) + prev * 0.3, floor + matchCount);
+  } else {
+    // Red Flagがない場合:
+    // 頻度を強く反映し、稀な疾患は症状一致が多くないと浮上しない
+    s = matchCount * (1 + prev * 0.15) + prev * 1.5;
   }
   return s;
 }
@@ -74,14 +94,16 @@ export default function DiagnosticBooster({
     );
   }, [selectedSymptoms, selectedFindings, RED_FLAGS]);
 
+  const hasRedFlags = activeRedFlags.length > 0;
+
   const rankedDiffs = useMemo(() => {
     return DIFFERENTIALS.map((d) => ({
       ...d,
-      _score: calcScore(d, selectedSymptoms, selectedFindings),
+      _score: calcScore(d, selectedSymptoms, selectedFindings, hasRedFlags),
     }))
       .filter((d) => d._score > 0 || d.alwaysShow)
       .sort((a, b) => b._score - a._score);
-  }, [selectedSymptoms, selectedFindings, DIFFERENTIALS]);
+  }, [selectedSymptoms, selectedFindings, DIFFERENTIALS, hasRedFlags]);
 
   const symptomGroups = useMemo(() => {
     const groups = {};
@@ -220,6 +242,11 @@ export default function DiagnosticBooster({
                     <span className={styles.diffFreq}>{d.freq}</span>
                   </summary>
                   <div className={styles.diffBody}>
+                    {d.resolvedStillDangerous && (
+                      <div className={styles.resolvedWarning}>
+                        &#9888; 症状が消失していても危険な疾患です。来院時に無症状でも精査を検討してください。
+                      </div>
+                    )}
                     <p className={styles.diffComment}>{d.comment}</p>
                     <div className={styles.diffAction}>
                       <strong>Next Step:</strong> {d.nextStep}
