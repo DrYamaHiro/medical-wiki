@@ -249,7 +249,7 @@ export default function DiagnosticBooster({
                     )}
                     {(d.severityWeight ?? 0) >= 4 && idx < 3 && (
                       <div className={styles.severityContext}>
-                        &#128312; 重篤な疾患の可能性があります。まず身体所見を丁寧に取り、該当する所見がなければ経過観察も選択肢です。クリニックでの除外が困難な場合に紹介を検討してください。
+                        &#128312; 重篤な疾患の可能性があります。クリニックでの除外が困難な場合に紹介を検討してください。
                       </div>
                     )}
                     <p className={styles.diffComment}>{d.comment}</p>
