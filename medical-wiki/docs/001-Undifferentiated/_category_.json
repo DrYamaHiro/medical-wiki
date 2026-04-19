@@ -1,9 +1,9 @@
 {
-  "label": "001: Undifferentiated（診断未確定・精査中）",
+  "label": "Diagnostic Booster（鑑別思考支援）",
   "position": 1,
   "collapsed": false,
   "link": {
     "type": "generated-index",
-    "description": "確定診断がつかない症状への初期対応テンプレート。Red flag評価 → 初期検査 → 経過観察/紹介判断の3段階構成。"
+    "description": "主訴から鑑別を広げる思考支援ツール。症状選択 → 所見入力 → 鑑別候補の一致度順表示。Red Flag自動検出。"
   }
 }
