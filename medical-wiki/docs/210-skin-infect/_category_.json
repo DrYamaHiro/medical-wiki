@@ -1,8 +1,8 @@
 {
-  "label": "210: Skin-Infect（皮膚感染症・熱傷）",
+  "label": "210: Skin-Infect（皮膚感染症）",
   "position": 210,
   "link": {
     "type": "generated-index",
-    "description": "皮膚感染症・熱傷の診療テンプレート一覧"
+    "description": "皮膚感染症の診療テンプレート一覧"
   }
 }

@@ -1,8 +1,8 @@
 {
-  "label": "310: Trauma（外傷・外科処置）",
+  "label": "310: Trauma（外傷・外科処置・熱傷）",
   "position": 310,
   "link": {
     "type": "generated-index",
-    "description": "外傷・外科処置の診療テンプレート一覧"
+    "description": "外傷・外科処置・熱傷の診療テンプレート一覧。熱傷（やけど）はこのカテゴリに収録。"
   }
 }
