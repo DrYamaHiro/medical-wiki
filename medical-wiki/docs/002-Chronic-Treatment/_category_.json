@@ -1,0 +1,9 @@
+{
+  "label": "002 Treatment Booster（治療思考支援）",
+  "position": 2,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "慢性疾患の治療修正支援ツール。現在の治療・コントロール状態・修飾因子から、次の一手（ステップアップ・変更・減量・紹介）を提案します。"
+  }
+}

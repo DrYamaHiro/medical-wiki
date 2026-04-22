@@ -1,0 +1,38 @@
+---
+id: i10-hypertension-treatment
+title: "高血圧"
+sidebar_label: "高血圧"
+sidebar_position: 1
+hide_table_of_contents: false
+description: "高血圧の治療修正支援ツール。JSH2024準拠。現在の治療と家庭血圧・修飾因子から次の一手を提案。"
+keywords: ["高血圧", "治療修正", "ステップアップ", "ARB", "CCB", "利尿薬", "MRA", "治療抵抗性", "JSH2024", "treatment booster"]
+---
+
+# 高血圧 — Treatment Booster
+
+現在の治療と家庭血圧・修飾因子を入力すると、次の一手（ステップアップ・変更・減量・紹介）を提案します。
+
+:::info 使い方
+- **Phase 1**: 現在服用中の薬剤を選択（未治療の場合はスキップ可）
+- **Phase 2**: 家庭血圧の平均値を入力＋該当する修飾因子（副作用・併存疾患・制約・失敗歴・Red Flag）を選択
+- **Phase 3**: 適合度順に推奨治療修正が表示されます
+:::
+
+<TreatmentBooster disease="hypertension" />
+
+## 🔗 関連ページ
+
+- [[I10] 本態性高血圧 / 初期・安定期](/docs/080-hypertension/i10-ht-stable) — SOAPテンプレートと詳細解説
+- [日本高血圧学会 高血圧治療ガイドライン2024（JSH2024）](https://www.jpnsh.jp/)
+
+## 📝 本ツールについて
+
+- JSH2024準拠の治療ラダーを実装
+- 21薬剤（ARB/ACEi/CCB/利尿薬/β遮断薬/MRA/α遮断薬/合剤）
+- 45の修飾因子（副作用・併存疾患・制約・失敗歴・Red Flag）
+- 20の推奨修正パターン + 13の DO NOT 禁忌ルール
+- Red Flag（妊娠、重症高血圧、両側腎動脈狭窄等）は独立バナーで即時表示
+
+:::warning 注意
+本ツールは治療思考の補助であり、臨床判断を代替するものではありません。薬剤選択・用量・中止の最終判断は主治医が行ってください。
+:::
