@@ -247,6 +247,27 @@
   color: var(--ifm-color-emphasis-700);
 }
 
+.targetLine {
+  margin: 0.5rem 0 0.3rem;
+  padding: 0.35rem 0.6rem;
+  background: #e0f2f1;
+  color: #004d40;
+  border-left: 3px solid #00695c;
+  border-radius: 3px;
+  font-size: 0.78rem;
+}
+
+.ageNudge {
+  display: block;
+  margin-top: 0.25rem;
+  padding: 0.2rem 0.4rem;
+  background: #fff9c4;
+  color: #795548;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
 .statusRow {
   display: flex;
   gap: 0.4rem;
@@ -266,6 +287,13 @@
   background: #c8e6c9;
   border-color: #388e3c;
   color: #1b5e20;
+  font-weight: 600;
+}
+
+.status_near_target {
+  background: #dcedc8;
+  border-color: #689f38;
+  color: #33691e;
   font-weight: 600;
 }
 
@@ -343,6 +371,11 @@
 
 .action_maintain {
   background: #388e3c;
+  color: #fff;
+}
+
+.action_watch {
+  background: #689f38;
   color: #fff;
 }
 
@@ -424,10 +457,15 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* MAINTAIN card emphasis */
+/* MAINTAIN / WATCH card emphasis */
 .rec_maintain {
   border-color: #388e3c;
   background: #f1f8f4;
+}
+
+.rec_watch {
+  border-color: #689f38;
+  background: #f5faf0;
 }
 
 .recDrug {

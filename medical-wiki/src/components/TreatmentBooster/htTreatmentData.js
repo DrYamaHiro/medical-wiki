@@ -1,11 +1,11 @@
 /**
  * Treatment Booster — 高血圧 治療修正データ
- * JSH2024準拠
+ * JSH2025（日本高血圧学会 高血圧治療ガイドライン2025）準拠
  *
  * Schema:
  * - DRUGS: 現在服用中の薬剤チップ（class別）
  * - MODIFIERS: 副作用・併存疾患・制約・失敗歴
- * - CONTROL_METRIC: 家庭血圧による状態判定
+ * - CONTROL_METRIC: 家庭血圧による状態判定（4段階: controlled / near_target / partial / uncontrolled）
  * - RECOMMENDATIONS: 推奨治療修正の配列
  * - DO_NOT_RULES: 絶対禁忌の表示ルール
  */
@@ -78,19 +78,43 @@ export const CONTROL_METRIC = {
     { id: 'sbp', label: 'SBP', unit: 'mmHg', placeholder: '例:135' },
     { id: 'dbp', label: 'DBP', unit: 'mmHg', placeholder: '例:85' },
   ],
-  note: '診察室血圧ではなく家庭血圧で判定。75歳未満: <125/75、75歳以上: <135/85、蛋白尿あり: <125/75',
-  deriveStatus: (v) => {
+  note: '家庭血圧で判定（診察室値は白衣効果で高めに出る）。目標: 一般成人 <125/75、75歳以上（高リスク非合併） <135/85、DM/蛋白尿/CKD/冠動脈疾患 <125/75。目標+5mmHg以内は「目標内」扱い（日間変動±10mmHg程度は生理的）',
+  /**
+   * deriveStatus — 4段階判定
+   *  controlled:   目標達成 or 目標+5以内（日間変動内、様子見で十分）
+   *  near_target:  目標+5〜+15（経過観察、急な強化は不要。生活指導・次回再評価優先）
+   *  uncontrolled: 目標+15以上（明確に目標未達、介入必要）
+   *  ※ 'partial' は v0.2 互換のため残す（現在は near_target を同義に扱う）
+   *
+   * 第2引数の modifiers から年齢・合併症を読み取り目標を動的に選択する。
+   */
+  deriveStatus: (v, modifiers = []) => {
     const s = v.sbp;
     const d = v.dbp;
     if (s === undefined && d === undefined) return null;
-    // 75歳以上の閾値は別途修飾因子で調整する（ここでは一般成人の<125/75を基準）
-    const sOK = s !== undefined && s < 125;
-    const dOK = d !== undefined && d < 75;
-    if (sOK && dOK) return 'controlled';
-    const sPoor = s !== undefined && s >= 135;
-    const dPoor = d !== undefined && d >= 85;
-    if (sPoor || dPoor) return 'uncontrolled';
-    return 'partial';
+
+    const isElderly = modifiers.includes('co_elderly') || modifiers.includes('co_frail');
+    const isHighRisk = [
+      'cm_dm',
+      'cm_ckd',
+      'cm_ckd_adv',
+      'cm_proteinuria',
+      'cm_cad',
+      'cm_post_mi',
+      'cm_hf',
+    ].some((m) => modifiers.includes(m));
+
+    // 高リスク併存は年齢を問わず厳格目標。高齢で高リスクなしのみ緩和。
+    const sTarget = isElderly && !isHighRisk ? 135 : 125;
+    const dTarget = isElderly && !isHighRisk ? 85 : 75;
+
+    const sMiss = s !== undefined ? s - sTarget : -Infinity;
+    const dMiss = d !== undefined ? d - dTarget : -Infinity;
+    const worst = Math.max(sMiss, dMiss);
+
+    if (worst <= 5) return 'controlled';       // 目標+5以内 → 維持
+    if (worst < 15) return 'near_target';      // 目標+5〜+15 → 経過観察
+    return 'uncontrolled';                     // 目標+15以上 → 介入
   },
 };
 
@@ -138,6 +162,7 @@ export const MODIFIERS = [
   { id: 'co_cost', label: 'コスト負担（後発品希望）', cat: '制約' },
   { id: 'co_nsaid', label: 'NSAID常用（整形疾患等）', cat: '制約' },
   { id: 'co_grade2', label: 'Grade II（診察室≥160/100 or 家庭≥145/90）', cat: '制約' },
+  { id: 'co_stable_6mo', label: '6ヶ月以上コントロール安定', cat: '制約' },
 
   // 失敗歴
   { id: 'fh_acei_cough', label: 'ACEi→空咳で中止歴', cat: '失敗歴' },
@@ -199,11 +224,11 @@ export const RECOMMENDATIONS = [
     action: 'STEP_UP',
     drug: 'ARB/CCB合剤で開始（Grade II以上）',
     example: 'ザクラス配合錠HD 1回1錠 1日1回 朝食後',
-    reason: 'SBP≥160 or DBP≥100の中等症以上では初期から合剤推奨（JSH2024）',
+    reason: 'SBP≥160 or DBP≥100の中等症以上では初期から合剤推奨（JSH2025）',
     fromStates: ['naive'],
     preferredWhen: ['co_adherence', 'co_grade2'],
     urgentWhen: ['rf_severe_ht', 'co_grade2'],
-    forbidden: ['co_pregnancy'],
+    forbidden: ['co_pregnancy', 'cm_bilateral_rvs', 'cm_aortic_stenosis', 'se_hyperK'],
     reassess: '1-2週後に家庭血圧確認',
   },
 
@@ -346,6 +371,7 @@ export const RECOMMENDATIONS = [
     example: 'テルミサルタン錠40mg 1回1錠 1日1回 朝食後（代謝改善・腎保護エビデンス豊富）',
     reason: 'DM+HTではARBが第一選択。SGLT2i併用で心腎保護エビデンス最強（EMPA-KIDNEY、DAPA-CKD）',
     fromStates: ['mono', 'dual'],
+    targetClass: 'ARB',
     preferredWhen: ['cm_dm', 'cm_ckd', 'cm_proteinuria'],
     forbidden: ['co_pregnancy'],
     connectedAlert: 'DM管理側でSGLT2i追加を検討（別途DMテンプレート参照）。SGLT2iは単独で降圧効果もあり',
@@ -407,6 +433,7 @@ export const RECOMMENDATIONS = [
     drug: '降圧薬の見直し（コントロール良好で長期安定）',
     reason: 'コントロール良好が6ヶ月以上持続。ポリファーマシー回避のため最小有効用量を検討',
     fromStates: ['dual', 'triple', 'quad_plus'],
+    requiresAny: ['co_stable_6mo'],
     preferredWhen: ['co_polyp', 'co_elderly'],
     note: 'いきなり中止は反跳性高血圧リスク。1剤ずつ減量、4週毎に評価',
     reassess: '4週後に家庭血圧',
@@ -423,7 +450,7 @@ export const RECOMMENDATIONS = [
     fromStates: ['naive', 'mono', 'dual', 'triple', 'quad_plus'],
     preferredWhen: ['co_pregnancy'],
     urgentWhen: ['co_pregnancy'],
-    note: '【最優先】ACEi/ARBは即時中止（継続不可）。使用可能薬: メチルドパ、ラベタロール、ヒドララジン、ニフェジピン徐放（JSH2024妊娠高血圧GL準拠）',
+    note: '【最優先】ACEi/ARBは即時中止（継続不可）。使用可能薬: メチルドパ、ラベタロール、ヒドララジン、ニフェジピン徐放（JSH2025妊娠高血圧GL準拠）',
   },
   {
     id: 'refer_hypertensive_emergency',

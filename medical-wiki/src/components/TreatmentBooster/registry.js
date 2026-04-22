@@ -12,7 +12,7 @@ import * as htTreatmentData from './htTreatmentData';
 export const TREATMENT_DATA = {
   hypertension: {
     data: htTreatmentData,
-    subtitle: '高血圧の治療修正支援（JSH2024準拠）',
+    subtitle: '高血圧の治療修正支援（JSH2025準拠）',
   },
   // 将来追加:
   // t2dm: { data: dmTreatmentData, subtitle: '2型糖尿病の治療修正支援' },

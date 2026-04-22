@@ -47,7 +47,9 @@ function detectDoseHeadroom(currentDrugs, allDrugs) {
   return headroom;
 }
 
-// Modifiers that contradict "現状維持" — any of these present = do not recommend MAINTAIN
+// Modifiers that contradict "現状維持/観察" — any present = no MAINTAIN / WATCH
+// 慢性の合併症 (cm_ckd_adv, cm_aortic_stenosis) は安定していれば維持可なので除外。
+// 副作用 (se_*) と Red Flag (rf_*) と妊娠のみ。
 const MAINTAIN_BLOCKERS = [
   'se_hyperK',
   'se_creatinine_up',
@@ -58,9 +60,6 @@ const MAINTAIN_BLOCKERS = [
   'se_uric_up',
   'se_bradycardia',
   'se_gynecomastia',
-  'cm_bilateral_rvs',
-  'cm_ckd_adv',
-  'cm_aortic_stenosis',
   'co_pregnancy',
   'rf_severe_ht',
   'rf_2nd_suspect',
@@ -68,8 +67,8 @@ const MAINTAIN_BLOCKERS = [
   'rf_target_organ',
 ];
 
-function synthesizeMaintainRec(currentDrugs, allDrugs) {
-  const drugLabels = currentDrugs
+function drugRegimenLabel(currentDrugs, allDrugs) {
+  return currentDrugs
     .map((entry) => {
       if (typeof entry === 'string') {
         const d = allDrugs.find((x) => x.id === entry);
@@ -81,15 +80,56 @@ function synthesizeMaintainRec(currentDrugs, allDrugs) {
       return doseLabel ? `${d.label} ${doseLabel}` : d.label;
     })
     .join(' + ');
+}
+
+function synthesizeMaintainRec(currentDrugs, allDrugs, modifiers = []) {
+  const drugLabels = drugRegimenLabel(currentDrugs, allDrugs);
+  const hasCKD = ['cm_ckd', 'cm_ckd_adv'].some((m) => modifiers.includes(m));
+  const hasCKDadv = modifiers.includes('cm_ckd_adv');
+  const hasDM = modifiers.includes('cm_dm');
+  const extraNote =
+    hasCKDadv
+      ? 'CKD G4併存: K・Creを1-3ヶ月毎、家庭血圧は週単位で確認。腎臓専門医との共同管理が望ましい'
+      : hasCKD
+      ? 'CKD併存: 4週後にK・Creを確認、NSAID併用時はTriple Whammyに注意'
+      : hasDM
+      ? 'DM併存: 次回も +5以内なら継続、超過傾向なら早期増量を検討'
+      : '家庭血圧には±10mmHg程度の日間変動が生理的に存在する。単回の値ではなく2週平均で評価する';
+  const reassess = hasCKDadv
+    ? '2-4週後に家庭血圧、月1回のK・Cre、血圧傾向に変化があれば速やかに対応'
+    : hasCKD
+    ? '4週後に家庭血圧 + K・Cre、NSAID使用有無を毎回確認'
+    : '4-8週後に家庭血圧再確認。冬場・夏場の季節変動も考慮し、2週間平均で判断';
   return {
     id: '_maintain',
     action: 'MAINTAIN',
-    drug: '現状維持（コントロール良好）',
-    example: drugLabels ? `現行処方を継続: ${drugLabels}` : '未治療継続',
+    drug: '現状維持（目標内）',
+    example: drugLabels ? `現行処方を継続: ${drugLabels}` : '未治療継続（生活習慣のみ）',
     reason:
-      '家庭血圧の平均値が目標範囲内。不要な薬剤変更はアドヒアランス低下・副作用リスクの原因。現行処方を継続し、次回は4-8週後に再評価',
-    reassess: '4-8週後に家庭血圧再確認。生活習慣（減塩・運動・減量）の強化は継続',
-    note: 'シーズン変動・服薬遵守の低下・併用薬変化で血圧は揺らぐ。急変がなければ維持が最善手',
+      '家庭血圧が目標域（または目標+5mmHg以内の日間変動許容範囲）。不要な薬剤変更はアドヒアランス低下・副作用のリスク。現行を継続し次回に経過確認',
+    reassess,
+    note: extraNote,
+  };
+}
+
+// WATCH — "ちょっと超えてる〜くらいで様子見" の機微を明示
+// 高リスク併存（DM/post-MI/HF/蛋白尿）の場合は早期介入を優先するため呼び出し側で抑制する
+function synthesizeWatchRec(currentDrugs, allDrugs, modifiers = []) {
+  const drugLabels = drugRegimenLabel(currentDrugs, allDrugs);
+  const hasCKD = ['cm_ckd', 'cm_ckd_adv'].some((m) => modifiers.includes(m));
+  return {
+    id: '_watch',
+    action: 'WATCH',
+    drug: '経過観察 + 生活指導強化',
+    example: drugLabels
+      ? `現行処方を継続: ${drugLabels}。減塩(6g/日未満)・減量・運動・節酒の強化`
+      : '生活習慣改善を優先（減塩・減量・運動・節酒・禁煙）',
+    reason:
+      '目標をわずかに超過しているが、家庭血圧の日間変動±10mmHg以内の可能性。単回の測定値で薬物強化せず、2-4週後の家庭血圧平均で再判断',
+    reassess: hasCKD
+      ? '2週後に家庭血圧 + K・Cre確認（CKD併存のため短め）'
+      : '2-4週後に家庭血圧平均（朝・夜各2回×14日）で再評価。生活指導の遵守状況を確認',
+    note: '白衣効果・測定手技・服薬タイミング・季節も影響する。慌てて薬を増やすより「次の2週間の平均」を待つのが賢明',
   };
 }
 
@@ -188,8 +228,13 @@ function calcScore(rec, currentDrugs, modifiers, controlStatus, allDrugs) {
     return { score: -1, excluded: 'forbidden', reason: rec.forbidden };
   }
 
-  // Same-class suppression: ADD rec for a class already in currentDrugs is nonsensical
-  // (e.g., "add CCB" when patient is already on amlodipine)
+  // requiresAny: rec は指定された modifier のいずれかが選択されていないと発火しない
+  // （例: taper_controlled_stable は co_stable_6mo を要求）
+  if (rec.requiresAny && !rec.requiresAny.some((m) => modifiers.includes(m))) {
+    return { score: -1, excluded: 'requires-missing' };
+  }
+
+  // Same-class ADD suppression
   if (rec.action === 'ADD' && rec.drugClass) {
     const currentClasses = getCurrentClasses(currentDrugs, allDrugs);
     if (currentClasses.has(rec.drugClass)) {
@@ -197,8 +242,16 @@ function calcScore(rec, currentDrugs, modifiers, controlStatus, allDrugs) {
     }
   }
 
-  // Combo-switch gating: mono→combo switch should require max dose reached on current mono
-  // UNLESS an urgent Grade II trigger is present
+  // Same-class SWITCH suppression: ARB→ARB のような意味のない SWITCH を除外
+  // triggerSideEffects が一致するときは例外（副作用で別のARBへスイッチ）
+  if (rec.action === 'SWITCH' && rec.targetClass) {
+    const currentClasses = getCurrentClasses(currentDrugs, allDrugs);
+    const hasTriggerMatch = rec.triggerSideEffects?.some((s) => modifiers.includes(s));
+    if (currentClasses.has(rec.targetClass) && !hasTriggerMatch) {
+      return { score: -1, excluded: 'same-class-switch' };
+    }
+  }
+
   if (rec._requiresMaxDose) {
     const hasMax = anyDrugAtMax(currentDrugs, allDrugs);
     const hasUrgent = rec.urgentWhen?.some((m) => modifiers.includes(m));
@@ -213,12 +266,12 @@ function calcScore(rec, currentDrugs, modifiers, controlStatus, allDrugs) {
 
   if (isEscalation) {
     if (controlStatus === 'uncontrolled') score += 10;
-    else if (controlStatus === 'partial') score += 6;
+    else if (controlStatus === 'partial' || controlStatus === 'near_target') score += 3; // 様子見優先: エスカレーションは低めに
     else if (controlStatus === 'controlled') score -= 12;
     else score += 4;
   } else if (rec.action === 'TAPER' || rec.action === 'STOP') {
     if (controlStatus === 'controlled') score += 8;
-    else if (controlStatus === 'partial') score += 2;
+    else if (controlStatus === 'near_target' || controlStatus === 'partial') score += 1;
     else score -= 10;
   } else if (rec.action === 'SWITCH') {
     if (rec.triggerSideEffects && rec.triggerSideEffects.some((s) => modifiers.includes(s))) {
@@ -230,18 +283,21 @@ function calcScore(rec, currentDrugs, modifiers, controlStatus, allDrugs) {
     if (controlStatus === 'uncontrolled') score += 5;
   }
 
-  // DOSE_UP は ADD/STEP_UP より優先（同一薬剤の調整を先に試す）
-  if (rec.action === 'DOSE_UP' && (controlStatus === 'partial' || controlStatus === 'uncontrolled')) {
-    score += 4;
+  if (rec.action === 'DOSE_UP' && (controlStatus === 'near_target' || controlStatus === 'partial' || controlStatus === 'uncontrolled')) {
+    score += 3;
   }
 
-  // Preferred modifiers: asymmetric — controlled 状態のときはエスカレーションへのブーストを停止
+  // preferredWhen: スタック上限を 2 にして DM+CKD+蛋白尿の三重ブーストを抑制
+  // かつ controlled 時のエスカレーションにはブーストしない
   if (rec.preferredWhen) {
     const matches = rec.preferredWhen.filter((m) => modifiers.includes(m));
+    const cappedMatches = Math.min(matches.length, 2);
     if (isEscalation && controlStatus === 'controlled') {
-      // エスカレーションを正当化しない
+      // no boost
+    } else if (isEscalation && (controlStatus === 'near_target' || controlStatus === 'partial')) {
+      score += cappedMatches * 1; // 様子見ゾーンでは弱めに
     } else {
-      score += matches.length * 3;
+      score += cappedMatches * 3;
     }
   }
 
@@ -272,12 +328,13 @@ function splitTiers(ranked, controlStatus) {
   if (ranked.length === 0) return { primary: [], alternates: [], later: [] };
   const caps = {
     controlled: { primary: 0, alternates: 0, later: 2 },
+    near_target: { primary: 0, alternates: 1, later: 3 }, // WATCH is primary (injected); DOSE_UPを1件alt、ほかlater
     partial: { primary: 1, alternates: 2, later: 3 },
     uncontrolled: { primary: 1, alternates: 2, later: 4 },
     null_: { primary: 1, alternates: 2, later: 3 },
   };
   const key = controlStatus || 'null_';
-  const cap = caps[key];
+  const cap = caps[key] || caps.null_;
   const top = ranked[0]._score;
   const alternateGate = top * 0.6;
   const laterGate = top * 0.3;
@@ -294,10 +351,10 @@ function splitTiers(ranked, controlStatus) {
   return { primary, alternates, later };
 }
 
-function deriveControlStatus(values, deriveFn, override) {
+function deriveControlStatus(values, deriveFn, override, modifiers) {
   if (override) return override;
   if (!deriveFn) return null;
-  return deriveFn(values);
+  return deriveFn(values, modifiers);
 }
 
 /* -------------------------------------------------------- */
@@ -360,8 +417,8 @@ export default function TreatmentBooster({
   }, []);
 
   const controlStatus = useMemo(
-    () => deriveControlStatus(metricValues, CONTROL_METRIC.deriveStatus, overrideStatus),
-    [metricValues, overrideStatus, CONTROL_METRIC]
+    () => deriveControlStatus(metricValues, CONTROL_METRIC.deriveStatus, overrideStatus, modifiers),
+    [metricValues, overrideStatus, CONTROL_METRIC, modifiers]
   );
 
   const currentState = useMemo(() => detectCurrentState(currentDrugs, DRUGS), [currentDrugs, DRUGS]);
@@ -404,19 +461,41 @@ export default function TreatmentBooster({
     [currentDrugs, DRUGS, modifiers]
   );
 
+  // DO_NOT ruleが current regimen に関連するかどうかを判定する
+  // （例: 痛風患者でサイアザイドDO_NOTが発火しても、患者がサイアザイド非服用なら MAINTAIN 抑制の必要なし）
+  const relevantDoNot = useMemo(() => {
+    const currentClasses = getCurrentClasses(currentDrugs, DRUGS);
+    return DO_NOT_RULES.some((r) => {
+      if (!r.modifiers || !r.modifiers.some((m) => modifiers.includes(m))) return false;
+      // DO_NOT rule の drug 文字列に current class が含まれるかを緩くマッチング
+      const ruleText = r.drug || '';
+      return [...currentClasses].some((cls) => ruleText.includes(cls));
+    });
+  }, [currentDrugs, DRUGS, modifiers, DO_NOT_RULES]);
+
+  // MAINTAIN: controlStatus === 'controlled' でのみ発火。ブロッカー・緊急・関連DO_NOTで抑制。
+  // CKD/DM等の合併症は reassess/note に反映。
   const maintainRec = useMemo(() => {
     if (controlStatus !== 'controlled') return null;
-    // Suppress MAINTAIN when blocker modifiers present (side effects, red flags, critical comorbidities)
     if (MAINTAIN_BLOCKERS.some((m) => modifiers.includes(m))) return null;
-    // Suppress MAINTAIN when urgent recs present (urgent + maintain = contradictory)
     if (urgentRecs.length > 0) return null;
-    // Suppress MAINTAIN when active DO_NOT rules present
-    const hasDoNot = DO_NOT_RULES.some(
-      (r) => r.modifiers && r.modifiers.some((m) => modifiers.includes(m))
+    if (relevantDoNot) return null;
+    return synthesizeMaintainRec(currentDrugs, DRUGS, modifiers);
+  }, [controlStatus, currentDrugs, DRUGS, modifiers, urgentRecs, relevantDoNot]);
+
+  // WATCH: controlStatus === 'near_target' で発火（目標+5〜+15mmHg、様子見ゾーン）
+  // 高リスク（DM/post-MI/HF/蛋白尿）併存時は WATCH primary を抑制し、介入案を優先表示させる。
+  const watchRec = useMemo(() => {
+    if (controlStatus !== 'near_target') return null;
+    if (MAINTAIN_BLOCKERS.some((m) => modifiers.includes(m))) return null;
+    if (urgentRecs.length > 0) return null;
+    if (relevantDoNot) return null;
+    const isHighRisk = ['cm_dm', 'cm_post_mi', 'cm_hf', 'cm_proteinuria'].some((m) =>
+      modifiers.includes(m)
     );
-    if (hasDoNot) return null;
-    return synthesizeMaintainRec(currentDrugs, DRUGS);
-  }, [controlStatus, currentDrugs, DRUGS, modifiers, urgentRecs, DO_NOT_RULES]);
+    if (isHighRisk) return null;
+    return synthesizeWatchRec(currentDrugs, DRUGS, modifiers);
+  }, [controlStatus, currentDrugs, DRUGS, modifiers, urgentRecs, relevantDoNot]);
 
   // Ranked recs (excluding urgent banner items)
   const rankedRecs = useMemo(() => {
@@ -436,11 +515,12 @@ export default function TreatmentBooster({
     [rankedRecs, controlStatus]
   );
 
-  // Inject MAINTAIN at the top when controlled
+  // Inject MAINTAIN / WATCH at the top
   const primaryWithMaintain = useMemo(() => {
     if (maintainRec) return [maintainRec, ...primary];
+    if (watchRec) return [watchRec, ...primary];
     return primary;
-  }, [maintainRec, primary]);
+  }, [maintainRec, watchRec, primary]);
 
   return (
     <div className={styles.booster}>
@@ -567,9 +647,19 @@ export default function TreatmentBooster({
                   </div>
                 ))}
               </div>
+              {(metricValues.sbp !== undefined || metricValues.dbp !== undefined) && (
+                <div className={styles.targetLine}>
+                  適用目標: <strong>{formatAppliedTarget(modifiers)}</strong>
+                  {suggestAgeNudge(metricValues, modifiers) && (
+                    <span className={styles.ageNudge}>
+                      &#128161; 75歳以上なら「75歳以上の高齢者」を選択してください（目標緩和）
+                    </span>
+                  )}
+                </div>
+              )}
               {controlStatus && (
                 <div className={styles.statusRow}>
-                  {['controlled', 'partial', 'uncontrolled'].map((s) => (
+                  {['controlled', 'near_target', 'uncontrolled'].map((s) => (
                     <button
                       key={s}
                       className={`${styles.statusChip} ${
@@ -736,17 +826,46 @@ function stateLabel(state) {
 function statusLabel(s) {
   return (
     {
-      controlled: 'コントロール良好',
+      controlled: 'コントロール良好（目標内）',
+      near_target: '目標+5〜+15（様子見）',
       partial: '部分的',
-      uncontrolled: 'コントロール不良',
+      uncontrolled: 'コントロール不良（+15以上）',
     }[s] || s
   );
+}
+
+function formatAppliedTarget(modifiers) {
+  const isElderly = modifiers.includes('co_elderly') || modifiers.includes('co_frail');
+  const isHighRisk = [
+    'cm_dm',
+    'cm_ckd',
+    'cm_ckd_adv',
+    'cm_proteinuria',
+    'cm_cad',
+    'cm_post_mi',
+    'cm_hf',
+  ].some((m) => modifiers.includes(m));
+  if (isElderly && !isHighRisk) return '< 135/85 mmHg（75歳以上・高リスク非合併）';
+  if (isHighRisk) return '< 125/75 mmHg（高リスク併存で厳格目標）';
+  return '< 125/75 mmHg（一般成人）';
+}
+
+// SBPが125-145付近・DBPが75-92付近だが co_elderly が未選択の場合に表示するヒント
+function suggestAgeNudge(values, modifiers) {
+  if (modifiers.includes('co_elderly') || modifiers.includes('co_frail')) return false;
+  const s = values.sbp;
+  const d = values.dbp;
+  // 目標+5〜+15に相当するゾーン（高齢者だと目標内になる可能性がある）
+  const sInNudgeZone = s !== undefined && s >= 130 && s < 145;
+  const dInNudgeZone = d !== undefined && d >= 80 && d < 92;
+  return sInNudgeZone || dInNudgeZone;
 }
 
 function actionLabel(action) {
   return (
     {
       MAINTAIN: '現状維持',
+      WATCH: '経過観察',
       DOSE_UP: '増量',
       STEP_UP: 'ステップアップ',
       ADD: '薬剤追加',
