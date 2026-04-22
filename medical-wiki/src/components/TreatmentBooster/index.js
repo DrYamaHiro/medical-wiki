@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import styles from './styles.module.css';
+import { TREATMENT_DATA } from './registry';
 
 /* -------------------------------------------------------- */
 /*  Scoring: 現在の治療 + 修飾因子から各推奨の適合度を算出    */
@@ -98,20 +99,24 @@ function deriveControlStatus(metric, values, controlThresholds, overrideStatus) 
 /*  Main Component                                          */
 /* -------------------------------------------------------- */
 export default function TreatmentBooster({
+  disease: propDisease,
   drugs: propDrugs,
   modifiers: propModifiers,
   controlMetric: propControlMetric,
   recommendations: propRecommendations,
   doNotRules: propDoNotRules,
   subtitle: propSubtitle,
-  disease: propDisease,
 }) {
-  const DRUGS = propDrugs || [];
-  const MODIFIERS = propModifiers || [];
-  const CONTROL_METRIC = propControlMetric || {};
-  const RECOMMENDATIONS = propRecommendations || [];
-  const DO_NOT_RULES = propDoNotRules || [];
-  const subtitle = propSubtitle || '治療修正の思考支援ツール';
+  // Resolve data from registry if disease key is provided
+  const registryEntry = propDisease ? TREATMENT_DATA[propDisease] : null;
+  const registryData = registryEntry?.data;
+
+  const DRUGS = propDrugs || registryData?.DRUGS || [];
+  const MODIFIERS = propModifiers || registryData?.MODIFIERS || [];
+  const CONTROL_METRIC = propControlMetric || registryData?.CONTROL_METRIC || {};
+  const RECOMMENDATIONS = propRecommendations || registryData?.RECOMMENDATIONS || [];
+  const DO_NOT_RULES = propDoNotRules || registryData?.DO_NOT_RULES || [];
+  const subtitle = propSubtitle || registryEntry?.subtitle || '治療修正の思考支援ツール';
 
   const [phase, setPhase] = useState(1);
   const [currentDrugs, setCurrentDrugs] = useState([]);

@@ -4,7 +4,6 @@ import ImageUploader from '@site/src/components/ImageUploader';
 import { ImageGallery } from '@site/src/components/ImageUploader';
 import DiagnosticBooster from '@site/src/components/DiagnosticBooster';
 import TreatmentBooster from '@site/src/components/TreatmentBooster';
-import * as htTreatmentData from '@site/src/components/TreatmentBooster/htTreatmentData';
 import MermaidChart from '@site/src/components/MermaidChart';
 import DupixentCalculator from '@site/src/components/ClinicalCalc/DupixentCalculator';
 
@@ -14,7 +13,6 @@ export default {
   ImageGallery,
   DiagnosticBooster,
   TreatmentBooster,
-  htTreatmentData,
   MermaidChart,
   DupixentCalculator,
 };
