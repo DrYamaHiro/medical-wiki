@@ -3,61 +3,258 @@ import styles from './styles.module.css';
 import { TREATMENT_DATA } from './registry';
 
 /* -------------------------------------------------------- */
-/*  Scoring: 現在の治療 + 修飾因子から各推奨の適合度を算出    */
+/*  Helpers                                                 */
 /* -------------------------------------------------------- */
-function calcScore(rec, currentDrugs, modifiers, controlStatus) {
-  // fromStates条件: 現在の治療ステートに適合しない推奨は除外
-  const currentState = detectCurrentState(currentDrugs, rec._allDrugs);
+function getDrugIds(currentDrugs) {
+  return currentDrugs.map((d) => (typeof d === 'string' ? d : d.id));
+}
+
+function detectCurrentState(currentDrugs, allDrugs) {
+  if (currentDrugs.length === 0) return 'naive';
+  const classes = new Set();
+  const ids = getDrugIds(currentDrugs);
+  ids.forEach((id) => {
+    const drug = allDrugs.find((d) => d.id === id);
+    if (drug) classes.add(drug.class);
+  });
+  // 合剤は2クラス扱い（ARB+CCB）
+  if (ids.some((id) => id.startsWith('combo_'))) {
+    classes.add('_combo_implied');
+  }
+  const count = classes.size;
+  if (count === 1) return 'mono';
+  if (count === 2) return 'dual';
+  if (count === 3) return 'triple';
+  return 'quad_plus';
+}
+
+function detectDoseHeadroom(currentDrugs, allDrugs) {
+  // Returns array of {drug, currentDose, nextDose} for drugs with room to escalate
+  const headroom = [];
+  currentDrugs.forEach((entry) => {
+    if (typeof entry === 'string') return; // no dose info
+    const drug = allDrugs.find((d) => d.id === entry.id);
+    if (!drug?.doses) return;
+    const idx = drug.doses.findIndex((x) => x.value === entry.dose);
+    if (idx < 0 || idx >= drug.doses.length - 1) return;
+    const nextDose = drug.doses[idx + 1];
+    headroom.push({
+      drug,
+      currentDose: drug.doses[idx],
+      nextDose,
+    });
+  });
+  return headroom;
+}
+
+// Modifiers that contradict "現状維持" — any of these present = do not recommend MAINTAIN
+const MAINTAIN_BLOCKERS = [
+  'se_hyperK',
+  'se_creatinine_up',
+  'se_cough',
+  'se_edema',
+  'se_hypotension',
+  'se_hypoK',
+  'se_uric_up',
+  'se_bradycardia',
+  'se_gynecomastia',
+  'cm_bilateral_rvs',
+  'cm_ckd_adv',
+  'cm_aortic_stenosis',
+  'co_pregnancy',
+  'rf_severe_ht',
+  'rf_2nd_suspect',
+  'rf_hypoK_severe',
+  'rf_target_organ',
+];
+
+function synthesizeMaintainRec(currentDrugs, allDrugs) {
+  const drugLabels = currentDrugs
+    .map((entry) => {
+      if (typeof entry === 'string') {
+        const d = allDrugs.find((x) => x.id === entry);
+        return d?.label || entry;
+      }
+      const d = allDrugs.find((x) => x.id === entry.id);
+      if (!d) return entry.id;
+      const doseLabel = d.doses?.find((x) => x.value === entry.dose)?.label || '';
+      return doseLabel ? `${d.label} ${doseLabel}` : d.label;
+    })
+    .join(' + ');
+  return {
+    id: '_maintain',
+    action: 'MAINTAIN',
+    drug: '現状維持（コントロール良好）',
+    example: drugLabels ? `現行処方を継続: ${drugLabels}` : '未治療継続',
+    reason:
+      '家庭血圧の平均値が目標範囲内。不要な薬剤変更はアドヒアランス低下・副作用リスクの原因。現行処方を継続し、次回は4-8週後に再評価',
+    reassess: '4-8週後に家庭血圧再確認。生活習慣（減塩・運動・減量）の強化は継続',
+    note: 'シーズン変動・服薬遵守の低下・併用薬変化で血圧は揺らぐ。急変がなければ維持が最善手',
+  };
+}
+
+function synthesizeDoseUpRecs(currentDrugs, allDrugs, modifiers) {
+  const headroom = detectDoseHeadroom(currentDrugs, allDrugs);
+  // Guards: both soft (avoidWhen) and hard (forbidden)
+  const avoidMap = {
+    ccb_am: ['se_edema', 'fh_ccb_edema', 'se_hypotension', 'co_frail'],
+    ccb_nif: ['se_edema', 'fh_ccb_edema', 'se_hypotension', 'co_frail'],
+    ccb_cil: ['se_edema', 'se_hypotension', 'co_frail'],
+    diu_tri: ['cm_gout', 'se_uric_up', 'fh_thiazide_hypoK', 'se_hypoK'],
+    diu_ind: ['cm_gout', 'se_uric_up', 'fh_thiazide_hypoK', 'se_hypoK'],
+    acei_ena: ['se_cough', 'fh_acei_cough', 'se_creatinine_up'],
+    acei_ima: ['se_cough', 'fh_acei_cough', 'se_creatinine_up'],
+    arb_azl: ['se_creatinine_up'],
+    arb_tel: ['se_creatinine_up'],
+    arb_ols: ['se_creatinine_up'],
+    arb_val: ['se_creatinine_up'],
+    arb_can: ['se_creatinine_up'],
+    arb_los: ['se_creatinine_up'],
+    bb_bis: ['se_bradycardia', 'fh_bb_bradycardia', 'cm_asthma', 'co_frail'],
+    bb_car: ['se_bradycardia', 'fh_bb_bradycardia', 'cm_asthma', 'co_frail'],
+    alpha_tam: ['se_hypotension', 'co_frail', 'co_elderly'],
+  };
+  const forbiddenMap = {
+    arb_azl: ['co_pregnancy', 'cm_bilateral_rvs', 'se_hyperK'],
+    arb_tel: ['co_pregnancy', 'cm_bilateral_rvs', 'se_hyperK'],
+    arb_ols: ['co_pregnancy', 'cm_bilateral_rvs', 'se_hyperK'],
+    arb_val: ['co_pregnancy', 'cm_bilateral_rvs', 'se_hyperK'],
+    arb_can: ['co_pregnancy', 'cm_bilateral_rvs', 'se_hyperK'],
+    arb_los: ['co_pregnancy', 'cm_bilateral_rvs', 'se_hyperK'],
+    acei_ena: ['co_pregnancy', 'cm_bilateral_rvs', 'se_hyperK'],
+    acei_ima: ['co_pregnancy', 'cm_bilateral_rvs', 'se_hyperK'],
+    mra_spi: ['se_hyperK', 'cm_ckd_adv'],
+    mra_ese: ['se_hyperK', 'cm_ckd_adv'],
+    diu_tri: ['cm_ckd_adv'],
+    diu_ind: ['cm_ckd_adv'],
+  };
+  return headroom.map(({ drug, currentDose, nextDose }) => {
+    return {
+      id: `_dose_up_${drug.id}`,
+      action: 'DOSE_UP',
+      drug: `${drug.label}を${nextDose.label}へ増量`,
+      example: `${drug.label}${nextDose.label} 1回1錠 1日1回 朝食後（現用量${currentDose.label}から増量）`,
+      reason:
+        '現用量で目標未達。同一薬剤の増量は新薬追加よりアドヒアランス・コストの面で優先される第一手',
+      avoidWhen: avoidMap[drug.id] || [],
+      forbidden: forbiddenMap[drug.id] || [],
+      reassess: '2-4週後に家庭血圧・副作用確認',
+      _isDoseUp: true,
+      _drugClass: drug.class,
+    };
+  });
+}
+
+// detect whether currentDrugs include any drug at its max dose (used for combo-switch gating)
+function anyDrugAtMax(currentDrugs, allDrugs) {
+  return currentDrugs.some((entry) => {
+    if (typeof entry === 'string') return false;
+    const drug = allDrugs.find((d) => d.id === entry.id);
+    if (!drug?.doses) return false;
+    const dose = drug.doses.find((x) => x.value === entry.dose);
+    return !!dose?.isMax;
+  });
+}
+
+/* -------------------------------------------------------- */
+/*  Scoring                                                 */
+/* -------------------------------------------------------- */
+function getCurrentClasses(currentDrugs, allDrugs) {
+  const classes = new Set();
+  const ids = getDrugIds(currentDrugs);
+  ids.forEach((id) => {
+    const drug = allDrugs.find((d) => d.id === id);
+    if (drug) classes.add(drug.class);
+    // 合剤は ARB+CCB として展開
+    if (id === 'combo_zac' || id === 'combo_mic' || id === 'combo_azl') {
+      classes.add('ARB');
+      classes.add('Ca拮抗薬');
+    }
+    if (id === 'combo_pre') {
+      classes.add('ARB');
+      classes.add('利尿薬');
+    }
+  });
+  return classes;
+}
+
+function calcScore(rec, currentDrugs, modifiers, controlStatus, allDrugs) {
+  const currentState = detectCurrentState(currentDrugs, allDrugs);
   if (rec.fromStates && !rec.fromStates.includes(currentState)) {
     return { score: -1, excluded: 'state-mismatch' };
   }
 
-  // 禁忌チェック: forbidden修飾因子があれば除外
   if (rec.forbidden && rec.forbidden.some((f) => modifiers.includes(f))) {
     return { score: -1, excluded: 'forbidden', reason: rec.forbidden };
   }
 
-  let score = 0;
+  // Same-class suppression: ADD rec for a class already in currentDrugs is nonsensical
+  // (e.g., "add CCB" when patient is already on amlodipine)
+  if (rec.action === 'ADD' && rec.drugClass) {
+    const currentClasses = getCurrentClasses(currentDrugs, allDrugs);
+    if (currentClasses.has(rec.drugClass)) {
+      return { score: -1, excluded: 'same-class' };
+    }
+  }
 
-  // Control score: 推奨アクションとコントロール状態の整合性
-  if (rec.action === 'STEP_UP' || rec.action === 'ADD') {
+  // Combo-switch gating: mono→combo switch should require max dose reached on current mono
+  // UNLESS an urgent Grade II trigger is present
+  if (rec._requiresMaxDose) {
+    const hasMax = anyDrugAtMax(currentDrugs, allDrugs);
+    const hasUrgent = rec.urgentWhen?.some((m) => modifiers.includes(m));
+    if (!hasMax && !hasUrgent) {
+      return { score: -1, excluded: 'not-at-max-dose' };
+    }
+  }
+
+  let score = 0;
+  const isEscalation =
+    rec.action === 'STEP_UP' || rec.action === 'ADD' || rec.action === 'DOSE_UP';
+
+  if (isEscalation) {
     if (controlStatus === 'uncontrolled') score += 10;
     else if (controlStatus === 'partial') score += 6;
-    else if (controlStatus === 'controlled') score -= 5; // penalize step-up when controlled
+    else if (controlStatus === 'controlled') score -= 12;
+    else score += 4;
   } else if (rec.action === 'TAPER' || rec.action === 'STOP') {
     if (controlStatus === 'controlled') score += 8;
     else if (controlStatus === 'partial') score += 2;
     else score -= 10;
   } else if (rec.action === 'SWITCH') {
-    // SWITCH depends on side effect presence
     if (rec.triggerSideEffects && rec.triggerSideEffects.some((s) => modifiers.includes(s))) {
       score += 10;
     } else {
-      score += 3;
+      score -= 3;
     }
   } else if (rec.action === 'REFER') {
     if (controlStatus === 'uncontrolled') score += 5;
   }
 
-  // Preferred modifiers: comorbidity-specific boost
-  if (rec.preferredWhen) {
-    const matches = rec.preferredWhen.filter((m) => modifiers.includes(m));
-    score += matches.length * 3;
+  // DOSE_UP は ADD/STEP_UP より優先（同一薬剤の調整を先に試す）
+  if (rec.action === 'DOSE_UP' && (controlStatus === 'partial' || controlStatus === 'uncontrolled')) {
+    score += 4;
   }
 
-  // Avoid modifiers: soft penalty
+  // Preferred modifiers: asymmetric — controlled 状態のときはエスカレーションへのブーストを停止
+  if (rec.preferredWhen) {
+    const matches = rec.preferredWhen.filter((m) => modifiers.includes(m));
+    if (isEscalation && controlStatus === 'controlled') {
+      // エスカレーションを正当化しない
+    } else {
+      score += matches.length * 3;
+    }
+  }
+
   if (rec.avoidWhen) {
     const matches = rec.avoidWhen.filter((m) => modifiers.includes(m));
     score -= matches.length * 4;
   }
 
-  // Side effect relief: boost SWITCH/TAPER if matching side effect
   if (rec.triggerSideEffects) {
     const matches = rec.triggerSideEffects.filter((s) => modifiers.includes(s));
     score += matches.length * 5;
   }
 
-  // Red flag floor: specialist/refer with severe triggers stays top-3
   if (rec.action === 'REFER' && rec.urgentWhen) {
     const matches = rec.urgentWhen.filter((m) => modifiers.includes(m));
     if (matches.length > 0) {
@@ -69,30 +266,38 @@ function calcScore(rec, currentDrugs, modifiers, controlStatus) {
 }
 
 /* -------------------------------------------------------- */
-/*  Detect current treatment state from selected drugs     */
+/*  Tiered display: split recs into primary/alternates/later */
 /* -------------------------------------------------------- */
-function detectCurrentState(currentDrugs, allDrugs) {
-  if (currentDrugs.length === 0) return 'naive';
-  // Group by class
-  const classes = new Set();
-  currentDrugs.forEach((id) => {
-    const drug = allDrugs.find((d) => d.id === id);
-    if (drug) classes.add(drug.class);
-  });
-  const count = classes.size;
-  if (count === 1) return 'mono';
-  if (count === 2) return 'dual';
-  if (count === 3) return 'triple';
-  return 'quad_plus';
+function splitTiers(ranked, controlStatus) {
+  if (ranked.length === 0) return { primary: [], alternates: [], later: [] };
+  const caps = {
+    controlled: { primary: 0, alternates: 0, later: 2 },
+    partial: { primary: 1, alternates: 2, later: 3 },
+    uncontrolled: { primary: 1, alternates: 2, later: 4 },
+    null_: { primary: 1, alternates: 2, later: 3 },
+  };
+  const key = controlStatus || 'null_';
+  const cap = caps[key];
+  const top = ranked[0]._score;
+  const alternateGate = top * 0.6;
+  const laterGate = top * 0.3;
+
+  const primary = ranked.slice(0, cap.primary);
+  const rest = ranked.slice(cap.primary);
+  const alternates = rest
+    .filter((r) => r._score >= alternateGate)
+    .slice(0, cap.alternates);
+  const usedIds = new Set([...primary, ...alternates].map((r) => r.id));
+  const later = rest
+    .filter((r) => !usedIds.has(r.id) && r._score >= laterGate)
+    .slice(0, cap.later);
+  return { primary, alternates, later };
 }
 
-/* -------------------------------------------------------- */
-/*  Derive control status from metric value                 */
-/* -------------------------------------------------------- */
-function deriveControlStatus(metric, values, controlThresholds, overrideStatus) {
-  if (overrideStatus) return overrideStatus;
-  if (!controlThresholds) return null;
-  return controlThresholds(values);
+function deriveControlStatus(values, deriveFn, override) {
+  if (override) return override;
+  if (!deriveFn) return null;
+  return deriveFn(values);
 }
 
 /* -------------------------------------------------------- */
@@ -107,7 +312,6 @@ export default function TreatmentBooster({
   doNotRules: propDoNotRules,
   subtitle: propSubtitle,
 }) {
-  // Resolve data from registry if disease key is provided
   const registryEntry = propDisease ? TREATMENT_DATA[propDisease] : null;
   const registryData = registryEntry?.data;
 
@@ -119,21 +323,32 @@ export default function TreatmentBooster({
   const subtitle = propSubtitle || registryEntry?.subtitle || '治療修正の思考支援ツール';
 
   const [phase, setPhase] = useState(1);
+  // currentDrugs: array of { id, dose } objects
   const [currentDrugs, setCurrentDrugs] = useState([]);
   const [modifiers, setModifiers] = useState([]);
   const [metricValues, setMetricValues] = useState({});
   const [overrideStatus, setOverrideStatus] = useState(null);
 
-  const toggleDrug = useCallback((id) => {
-    setCurrentDrugs((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+  const toggleDrug = useCallback(
+    (id) => {
+      setCurrentDrugs((prev) => {
+        const exists = prev.find((x) => x.id === id);
+        if (exists) return prev.filter((x) => x.id !== id);
+        const drug = DRUGS.find((d) => d.id === id);
+        const defaultDose =
+          drug?.doses?.find((x) => x.isDefault)?.value || drug?.doses?.[0]?.value || null;
+        return [...prev, { id, dose: defaultDose }];
+      });
+    },
+    [DRUGS]
+  );
+
+  const setDose = useCallback((id, dose) => {
+    setCurrentDrugs((prev) => prev.map((x) => (x.id === id ? { ...x, dose } : x)));
   }, []);
 
   const toggleModifier = useCallback((id) => {
-    setModifiers((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+    setModifiers((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   }, []);
 
   const reset = useCallback(() => {
@@ -144,21 +359,13 @@ export default function TreatmentBooster({
     setOverrideStatus(null);
   }, []);
 
-  const controlStatus = useMemo(() => {
-    return deriveControlStatus(
-      CONTROL_METRIC,
-      metricValues,
-      CONTROL_METRIC.deriveStatus,
-      overrideStatus
-    );
-  }, [metricValues, overrideStatus, CONTROL_METRIC]);
-
-  const currentState = useMemo(
-    () => detectCurrentState(currentDrugs, DRUGS),
-    [currentDrugs, DRUGS]
+  const controlStatus = useMemo(
+    () => deriveControlStatus(metricValues, CONTROL_METRIC.deriveStatus, overrideStatus),
+    [metricValues, overrideStatus, CONTROL_METRIC]
   );
 
-  // Group drugs by class for display
+  const currentState = useMemo(() => detectCurrentState(currentDrugs, DRUGS), [currentDrugs, DRUGS]);
+
   const drugGroups = useMemo(() => {
     const g = {};
     DRUGS.forEach((d) => {
@@ -168,7 +375,6 @@ export default function TreatmentBooster({
     return g;
   }, [DRUGS]);
 
-  // Group modifiers by category
   const modifierGroups = useMemo(() => {
     const g = {};
     MODIFIERS.forEach((m) => {
@@ -178,43 +384,66 @@ export default function TreatmentBooster({
     return g;
   }, [MODIFIERS]);
 
-  // Active DO NOT rules
   const activeDoNot = useMemo(() => {
-    return DO_NOT_RULES.filter((r) => {
-      if (r.modifiers) {
-        return r.modifiers.some((m) => modifiers.includes(m));
-      }
-      return false;
-    });
+    return DO_NOT_RULES.filter((r) => r.modifiers && r.modifiers.some((m) => modifiers.includes(m)));
   }, [modifiers, DO_NOT_RULES]);
 
-  // Urgent recommendations (Red Flag triggered) — always visible banner
   const urgentRecs = useMemo(() => {
-    return RECOMMENDATIONS.filter((r) => {
-      if (!r.urgentWhen) return false;
-      return r.urgentWhen.some((m) => modifiers.includes(m));
-    });
+    return RECOMMENDATIONS.filter(
+      (r) =>
+        r.urgentWhen &&
+        r.urgentWhen.some((m) => modifiers.includes(m)) &&
+        // Urgent banner must also respect forbidden — never show a contraindicated drug as urgent
+        !(r.forbidden && r.forbidden.some((f) => modifiers.includes(f)))
+    );
   }, [RECOMMENDATIONS, modifiers]);
 
-  // Ranked recommendations (excluding urgent ones shown in banner)
+  // Synthesized recs: DOSE_UP + MAINTAIN
+  const doseUpRecs = useMemo(
+    () => synthesizeDoseUpRecs(currentDrugs, DRUGS, modifiers),
+    [currentDrugs, DRUGS, modifiers]
+  );
+
+  const maintainRec = useMemo(() => {
+    if (controlStatus !== 'controlled') return null;
+    // Suppress MAINTAIN when blocker modifiers present (side effects, red flags, critical comorbidities)
+    if (MAINTAIN_BLOCKERS.some((m) => modifiers.includes(m))) return null;
+    // Suppress MAINTAIN when urgent recs present (urgent + maintain = contradictory)
+    if (urgentRecs.length > 0) return null;
+    // Suppress MAINTAIN when active DO_NOT rules present
+    const hasDoNot = DO_NOT_RULES.some(
+      (r) => r.modifiers && r.modifiers.some((m) => modifiers.includes(m))
+    );
+    if (hasDoNot) return null;
+    return synthesizeMaintainRec(currentDrugs, DRUGS);
+  }, [controlStatus, currentDrugs, DRUGS, modifiers, urgentRecs, DO_NOT_RULES]);
+
+  // Ranked recs (excluding urgent banner items)
   const rankedRecs = useMemo(() => {
     const urgentIds = new Set(urgentRecs.map((r) => r.id));
-    return RECOMMENDATIONS.map((r) => {
-      const { score, excluded, reason } = calcScore(
-        { ...r, _allDrugs: DRUGS },
-        currentDrugs,
-        modifiers,
-        controlStatus
-      );
-      return { ...r, _score: score, _excluded: excluded, _reason: reason };
-    })
+    const allRecs = [...RECOMMENDATIONS, ...doseUpRecs];
+    return allRecs
+      .map((r) => {
+        const { score, excluded, reason } = calcScore(r, currentDrugs, modifiers, controlStatus, DRUGS);
+        return { ...r, _score: score, _excluded: excluded, _reason: reason };
+      })
       .filter((r) => r._score > 0 && !urgentIds.has(r.id))
       .sort((a, b) => b._score - a._score);
-  }, [RECOMMENDATIONS, DRUGS, currentDrugs, modifiers, controlStatus, urgentRecs]);
+  }, [RECOMMENDATIONS, doseUpRecs, DRUGS, currentDrugs, modifiers, controlStatus, urgentRecs]);
+
+  const { primary, alternates, later } = useMemo(
+    () => splitTiers(rankedRecs, controlStatus),
+    [rankedRecs, controlStatus]
+  );
+
+  // Inject MAINTAIN at the top when controlled
+  const primaryWithMaintain = useMemo(() => {
+    if (maintainRec) return [maintainRec, ...primary];
+    return primary;
+  }, [maintainRec, primary]);
 
   return (
     <div className={styles.booster}>
-      {/* ヘッダー */}
       <div className={styles.header}>
         <div>
           <p className={styles.title}>Treatment Booster</p>
@@ -228,7 +457,6 @@ export default function TreatmentBooster({
         </div>
       </div>
 
-      {/* 緊急推奨バナー（Red Flag発動時・常時最上位） */}
       {urgentRecs.length > 0 && (
         <div className={styles.urgentBox}>
           {urgentRecs.map((r) => (
@@ -240,7 +468,6 @@ export default function TreatmentBooster({
         </div>
       )}
 
-      {/* アクティブなDO NOT警告 */}
       {activeDoNot.length > 0 && (
         <div className={styles.doNotBox}>
           {activeDoNot.map((r, i) => (
@@ -251,7 +478,6 @@ export default function TreatmentBooster({
         </div>
       )}
 
-      {/* 現在の治療ステート表示 */}
       {currentDrugs.length > 0 && phase >= 1 && (
         <div className={styles.stateBar}>
           現在の治療ステート: <strong>{stateLabel(currentState)}</strong>
@@ -263,23 +489,41 @@ export default function TreatmentBooster({
         <div className={styles.section}>
           <h4 className={styles.sectionTitle}>
             Phase 1: 現在の治療
-            <span className={styles.sectionHint}>（服用中の薬剤を選択・未治療可）</span>
+            <span className={styles.sectionHint}>（服用中の薬剤と用量を選択・未治療可）</span>
           </h4>
           {Object.entries(drugGroups).map(([cls, items]) => (
             <div key={cls} className={styles.catGroup}>
               <span className={styles.catLabel}>{cls}</span>
               <div className={styles.chipGrid}>
-                {items.map((d) => (
-                  <button
-                    key={d.id}
-                    className={`${styles.chip} ${
-                      currentDrugs.includes(d.id) ? styles.chipActive : ''
-                    }`}
-                    onClick={() => toggleDrug(d.id)}
-                  >
-                    {d.label}
-                  </button>
-                ))}
+                {items.map((d) => {
+                  const active = currentDrugs.find((x) => x.id === d.id);
+                  return (
+                    <div key={d.id} className={styles.drugChipWrap}>
+                      <button
+                        className={`${styles.chip} ${active ? styles.chipActive : ''}`}
+                        onClick={() => toggleDrug(d.id)}
+                      >
+                        {d.label}
+                      </button>
+                      {active && d.doses && (
+                        <div className={styles.dosePicker}>
+                          {d.doses.map((dose) => (
+                            <button
+                              key={dose.value}
+                              className={`${styles.doseChip} ${
+                                active.dose === dose.value ? styles.doseChipActive : ''
+                              }`}
+                              onClick={() => setDose(d.id, dose.value)}
+                            >
+                              {dose.label}
+                              {dose.isMax && <span className={styles.maxBadge}>最大</span>}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -291,22 +535,17 @@ export default function TreatmentBooster({
         </div>
       )}
 
-      {/* Phase 2: コントロール状態 + 修飾因子 */}
+      {/* Phase 2 */}
       {phase >= 2 && (
         <div className={styles.section}>
           <h4 className={styles.sectionTitle}>
             Phase 2: コントロール状態・修飾因子
-            <span className={styles.sectionHint}>
-              （数値入力 + 該当するチップを選択）
-            </span>
+            <span className={styles.sectionHint}>（数値入力 + 該当するチップを選択）</span>
           </h4>
 
-          {/* 数値入力 */}
           {CONTROL_METRIC.label && (
             <div className={styles.metricBox}>
-              <label className={styles.metricLabel}>
-                {CONTROL_METRIC.label}
-              </label>
+              <label className={styles.metricLabel}>{CONTROL_METRIC.label}</label>
               <div className={styles.metricInputs}>
                 {(CONTROL_METRIC.inputs || []).map((inp) => (
                   <div key={inp.id} className={styles.metricInputGroup}>
@@ -318,7 +557,8 @@ export default function TreatmentBooster({
                       onChange={(e) =>
                         setMetricValues({
                           ...metricValues,
-                          [inp.id]: e.target.value === '' ? undefined : parseFloat(e.target.value),
+                          [inp.id]:
+                            e.target.value === '' ? undefined : parseFloat(e.target.value),
                         })
                       }
                       placeholder={inp.placeholder || ''}
@@ -335,9 +575,7 @@ export default function TreatmentBooster({
                       className={`${styles.statusChip} ${
                         controlStatus === s ? styles[`status_${s}`] : ''
                       }`}
-                      onClick={() =>
-                        setOverrideStatus(overrideStatus === s ? null : s)
-                      }
+                      onClick={() => setOverrideStatus(overrideStatus === s ? null : s)}
                     >
                       {statusLabel(s)}
                       {overrideStatus === s ? ' (手動)' : ''}
@@ -345,13 +583,10 @@ export default function TreatmentBooster({
                   ))}
                 </div>
               )}
-              {CONTROL_METRIC.note && (
-                <p className={styles.metricNote}>{CONTROL_METRIC.note}</p>
-              )}
+              {CONTROL_METRIC.note && <p className={styles.metricNote}>{CONTROL_METRIC.note}</p>}
             </div>
           )}
 
-          {/* 修飾因子チップ */}
           {Object.entries(modifierGroups).map(([cat, items]) => (
             <div key={cat} className={styles.catGroup}>
               <span className={styles.catLabel}>{cat}</span>
@@ -379,15 +614,18 @@ export default function TreatmentBooster({
         </div>
       )}
 
-      {/* Phase 3: 推奨修正 */}
+      {/* Phase 3: Tiered recommendations */}
       {phase >= 3 && (
         <div className={styles.section}>
           <h4 className={styles.sectionTitle}>
             Phase 3: 推奨治療修正
-            <span className={styles.sectionHint}>（適合度順 / {rankedRecs.length}件）</span>
+            <span className={styles.sectionHint}>
+              （Primary {primaryWithMaintain.length}件 / Alt {alternates.length}件 / Later{' '}
+              {later.length}件）
+            </span>
           </h4>
 
-          {rankedRecs.length === 0 ? (
+          {primaryWithMaintain.length === 0 && alternates.length === 0 && later.length === 0 ? (
             <p className={styles.noResult}>
               条件に合う推奨がありません。
               {currentDrugs.length === 0 && controlStatus === null
@@ -396,49 +634,40 @@ export default function TreatmentBooster({
             </p>
           ) : (
             <div className={styles.recList}>
-              {rankedRecs.map((r, idx) => (
-                <details
-                  key={r.id}
-                  className={`${styles.recCard} ${styles[`rec_${r.action.toLowerCase()}`]}`}
-                  open={idx < 3}
-                >
-                  <summary className={styles.recSummary}>
-                    <span className={styles.recRank}>#{idx + 1}</span>
-                    <span
-                      className={`${styles.recAction} ${styles[`action_${r.action.toLowerCase()}`]}`}
-                    >
-                      {actionLabel(r.action)}
-                    </span>
-                    <span className={styles.recDrug}>{r.drug}</span>
-                    {r.specialistGate && (
-                      <span className={styles.specialistTag}>要専門医</span>
-                    )}
-                  </summary>
-                  <div className={styles.recBody}>
-                    {r.example && (
-                      <div className={styles.recExample}>
-                        <strong>処方例:</strong> {r.example}
-                      </div>
-                    )}
-                    {r.reason && (
-                      <div className={styles.recReason}>
-                        <strong>理由:</strong> {r.reason}
-                      </div>
-                    )}
-                    {r.connectedAlert && (
-                      <div className={styles.connectedAlert}>
-                        &#128279; <strong>連携疾患:</strong> {r.connectedAlert}
-                      </div>
-                    )}
-                    {r.reassess && (
-                      <div className={styles.reassess}>
-                        &#9200; <strong>再評価:</strong> {r.reassess}
-                      </div>
-                    )}
-                    {r.note && <p className={styles.recNote}>{r.note}</p>}
-                  </div>
-                </details>
-              ))}
+              {primaryWithMaintain.length > 0 && (
+                <>
+                  <div className={styles.tierLabel}>推奨（Primary）</div>
+                  {primaryWithMaintain.map((r, idx) => (
+                    <RecCard key={r.id} rec={r} rank={idx + 1} open={true} />
+                  ))}
+                </>
+              )}
+              {alternates.length > 0 && (
+                <>
+                  <div className={styles.tierLabel}>代替案（Alternates）</div>
+                  {alternates.map((r, idx) => (
+                    <RecCard
+                      key={r.id}
+                      rec={r}
+                      rank={primaryWithMaintain.length + idx + 1}
+                      open={false}
+                    />
+                  ))}
+                </>
+              )}
+              {later.length > 0 && (
+                <>
+                  <div className={styles.tierLabel}>後で検討（Later）</div>
+                  {later.map((r, idx) => (
+                    <RecCard
+                      key={r.id}
+                      rec={r}
+                      rank={primaryWithMaintain.length + alternates.length + idx + 1}
+                      open={false}
+                    />
+                  ))}
+                </>
+              )}
             </div>
           )}
         </div>
@@ -448,6 +677,47 @@ export default function TreatmentBooster({
         本ツールは治療思考の補助であり、臨床判断を代替するものではありません。薬剤選択・用量・中止の最終判断は主治医が行ってください。
       </div>
     </div>
+  );
+}
+
+function RecCard({ rec, rank, open }) {
+  return (
+    <details
+      className={`${styles.recCard} ${styles[`rec_${rec.action.toLowerCase()}`] || ''}`}
+      open={open}
+    >
+      <summary className={styles.recSummary}>
+        <span className={styles.recRank}>#{rank}</span>
+        <span className={`${styles.recAction} ${styles[`action_${rec.action.toLowerCase()}`] || ''}`}>
+          {actionLabel(rec.action)}
+        </span>
+        <span className={styles.recDrug}>{rec.drug}</span>
+        {rec.specialistGate && <span className={styles.specialistTag}>要専門医</span>}
+      </summary>
+      <div className={styles.recBody}>
+        {rec.example && (
+          <div className={styles.recExample}>
+            <strong>処方例:</strong> {rec.example}
+          </div>
+        )}
+        {rec.reason && (
+          <div className={styles.recReason}>
+            <strong>理由:</strong> {rec.reason}
+          </div>
+        )}
+        {rec.connectedAlert && (
+          <div className={styles.connectedAlert}>
+            &#128279; <strong>連携疾患:</strong> {rec.connectedAlert}
+          </div>
+        )}
+        {rec.reassess && (
+          <div className={styles.reassess}>
+            &#9200; <strong>再評価:</strong> {rec.reassess}
+          </div>
+        )}
+        {rec.note && <p className={styles.recNote}>{rec.note}</p>}
+      </div>
+    </details>
   );
 }
 
@@ -464,12 +734,20 @@ function stateLabel(state) {
 }
 
 function statusLabel(s) {
-  return { controlled: 'コントロール良好', partial: '部分的', uncontrolled: 'コントロール不良' }[s] || s;
+  return (
+    {
+      controlled: 'コントロール良好',
+      partial: '部分的',
+      uncontrolled: 'コントロール不良',
+    }[s] || s
+  );
 }
 
 function actionLabel(action) {
   return (
     {
+      MAINTAIN: '現状維持',
+      DOSE_UP: '増量',
       STEP_UP: 'ステップアップ',
       ADD: '薬剤追加',
       SWITCH: '薬剤変更',

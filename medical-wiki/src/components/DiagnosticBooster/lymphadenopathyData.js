@@ -177,7 +177,7 @@ export const DIFFERENTIALS = [
     findings: ['splenomegaly'],
     redFlags: [],
     nextStep: 'ANA+抗dsDNA抗体+補体。リウマチ科紹介。',
-    link: '/docs/220-Rheumatology',
+    link: '/docs/220-rheumatology',
     comment: '若年女性。全身性リンパ節腫脹+蝶形紅斑+関節痛+漿膜炎。リンパ節腫脹はSLEの活動性を反映。',
   },
   {

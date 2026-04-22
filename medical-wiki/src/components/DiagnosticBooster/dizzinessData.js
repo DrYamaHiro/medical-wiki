@@ -102,7 +102,7 @@ export const DIFFERENTIALS = [
     findings: ['dix_hallpike_positive', 'hit_positive'],
     redFlags: [],
     nextStep: 'Dix-Hallpike陽性→Epley法（耳石置換法）実施。治療後めまい消失を確認。※Dix-Hallpike陰性や非典型パターン（潜時なし・減衰しない眼振・下眼瞼向き眼振）の場合は中枢性を除外せよ→HINTS exam実施またはCT/MRI施設へ紹介。',
-    link: '/docs/150-Vertigo',
+    link: '/docs/150-vertigo',
     comment: '最も頻度の高いめまい。頭位変換で回転性めまいが誘発され、1分以内に消失する。上眼瞼向き回旋性眼振＋潜時あり（2-5秒）。Epley法の成功率は約80%。非典型パターンや改善しない場合は中枢性除外を怠らないこと。',
   },
   {
@@ -116,7 +116,7 @@ export const DIFFERENTIALS = [
     findings: ['hit_positive'],
     redFlags: [],
     nextStep: '耳鼻科紹介（聴力検査を含む精査）。発作時: 制吐剤+安静。予防: 減塩+イソソルビド。',
-    link: '/docs/150-Vertigo',
+    link: '/docs/150-vertigo',
     comment: '三徴: 回転性めまい+低音障害型感音難聴+耳鳴。発作は20分〜数時間持続。発作間欠期は無症状。反復し聴力が段階的に悪化。',
   },
   {
@@ -130,7 +130,7 @@ export const DIFFERENTIALS = [
     findings: ['hit_positive'],
     redFlags: [],
     nextStep: 'HIT陽性=末梢性を支持。聴力正常を確認。対症療法（メリスロン+制吐剤）。前庭リハビリ。※HIT陽性が得られない場合やHIT陰性の場合は小脳梗塞を除外→HINTS中枢パターン確認→搬送を検討。',
-    link: '/docs/150-Vertigo',
+    link: '/docs/150-vertigo',
     comment: '突発性の持続する回転性めまい。聴力は正常（メニエールとの鑑別点）。ウイルス感染後に発症することが多い。自然経過で数日〜数週で改善。HIT陽性が末梢性の証拠。',
   },
   {
@@ -159,7 +159,7 @@ export const DIFFERENTIALS = [
     findings: ['orthostatic_drop'],
     redFlags: [],
     nextStep: '臥位→立位3分後の血圧測定。原因検索: 脱水・消化管出血（黒色便）・副腎不全・薬剤性（降圧薬・α遮断薬・三環系）。',
-    link: '/docs/090-Cardiovascular',
+    link: '/docs/090-cardiovascular',
     comment: '臥位→立位で収縮期≥20mmHg or 拡張期≥10mmHg低下。高齢者の「立ちくらみ」で最多。降圧薬過量は見直し。黒色便→消化管出血の除外を忘れるな。',
   },
   {

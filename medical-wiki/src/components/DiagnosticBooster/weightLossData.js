@@ -109,7 +109,7 @@ export const DIFFERENTIALS = [
     findings: ['thyroid_enlargement'],
     redFlags: [],
     nextStep: 'TSH+FT3/FT4。TSH低値→甲状腺機能亢進症。食欲があるのに痩せる=本疾患を最優先で疑え。再受診基準: 高熱+頻脈+意識障害（甲状腺クリーゼ）→即搬送。',
-    link: '/docs/130-Endocrine',
+    link: '/docs/130-endocrine',
     comment: '食欲亢進+体重減少+動悸+手指振戦+発汗過多+暑がり。「食べているのに痩せる」の代表的原因。',
   },
   {
@@ -123,7 +123,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'HbA1c+随時血糖。口渇+多飲+多尿+体重減少=DM。1型は急速な体重減少+ケトアシドーシスリスク。再受診基準: 嘔吐・意識障害（DKA/HHS）→即受診。',
-    link: '/docs/110-Diabetes',
+    link: '/docs/110-diabetes',
     comment: '口渇+多飲+多尿で疑う。食べているのに痩せるパターン。高齢者のHHS（高浸透圧高血糖状態）は致死的。',
   },
   {
@@ -224,7 +224,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'PHQ-2≧3→PHQ-9で詳細評価。器質的疾患を除外した上で。精神科/心療内科紹介。再受診基準: 希死念慮→精神科緊急。',
-    link: '/docs/170-Psychiatry',
+    link: '/docs/170-psychiatry',
     comment: '食欲低下+体重減少+気分の落ち込み+意欲低下。高齢者のうつ病は身体症状が前面に出やすい（仮面うつ病）。器質的疾患の除外が先。',
   },
   {

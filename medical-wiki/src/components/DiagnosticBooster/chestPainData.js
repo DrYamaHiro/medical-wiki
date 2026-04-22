@@ -214,7 +214,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'PPI試験投与。改善なし→上部消化管内視鏡紹介。再受診基準: 胸痛が安静時に持続(>20分)、冷汗→ACS除外のため即受診。',
-    link: '/docs/050-Gastroenteritis',
+    link: '/docs/050-gastroenteritis',
     comment: '食後・臥位で悪化する胸骨後部の灼熱感。PPI反応性が診断的。ただしACSを除外してから。',
   },
   {
@@ -270,7 +270,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'Killer疾患を除外した上での診断。過換気があれば紙袋呼吸は推奨されない。精神科/心療内科紹介。',
-    link: '/docs/170-Psychiatry',
+    link: '/docs/170-psychiatry',
     comment: '若年者の反復性胸痛+動悸+過換気+四肢しびれ。除外診断であり、初発時はKiller疾患を必ず除外。「パニックだろう」は最後の診断。',
     alwaysShow: true,
   },

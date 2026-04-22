@@ -71,7 +71,7 @@ export const DIFFERENTIALS = [
     findings: ['thyroid_enlargement', 'delayed_reflex'],
     redFlags: [],
     nextStep: 'TSH+FT4。TSH高値→甲状腺機能低下症確定。レボチロキシン開始。再受診基準: 6-8週で効果判定。',
-    link: '/docs/130-Endocrine',
+    link: '/docs/130-endocrine',
     comment: '倦怠感の原因として最も見逃されやすい。寒がり+便秘+体重増加+皮膚乾燥+脱毛が揃えば強く疑う。橋本病が最多原因。深部腱反射の弛緩相遅延（アキレス腱）は診察室で確認可能な特徴的所見。',
   },
   {
@@ -85,7 +85,7 @@ export const DIFFERENTIALS = [
     findings: ['pallor'],
     redFlags: [],
     nextStep: 'CBC+フェリチン。鉄欠乏→原因検索（消化管出血・月経過多）。Hb<7は輸血検討→紹介。再受診基準: 鉄剤開始後2-4週で効果判定。',
-    link: '/docs/320-Hematology',
+    link: '/docs/320-hematology',
     comment: '眼瞼結膜蒼白が簡便なスクリーニング。鉄欠乏が最多だが、大球性（VitB12/葉酸欠乏）、腎性、慢性疾患に伴う貧血も鑑別。急性発症なら消化管出血を疑え。',
   },
   {
@@ -99,7 +99,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'HbA1c+随時血糖。HbA1c≧6.5%→糖尿病確定。再受診基準: 口渇悪化・意識障害→即受診（DKA/HHS）。',
-    link: '/docs/110-Diabetes',
+    link: '/docs/110-diabetes',
     comment: '口渇+多飲+多尿+体重減少で疑う。倦怠感のみの症状で受診するDM患者も多い。',
   },
   {
@@ -113,7 +113,7 @@ export const DIFFERENTIALS = [
     findings: ['pitting_edema', 'pallor'],
     redFlags: ['orthopnea'],
     nextStep: 'BNP+胸部X線+心電図。BNP高値→心エコー（当院不可→循環器紹介）。再受診基準: 安静時息切れ・起座呼吸・体重急増→即受診。',
-    link: '/docs/090-Cardiovascular',
+    link: '/docs/090-cardiovascular',
     comment: '労作時息切れ+浮腫+起座呼吸。BNP<100で心不全はほぼ否定。高齢者ではHFpEF（駆出率保持型）も多い。',
   },
   {
@@ -169,7 +169,7 @@ export const DIFFERENTIALS = [
     findings: ['hepatomegaly'],
     redFlags: ['jaundice'],
     nextStep: '肝機能（AST/ALT/γGTP/ALP/ビリルビン/アルブミン）。肝硬変疑い→腹部エコー（当院不可→紹介）。',
-    link: '/docs/070-Hepatobiliary',
+    link: '/docs/070-hepatobiliary',
     comment: '倦怠感+黄疸+食欲低下+浮腫。アルコール歴・B/C型肝炎歴を聴取。アルブミン低値は肝予備能低下を示唆。',
   },
   {
@@ -198,7 +198,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: ['suicidal'],
     nextStep: 'PHQ-2≧3→PHQ-9で詳細評価。PHQ-9≧10→中等度以上のうつ。精神科/心療内科紹介。希死念慮→安全確保+精神科緊急。再受診基準: 症状悪化、希死念慮出現→即受診。',
-    link: '/docs/170-Psychiatry',
+    link: '/docs/170-psychiatry',
     comment: '倦怠感の原因として器質的疾患と並ぶ高頻度。朝に強い倦怠感+興味喪失+気分の落ち込みが手がかり。ただし器質的疾患の除外が先。「うつだろう」で甲状腺機能低下を見逃すな。',
   },
   {
@@ -212,7 +212,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'GAD-7でスクリーニング。器質的疾患を除外した上での診断。精神科/心療内科紹介。',
-    link: '/docs/170-Psychiatry',
+    link: '/docs/170-psychiatry',
     comment: '慢性の倦怠感+不眠+動悸+不安。過覚醒状態が持続し疲弊する。器質的疾患の除外が前提。',
   },
   // === 睡眠関連 ===
@@ -227,7 +227,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'ESS（エプワース眠気尺度）。ESS≧11→OSAS疑い。簡易PSG/精密PSG（当院不可→紹介）。BMI≧25+いびき+日中傾眠=高確率。',
-    link: '/docs/160-Sleep-Apnea',
+    link: '/docs/160-sleep-apnea',
     comment: 'いびき+日中の過度の眠気+睡眠で回復しない。肥満男性に多いが女性・痩せ型でも起こる。未治療は高血圧・心房細動・脳卒中のリスク。',
   },
   {
@@ -241,7 +241,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: '睡眠衛生指導。非薬物療法（CBT-I）が第一選択。薬物療法は短期間。器質的原因（OSAS等）を除外。再受診基準: 改善なし4週→紹介。',
-    link: '/docs/170-Psychiatry',
+    link: '/docs/170-psychiatry',
     comment: '入眠障害・中途覚醒・早朝覚醒。睡眠衛生の乱れ（スマホ・カフェイン・不規則な就寝時間）が多い。うつ病の合併を見逃さない。',
   },
   // === 機能性 ===

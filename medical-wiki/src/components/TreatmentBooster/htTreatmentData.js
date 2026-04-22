@@ -15,36 +15,54 @@
 /* -------------------------------------------------------- */
 export const DRUGS = [
   // ARB
-  { id: 'arb_azl', label: 'アジルバ（アジルサルタン）', class: 'ARB' },
-  { id: 'arb_tel', label: 'テルミサルタン', class: 'ARB' },
-  { id: 'arb_ols', label: 'オルメサルタン', class: 'ARB' },
-  { id: 'arb_val', label: 'バルサルタン', class: 'ARB' },
-  { id: 'arb_can', label: 'カンデサルタン', class: 'ARB' },
-  { id: 'arb_los', label: 'ロサルタン', class: 'ARB' },
+  { id: 'arb_azl', label: 'アジルバ（アジルサルタン）', class: 'ARB',
+    doses: [{ value: '10', label: '10mg' }, { value: '20', label: '20mg', isDefault: true }, { value: '40', label: '40mg', isMax: true }] },
+  { id: 'arb_tel', label: 'テルミサルタン', class: 'ARB',
+    doses: [{ value: '20', label: '20mg' }, { value: '40', label: '40mg', isDefault: true }, { value: '80', label: '80mg', isMax: true }] },
+  { id: 'arb_ols', label: 'オルメサルタン', class: 'ARB',
+    doses: [{ value: '10', label: '10mg' }, { value: '20', label: '20mg', isDefault: true }, { value: '40', label: '40mg', isMax: true }] },
+  { id: 'arb_val', label: 'バルサルタン', class: 'ARB',
+    doses: [{ value: '40', label: '40mg' }, { value: '80', label: '80mg', isDefault: true }, { value: '160', label: '160mg', isMax: true }] },
+  { id: 'arb_can', label: 'カンデサルタン', class: 'ARB',
+    doses: [{ value: '4', label: '4mg' }, { value: '8', label: '8mg', isDefault: true }, { value: '12', label: '12mg', isMax: true }] },
+  { id: 'arb_los', label: 'ロサルタン', class: 'ARB',
+    doses: [{ value: '25', label: '25mg' }, { value: '50', label: '50mg', isDefault: true }, { value: '100', label: '100mg', isMax: true }] },
 
   // ACE阻害薬
-  { id: 'acei_ena', label: 'エナラプリル', class: 'ACE阻害薬' },
-  { id: 'acei_ima', label: 'イミダプリル', class: 'ACE阻害薬' },
+  { id: 'acei_ena', label: 'エナラプリル', class: 'ACE阻害薬',
+    doses: [{ value: '2.5', label: '2.5mg' }, { value: '5', label: '5mg', isDefault: true }, { value: '10', label: '10mg', isMax: true }] },
+  { id: 'acei_ima', label: 'イミダプリル', class: 'ACE阻害薬',
+    doses: [{ value: '2.5', label: '2.5mg' }, { value: '5', label: '5mg', isDefault: true }, { value: '10', label: '10mg', isMax: true }] },
 
   // Ca拮抗薬
-  { id: 'ccb_am', label: 'アムロジピン', class: 'Ca拮抗薬' },
-  { id: 'ccb_nif', label: 'ニフェジピンCR', class: 'Ca拮抗薬' },
-  { id: 'ccb_cil', label: 'シルニジピン', class: 'Ca拮抗薬' },
+  { id: 'ccb_am', label: 'アムロジピン', class: 'Ca拮抗薬',
+    doses: [{ value: '2.5', label: '2.5mg' }, { value: '5', label: '5mg', isDefault: true }, { value: '10', label: '10mg', isMax: true }] },
+  { id: 'ccb_nif', label: 'ニフェジピンCR', class: 'Ca拮抗薬',
+    doses: [{ value: '20', label: '20mg' }, { value: '40', label: '40mg', isDefault: true }, { value: '80', label: '80mg', isMax: true }] },
+  { id: 'ccb_cil', label: 'シルニジピン', class: 'Ca拮抗薬',
+    doses: [{ value: '5', label: '5mg' }, { value: '10', label: '10mg', isDefault: true }, { value: '20', label: '20mg', isMax: true }] },
 
   // 利尿薬
-  { id: 'diu_tri', label: 'トリクロルメチアジド', class: '利尿薬' },
-  { id: 'diu_ind', label: 'インダパミド', class: '利尿薬' },
+  { id: 'diu_tri', label: 'トリクロルメチアジド', class: '利尿薬',
+    doses: [{ value: '1', label: '1mg', isDefault: true }, { value: '2', label: '2mg', isMax: true }] },
+  { id: 'diu_ind', label: 'インダパミド', class: '利尿薬',
+    doses: [{ value: '1', label: '1mg', isDefault: true }, { value: '2', label: '2mg', isMax: true }] },
 
   // β遮断薬
-  { id: 'bb_bis', label: 'ビソプロロール', class: 'β遮断薬' },
-  { id: 'bb_car', label: 'カルベジロール', class: 'β遮断薬' },
+  { id: 'bb_bis', label: 'ビソプロロール', class: 'β遮断薬',
+    doses: [{ value: '0.625', label: '0.625mg' }, { value: '1.25', label: '1.25mg' }, { value: '2.5', label: '2.5mg', isDefault: true }, { value: '5', label: '5mg', isMax: true }] },
+  { id: 'bb_car', label: 'カルベジロール', class: 'β遮断薬',
+    doses: [{ value: '1.25', label: '1.25mg' }, { value: '2.5', label: '2.5mg' }, { value: '5', label: '5mg', isDefault: true }, { value: '10', label: '10mg' }, { value: '20', label: '20mg', isMax: true }] },
 
   // MRA
-  { id: 'mra_spi', label: 'スピロノラクトン', class: 'MRA' },
-  { id: 'mra_ese', label: 'エサキセレノン（ミネブロ）', class: 'MRA' },
-  { id: 'alpha_tam', label: 'タムスロシン（BPH併存時）', class: 'α遮断薬' },
+  { id: 'mra_spi', label: 'スピロノラクトン', class: 'MRA',
+    doses: [{ value: '12.5', label: '12.5mg' }, { value: '25', label: '25mg', isDefault: true }, { value: '50', label: '50mg', isMax: true }] },
+  { id: 'mra_ese', label: 'エサキセレノン（ミネブロ）', class: 'MRA',
+    doses: [{ value: '1.25', label: '1.25mg' }, { value: '2.5', label: '2.5mg', isDefault: true }, { value: '5', label: '5mg', isMax: true }] },
+  { id: 'alpha_tam', label: 'タムスロシン（BPH併存時）', class: 'α遮断薬',
+    doses: [{ value: '0.1', label: '0.1mg' }, { value: '0.2', label: '0.2mg', isDefault: true, isMax: true }] },
 
-  // 合剤（よく使われる）
+  // 合剤（よく使われる）— 合剤には増量の概念はないためdosesなし
   { id: 'combo_zac', label: 'ザクラス（アジルバ+アムロジピン）', class: '合剤' },
   { id: 'combo_mic', label: 'ミカムロ（テルミ+アムロジピン）', class: '合剤' },
   { id: 'combo_pre', label: 'プレミネント（ロサルタン+HCTZ）', class: '合剤' },
@@ -197,11 +215,13 @@ export const RECOMMENDATIONS = [
     action: 'STEP_UP',
     drug: 'ARB/CCB合剤へ切り替え',
     example: 'ザクラス配合錠HD 1回1錠 1日1回 朝食後（既存薬中止）',
-    reason: '単剤で目標未達。ARB+CCBは最もエビデンスある併用で、合剤はアドヒアランス改善',
+    reason: '単剤最大用量でも目標未達。ARB+CCBは最もエビデンスある併用で、合剤はアドヒアランス改善',
     fromStates: ['mono'],
     preferredWhen: ['co_adherence'],
     forbidden: ['co_pregnancy'],
     reassess: '2週後に家庭血圧',
+    _requiresMaxDose: true,
+    urgentWhen: ['co_grade2'],
   },
   {
     id: 'mono_add_ccb',
@@ -212,6 +232,7 @@ export const RECOMMENDATIONS = [
     fromStates: ['mono'],
     avoidWhen: ['se_edema', 'fh_ccb_edema'],
     reassess: '2週後に家庭血圧・浮腫確認',
+    drugClass: 'Ca拮抗薬',
   },
   {
     id: 'mono_add_thiazide',
@@ -223,6 +244,7 @@ export const RECOMMENDATIONS = [
     preferredWhen: ['co_elderly'],
     avoidWhen: ['cm_gout', 'se_uric_up', 'fh_thiazide_hypoK', 'cm_dm'],
     reassess: '4週後にK・Na・UA確認',
+    drugClass: '利尿薬',
   },
 
   // ===========================================
@@ -237,6 +259,7 @@ export const RECOMMENDATIONS = [
     fromStates: ['dual'],
     avoidWhen: ['cm_gout', 'fh_thiazide_hypoK', 'cm_ckd_adv'],
     reassess: '4週後にK・Na・UA・Cre確認',
+    drugClass: '利尿薬',
   },
 
   // ===========================================
@@ -249,6 +272,7 @@ export const RECOMMENDATIONS = [
     example: 'スピロノラクトン錠25mg 1回1錠 1日1回 朝食後（高齢/CKD G3は12.5mgから）／または エサキセレノン錠2.5mg 1回1錠 1日1回',
     reason: '3剤併用でも未達の治療抵抗性高血圧。MRA追加でエビデンスあり（PATHWAY-2）',
     fromStates: ['triple'],
+    drugClass: 'MRA',
     forbidden: ['se_hyperK', 'cm_ckd_adv'],
     urgentWhen: ['rf_target_organ'],
     reassess: 'eGFR 60以上: 2週後・4週後・3ヶ月後にK/Cre、 eGFR 30-59: 週1回×2、隔週×2、月1回',
@@ -333,6 +357,7 @@ export const RECOMMENDATIONS = [
     example: 'ビソプロロール錠2.5mg 1回1錠 1日1回（徐々に増量）',
     reason: 'HFrEF+HT → β遮断薬は予後改善薬（Fantastic Four構成薬）',
     fromStates: ['mono', 'dual', 'triple'],
+    drugClass: 'β遮断薬',
     preferredWhen: ['cm_hf', 'cm_post_mi'],
     avoidWhen: ['cm_asthma', 'fh_bb_bradycardia', 'se_bradycardia'],
     reassess: '2週毎に心拍・血圧確認',
@@ -357,6 +382,7 @@ export const RECOMMENDATIONS = [
     example: 'タムスロシン錠0.2mg 1回1錠 1日1回 朝食後',
     reason: 'BPH+HT → α遮断薬で排尿障害改善+軽度降圧の一石二鳥',
     fromStates: ['mono', 'dual', 'triple'],
+    drugClass: 'α遮断薬',
     preferredWhen: ['cm_bph'],
     avoidWhen: ['se_hypotension', 'co_frail'],
   },

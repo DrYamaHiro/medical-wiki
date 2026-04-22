@@ -214,7 +214,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'トリプタン（スマトリプタン50mg）。NSAIDs。制吐剤。頭痛ダイアリー。月4回以上→予防薬（バルプロ酸/アミトリプチリン）。再受診基準: 雷鳴頭痛・発熱出現・神経症状出現・パターンの急変→即受診。',
-    link: '/docs/140-Headache',
+    link: '/docs/140-headache',
     comment: '片側拍動性+嘔気+光過敏+音過敏+体動で悪化。前兆（閃輝暗点）は約30%に。除外診断ではなく、典型的パターンなら積極的に診断してよい。ただし初発・パターン変化時は二次性を除外。',
   },
   {
@@ -228,7 +228,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'NSAIDs。ストレス・姿勢改善指導。慢性化（月15日以上）→アミトリプチリン。再受診基準: 雷鳴頭痛・発熱出現・神経症状出現・パターン急変→即受診。',
-    link: '/docs/140-Headache',
+    link: '/docs/140-headache',
     comment: '両側の締め付け感。体動で悪化しない。嘔気・光過敏は軽度or absent。最も頻度が高い頭痛。除外診断。',
   },
   {
@@ -242,7 +242,7 @@ export const DIFFERENTIALS = [
     findings: ['ptosis_miosis'],
     redFlags: [],
     nextStep: '発作時: 100%酸素吸入（12-15L/min フェイスマスク 15分）+ スマトリプタン皮下注6mg。予防: ベラパミル。',
-    link: '/docs/140-Headache',
+    link: '/docs/140-headache',
     comment: '片側の眼窩部激痛+流涙+結膜充血+鼻閉+Horner様症状。15分-3時間持続。毎日同じ時間に出現（特に夜間）。男性に多い。',
   },
   {
@@ -256,7 +256,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: '原因薬剤の段階的中止。予防薬導入。頭痛ダイアリー。',
-    link: '/docs/140-Headache',
+    link: '/docs/140-headache',
     comment: '鎮痛薬を月10日以上使用（トリプタン・エルゴタミンは月10日、NSAIDs・アセトアミノフェンは月15日が基準）。薬を飲むほど頭痛が増える悪循環。',
     alwaysShow: true,
   },

@@ -72,7 +72,7 @@ export const DIFFERENTIALS = [
     findings: ['ecg_af', 'irregular_pulse', 'tachycardia'],
     redFlags: ['ecg_af'],
     nextStep: 'CHA2DS2-VAScスコア評価→抗凝固薬の適応判断。心拍数コントロール（β遮断薬 or Ca拮抗薬）。甲状腺チェック（Af新規発症の原因）。心エコー（当院不可→循環器紹介）。再受診基準: 失神・胸痛・呼吸困難→即受診。',
-    link: '/docs/090-Cardiovascular',
+    link: '/docs/090-cardiovascular',
     comment: '脈の不整+RR間隔不整。脳梗塞の主要原因→抗凝固薬の適応を必ず評価。発作性Afは受診時の洞調律でも否定不可→ホルター。アルコール（Holiday Heart）・甲状腺が原因のことも。',
   },
   {
@@ -188,7 +188,7 @@ export const DIFFERENTIALS = [
     findings: ['ecg_sinus_tachy', 'tachycardia', 'thyroid_enlargement', 'exophthalmos'],
     redFlags: [],
     nextStep: 'TSH+FT3+FT4。TSH低値+FT3/FT4高値→甲状腺機能亢進症。チアマゾール（メルカゾール）開始。甲状腺クリーゼ（高熱+頻脈+意識障害）→即搬送。再受診基準: 内服開始後2-4週で効果判定+肝機能チェック。',
-    link: '/docs/130-Endocrine',
+    link: '/docs/130-endocrine',
     comment: '動悸+頻脈+手指振戦+体重減少+発汗過多+暑がり。Af新規発症の原因であることも。TSHは動悸患者で必ずチェック。',
   },
   {
@@ -202,7 +202,7 @@ export const DIFFERENTIALS = [
     findings: ['ecg_sinus_tachy', 'tachycardia'],
     redFlags: [],
     nextStep: 'CBC+フェリチン。貧血→原因検索。',
-    link: '/docs/320-Hematology',
+    link: '/docs/320-hematology',
     comment: '代償性の洞性頻脈。労作時に動悸+息切れ。眼瞼結膜蒼白が簡便なスクリーニング。',
   },
   {
@@ -216,7 +216,7 @@ export const DIFFERENTIALS = [
     findings: ['ecg_sinus_tachy'],
     redFlags: [],
     nextStep: '器質的疾患を除外した上での診断。ECG正常+TSH/CBC正常+典型的な過換気+不安発作→パニック障害。精神科/心療内科紹介。再受診基準: 失神・胸痛が新たに出現→再評価（Killer除外）。',
-    link: '/docs/170-Psychiatry',
+    link: '/docs/170-psychiatry',
     comment: '動悸+過換気+四肢しびれ+恐怖感+「死ぬかもしれない」。除外診断。初発時は心原性を必ず除外。「パニックだろう」は最後の診断。',
     alwaysShow: true,
   },

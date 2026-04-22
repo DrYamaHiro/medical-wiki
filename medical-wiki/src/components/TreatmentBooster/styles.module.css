@@ -336,6 +336,16 @@
   color: #fff;
 }
 
+.action_dose_up {
+  background: #0277bd;
+  color: #fff;
+}
+
+.action_maintain {
+  background: #388e3c;
+  color: #fff;
+}
+
 .action_switch {
   background: #6a1b9a;
   color: #fff;
@@ -349,6 +359,75 @@
 .action_refer {
   background: #c62828;
   color: #fff;
+}
+
+/* Tier labels */
+.tierLabel {
+  margin: 0.8rem 0 0.3rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-700);
+  background: var(--ifm-color-emphasis-100);
+  border-left: 3px solid #00695c;
+  border-radius: 0 3px 3px 0;
+}
+
+.tierLabel:first-of-type {
+  margin-top: 0;
+}
+
+/* Dose picker (Phase 1 sub-picker) */
+.drugChipWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.dosePicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  margin-left: 0.5rem;
+  padding: 0.25rem 0.4rem;
+  background: #e0f2f1;
+  border-radius: 4px;
+}
+
+.doseChip {
+  padding: 0.15rem 0.5rem;
+  font-size: 0.72rem;
+  border: 1px solid #00695c;
+  background: #fff;
+  color: #00695c;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.doseChipActive {
+  background: #00695c;
+  color: #fff;
+}
+
+.maxBadge {
+  padding: 0 0.25rem;
+  font-size: 0.62rem;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 2px;
+}
+
+.doseChipActive .maxBadge {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* MAINTAIN card emphasis */
+.rec_maintain {
+  border-color: #388e3c;
+  background: #f1f8f4;
 }
 
 .recDrug {

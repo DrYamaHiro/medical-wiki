@@ -147,7 +147,7 @@ export const DIFFERENTIALS = [
     findings: ['murphy_sign', 'jaundice_sign'],
     redFlags: [],
     nextStep: '採血（肝胆道系酵素・炎症・ビリルビン）。消化器内科/外科紹介（エコー・CT評価が必要）。',
-    link: '/docs/070-Hepatobiliary',
+    link: '/docs/070-hepatobiliary',
     comment: '右季肋部痛+発熱+Murphy徴候。脂肪食後に悪化。胆管炎（Charcot三徴）に進展する場合あり。',
   },
   {
@@ -161,7 +161,7 @@ export const DIFFERENTIALS = [
     findings: ['murphy_sign'],
     redFlags: [],
     nextStep: '消化器内科紹介（エコー評価が必要）。鎮痙薬（ブスコパン※緑内障・前立腺肥大に禁忌）で一時的緩和。',
-    link: '/docs/070-Hepatobiliary',
+    link: '/docs/070-hepatobiliary',
     comment: '脂肪食後の右季肋部疝痛が典型。発熱がなければ胆嚢炎ではなく胆石発作。',
   },
   {
@@ -189,7 +189,7 @@ export const DIFFERENTIALS = [
     findings: ['epigastric_tenderness'],
     redFlags: [],
     nextStep: 'PPI投与。活動性出血疑い（黒色便/吐血）→PPI静注+緊急内視鏡可能施設へ紹介（止血が優先）。',
-    link: '/docs/050-Gastroenteritis',
+    link: '/docs/050-gastroenteritis',
     comment: 'NSAIDs・H.pylori・ストレスがリスク。黒色便は上部消化管出血を示唆。穿孔→消化管穿孔の項参照。',
   },
   {
@@ -203,7 +203,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: '脱水評価。整腸剤・補液。血便→細菌性を考慮（便培養）。',
-    link: '/docs/050-Gastroenteritis',
+    link: '/docs/050-gastroenteritis',
     comment: '最も頻度が高い。ウイルス性が大半。血便・持続する高熱は細菌性を疑う。除外診断。',
   },
   {
@@ -331,7 +331,7 @@ export const DIFFERENTIALS = [
     findings: ['murphy_sign', 'jaundice_sign', 'hypotension', 'tachycardia'],
     redFlags: ['hypotension'],
     nextStep: 'Charcot三徴（痛み+発熱+黄疸）で疑う。Reynolds五徴（+ショック+意識障害）は重症。採血（肝胆道系酵素・ビリルビン・炎症）。即消化器内科/外科紹介（ERCP/PTCDが必要）。',
-    link: '/docs/070-Hepatobiliary',
+    link: '/docs/070-hepatobiliary',
     comment: '胆嚢炎からの進展or総胆管結石が原因。敗血症に急速進展しうるKiller disease。Reynolds五徴は死亡率高い。',
   },
   {

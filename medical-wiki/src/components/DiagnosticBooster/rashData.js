@@ -70,7 +70,7 @@ export const DIFFERENTIALS = [
     findings: ['nikolsky_positive', 'mucosal_erosion', 'fever_high'],
     redFlags: ['nikolsky_positive', 'mucosal_erosion'],
     nextStep: '被疑薬の即時中止。即日皮膚科紹介/搬送。死亡率: SJS 1-5%、TEN 25-35%。',
-    link: '/docs/200-Dermatitis/l270-drug-eruption',
+    link: '/docs/200-dermatitis/l270-drug-eruption',
     comment: '薬剤開始後2-4週で全身紅斑+口腔・眼・陰部の粘膜びらん+発熱。Nikolsky陽性。高リスク薬: カルバマゼピン(HLA-A*3101)、アロプリノール(HLA-B*5801)、ラモトリギン、ST合剤、oxicam系NSAIDs。被疑薬中止が最優先。',
   },
   {
@@ -84,7 +84,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: '被疑薬の中止。軽症: 抗ヒスタミン薬+ステロイド外用。再受診基準: 口内・目・陰部の痛み出現、皮疹の急速拡大→SJS/TEN除外のため即受診。',
-    link: '/docs/200-Dermatitis/l270-drug-eruption',
+    link: '/docs/200-dermatitis/l270-drug-eruption',
     comment: '薬剤開始1-2週で全身に対称性の紅斑丘疹。掻痒を伴う。被疑薬中止で数日-2週で軽快。SJS/TENへの移行に常に注意。',
   },
   {
@@ -155,7 +155,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'ステロイド外用（部位別ランク選択は疾患ページ参照）+保湿指導。ステロイド開始前にKOH提出（外注: 白癬除外。結果判明前は抗真菌外用を併用or処方保留を検討）。再受診基準: 2-4週で改善なし→診断再考。',
-    link: '/docs/200-Dermatitis/l309-eczema-hand-eczema',
+    link: '/docs/200-dermatitis/l309-eczema-hand-eczema',
     comment: '最も頻度が高い皮疹。掻痒+紅斑+鱗屑が基本パターン。慢性化で苔癬化。',
   },
   {
@@ -169,7 +169,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'ステロイド外用+保湿（部位別ランク選択は疾患ページ参照）。急性期→導入療法。寛解後→プロアクティブ療法。総IgE・TARC。再受診基準: 2-4週で改善なし→治療見直し。',
-    link: '/docs/200-Dermatitis/l209-ad-induction-phase',
+    link: '/docs/200-dermatitis/l209-ad-induction-phase',
     comment: '掻痒+左右対称+屈側優位（肘窩・膝窩・頸部）+慢性再発性。アトピー素因（喘息・鼻炎・家族歴）。',
   },
   {
@@ -183,7 +183,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: '原因物質の同定・除去。ステロイド外用（部位別ランク選択は疾患ページ参照）。パッチテスト（皮膚科紹介）。再受診基準: 2-4週で改善なし→再受診。',
-    link: '/docs/200-Dermatitis/l239-contact-dermatitis',
+    link: '/docs/200-dermatitis/l239-contact-dermatitis',
     comment: '接触部位に一致した紅斑・水疱。金属・化粧品・洗剤・植物・ゴム手袋が原因。接触歴の詳細聴取が鑑別の鍵。',
   },
   {
@@ -197,7 +197,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: '抗ヒスタミン薬。24時間以内に消退する膨疹が特徴。個疹が24時間以上持続→蕁麻疹様血管炎を疑え→皮膚科紹介（生検は当院不可）。アナフィラキシー徴候（呼吸困難・血圧低下）→アドレナリン0.3mg筋注+搬送。',
-    link: '/docs/200-Dermatitis/l509-urticaria',
+    link: '/docs/200-dermatitis/l509-urticaria',
     comment: '一過性の膨疹（24h以内に消退）が本態。慢性（6週以上）は特発性が多い。個疹が24h以上持続+紫斑を残す→蕁麻疹様血管炎→皮膚科紹介。',
   },
   {
@@ -211,7 +211,7 @@ export const DIFFERENTIALS = [
     findings: ['central_clearing', 'koh_positive'],
     redFlags: [],
     nextStep: 'KOH直接鏡検（外注）。陽性→抗真菌外用（ルリコン等）。爪白癬→内服（テルビナフィン等、肝機能注意）。',
-    link: '/docs/210-Skin-Infect',
+    link: '/docs/210-skin-infect',
     comment: '辺縁隆起+中心治癒の環状紅斑が典型。KOH陽性で確定。ステロイドで修飾されるとtinea incognitoに。',
   },
   {
@@ -225,7 +225,7 @@ export const DIFFERENTIALS = [
     findings: ['koh_positive'],
     redFlags: ['steroid_worsened'],
     nextStep: 'ステロイド外用を中止。KOH直接鏡検（外注）。KOH結果判明前はステロイド再開せず抗真菌外用を先行処方。陽性→抗真菌外用に切り替え。',
-    link: '/docs/210-Skin-Infect',
+    link: '/docs/210-skin-infect',
     comment: '前医のステロイド外用で「一時改善→再燃」を繰り返す=tinea incognitoを最も疑うべきパターン。KOH検査が唯一の確定手段。',
   },
   {
@@ -239,7 +239,7 @@ export const DIFFERENTIALS = [
     findings: ['auspitz_sign', 'koebner'],
     redFlags: [],
     nextStep: 'ステロイド外用+VD3外用。中等症以上→皮膚科紹介（光線療法・生物学的製剤）。',
-    link: '/docs/200-Dermatitis/l400-psoriasis-vulgaris',
+    link: '/docs/200-dermatitis/l400-psoriasis-vulgaris',
     comment: '銀白色鱗屑を伴う境界明瞭な紅色局面。肘・膝・頭皮・臀部に好発。Auspitz sign。Koebner現象。爪病変（点状陥凹・油滴徴候）。関節症性乾癬の合併あり。',
   },
   {
@@ -253,7 +253,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: '抗真菌外用（ケトコナゾール）+弱いステロイド外用。頭皮→抗真菌シャンプー。',
-    link: '/docs/200-Dermatitis/l219-seborrheic-dermatitis',
+    link: '/docs/200-dermatitis/l219-seborrheic-dermatitis',
     comment: '頭皮・眉間・鼻唇溝・耳後部の脂漏部位に好発する紅斑+油性鱗屑。Malasseziaの関与。',
   },
   {
@@ -267,7 +267,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'バラシクロビル1000mg×3回/日×7日間（72h以内に開始、腎機能障害時は減量）。三叉神経第1枝（Hutchinson徴候）→眼部帯状疱疹→即日眼科紹介。再受診基準: 対側への水疱拡大（播種性）、眼症状（視力低下・充血）→即受診。',
-    link: '/docs/210-Skin-Infect',
+    link: '/docs/210-skin-infect',
     comment: '片側のデルマトームに沿う水疱+神経痛。皮疹前2-3日は前駆痛のみ。免疫低下者で播種性リスク→搬送。',
   },
   {

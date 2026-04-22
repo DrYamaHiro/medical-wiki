@@ -244,7 +244,7 @@ export const DIFFERENTIALS = [
     findings: ['orthostatic_drop'],
     redFlags: [],
     nextStep: '臥位→立位3分後の血圧測定。原因検索: 脱水・消化管出血（黒色便）・副腎不全・薬剤性（降圧薬・利尿薬・α遮断薬・三環系・硝酸薬・抗パーキンソン薬）。安全指導: 原因確定まで運転禁止。入浴注意。再受診基準: 失神の再発、黒色便→即受診。',
-    link: '/docs/090-Cardiovascular',
+    link: '/docs/090-cardiovascular',
     comment: '起立後に収縮期≥20 or 拡張期≥10mmHg低下。高齢者で最多。降圧薬過量が最も多い原因。黒色便→消化管出血の除外を忘れるな。',
   },
   // === てんかん鑑別 ===

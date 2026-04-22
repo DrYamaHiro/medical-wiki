@@ -176,7 +176,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: ['altered_mental'],
     nextStep: '脱水評価。整腸剤・補液。血便→細菌性を考慮。再受診基準: 経口摂取不能24h以上、血便、意識朦朧。',
-    link: '/docs/050-Gastroenteritis',
+    link: '/docs/050-gastroenteritis',
     comment: 'ウイルス性が多い。血便・持続する高熱は細菌性を疑う。',
   },
   {
@@ -204,7 +204,7 @@ export const DIFFERENTIALS = [
     findings: ['murphy_sign'],
     redFlags: ['altered_mental'],
     nextStep: '採血（肝胆道系酵素・炎症）。外科/消化器内科に紹介（エコー・CT評価必要）。',
-    link: '/docs/070-Hepatobiliary',
+    link: '/docs/070-hepatobiliary',
     comment: '右季肋部痛+発熱+Murphy徴候。当院エコー未設置のため高く疑えば紹介。',
   },
   {
@@ -218,7 +218,7 @@ export const DIFFERENTIALS = [
     findings: ['cellulitis_signs', 'necrotizing_signs'],
     redFlags: ['necrotizing_signs'],
     nextStep: '第一選択: セファレキシン。咬傷・嫌気性菌混合感染疑い: アモキシシリン/クラブラン酸。再受診基準: 急速拡大・水疱・握雪感→壊死性筋膜炎疑い→緊急搬送。',
-    link: '/docs/210-Skin-Infect',
+    link: '/docs/210-skin-infect',
     comment: '境界明瞭な発赤・腫脹・熱感・疼痛。急速進行・水疱・握雪感・不釣り合いな疼痛は壊死性筋膜炎→緊急搬送。',
   },
   {
@@ -288,7 +288,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: '尿検査・尿培養。直腸診（前立腺圧痛、強いマッサージは菌血症リスク）。レボフロキサシン等のニューキノロン2-4週間（※腱断裂リスク〔高齢者・ステロイド併用〕に注意）。',
-    link: '/docs/260-Prostate/n410-acute-prostatitis',
+    link: '/docs/260-prostate/n410-acute-prostatitis',
     comment: '男性の発熱+排尿障害。直腸診で前立腺の腫大・圧痛。',
   },
   {
@@ -316,7 +316,7 @@ export const DIFFERENTIALS = [
     findings: ['maculopapular_rash', 'joint_swelling'],
     redFlags: [],
     nextStep: 'ANA、抗dsDNA抗体、補体。リウマチ科紹介。',
-    link: '/docs/220-Rheumatology/m329-sle',
+    link: '/docs/220-rheumatology/m329-sle',
     comment: '若年女性。蝶形紅斑、光線過敏、口腔潰瘍、多関節炎、漿膜炎。',
   },
   {
@@ -344,7 +344,7 @@ export const DIFFERENTIALS = [
     findings: ['relative_bradycardia', 'maculopapular_rash'],
     redFlags: [],
     nextStep: '被疑薬中止。48-72時間で解熱確認。',
-    link: '/docs/200-Dermatitis/l270-drug-eruption',
+    link: '/docs/200-dermatitis/l270-drug-eruption',
     comment: '初回投与後5-28日（典型的には7-10日、再投与時はより早期）。相対的徐脈が手がかり。好酸球増多。全身状態は比較的良好。',
     alwaysShow: true,
   },

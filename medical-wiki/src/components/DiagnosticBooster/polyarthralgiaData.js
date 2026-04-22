@@ -78,7 +78,7 @@ export const DIFFERENTIALS = [
     findings: ['joint_swelling', 'tophi'],
     redFlags: [],
     nextStep: '第1MTP関節（足の親指付け根）の急性発赤・腫脹が典型。尿酸値（発作中は低下することあり）。NSAIDs or コルヒチン。痛風結節あり=慢性痛風→尿酸降下薬。再受診基準: 発熱+複数関節→化膿性との鑑別で紹介。',
-    link: '/docs/120-Dyslipidemia',
+    link: '/docs/120-dyslipidemia',
     comment: '中年男性に多い。飲酒・肉食・利尿薬がリスク。発作中の尿酸値は正常のことがある→発作後2-4週で再検。',
   },
   {
@@ -107,7 +107,7 @@ export const DIFFERENTIALS = [
     findings: ['squeeze_test', 'rheumatoid_nodule', 'elevated_crp_esr'],
     redFlags: [],
     nextStep: 'RF+抗CCP抗体+CRP/ESR。抗CCP抗体陽性は特異度95-99%（RF陰性でも早期RA拾い上げ可能）。手指X線（骨びらん）。4週間以上の多関節炎→リウマチ科紹介（治療の窓: 早期介入が関節破壊を防ぐ）。再受診基準: 関節腫脹の急速悪化→即受診。',
-    link: '/docs/220-Rheumatology',
+    link: '/docs/220-rheumatology',
     comment: '対称性+小関節（MP/PIP/MTP）+朝のこわばり60分以上が典型。RF陰性RA（seronegative RA）は20-30%存在→抗CCP抗体で拾う。DIPは侵さない（DIP→OA or PsA）。',
   },
   {
@@ -121,7 +121,7 @@ export const DIFFERENTIALS = [
     findings: ['butterfly_rash', 'elevated_crp_esr'],
     redFlags: ['butterfly_rash'],
     nextStep: 'ANA+抗dsDNA抗体+補体（C3/C4）+CBC+尿検査（蛋白尿）。リウマチ科紹介。再受診基準: 血尿・浮腫・呼吸困難・高熱→即受診。',
-    link: '/docs/220-Rheumatology',
+    link: '/docs/220-rheumatology',
     comment: '若年女性。蝶形紅斑+光線過敏+口腔潰瘍+多関節炎+漿膜炎+腎障害。ANA陽性（感度95%以上だが特異度低い）。関節炎は非びらん性（RAと異なりX線で骨びらんを来さない）。',
   },
   {
@@ -135,7 +135,7 @@ export const DIFFERENTIALS = [
     findings: ['elevated_crp_esr'],
     redFlags: [],
     nextStep: 'ESR（著明高値が典型）+CRP。プレドニゾロン15mg/日で劇的改善（24-72時間以内）→診断的治療。1週間で反応なし→PMR診断を再考。頭痛/視力障害/顎跛行→GCA合併を疑い即日眼科+リウマチ科紹介。再受診基準: 頭痛・視力変化出現→即受診（GCA=失明リスク）。',
-    link: '/docs/220-Rheumatology',
+    link: '/docs/220-rheumatology',
     comment: '50歳以上+両肩・腰帯の痛み+朝のこわばり+ESR著明高値。「関節痛」というよりも「肩や腰回りが痛くて動けない」。PMRの15-20%にGCA合併→頭痛・顎跛行を聴取。',
   },
   {
@@ -207,7 +207,7 @@ export const DIFFERENTIALS = [
     findings: [],
     redFlags: [],
     nextStep: 'DIP関節（Heberden結節）/膝/股が典型。朝のこわばり30分未満。CRP/ESR正常。X線（関節裂隙狭小化・骨棘）。NSAIDs+運動療法+体重管理。再受診基準: 急性腫脹+発熱→化膿性/結晶性の除外。',
-    link: '/docs/230-Orthopedics',
+    link: '/docs/230-orthopedics',
     comment: '最も頻度が高い関節疾患。加齢+肥満+関節負荷が危険因子。DIP（Heberden結節）・PIP（Bouchard結節）・膝・股が好発。炎症マーカーは正常。',
     alwaysShow: true,
   },
