@@ -266,11 +266,13 @@ function calcScore(rec, currentDrugs, modifiers, controlStatus, allDrugs) {
 
   if (isEscalation) {
     if (controlStatus === 'uncontrolled') score += 10;
-    else if (controlStatus === 'partial' || controlStatus === 'near_target') score += 3; // 様子見優先: エスカレーションは低めに
+    else if (controlStatus === 'partial' || controlStatus === 'near_target') score += 3;
     else if (controlStatus === 'controlled') score -= 12;
+    else if (controlStatus === 'overcontrolled') score -= 15; // 過降圧時のエスカレーションは禁
     else score += 4;
   } else if (rec.action === 'TAPER' || rec.action === 'STOP') {
-    if (controlStatus === 'controlled') score += 8;
+    if (controlStatus === 'overcontrolled') score += 15; // 過降圧は減量が第一
+    else if (controlStatus === 'controlled') score += 8;
     else if (controlStatus === 'near_target' || controlStatus === 'partial') score += 1;
     else score -= 10;
   } else if (rec.action === 'SWITCH') {
@@ -281,6 +283,9 @@ function calcScore(rec, currentDrugs, modifiers, controlStatus, allDrugs) {
     }
   } else if (rec.action === 'REFER') {
     if (controlStatus === 'uncontrolled') score += 5;
+  } else if (rec.action === 'WATCH') {
+    // データに格納された WATCH rec（naive_lifestyle_first 等）
+    score += 7;
   }
 
   if (rec.action === 'DOSE_UP' && (controlStatus === 'near_target' || controlStatus === 'partial' || controlStatus === 'uncontrolled')) {
@@ -328,7 +333,8 @@ function splitTiers(ranked, controlStatus) {
   if (ranked.length === 0) return { primary: [], alternates: [], later: [] };
   const caps = {
     controlled: { primary: 0, alternates: 0, later: 2 },
-    near_target: { primary: 0, alternates: 1, later: 3 }, // WATCH is primary (injected); DOSE_UPを1件alt、ほかlater
+    near_target: { primary: 0, alternates: 1, later: 3 },
+    overcontrolled: { primary: 1, alternates: 1, later: 2 }, // TAPER を primary に
     partial: { primary: 1, alternates: 2, later: 3 },
     uncontrolled: { primary: 1, alternates: 2, later: 4 },
     null_: { primary: 1, alternates: 2, later: 3 },
@@ -416,9 +422,31 @@ export default function TreatmentBooster({
     setOverrideStatus(null);
   }, []);
 
+  // BP値から自動検出される追加モディファイア（手動選択が不要）
+  const autoFlags = useMemo(() => {
+    const flags = [];
+    const s = metricValues.sbp;
+    const d = metricValues.dbp;
+    // Grade II 相当（家庭血圧 ≥145/90）
+    if ((s !== undefined && s >= 145) || (d !== undefined && d >= 90)) {
+      flags.push('co_grade2');
+    }
+    // 重症高血圧（家庭血圧 ≥160/105、診察室≥180/110 相当）
+    if ((s !== undefined && s >= 160) || (d !== undefined && d >= 105)) {
+      flags.push('rf_severe_ht');
+    }
+    return flags;
+  }, [metricValues]);
+
+  // 手動選択 + 自動検出のマージ
+  const effectiveModifiers = useMemo(() => {
+    const set = new Set([...modifiers, ...autoFlags]);
+    return [...set];
+  }, [modifiers, autoFlags]);
+
   const controlStatus = useMemo(
-    () => deriveControlStatus(metricValues, CONTROL_METRIC.deriveStatus, overrideStatus, modifiers),
-    [metricValues, overrideStatus, CONTROL_METRIC, modifiers]
+    () => deriveControlStatus(metricValues, CONTROL_METRIC.deriveStatus, overrideStatus, effectiveModifiers),
+    [metricValues, overrideStatus, CONTROL_METRIC, effectiveModifiers]
   );
 
   const currentState = useMemo(() => detectCurrentState(currentDrugs, DRUGS), [currentDrugs, DRUGS]);
@@ -442,23 +470,22 @@ export default function TreatmentBooster({
   }, [MODIFIERS]);
 
   const activeDoNot = useMemo(() => {
-    return DO_NOT_RULES.filter((r) => r.modifiers && r.modifiers.some((m) => modifiers.includes(m)));
-  }, [modifiers, DO_NOT_RULES]);
+    return DO_NOT_RULES.filter((r) => r.modifiers && r.modifiers.some((m) => effectiveModifiers.includes(m)));
+  }, [effectiveModifiers, DO_NOT_RULES]);
 
   const urgentRecs = useMemo(() => {
     return RECOMMENDATIONS.filter(
       (r) =>
         r.urgentWhen &&
-        r.urgentWhen.some((m) => modifiers.includes(m)) &&
-        // Urgent banner must also respect forbidden — never show a contraindicated drug as urgent
-        !(r.forbidden && r.forbidden.some((f) => modifiers.includes(f)))
+        r.urgentWhen.some((m) => effectiveModifiers.includes(m)) &&
+        !(r.forbidden && r.forbidden.some((f) => effectiveModifiers.includes(f)))
     );
-  }, [RECOMMENDATIONS, modifiers]);
+  }, [RECOMMENDATIONS, effectiveModifiers]);
 
   // Synthesized recs: DOSE_UP + MAINTAIN
   const doseUpRecs = useMemo(
-    () => synthesizeDoseUpRecs(currentDrugs, DRUGS, modifiers),
-    [currentDrugs, DRUGS, modifiers]
+    () => synthesizeDoseUpRecs(currentDrugs, DRUGS, effectiveModifiers),
+    [currentDrugs, DRUGS, effectiveModifiers]
   );
 
   // DO_NOT ruleが current regimen に関連するかどうかを判定する
@@ -466,36 +493,35 @@ export default function TreatmentBooster({
   const relevantDoNot = useMemo(() => {
     const currentClasses = getCurrentClasses(currentDrugs, DRUGS);
     return DO_NOT_RULES.some((r) => {
-      if (!r.modifiers || !r.modifiers.some((m) => modifiers.includes(m))) return false;
-      // DO_NOT rule の drug 文字列に current class が含まれるかを緩くマッチング
+      if (!r.modifiers || !r.modifiers.some((m) => effectiveModifiers.includes(m))) return false;
       const ruleText = r.drug || '';
       return [...currentClasses].some((cls) => ruleText.includes(cls));
     });
-  }, [currentDrugs, DRUGS, modifiers, DO_NOT_RULES]);
+  }, [currentDrugs, DRUGS, effectiveModifiers, DO_NOT_RULES]);
 
   // MAINTAIN: controlStatus === 'controlled' でのみ発火。ブロッカー・緊急・関連DO_NOTで抑制。
   // CKD/DM等の合併症は reassess/note に反映。
   const maintainRec = useMemo(() => {
     if (controlStatus !== 'controlled') return null;
-    if (MAINTAIN_BLOCKERS.some((m) => modifiers.includes(m))) return null;
+    if (MAINTAIN_BLOCKERS.some((m) => effectiveModifiers.includes(m))) return null;
     if (urgentRecs.length > 0) return null;
     if (relevantDoNot) return null;
-    return synthesizeMaintainRec(currentDrugs, DRUGS, modifiers);
-  }, [controlStatus, currentDrugs, DRUGS, modifiers, urgentRecs, relevantDoNot]);
+    return synthesizeMaintainRec(currentDrugs, DRUGS, effectiveModifiers);
+  }, [controlStatus, currentDrugs, DRUGS, effectiveModifiers, urgentRecs, relevantDoNot]);
 
   // WATCH: controlStatus === 'near_target' で発火（目標+5〜+15mmHg、様子見ゾーン）
   // 高リスク（DM/post-MI/HF/蛋白尿）併存時は WATCH primary を抑制し、介入案を優先表示させる。
   const watchRec = useMemo(() => {
     if (controlStatus !== 'near_target') return null;
-    if (MAINTAIN_BLOCKERS.some((m) => modifiers.includes(m))) return null;
+    if (MAINTAIN_BLOCKERS.some((m) => effectiveModifiers.includes(m))) return null;
     if (urgentRecs.length > 0) return null;
     if (relevantDoNot) return null;
     const isHighRisk = ['cm_dm', 'cm_post_mi', 'cm_hf', 'cm_proteinuria'].some((m) =>
-      modifiers.includes(m)
+      effectiveModifiers.includes(m)
     );
     if (isHighRisk) return null;
-    return synthesizeWatchRec(currentDrugs, DRUGS, modifiers);
-  }, [controlStatus, currentDrugs, DRUGS, modifiers, urgentRecs, relevantDoNot]);
+    return synthesizeWatchRec(currentDrugs, DRUGS, effectiveModifiers);
+  }, [controlStatus, currentDrugs, DRUGS, effectiveModifiers, urgentRecs, relevantDoNot]);
 
   // Ranked recs (excluding urgent banner items)
   const rankedRecs = useMemo(() => {
@@ -503,12 +529,12 @@ export default function TreatmentBooster({
     const allRecs = [...RECOMMENDATIONS, ...doseUpRecs];
     return allRecs
       .map((r) => {
-        const { score, excluded, reason } = calcScore(r, currentDrugs, modifiers, controlStatus, DRUGS);
+        const { score, excluded, reason } = calcScore(r, currentDrugs, effectiveModifiers, controlStatus, DRUGS);
         return { ...r, _score: score, _excluded: excluded, _reason: reason };
       })
       .filter((r) => r._score > 0 && !urgentIds.has(r.id))
       .sort((a, b) => b._score - a._score);
-  }, [RECOMMENDATIONS, doseUpRecs, DRUGS, currentDrugs, modifiers, controlStatus, urgentRecs]);
+  }, [RECOMMENDATIONS, doseUpRecs, DRUGS, currentDrugs, effectiveModifiers, controlStatus, urgentRecs]);
 
   const { primary, alternates, later } = useMemo(
     () => splitTiers(rankedRecs, controlStatus),
@@ -650,16 +676,21 @@ export default function TreatmentBooster({
               {(metricValues.sbp !== undefined || metricValues.dbp !== undefined) && (
                 <div className={styles.targetLine}>
                   適用目標: <strong>{formatAppliedTarget(modifiers)}</strong>
+                  {autoFlags.length > 0 && (
+                    <span className={styles.autoFlags}>
+                      &#9888; 自動検出: {autoFlags.map((f) => autoFlagLabel(f)).join(' / ')}
+                    </span>
+                  )}
                   {suggestAgeNudge(metricValues, modifiers) && (
                     <span className={styles.ageNudge}>
-                      &#128161; 75歳以上なら「75歳以上の高齢者」を選択してください（目標緩和）
+                      &#128161; 75歳以上なら健康・機能状態に応じたカテゴリー（カテゴリー1〜4）を選択してください（JSH2025 Table 3）
                     </span>
                   )}
                 </div>
               )}
               {controlStatus && (
                 <div className={styles.statusRow}>
-                  {['controlled', 'near_target', 'uncontrolled'].map((s) => (
+                  {['controlled', 'near_target', 'uncontrolled', 'overcontrolled'].map((s) => (
                     <button
                       key={s}
                       className={`${styles.statusChip} ${
@@ -828,36 +859,48 @@ function statusLabel(s) {
     {
       controlled: 'コントロール良好（目標内）',
       near_target: '目標+5〜+15（様子見）',
+      overcontrolled: '過降圧（減量検討）',
       partial: '部分的',
       uncontrolled: 'コントロール不良（+15以上）',
     }[s] || s
   );
 }
 
-function formatAppliedTarget(modifiers) {
-  const isElderly = modifiers.includes('co_elderly') || modifiers.includes('co_frail');
-  const isHighRisk = [
-    'cm_dm',
-    'cm_ckd',
-    'cm_ckd_adv',
-    'cm_proteinuria',
-    'cm_cad',
-    'cm_post_mi',
-    'cm_hf',
-  ].some((m) => modifiers.includes(m));
-  if (isElderly && !isHighRisk) return '< 135/85 mmHg（75歳以上・高リスク非合併）';
-  if (isHighRisk) return '< 125/75 mmHg（高リスク併存で厳格目標）';
-  return '< 125/75 mmHg（一般成人）';
+function autoFlagLabel(f) {
+  return (
+    {
+      co_grade2: 'Grade II（家庭≥145/90）',
+      rf_severe_ht: '重症高血圧（家庭≥160/105）',
+    }[f] || f
+  );
 }
 
-// SBPが125-145付近・DBPが75-92付近だが co_elderly が未選択の場合に表示するヒント
+function formatAppliedTarget(modifiers) {
+  // JSH2025: 全年齢で原則 <125/75、75歳以上の高齢者カテゴリー2以降で緩和
+  if (modifiers.includes('co_end_of_life'))
+    return '個別判断（目安 140-160 mmHg）（JSH2025カテゴリー4）';
+  if (modifiers.includes('co_adl_severe'))
+    return '< 145/90 mmHg（JSH2025カテゴリー3、収縮期<120は回避）';
+  if (modifiers.includes('co_frail'))
+    return '< 135/85 mmHg（JSH2025カテゴリー2）';
+  if (modifiers.includes('co_elderly'))
+    return '< 125/75 mmHg（JSH2025カテゴリー1、非高齢者と同様）';
+  return '< 125/75 mmHg（JSH2025 全年齢統一目標）';
+}
+
+// BP値が高齢者目標範囲に近い（130-144/80-91）だがカテゴリーが未選択なら年齢確認ヒント
 function suggestAgeNudge(values, modifiers) {
-  if (modifiers.includes('co_elderly') || modifiers.includes('co_frail')) return false;
+  const hasAnyCategory = [
+    'co_elderly',
+    'co_frail',
+    'co_adl_severe',
+    'co_end_of_life',
+  ].some((m) => modifiers.includes(m));
+  if (hasAnyCategory) return false;
   const s = values.sbp;
   const d = values.dbp;
-  // 目標+5〜+15に相当するゾーン（高齢者だと目標内になる可能性がある）
-  const sInNudgeZone = s !== undefined && s >= 130 && s < 145;
-  const dInNudgeZone = d !== undefined && d >= 80 && d < 92;
+  const sInNudgeZone = s !== undefined && s >= 125 && s < 145;
+  const dInNudgeZone = d !== undefined && d >= 75 && d < 92;
   return sInNudgeZone || dInNudgeZone;
 }
 

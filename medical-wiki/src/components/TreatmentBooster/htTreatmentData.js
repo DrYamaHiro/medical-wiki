@@ -42,11 +42,11 @@ export const DRUGS = [
   { id: 'ccb_cil', label: 'シルニジピン', class: 'Ca拮抗薬',
     doses: [{ value: '5', label: '5mg' }, { value: '10', label: '10mg', isDefault: true }, { value: '20', label: '20mg', isMax: true }] },
 
-  // 利尿薬
+  // 利尿薬（JSH2025: サイアザイドは少量で使用開始推奨）
   { id: 'diu_tri', label: 'トリクロルメチアジド', class: '利尿薬',
-    doses: [{ value: '1', label: '1mg', isDefault: true }, { value: '2', label: '2mg', isMax: true }] },
+    doses: [{ value: '0.5', label: '0.5mg', isDefault: true }, { value: '1', label: '1mg' }, { value: '2', label: '2mg', isMax: true }] },
   { id: 'diu_ind', label: 'インダパミド', class: '利尿薬',
-    doses: [{ value: '1', label: '1mg', isDefault: true }, { value: '2', label: '2mg', isMax: true }] },
+    doses: [{ value: '0.5', label: '0.5mg', isDefault: true }, { value: '1', label: '1mg' }, { value: '2', label: '2mg', isMax: true }] },
 
   // β遮断薬
   { id: 'bb_bis', label: 'ビソプロロール', class: 'β遮断薬',
@@ -54,11 +54,15 @@ export const DRUGS = [
   { id: 'bb_car', label: 'カルベジロール', class: 'β遮断薬',
     doses: [{ value: '1.25', label: '1.25mg' }, { value: '2.5', label: '2.5mg' }, { value: '5', label: '5mg', isDefault: true }, { value: '10', label: '10mg' }, { value: '20', label: '20mg', isMax: true }] },
 
-  // MRA
+  // MRA (JSH2025 G2)
   { id: 'mra_spi', label: 'スピロノラクトン', class: 'MRA',
     doses: [{ value: '12.5', label: '12.5mg' }, { value: '25', label: '25mg', isDefault: true }, { value: '50', label: '50mg', isMax: true }] },
   { id: 'mra_ese', label: 'エサキセレノン（ミネブロ）', class: 'MRA',
     doses: [{ value: '1.25', label: '1.25mg' }, { value: '2.5', label: '2.5mg', isDefault: true }, { value: '5', label: '5mg', isMax: true }] },
+
+  // ARNI (JSH2025で高血圧に位置づけ、G2)
+  { id: 'arni_sac', label: 'サクビトリルバルサルタン（エンレスト）', class: 'ARNI',
+    doses: [{ value: '100', label: '100mg' }, { value: '200', label: '200mg', isDefault: true }, { value: '400', label: '400mg', isMax: true }] },
   { id: 'alpha_tam', label: 'タムスロシン（BPH併存時）', class: 'α遮断薬',
     doses: [{ value: '0.1', label: '0.1mg' }, { value: '0.2', label: '0.2mg', isDefault: true, isMax: true }] },
 
@@ -75,46 +79,57 @@ export const DRUGS = [
 export const CONTROL_METRIC = {
   label: '家庭血圧平均（朝・夜の2週間平均）',
   inputs: [
-    { id: 'sbp', label: 'SBP', unit: 'mmHg', placeholder: '例:135' },
-    { id: 'dbp', label: 'DBP', unit: 'mmHg', placeholder: '例:85' },
+    { id: 'sbp', label: 'SBP', unit: 'mmHg', placeholder: '例:128' },
+    { id: 'dbp', label: 'DBP', unit: 'mmHg', placeholder: '例:78' },
   ],
-  note: '家庭血圧で判定（診察室値は白衣効果で高めに出る）。目標: 一般成人 <125/75、75歳以上（高リスク非合併） <135/85、DM/蛋白尿/CKD/冠動脈疾患 <125/75。目標+5mmHg以内は「目標内」扱い（日間変動±10mmHg程度は生理的）',
+  note: 'JSH2025: 全年齢で家庭血圧 <125/75（診察室 <130/80）に統一。ただし75歳以上は健康・機能状態で4カテゴリー分類（カテゴリー2以降で目標緩和、カテゴリー3以降は収縮期<120への降圧を避ける）。目標+5mmHg以内は日間変動範囲内として「目標内」扱い',
   /**
-   * deriveStatus — 4段階判定
-   *  controlled:   目標達成 or 目標+5以内（日間変動内、様子見で十分）
-   *  near_target:  目標+5〜+15（経過観察、急な強化は不要。生活指導・次回再評価優先）
-   *  uncontrolled: 目標+15以上（明確に目標未達、介入必要）
-   *  ※ 'partial' は v0.2 互換のため残す（現在は near_target を同義に扱う）
+   * deriveStatus — JSH2025準拠の判定
+   *  controlled:     目標達成 or 目標+5以内（日間変動内、維持）
+   *  near_target:    目標+5〜+15（経過観察、個別判断・早期ステップアップ検討）
+   *  uncontrolled:   目標+15以上（明確に目標未達、介入必要）
+   *  overcontrolled: カテゴリー3以上でSBP<120（過降圧、減量検討）
    *
-   * 第2引数の modifiers から年齢・合併症を読み取り目標を動的に選択する。
+   * 高齢者カテゴリー（JSH2025 Table 3）:
+   *   co_elderly:    カテゴリー1（ADL保持、自力通院可能）→ 非高齢者と同様の目標 <125/75
+   *   co_frail:      カテゴリー2（手段的ADL低下、介助必要）→ 家庭 <135/85
+   *   co_adl_severe: カテゴリー3（基本的ADL低下、通院困難）→ 家庭 <145/90、<120 は避ける
+   *   co_end_of_life:カテゴリー4（エンド・オブ・ライフ）→ 個別判断、目安 140-160
+   *
+   * JSH2025 変更点: JSH2019の「75歳以上は<135/85」は撤廃。高齢でも原則 <125/75 を目指し、
+   * 有害事象がある場合のみカテゴリー分類に応じて緩和する。
    */
   deriveStatus: (v, modifiers = []) => {
     const s = v.sbp;
     const d = v.dbp;
     if (s === undefined && d === undefined) return null;
 
-    const isElderly = modifiers.includes('co_elderly') || modifiers.includes('co_frail');
-    const isHighRisk = [
-      'cm_dm',
-      'cm_ckd',
-      'cm_ckd_adv',
-      'cm_proteinuria',
-      'cm_cad',
-      'cm_post_mi',
-      'cm_hf',
-    ].some((m) => modifiers.includes(m));
+    const cat4 = modifiers.includes('co_end_of_life');
+    const cat3 = modifiers.includes('co_adl_severe');
+    const cat2 = modifiers.includes('co_frail');
 
-    // 高リスク併存は年齢を問わず厳格目標。高齢で高リスクなしのみ緩和。
-    const sTarget = isElderly && !isHighRisk ? 135 : 125;
-    const dTarget = isElderly && !isHighRisk ? 85 : 75;
+    // JSH2025: カテゴリー別目標（家庭血圧換算、診察室-5mmHg が目安）
+    let sTarget = 125, dTarget = 75; // 原則（カテゴリー1 含む、全年齢）
+    if (cat4) { sTarget = 155; dTarget = 95; }
+    else if (cat3) { sTarget = 145; dTarget = 90; }
+    else if (cat2) { sTarget = 135; dTarget = 85; }
+
+    // 過降圧検出（JSH2025 Table 3）: カテゴリー3 では SBP<120 を避ける
+    // カテゴリー2 でも SBP<120 は減量考慮
+    if ((cat3 || cat4) && s !== undefined && s < 120) {
+      return 'overcontrolled';
+    }
+    if (cat2 && s !== undefined && s < 115) {
+      return 'overcontrolled';
+    }
 
     const sMiss = s !== undefined ? s - sTarget : -Infinity;
     const dMiss = d !== undefined ? d - dTarget : -Infinity;
     const worst = Math.max(sMiss, dMiss);
 
-    if (worst <= 5) return 'controlled';       // 目標+5以内 → 維持
-    if (worst < 15) return 'near_target';      // 目標+5〜+15 → 経過観察
-    return 'uncontrolled';                     // 目標+15以上 → 介入
+    if (worst <= 5) return 'controlled';
+    if (worst < 15) return 'near_target';
+    return 'uncontrolled';
   },
 };
 
@@ -152,9 +167,11 @@ export const MODIFIERS = [
   { id: 'cm_liver', label: '肝機能障害（Child-Pugh B以上）', cat: '併存疾患' },
   { id: 'cm_salt_sensitive', label: '食塩感受性高血圧（推定）', cat: '併存疾患' },
 
-  // 制約
-  { id: 'co_elderly', label: '75歳以上の高齢者', cat: '制約' },
-  { id: 'co_frail', label: 'フレイル（転倒リスク高）', cat: '制約' },
+  // 制約（JSH2025 高齢者カテゴリー Table 3 準拠）
+  { id: 'co_elderly', label: '75歳以上・ADL保持（カテゴリー1、目標 <125/75）', cat: '制約' },
+  { id: 'co_frail', label: 'フレイル〜要介護（カテゴリー2、目標 <135/85）', cat: '制約' },
+  { id: 'co_adl_severe', label: '基本的ADL低下・通院困難（カテゴリー3、目標 <145/90、<120回避）', cat: '制約', severity: 'critical' },
+  { id: 'co_end_of_life', label: 'エンド・オブ・ライフ（カテゴリー4、個別判断）', cat: '制約', severity: 'critical' },
   { id: 'co_pregnancy', label: '妊娠/妊娠希望', cat: '制約', severity: 'critical' },
   { id: 'co_lactation', label: '授乳中', cat: '制約' },
   { id: 'co_polyp', label: 'ポリファーマシー（5剤以上）', cat: '制約' },
@@ -182,8 +199,19 @@ export const MODIFIERS = [
 /* -------------------------------------------------------- */
 export const RECOMMENDATIONS = [
   // ===========================================
-  // STEP UP: 無治療 → 単剤
+  // 無治療: 生活習慣指導が先か、薬物療法開始か
   // ===========================================
+  {
+    id: 'naive_lifestyle_first',
+    action: 'WATCH',
+    drug: '生活習慣改善を優先（STEP 1 前）',
+    example: '減塩(6g/日未満)・減量(BMI<25)・運動(中等度30分×週5)・節酒・禁煙 + 家庭血圧手帳',
+    reason: 'JSH2025: 低・中等リスクのI度高血圧では、生活習慣改善を1ヶ月以内に再評価。十分な降圧があれば薬物療法不要',
+    fromStates: ['naive'],
+    forbidden: ['co_grade2', 'rf_severe_ht', 'rf_target_organ', 'cm_hf', 'cm_post_mi', 'cm_stroke', 'cm_dm', 'cm_ckd', 'cm_ckd_adv', 'cm_proteinuria'],
+    reassess: '1ヶ月後に家庭血圧で再評価。十分な降圧がなければ STEP 1 の薬物療法を開始',
+    note: 'JSH2025: 診断後1ヶ月以内に再評価し、改善なければ薬物療法を遅らせず開始。高リスク併存例では最初から薬物療法併用',
+  },
   {
     id: 'start_arb',
     action: 'STEP_UP',
@@ -210,14 +238,29 @@ export const RECOMMENDATIONS = [
   {
     id: 'start_thiazide',
     action: 'STEP_UP',
-    drug: 'サイアザイド系利尿薬から開始',
-    example: 'トリクロルメチアジド錠1mg 1回1錠 1日1回 朝食後',
-    reason: '食塩感受性高血圧・高齢者に有効。第一選択の一つ（低コスト）',
+    drug: 'サイアザイド系利尿薬から開始（少量）',
+    example: 'トリクロルメチアジド錠0.5mg 1回1錠 1日1回 朝食後（JSH2025: 少量で開始）',
+    reason: 'JSH2025 G1b: 本来投与されるべき病態への使用率が低く積極的投与が望まれる。食塩感受性・高齢者に有効',
     fromStates: ['naive'],
-    preferredWhen: ['co_cost', 'cm_salt_sensitive', 'co_elderly'],
+    preferredWhen: ['co_cost', 'cm_salt_sensitive', 'co_elderly', 'co_frail'],
     avoidWhen: ['cm_gout', 'cm_dm', 'se_uric_up', 'fh_thiazide_hypoK'],
+    forbidden: ['se_hypoK'],
     reassess: '4週後にK・Na・UA測定',
-    note: '低K血症・耐糖能悪化・高尿酸血症に注意。DM/痛風合併例では避ける',
+    note: 'JSH2025: 少量（0.5-1mg）で開始。低K血症・耐糖能悪化・高尿酸血症に注意。DM/痛風合併例では他剤優先',
+  },
+  {
+    id: 'start_bb',
+    action: 'STEP_UP',
+    drug: 'β遮断薬から開始（ビソプロロール/カルベジロール）',
+    example: 'ビソプロロール錠2.5mg 1回1錠 1日1回 朝食後',
+    reason: 'JSH2025 G1b: 狭心症・心筋梗塞後・HFrEF・大動脈解離・胸部大動脈瘤で積極的適応。有用性・安全性が確立',
+    fromStates: ['naive'],
+    preferredWhen: ['cm_cad', 'cm_post_mi', 'cm_hf', 'cm_af'],
+    avoidWhen: ['cm_asthma', 'fh_bb_bradycardia', 'se_bradycardia', 'co_adl_severe'],
+    forbidden: ['co_pregnancy'],
+    drugClass: 'β遮断薬',
+    reassess: '2週後に心拍数・血圧確認。徐脈に注意しながら漸増',
+    note: 'JSH2025: ビソプロロール・カルベジロールは糖尿病・高齢者への使用懸念が解消。積極的適応では第一選択の一つ',
   },
   {
     id: 'start_combo',
@@ -278,13 +321,29 @@ export const RECOMMENDATIONS = [
   {
     id: 'dual_add_thiazide',
     action: 'ADD',
-    drug: 'サイアザイド系利尿薬追加（3剤目）',
-    example: 'トリクロルメチアジド錠1mg 1回1錠 1日1回 朝食後',
-    reason: 'ARB+CCB+利尿薬は標準的な3剤併用。食塩感受性にも対応',
+    drug: 'サイアザイド系利尿薬追加（3剤目・原則投与）',
+    example: 'トリクロルメチアジド錠0.5-1mg 1回1錠 1日1回 朝食後',
+    reason: 'JSH2025 STEP 3: サイアザイド系利尿薬が投与されていなければ原則追加。ARB+CCB+利尿薬は標準的3剤併用',
     fromStates: ['dual'],
-    avoidWhen: ['cm_gout', 'fh_thiazide_hypoK', 'cm_ckd_adv'],
+    avoidWhen: ['cm_gout', 'fh_thiazide_hypoK', 'cm_ckd_adv', 'se_hypoK'],
     reassess: '4週後にK・Na・UA・Cre確認',
     drugClass: '利尿薬',
+  },
+  {
+    id: 'switch_to_arni',
+    action: 'SWITCH',
+    drug: 'ARB/ACEi → ARNI（サクビトリルバルサルタン）へ切替',
+    example: 'ARB/ACEi中止 → 36時間休薬後 → サクビトリルバルサルタン錠200mg 1回1錠 1日1回',
+    reason: 'JSH2025 G2: HFrEF・LVH併存HTで選択肢。ARB/ACEiから切替時は36時間の休薬期間必須（血管浮腫リスク）',
+    fromStates: ['mono', 'dual'],
+    targetClass: 'ARNI',
+    preferredWhen: ['cm_hf', 'cm_post_mi'],
+    forbidden: ['co_pregnancy', 'se_hyperK', 'cm_bilateral_rvs'],
+    drugClass: 'ARNI',
+    specialistGate: true,
+    note: 'ARBとの併用は禁忌（36時間休薬必須）。血管浮腫既往例では禁忌。循環器専門医と連携推奨',
+    reassess: '2週後に血圧・K・Cre',
+    connectedAlert: 'HFrEF管理: ARNI+βB+MRA+SGLT2i（Fantastic Four）の構成を検討',
   },
 
   // ===========================================
@@ -312,7 +371,17 @@ export const RECOMMENDATIONS = [
     fromStates: ['triple', 'quad_plus'],
     preferredWhen: ['rf_2nd_suspect', 'rf_hypoK_severe', 'rf_target_organ'],
     urgentWhen: ['rf_severe_ht', 'rf_target_organ'],
-    note: 'ホルモン検査（PRA/PAC、コルチゾール、カテコラミン）の追加を検討',
+    note: '【二次性HTスクリーニング】原発性アルドステロン症: PAC/PRA比 ≥200 + PAC ≥120 pg/mL / 褐色細胞腫: 24時間尿メタネフリン・ノルメタネフリン / 腎血管性HT: 腎動脈Doppler or MRA / クッシング症候群: 24時間尿遊離コルチゾール / 甲状腺機能: TSH・FT4',
+  },
+  {
+    id: 'refer_ckd_advanced',
+    action: 'REFER',
+    drug: '腎臓内科へ紹介（CKD G4-G5 高血圧）',
+    reason: 'eGFR<30では降圧薬の選択・用量調整・K管理が専門的。早期のネフロロジー共同管理が望ましい',
+    fromStates: ['naive', 'mono', 'dual', 'triple', 'quad_plus'],
+    preferredWhen: ['cm_ckd_adv'],
+    note: '【G4-G5管理】ARB/ACEi は慎重投与（Cr/K頻回モニタ）。サイアザイドはeGFR<30で効果減弱→ループ利尿薬（フロセミド等）を検討。高K血症時はK吸着薬（ロケルマ・カリメート）併用。透析導入時期の評価も並行',
+    reassess: '月1回のK・Cre・eGFR・尿蛋白',
   },
 
   // ===========================================
@@ -420,12 +489,22 @@ export const RECOMMENDATIONS = [
     id: 'taper_elderly_hypotension',
     action: 'TAPER',
     drug: '降圧薬の減量（起立性低血圧・フレイル）',
-    reason: '高齢者・フレイルで過降圧による転倒リスク。目標緩和（<140/90まで許容）',
+    reason: '高齢者・フレイルで過降圧による転倒リスク。症候性低血圧・ふらつきを認めるときは速やかに減量',
     fromStates: ['mono', 'dual', 'triple', 'quad_plus'],
     triggerSideEffects: ['se_hypotension'],
-    preferredWhen: ['co_elderly', 'co_frail'],
+    preferredWhen: ['co_frail', 'co_adl_severe'],
     note: 'まず朝食後の最も作用の強い薬を1/2量に減量。2週後に再評価',
     reassess: '2週後に家庭血圧（起立時も測定）',
+  },
+  {
+    id: 'taper_overcontrolled',
+    action: 'TAPER',
+    drug: '降圧薬の減量（過降圧）',
+    reason: 'JSH2025 Table 3: カテゴリー3以上で収縮期<120への降圧は避ける。カテゴリー2でも<115で減量考慮。転倒・失神・臓器灌流低下リスク',
+    fromStates: ['mono', 'dual', 'triple', 'quad_plus'],
+    preferredWhen: ['co_adl_severe', 'co_end_of_life', 'co_frail'],
+    note: 'まず作用の最も強い薬を1/2量に。2週後に家庭血圧の起立時含めた再評価',
+    reassess: '2週後に家庭血圧（臥位・起立時両方を測定）',
   },
   {
     id: 'taper_controlled_stable',
@@ -530,5 +609,20 @@ export const DO_NOT_RULES = [
     drug: 'ACE阻害薬/ARB',
     modifiers: ['co_lactation'],
     reason: '授乳中は慎重投与。必要時はエナラプリル（母乳移行少）を選択',
+  },
+  {
+    drug: 'β遮断薬',
+    modifiers: ['se_bradycardia'],
+    reason: '【JSH2025 Table 2】高度徐脈（HR<50）は禁忌。2-3度AVブロック既往も禁忌',
+  },
+  {
+    drug: 'サイアザイド系利尿薬',
+    modifiers: ['se_hypoK'],
+    reason: '【JSH2025 Table 2】ナトリウム・カリウムが明らかに減少している病態では禁忌。ベースライン低K血症例では開始前に補正',
+  },
+  {
+    drug: 'ARB + ARNI（サクビトリルバルサルタン）',
+    modifiers: ['cm_hf', 'cm_post_mi'],
+    reason: '【JSH2025】ARBとARNIの併用は禁忌（血管浮腫・腎機能悪化リスク）。ARNI使用時はARBを36時間以上休薬してから切替',
   },
 ];

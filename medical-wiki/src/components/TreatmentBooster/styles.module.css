@@ -268,6 +268,17 @@
   font-weight: 600;
 }
 
+.autoFlags {
+  display: block;
+  margin-top: 0.25rem;
+  padding: 0.2rem 0.4rem;
+  background: #ffecb3;
+  color: #b71c1c;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .statusRow {
   display: flex;
   gap: 0.4rem;
@@ -308,6 +319,13 @@
   background: #ffcdd2;
   border-color: #c62828;
   color: #b71c1c;
+  font-weight: 600;
+}
+
+.status_overcontrolled {
+  background: #e1bee7;
+  border-color: #6a1b9a;
+  color: #4a148c;
   font-weight: 600;
 }
 
