@@ -8,6 +8,9 @@ description: "診察室血圧≧140/90、家庭血圧≧135/85。"
 keywords: ["本態性高血圧 / 初期・安定期", "本態性高血圧", "初期", "安定期", "本態", "態性", "性高", "高血", "血圧", "圧初", "期安", "安定", "定期", "本態性", "態性高", "性高血", "高血圧", "血圧初", "圧初期", "初期安", "期安定", "I10", "ht", "stable"]
 ---
 
+import TreatmentBooster from '@site/src/components/TreatmentBooster';
+import * as htTreatmentData from '@site/src/components/TreatmentBooster/htTreatmentData';
+
 <div className="row wiki-main">
 <div className="col col--5 soap-col">
 
@@ -135,6 +138,20 @@ keywords: ["本態性高血圧 / 初期・安定期", "本態性高血圧", "初
 <ImageUploader docId="i10-ht-stable" />
 
 {/* WIKI_EDIT_START */}
+## 🩺 治療修正支援ツール
+
+現在の治療と家庭血圧・修飾因子から、次の一手（ステップアップ・変更・減量・紹介）を提案します。
+
+<TreatmentBooster
+  drugs={htTreatmentData.DRUGS}
+  modifiers={htTreatmentData.MODIFIERS}
+  controlMetric={htTreatmentData.CONTROL_METRIC}
+  recommendations={htTreatmentData.RECOMMENDATIONS}
+  doNotRules={htTreatmentData.DO_NOT_RULES}
+  subtitle="高血圧の治療修正支援（JSH2024準拠）"
+  disease="hypertension"
+/>
+
 ## 📖 詳細解説
 
 ### 病態生理
