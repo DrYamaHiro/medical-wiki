@@ -10,6 +10,7 @@
 import * as htTreatmentData from './htTreatmentData';
 import * as dmTreatmentData from './dmTreatmentData';
 import * as dlpTreatmentData from './dlpTreatmentData';
+import * as asthmaTreatmentData from './asthmaTreatmentData';
 
 export const TREATMENT_DATA = {
   hypertension: {
@@ -24,6 +25,8 @@ export const TREATMENT_DATA = {
     data: dlpTreatmentData,
     subtitle: '脂質異常症の治療修正支援（JAS動脈硬化性疾患予防GL2022準拠）',
   },
-  // 将来追加:
-  // asthma: { data: asthmaTreatmentData, subtitle: '気管支喘息の治療修正支援' },
+  asthma: {
+    data: asthmaTreatmentData,
+    subtitle: '気管支喘息の治療修正支援（JGL2024 + GINA 2024準拠）',
+  },
 };
