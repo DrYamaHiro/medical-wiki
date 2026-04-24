@@ -506,7 +506,10 @@ export default function TreatmentBooster({
   const fnComputeConnectedAlerts = registryData?.computeConnectedAlerts || defaultHtComputeConnectedAlerts;
   const fnIsHighRiskForWatch = registryData?.isHighRiskForWatch || defaultHtIsHighRiskForWatch;
 
-  const [phase, setPhase] = useState(1);
+  // Phase 0 (optional risk stratification phase) is enabled per-disease via registryData.PHASE0
+  const PHASE0 = registryData?.PHASE0;
+  const initialPhase = PHASE0 ? 0 : 1;
+  const [phase, setPhase] = useState(initialPhase);
   // currentDrugs: array of { id, dose } objects
   const [currentDrugs, setCurrentDrugs] = useState([]);
   const [modifiers, setModifiers] = useState([]);
@@ -536,12 +539,26 @@ export default function TreatmentBooster({
   }, []);
 
   const reset = useCallback(() => {
-    setPhase(1);
+    setPhase(PHASE0 ? 0 : 1);
     setCurrentDrugs([]);
     setModifiers([]);
     setMetricValues({});
     setOverrideStatus(null);
-  }, []);
+  }, [PHASE0]);
+
+  // Phase 0: mutually exclusive risk category selection. Toggling off leaves none selected.
+  const selectRiskCategory = useCallback(
+    (catId) => {
+      if (!PHASE0) return;
+      const allRiskIds = PHASE0.categories.map((c) => c.id);
+      setModifiers((prev) => {
+        const isCurrentlySelected = prev.includes(catId);
+        const withoutRisk = prev.filter((m) => !allRiskIds.includes(m));
+        return isCurrentlySelected ? withoutRisk : [...withoutRisk, catId];
+      });
+    },
+    [PHASE0]
+  );
 
   const infoAlerts = useMemo(
     () => fnComputeInfoAlerts(metricValues, modifiers, currentDrugs, DRUGS),
@@ -681,7 +698,10 @@ export default function TreatmentBooster({
           <p className={styles.subtitle}>{subtitle}</p>
         </div>
         <div className={styles.headerRight}>
-          <span className={styles.phaseIndicator}>Phase {phase}/3</span>
+          <span className={styles.phaseIndicator}>
+            Phase {phase}/{PHASE0 ? 3 : 3}
+            {PHASE0 && phase === 0 ? ' (リスク層別)' : ''}
+          </span>
           <button className={styles.resetBtn} onClick={reset}>
             リセット
           </button>
@@ -737,6 +757,50 @@ export default function TreatmentBooster({
       {currentDrugs.length > 0 && phase >= 1 && (
         <div className={styles.stateBar}>
           現在の治療ステート: <strong>{stateLabel(currentState)}</strong>
+        </div>
+      )}
+
+      {/* Phase 0: リスク層別化（疾患別オプション） */}
+      {PHASE0 && phase >= 0 && (
+        <div className={styles.section}>
+          <h4 className={styles.sectionTitle}>
+            {PHASE0.label || 'Phase 0: リスク層別化'}
+            {PHASE0.hint && <span className={styles.sectionHint}>{PHASE0.hint}</span>}
+          </h4>
+          {PHASE0.link && (
+            <p className={styles.phase0Link}>
+              &#128279;{' '}
+              <a href={PHASE0.link.url} target="_blank" rel="noopener noreferrer">
+                {PHASE0.link.text}
+              </a>
+            </p>
+          )}
+          <div className={styles.catGroup}>
+            {PHASE0.groupLabel && (
+              <span className={styles.catLabel}>{PHASE0.groupLabel}</span>
+            )}
+            <div className={styles.chipGrid}>
+              {PHASE0.categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  className={`${styles.chip} ${
+                    modifiers.includes(cat.id) ? styles.chipActive : ''
+                  }`}
+                  onClick={() => selectRiskCategory(cat.id)}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className={styles.targetLine}>
+            適用目標: <strong>{fnFormatAppliedTarget(modifiers)}</strong>
+          </div>
+          {phase === 0 && (
+            <button className={styles.nextBtn} onClick={() => setPhase(1)}>
+              Phase 1: 現在の治療へ進む
+            </button>
+          )}
         </div>
       )}
 

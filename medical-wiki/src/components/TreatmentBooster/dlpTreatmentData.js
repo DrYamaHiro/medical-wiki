@@ -211,23 +211,48 @@ const ASCVD_IDS = ['cm_ascvd', 'cm_cad', 'cm_acs_12mo', 'cm_stroke', 'cm_non_car
 const VERY_HIGH_COMORBIDS = ['cm_dm', 'cm_ckd_g45', 'cm_acs_12mo', 'cm_non_card_stroke', 'cm_fh'];
 const HIGH_PRIMARY_IDS = ['cm_dm', 'cm_ckd', 'cm_ckd_g45', 'cm_pad', 'cm_multi_ascvd_lesion'];
 
+// Phase 0 explicit risk category → LDL target mapping (override)
+const PHASE0_TARGET_MAP = {
+  risk_fh_secondary: 70,
+  risk_very_high: 70,
+  risk_secondary: 100,
+  risk_fh_primary: 100,
+  risk_primary_high: 120,
+  risk_primary_moderate: 140,
+  risk_primary_low: 160,
+};
+const PHASE0_CATEGORY_LABELS = {
+  risk_fh_secondary: 'FH + ASCVD既往',
+  risk_very_high: '二次予防・超高リスク',
+  risk_secondary: '二次予防',
+  risk_fh_primary: 'FH（一次予防）',
+  risk_primary_high: '一次予防・高リスク',
+  risk_primary_moderate: '一次予防・中リスク',
+  risk_primary_low: '一次予防・低リスク',
+};
+
 function hasAscvdHistory(modifiers) {
   return ASCVD_IDS.some((m) => modifiers.includes(m));
 }
 
+function getPhase0Category(modifiers) {
+  return Object.keys(PHASE0_TARGET_MAP).find((id) => modifiers.includes(id));
+}
+
 export function deriveLDLTarget(modifiers = []) {
+  // Phase 0 override: explicit user selection takes precedence
+  const phase0Cat = getPhase0Category(modifiers);
+  if (phase0Cat) return PHASE0_TARGET_MAP[phase0Cat];
+
+  // Fallback: infer from individual comorbidity modifiers (legacy path)
   const has = (id) => modifiers.includes(id);
   const ascvd = hasAscvdHistory(modifiers);
-  // FH
   if (has('cm_fh') || has('cm_fh_homo')) return ascvd ? 70 : 100;
-  // Secondary prevention
   if (ascvd) {
     const veryHigh = VERY_HIGH_COMORBIDS.some(has) || has('cm_fh_suspect');
     return veryHigh ? 70 : 100;
   }
-  // Primary prevention high risk
   if (HIGH_PRIMARY_IDS.some(has)) return 120;
-  // Primary prevention moderate risk
   const riskCount = ['cm_multi_risk', 'cm_primary_moderate_risk', 'co_smoking', 'co_hypertension', 'co_low_hdl', 'co_fhx_ascvd']
     .filter(has).length;
   if (has('cm_primary_moderate_risk') || riskCount >= 2) return 140;
@@ -235,6 +260,10 @@ export function deriveLDLTarget(modifiers = []) {
 }
 
 function deriveRiskCategory(modifiers = []) {
+  // Phase 0 explicit selection wins
+  const phase0Cat = getPhase0Category(modifiers);
+  if (phase0Cat) return PHASE0_CATEGORY_LABELS[phase0Cat];
+
   const target = deriveLDLTarget(modifiers);
   const ascvd = hasAscvdHistory(modifiers);
   if (modifiers.includes('cm_fh') || modifiers.includes('cm_fh_homo')) {
@@ -248,6 +277,9 @@ function deriveRiskCategory(modifiers = []) {
 }
 
 function explainTargetDriver(modifiers) {
+  // When Phase 0 explicit selection is made, no extra driver label needed (category name already shown)
+  if (getPhase0Category(modifiers)) return '';
+
   const labels = {
     cm_fh: 'FH',
     cm_fh_homo: 'HoFH',
@@ -264,6 +296,28 @@ function explainTargetDriver(modifiers) {
   const drivers = Object.keys(labels).filter((id) => modifiers.includes(id));
   return drivers.slice(0, 2).map((id) => labels[id]).join(' + ');
 }
+
+/* -------------------------------------------------------- */
+/*  PHASE0 — Optional risk stratification phase             */
+/* -------------------------------------------------------- */
+export const PHASE0 = {
+  label: 'Phase 0: リスク層別化',
+  hint: '（最初にリスクカテゴリーを選択 → LDL-C 目標が自動決定）',
+  link: {
+    text: '久山町リスクスコア / JAS2022 計算ツール（公式）',
+    url: 'https://www.j-athero.org/jp/general/hisayama/',
+  },
+  groupLabel: 'リスク層別（1つ選択、未選択なら詳細併存症から自動推定）',
+  categories: [
+    { id: 'risk_primary_low', label: '一次予防・低リスク（LDL <160）' },
+    { id: 'risk_primary_moderate', label: '一次予防・中リスク（LDL <140）' },
+    { id: 'risk_primary_high', label: '一次予防・高リスク DM/CKD/PAD（LDL <120）' },
+    { id: 'risk_secondary', label: '二次予防 ASCVD既往（LDL <100）' },
+    { id: 'risk_very_high', label: '超高リスク 二次予防+DM/FH/ACS<12M/非心原性脳梗塞（LDL <70）' },
+    { id: 'risk_fh_primary', label: 'FH 一次予防 HeFH/HoFH（LDL <100）' },
+    { id: 'risk_fh_secondary', label: 'FH + ASCVD既往（LDL <70）' },
+  ],
+};
 
 /* -------------------------------------------------------- */
 /*  CONTROL_METRIC (JAS2022)                                */
