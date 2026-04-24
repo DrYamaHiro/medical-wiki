@@ -278,6 +278,9 @@ function calcScore(rec, currentDrugs, modifiers, controlStatus, allDrugs) {
   } else if (rec.action === 'SWITCH') {
     if (rec.triggerSideEffects && rec.triggerSideEffects.some((s) => modifiers.includes(s))) {
       score += 10;
+    } else if (rec.preferredWhen && rec.preferredWhen.some((m) => modifiers.includes(m))) {
+      // 副作用による SWITCH ではないが、preferredWhen 合致あり → 予防的最適化として埋没させない
+      score += 2;
     } else {
       score -= 3;
     }
@@ -423,17 +426,79 @@ export default function TreatmentBooster({
   }, []);
 
   // BP値から自動検出される追加モディファイア（手動選択が不要）
+  // 後で autoFlags から派生する情報アラート（軽度・中等度の教育的ヒント）
+  const infoAlerts = useMemo(() => {
+    const alerts = [];
+    const s = metricValues.sbp;
+    const d = metricValues.dbp;
+    const os = metricValues.office_sbp;
+    const od = metricValues.office_dbp;
+    const sd = metricValues.sbp_sd;
+
+    // 白衣高血圧
+    if (
+      ((os !== undefined && os >= 140) || (od !== undefined && od >= 90)) &&
+      ((s === undefined || s < 135) && (d === undefined || d < 85))
+    ) {
+      alerts.push({
+        type: 'white_coat',
+        label: '白衣高血圧の可能性',
+        detail: `診察室${os ?? '?'}/${od ?? '?'} vs 家庭${s ?? '?'}/${d ?? '?'}。家庭血圧平均で治療判断を。過降圧リスクあり、診察室値のみで増量しない`,
+      });
+    }
+    // 仮面高血圧
+    if (
+      (os !== undefined && os < 140 && od !== undefined && od < 90) &&
+      ((s !== undefined && s >= 135) || (d !== undefined && d >= 85))
+    ) {
+      alerts.push({
+        type: 'masked',
+        label: '仮面高血圧の可能性',
+        detail: `診察室${os}/${od} は正常範囲でも家庭${s ?? '?'}/${d ?? '?'} が高値。心血管リスクは通常のHT同等以上。治療強化を検討`,
+      });
+    }
+    // 日間変動大
+    if (sd !== undefined && sd > 15) {
+      alerts.push({
+        type: 'variability',
+        label: '家庭血圧変動 大 (SD>15)',
+        detail: `日間変動大（SD ${sd}）は心血管イベント独立リスク。Ca拮抗薬（アムロジピン）は変動抑制に有利。測定手技・服薬遵守も確認`,
+      });
+    }
+    return alerts;
+  }, [metricValues]);
+
   const autoFlags = useMemo(() => {
     const flags = [];
     const s = metricValues.sbp;
     const d = metricValues.dbp;
-    // Grade II 相当（家庭血圧 ≥145/90）
+    const os = metricValues.office_sbp;
+    const od = metricValues.office_dbp;
+    const sd = metricValues.sbp_sd;
+
     if ((s !== undefined && s >= 145) || (d !== undefined && d >= 90)) {
       flags.push('co_grade2');
     }
-    // 重症高血圧（家庭血圧 ≥160/105、診察室≥180/110 相当）
     if ((s !== undefined && s >= 160) || (d !== undefined && d >= 105)) {
       flags.push('rf_severe_ht');
+    }
+    // 白衣高血圧: 診察室≥140/90 + 家庭<135/85
+    if (
+      ((os !== undefined && os >= 140) || (od !== undefined && od >= 90)) &&
+      ((s === undefined || s < 135) && (d === undefined || d < 85))
+    ) {
+      flags.push('_white_coat_ht');
+    }
+    // 仮面高血圧: 診察室<140/90 + 家庭≥135/85
+    if (
+      (os !== undefined && os < 140 && od !== undefined && od < 90) &&
+      ((s !== undefined && s >= 135) || (d !== undefined && d >= 85))
+    ) {
+      flags.push('_masked_ht');
+    }
+    // 日間変動が大きい（SD>15）
+    if (sd !== undefined && sd > 15) {
+      flags.push('_high_bp_variability');
     }
     return flags;
   }, [metricValues]);
@@ -490,6 +555,54 @@ export default function TreatmentBooster({
 
   // DO_NOT ruleが current regimen に関連するかどうかを判定する
   // （例: 痛風患者でサイアザイドDO_NOTが発火しても、患者がサイアザイド非服用なら MAINTAIN 抑制の必要なし）
+  // 連携アラート: 処方+合併症の組み合わせから動的に導出
+  const connectedAlerts = useMemo(() => {
+    const alerts = [];
+    const currentClasses = getCurrentClasses(currentDrugs, DRUGS);
+    const hasARB_or_ACEi = currentClasses.has('ARB') || currentClasses.has('ACE阻害薬');
+    const hasDiuretic = currentClasses.has('利尿薬');
+    const hasBB = currentClasses.has('β遮断薬');
+
+    // SGLT2i 連携推奨: DM+ARB/ACEi で心腎保護を強化
+    if (effectiveModifiers.includes('cm_dm') && hasARB_or_ACEi) {
+      alerts.push({
+        type: 'sglt2i',
+        label: 'SGLT2i 併用を検討',
+        detail: 'DM+高血圧でARB/ACEi内服中。SGLT2i併用で心腎保護エビデンス最強（EMPA-KIDNEY・DAPA-CKD）。DM主治医と相談の上、ダパグリフロジン/エンパグリフロジンの追加を検討',
+      });
+    }
+
+    // Triple Whammy: ARB/ACEi + 利尿薬 + NSAID (+CKDで特にリスク増)
+    if (hasARB_or_ACEi && hasDiuretic && effectiveModifiers.includes('co_nsaid')) {
+      alerts.push({
+        type: 'triple_whammy',
+        label: '⚠ Triple Whammy（AKI高リスク）',
+        detail: 'ARB/ACEi + 利尿薬 + NSAID の3者併用は急性腎障害リスク急増。NSAID中止orアセトアミノフェン変更を最優先。中止不可なら72時間以内にCr/eGFR再検',
+        severity: 'critical',
+      });
+    }
+
+    // 妊娠可能年齢 + ARB/ACEi 確認
+    if (effectiveModifiers.includes('co_reproductive_age') && hasARB_or_ACEi) {
+      alerts.push({
+        type: 'repro_age',
+        label: '妊娠可能年齢の女性 + ARB/ACEi',
+        detail: '挙児希望・避妊状況の確認を。妊娠時は胎児腎毒性・羊水過少。妊娠判明時は即時中止 → メチルドパ/ラベタロール/ニフェジピン徐放へ切替。挙児希望ならこれらを事前に第一選択検討',
+        severity: 'critical',
+      });
+    }
+
+    // β遮断薬急激中止の警告（現在のcurrentDrugsではなく、TAPER/STOPを選ぶ際のフラグ）
+    if (hasBB && effectiveModifiers.includes('cm_cad')) {
+      alerts.push({
+        type: 'bb_withdrawal',
+        label: 'β遮断薬の急激中止は避ける',
+        detail: '虚血性心疾患併存でβ遮断薬を減量/中止する場合、急激な中止は反跳性頻脈・狭心症悪化・心筋梗塞リスク。2-4週かけて段階的に減量',
+      });
+    }
+    return alerts;
+  }, [currentDrugs, DRUGS, effectiveModifiers]);
+
   const relevantDoNot = useMemo(() => {
     const currentClasses = getCurrentClasses(currentDrugs, DRUGS);
     return DO_NOT_RULES.some((r) => {
@@ -520,6 +633,10 @@ export default function TreatmentBooster({
       effectiveModifiers.includes(m)
     );
     if (isHighRisk) return null;
+    // EOL/高度ADL低下では WATCH（2-4週後再評価）は不適切。taper or 個別判断が適切。
+    if (effectiveModifiers.includes('co_end_of_life') || effectiveModifiers.includes('co_adl_severe')) {
+      return null;
+    }
     return synthesizeWatchRec(currentDrugs, DRUGS, effectiveModifiers);
   }, [controlStatus, currentDrugs, DRUGS, effectiveModifiers, urgentRecs, relevantDoNot]);
 
@@ -579,6 +696,31 @@ export default function TreatmentBooster({
           {activeDoNot.map((r, i) => (
             <div key={i} className={styles.doNotItem}>
               &#10060; <strong>{r.drug}</strong>: {r.reason}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {connectedAlerts.length > 0 && (
+        <div className={styles.connectedBox}>
+          {connectedAlerts.map((a, i) => (
+            <div
+              key={i}
+              className={`${styles.connectedItem} ${
+                a.severity === 'critical' ? styles.connectedCritical : ''
+              }`}
+            >
+              <strong>{a.label}</strong>: {a.detail}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {infoAlerts.length > 0 && (
+        <div className={styles.infoBox}>
+          {infoAlerts.map((a, i) => (
+            <div key={i} className={styles.infoItem}>
+              &#8505; <strong>{a.label}</strong>: {a.detail}
             </div>
           ))}
         </div>

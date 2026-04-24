@@ -89,6 +89,46 @@
   border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
+/* 連携アラート (SGLT2i、Triple Whammy、妊娠可能年齢、β急激中止) */
+.connectedBox {
+  padding: 0.6rem 1.2rem;
+  background: #fff3e0;
+  color: #e65100;
+  border-bottom: 1px solid rgba(230, 81, 0, 0.2);
+}
+
+.connectedItem {
+  font-size: 0.82rem;
+  margin: 0.25rem 0;
+  padding: 0.3rem 0.5rem;
+  background: #ffe0b2;
+  border-left: 3px solid #e65100;
+  border-radius: 3px;
+}
+
+.connectedCritical {
+  background: #ffccbc;
+  border-left-color: #bf360c;
+  color: #bf360c;
+}
+
+/* 情報アラート (白衣HT・仮面HT・変動大) */
+.infoBox {
+  padding: 0.6rem 1.2rem;
+  background: #e3f2fd;
+  color: #1565c0;
+  border-bottom: 1px solid rgba(21, 101, 192, 0.2);
+}
+
+.infoItem {
+  font-size: 0.82rem;
+  margin: 0.25rem 0;
+  padding: 0.3rem 0.5rem;
+  background: #bbdefb;
+  border-left: 3px solid #1565c0;
+  border-radius: 3px;
+}
+
 .doNotItem {
   font-size: 0.85rem;
   font-weight: 600;

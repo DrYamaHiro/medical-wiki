@@ -77,10 +77,13 @@ export const DRUGS = [
 /*  CONTROL_METRIC (家庭血圧)                              */
 /* -------------------------------------------------------- */
 export const CONTROL_METRIC = {
-  label: '家庭血圧平均（朝・夜の2週間平均）',
+  label: '家庭血圧平均（朝・夜の2週間平均）※診察室血圧も任意入力で白衣HT/仮面HT検出',
   inputs: [
-    { id: 'sbp', label: 'SBP', unit: 'mmHg', placeholder: '例:128' },
-    { id: 'dbp', label: 'DBP', unit: 'mmHg', placeholder: '例:78' },
+    { id: 'sbp', label: '家庭SBP', unit: 'mmHg', placeholder: '例:128' },
+    { id: 'dbp', label: '家庭DBP', unit: 'mmHg', placeholder: '例:78' },
+    { id: 'office_sbp', label: '診察室SBP', unit: 'mmHg', placeholder: '任意:142' },
+    { id: 'office_dbp', label: '診察室DBP', unit: 'mmHg', placeholder: '任意:88' },
+    { id: 'sbp_sd', label: '家庭SBP変動SD', unit: 'mmHg', placeholder: '任意:12' },
   ],
   note: 'JSH2025: 全年齢で家庭血圧 <125/75（診察室 <130/80）に統一。ただし75歳以上は健康・機能状態で4カテゴリー分類（カテゴリー2以降で目標緩和、カテゴリー3以降は収縮期<120への降圧を避ける）。目標+5mmHg以内は日間変動範囲内として「目標内」扱い',
   /**
@@ -162,6 +165,8 @@ export const MODIFIERS = [
   { id: 'cm_gout', label: '痛風/高尿酸血症', cat: '併存疾患' },
   { id: 'cm_asthma', label: '喘息（コントロール不良）', cat: '併存疾患' },
   { id: 'cm_osas', label: '睡眠時無呼吸症候群', cat: '併存疾患' },
+  { id: 'cm_nocturnal_ht', label: '夜間高血圧 / non-dipper', cat: '併存疾患' },
+  { id: 'cm_morning_surge', label: '早朝高血圧', cat: '併存疾患' },
   { id: 'cm_aortic_stenosis', label: '大動脈弁狭窄症（重症）', cat: '併存疾患', severity: 'critical' },
   { id: 'cm_bilateral_rvs', label: '両側腎動脈狭窄', cat: '併存疾患', severity: 'critical' },
   { id: 'cm_liver', label: '肝機能障害（Child-Pugh B以上）', cat: '併存疾患' },
@@ -180,6 +185,9 @@ export const MODIFIERS = [
   { id: 'co_nsaid', label: 'NSAID常用（整形疾患等）', cat: '制約' },
   { id: 'co_grade2', label: 'Grade II（診察室≥160/100 or 家庭≥145/90）', cat: '制約' },
   { id: 'co_stable_6mo', label: '6ヶ月以上コントロール安定', cat: '制約' },
+  { id: 'co_reproductive_age', label: '妊娠可能年齢の女性（挙児希望・避妊未確定）', cat: '制約', severity: 'critical' },
+  { id: 'co_obese', label: '肥満（BMI≥25）', cat: '制約' },
+  { id: 'co_osa_risk', label: 'いびき・昼間眠気・家族の無呼吸指摘（OSA疑い）', cat: '制約' },
 
   // 失敗歴
   { id: 'fh_acei_cough', label: 'ACEi→空咳で中止歴', cat: '失敗歴' },
@@ -372,6 +380,31 @@ export const RECOMMENDATIONS = [
     preferredWhen: ['rf_2nd_suspect', 'rf_hypoK_severe', 'rf_target_organ'],
     urgentWhen: ['rf_severe_ht', 'rf_target_organ'],
     note: '【二次性HTスクリーニング】原発性アルドステロン症: PAC/PRA比 ≥200 + PAC ≥120 pg/mL / 褐色細胞腫: 24時間尿メタネフリン・ノルメタネフリン / 腎血管性HT: 腎動脈Doppler or MRA / クッシング症候群: 24時間尿遊離コルチゾール / 甲状腺機能: TSH・FT4',
+  },
+  {
+    id: 'screen_osa',
+    action: 'REFER',
+    drug: 'OSA（睡眠時無呼吸）スクリーニング・PSG検査',
+    reason: '治療抵抗性HTの高頻度原因。JSH2025も3剤以降未達で除外を推奨',
+    fromStates: ['triple', 'quad_plus'],
+    requiresAny: ['co_osa_risk', 'cm_osas', 'co_obese', 'cm_nocturnal_ht'],
+    preferredWhen: ['co_osa_risk', 'cm_osas', 'co_obese', 'cm_nocturnal_ht'],
+    note: '【OSAスクリーニング】Epworth Sleepiness Scale（ESS）+ STOP-BANG質問票。疑い強ければ呼吸器内科/耳鼻科で終夜ポリソムノグラフィ（PSG）or 簡易型検査。CPAP導入で降圧効果 SBP 2-3mmHg報告あり',
+    reassess: 'PSG施行後に再評価',
+  },
+  {
+    id: 'nocturnal_bedtime_dosing',
+    action: 'SWITCH',
+    drug: '就寝前投与への変更（夜間高血圧・早朝高血圧）',
+    example: 'アジルバ錠20mg 1回1錠 1日1回 就寝前（朝食後→就寝前へ変更）',
+    reason: '夜間高血圧（non-dipper）・早朝高血圧の是正に、一部のARB/ACEi/CCBの就寝前投与を検討',
+    fromStates: ['mono', 'dual', 'triple'],
+    requiresAny: ['cm_nocturnal_ht', 'cm_morning_surge'],
+    preferredWhen: ['cm_nocturnal_ht', 'cm_morning_surge', 'cm_osas'],
+    avoidWhen: ['se_hypotension', 'co_frail', 'co_adl_severe', 'co_end_of_life'],
+    specialistGate: true,
+    note: 'エビデンス: MAPEC/HYGIA試験で心血管イベント減少報告あるも、TIME試験(2022)で差なし。ABPMで非降下型（dipping <10%）を確認してから実施することが望ましい',
+    reassess: '2-4週後にABPM or 就寝前・早朝の家庭血圧測定',
   },
   {
     id: 'refer_ckd_advanced',
@@ -626,3 +659,5 @@ export const DO_NOT_RULES = [
     reason: '【JSH2025】ARBとARNIの併用は禁忌（血管浮腫・腎機能悪化リスク）。ARNI使用時はARBを36時間以上休薬してから切替',
   },
 ];
+// 注: 妊娠可能年齢 + ARB/ACEi 警告と Triple Whammy は connectedAlerts で動的に発火する
+// （既存の "ARB + 利尿薬 + NSAID" DO_NOT と重複表示を避けるため、DO_NOT_RULES に追加せず connectedAlerts のみで警告）
