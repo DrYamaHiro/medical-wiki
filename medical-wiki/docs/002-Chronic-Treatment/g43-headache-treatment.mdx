@@ -1,0 +1,60 @@
+---
+id: g43-headache-treatment
+title: "頭痛"
+sidebar_label: "頭痛"
+sidebar_position: 9
+hide_table_of_contents: false
+description: "頭痛の治療修正支援ツール。頭痛診療ガイドライン2021 + ICHD-3 準拠。片頭痛/緊張型/群発、急性期/予防、CGRP抗体/ボトックス、MOH、Red Flag対応を実装。"
+keywords: ["頭痛", "片頭痛", "緊張型頭痛", "群発頭痛", "トリプタン", "ラスミジタン", "CGRP抗体", "MOH", "薬物乱用頭痛"]
+---
+
+# 頭痛 — Treatment Booster
+
+頭痛型・頻度・MIDAS・急性期薬使用日数・Red Flag・併存症から、次の一手（生活指導・急性期薬開始/切替・予防薬・CGRP抗体検討・MOH離脱・二次性精査）を提案します。
+
+:::info 使い方
+- **Phase 1**: 現在服用中の急性期薬・予防薬を選択
+- **Phase 2**: 頭痛型（片頭痛/緊張型/群発/MOH）・頻度・MIDAS・急性期薬使用日数・Red Flag・併存症を選択。**数字入力を省略して状態を直接選択**も可能
+- **Phase 3**: 推奨表示（Red Flag優先・MOH離脱優先）
+:::
+
+:::tip Red Flag（SNOOP）— 二次性頭痛は薬物治療前に精査
+- **S**ystemic: 発熱・体重減少
+- **N**eurological: 巣症状・意識障害・痙攣・項部硬直
+- **O**nset: 突発性（thunderclap）→ SAH
+- **O**lder: 50歳以降初発 → GCA/脳腫瘍
+- **P**attern change: 既存頭痛の変化
+
+**MOH（薬物乱用頭痛）**: トリプタン/合剤 月≥10日 or 単純鎮痛月≥15日 → 離脱治療優先
+:::
+
+:::tip 目標
+頭痛 ≤2日/月 + MIDAS ≤5 + 急性期薬 ≤4日/月
+:::
+
+<TreatmentBooster disease="headache" />
+
+## 🔗 ガイドライン
+
+- [日本神経学会・日本頭痛学会 頭痛の診療ガイドライン2021](https://www.neurology-jp.org/)
+- [ICHD-3 (International Classification of Headache Disorders)](https://ichd-3.org/)
+
+## 📝 特徴的機能
+
+- **Red Flag 優先フロー**: SNOOP陽性で二次性頭痛精査を最優先推奨
+- **MOH 自動検出 + 離脱優先**: 急性期薬使用日数から自動フラグ
+- **表現型別pathway**:
+  - 片頭痛 acute: NSAID/トリプタン/ラスミジタン（CV既往対応）
+  - 片頭痛 予防: プロプラノロール/ロメリジン/アミトリプチリン/バルプロ酸
+  - 慢性片頭痛 or 難治: CGRP抗体/ボトックス
+  - 群発: 酸素+スマトリプタンSC、ベラパミル予防
+  - 緊張型: アミトリプチリン
+- **併存症別 予防薬選択**: うつ→TCA、高血圧→β遮断、喘息→ロメリジン、てんかん→バルプロ酸
+- **CV既往対応**: トリプタン禁忌 → ラスミジタン
+- **前兆あり片頭痛 + 経口避妊薬**: 脳卒中リスク警告
+- **妊娠中頭痛**: アセトアミノフェン第一、バルプロ酸/トリプタン禁忌
+- **CGRP抗体 保険適応条件**: 従来予防薬2剤以上無効/禁忌
+
+:::warning 注意
+本ツールは治療思考の補助です。Red Flag陽性・重症頭痛・CGRP抗体導入・群発頭痛・治療抵抗性は必ず専門医と連携してください。
+:::

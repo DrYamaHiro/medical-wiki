@@ -14,6 +14,8 @@ import * as asthmaTreatmentData from './asthmaTreatmentData';
 import * as goutTreatmentData from './goutTreatmentData';
 import * as insomniaTreatmentData from './insomniaTreatmentData';
 import * as constipationTreatmentData from './constipationTreatmentData';
+import * as copdTreatmentData from './copdTreatmentData';
+import * as headacheTreatmentData from './headacheTreatmentData';
 
 export const TREATMENT_DATA = {
   hypertension: {
@@ -43,5 +45,13 @@ export const TREATMENT_DATA = {
   constipation: {
     data: constipationTreatmentData,
     subtitle: '慢性便秘症の治療修正支援（日本消化管学会GL2023 + Rome IV準拠）',
+  },
+  copd: {
+    data: copdTreatmentData,
+    subtitle: 'COPDの治療修正支援（JRS COPD GL 2022 + GOLD 2024準拠）',
+  },
+  headache: {
+    data: headacheTreatmentData,
+    subtitle: '頭痛の治療修正支援（頭痛診療GL2021 + ICHD-3準拠）',
   },
 };

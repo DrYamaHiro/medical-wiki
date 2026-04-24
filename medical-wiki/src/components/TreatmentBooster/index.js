@@ -902,22 +902,23 @@ export default function TreatmentBooster({
                   )}
                 </div>
               )}
-              {controlStatus && (
-                <div className={styles.statusRow}>
-                  {['controlled', 'near_target', 'uncontrolled', 'overcontrolled'].map((s) => (
-                    <button
-                      key={s}
-                      className={`${styles.statusChip} ${
-                        controlStatus === s ? styles[`status_${s}`] : ''
-                      }`}
-                      onClick={() => setOverrideStatus(overrideStatus === s ? null : s)}
-                    >
-                      {statusLabel(s)}
-                      {overrideStatus === s ? ' (手動)' : ''}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <div className={styles.statusRow}>
+                <span className={styles.statusRowHint}>
+                  数字入力を省略して状態を直接選択:
+                </span>
+                {['controlled', 'near_target', 'uncontrolled', 'overcontrolled'].map((s) => (
+                  <button
+                    key={s}
+                    className={`${styles.statusChip} ${
+                      controlStatus === s ? styles[`status_${s}`] : ''
+                    }`}
+                    onClick={() => setOverrideStatus(overrideStatus === s ? null : s)}
+                  >
+                    {statusLabel(s)}
+                    {overrideStatus === s ? ' (手動)' : ''}
+                  </button>
+                ))}
+              </div>
               {CONTROL_METRIC.note && <p className={styles.metricNote}>{CONTROL_METRIC.note}</p>}
             </div>
           )}

@@ -1,0 +1,54 @@
+---
+id: j44-copd-treatment
+title: "COPD"
+sidebar_label: "COPD"
+sidebar_position: 8
+hide_table_of_contents: false
+description: "COPDの治療修正支援ツール。JRS COPD GL 2022 + GOLD 2024 ABE分類準拠。LAMA/LABA合剤第一選択・ICS判断（eos/肺炎歴）・増悪pathway・禁煙/ワクチン/肺リハを実装。"
+keywords: ["COPD", "LAMA", "LABA", "ICS", "テリルジー", "ビレーズトリ", "GOLD", "ABE分類", "禁煙"]
+---
+
+# COPD — Treatment Booster
+
+現在の治療と mMRC・CAT・FEV1・増悪歴・併存症・好酸球から、次の一手（禁煙支援・LAMA開始/合剤化/Triple・ICS withdrawal・増悪対応・肺リハ/HOT/ワクチン）を提案します。
+
+:::info 使い方
+- **Phase 1**: 現在の吸入薬・経口薬（LAMA/LABA/ICS合剤/triple/SABA）を選択
+- **Phase 2**: mMRC・CAT・FEV1・増悪歴・好酸球・併存症・現喫煙・吸気力問題などを入力/選択。**数字入力を省略して状態を直接選択**も可能
+- **Phase 3**: 推奨表示（ABE分類で階層化）
+:::
+
+:::tip GOLD 2024 ABE分類
+- **Group A**: CAT&lt;10 + mMRC 0-1 + 増悪&lt;1/年 → LAMA単剤
+- **Group B**: 症状あり (CAT≥10 or mMRC≥2) + 増悪少 → LAMA/LABA合剤
+- **Group E**: 増悪≥2 or 入院 → LAMA/LABA合剤 + eos≥300/ACOならTriple
+
+**禁煙が最優先**。全stageで禁煙支援介入。
+**ICS判断**: eos≥300/喘息既往/頻回増悪で推奨、eos&lt;100/肺炎既往で回避
+:::
+
+<TreatmentBooster disease="copd" />
+
+## 🔗 ガイドライン
+
+- [日本呼吸器学会 COPD診断と治療のためのガイドライン 第6版 2022](https://www.jrs.or.jp/)
+- [GOLD (Global Initiative for Chronic Obstructive Lung Disease) 2024](https://goldcopd.org/)
+
+## 📝 特徴的機能
+
+- **GOLD 2024 ABE分類ベース** の自動推奨選択
+- **ICS判断ロジック**: eos≥300 or ACO → 追加、eos&lt;100 or 肺炎歴 → withdrawal検討
+- **増悪severity 別 pathway**: 軽度/中等度/重度/呼吸不全で処方内容を自動切替
+- **LAMA禁忌自動検出**: 狭隅角緑内障・重症BPH
+- **非選択性β遮断薬警告**: 気管支攣縮リスク
+- **CO2貯留型での酸素投与注意**: SpO2 88-92%目標
+- **ACO（喘息-COPDオーバーラップ）**: Triple必須、ICS不可欠
+- **α1-AT欠損症スクリーニング**: 若年発症・家族歴
+- **禁煙最優先**: バレニクリン・ニコチンパッチ・禁煙外来
+- **ワクチン一式推奨**: インフル/肺炎球菌/RSV/帯状疱疹/COVID
+- **肺リハ**: mMRC≥2 で推奨
+- **HOT適応**: PaO2≤55 or ≤60+臓器障害
+
+:::warning 注意
+本ツールは治療思考の補助です。薬剤選択・用量・中止の最終判断は主治医が行ってください。α1-AT欠損症・FEV1&lt;30・頻回増悪・呼吸不全・肺性心は必ず呼吸器専門医と連携してください。
+:::

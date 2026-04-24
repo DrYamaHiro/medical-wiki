@@ -85,6 +85,13 @@ export const DRUGS = [
 /*  MODIFIERS                                               */
 /* -------------------------------------------------------- */
 export const MODIFIERS = [
+  // ===== 不眠症タイプ（最優先、主要選択） =====
+  // 数字入力不要でここから選ぶだけで大まかな薬剤選択に影響
+  { id: 'cm_insomnia_onset', label: '入眠困難', cat: '不眠症タイプ（主要選択）' },
+  { id: 'cm_insomnia_maintenance', label: '中途覚醒', cat: '不眠症タイプ（主要選択）' },
+  { id: 'cm_insomnia_early_morning', label: '早期覚醒（うつ鑑別要）', cat: '不眠症タイプ（主要選択）' },
+  { id: 'cm_insomnia_nonrestorative', label: '熟眠障害', cat: '不眠症タイプ（主要選択）' },
+
   // 副作用
   { id: 'se_paradoxical_reaction', label: '奇異反応（興奮・攻撃性）', cat: '副作用', severity: 'critical' },
   { id: 'se_anterograde_amnesia', label: '前向性健忘・睡眠時行動（運転・電話・食事）', cat: '副作用', severity: 'critical' },
@@ -93,12 +100,6 @@ export const MODIFIERS = [
   { id: 'se_cognitive_impairment', label: '認知機能低下', cat: '副作用' },
   { id: 'se_rebound_insomnia', label: '反跳性不眠（中止後）', cat: '副作用' },
   { id: 'se_daytime_somnolence', label: '日中過眠', cat: '副作用' },
-
-  // 不眠症タイプ
-  { id: 'cm_insomnia_onset', label: '入眠障害優位', cat: '症状タイプ' },
-  { id: 'cm_insomnia_maintenance', label: '中途覚醒優位', cat: '症状タイプ' },
-  { id: 'cm_insomnia_early_morning', label: '早朝覚醒（うつ鑑別要）', cat: '症状タイプ' },
-  { id: 'cm_insomnia_mixed', label: '混合型', cat: '症状タイプ' },
 
   // 期間
   { id: 'cm_chronic_insomnia', label: '3ヶ月以上持続（慢性）', cat: '期間' },
@@ -151,7 +152,7 @@ export const CONTROL_METRIC = {
     { id: 'day_impairment', label: '日中機能障害（0=なし/1=軽/2=重）', unit: '0-2', placeholder: '1' },
     { id: 'duration_months', label: '不眠持続期間', unit: '月', placeholder: '例:6' },
   ],
-  note: 'ISI 0-7:なし、8-14:sub-threshold、15-21:中等度、22-28:重症。成人 ISI<8、高齢者 <10 を目標。3ヶ月以上連用で漸減計画必須',
+  note: '数字入力は任意（時間がない時はスキップ可）。「不眠症タイプ」チップ選択 + 状態ダイレクト選択で推奨が出ます。ISI 0-7:なし、8-14:sub-threshold、15-21:中等度、22-28:重症。3ヶ月以上連用で漸減計画必須',
   deriveStatus: (v, modifiers = []) => {
     const isi = v.isi_score;
     const sol = v.sleep_latency_min;

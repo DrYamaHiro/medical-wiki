@@ -338,6 +338,15 @@
   display: flex;
   gap: 0.4rem;
   margin-top: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.statusRowHint {
+  font-size: 0.72rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-right: 0.5rem;
+  font-style: italic;
 }
 
 .statusChip {
