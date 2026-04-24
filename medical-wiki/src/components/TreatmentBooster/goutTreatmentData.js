@@ -64,7 +64,7 @@ export const DRUGS = [
     ] },
   { id: 'acute_col', label: 'コルヒチン', class: 'コルヒチン',
     doses: [
-      { value: '0.5_prophylaxis', label: '0.5mg×1-2/日（予防・ULT開始時併用）', isDefault: true },
+      { value: '0.5_prophylaxis', label: '0.5mg×1-2/日（予防・尿酸降下薬開始時併用）', isDefault: true },
       { value: '1.0_acute', label: '1mg初回→1h後0.5mg（急性期）', isMax: true },
     ] },
   { id: 'acute_psl', label: 'プレドニゾロン（プレドニン）', class: 'OCS',
@@ -106,7 +106,7 @@ export const MODIFIERS = [
   { id: 'co_attack_frequent', label: '発作年2回以上', cat: '制約', severity: 'critical' },
   { id: 'co_attack_free_5y', label: '5年以上無発作（減量検討可）', cat: '制約' },
   { id: 'co_on_urate_lowering', label: '尿酸降下薬 既服用中', cat: '制約' },
-  { id: 'co_on_ult_prophylaxis', label: 'コルヒチン予防内服中（ULT開始期）', cat: '制約' },
+  { id: 'co_on_ult_prophylaxis', label: 'コルヒチン予防内服中（尿酸降下薬開始期）', cat: '制約' },
   { id: 'co_cyp3a4_inhibitor', label: 'CYP3A4/P-gp阻害薬併用（マクロライド・ベラパミル・シクロスポリン）', cat: '制約', severity: 'critical' },
   { id: 'co_azathioprine_use', label: 'アザチオプリン併用', cat: '制約', severity: 'critical' },
   { id: 'co_anticoag_major', label: '抗凝固薬併用（ワルファリン/DOAC）', cat: '制約' },
@@ -218,7 +218,7 @@ export function computeAutoFlags(metricValues, modifiers, currentDrugs, allDrugs
   const ua = metricValues.sua;
   if (attacks !== undefined && attacks >= 2) flags.push('co_attack_frequent');
   if (ua !== undefined && ua < 3.0) flags.push('se_low_ua_cognitive');
-  // 現行ULT服用の自動検出
+  // 現行尿酸降下薬服用の自動検出
   if (currentDrugs && currentDrugs.length > 0 && allDrugs) {
     const classes = new Set();
     currentDrugs.forEach((entry) => {
@@ -290,7 +290,7 @@ export function computeConnectedAlerts({ currentClasses, modifiers, currentDrugs
     alerts.push({
       type: 'benz_stone',
       label: '⚠ ベンズブロマロン + 尿酸結石: 禁忌',
-      detail: '尿中尿酸増加で結石悪化。ULT は尿酸生成抑制薬へ変更',
+      detail: '尿中尿酸増加で結石悪化。尿酸降下薬 は尿酸生成抑制薬へ変更',
       severity: 'critical',
     });
   }
@@ -443,7 +443,7 @@ export function synthesizeDoseUpRecs(currentDrugs, allDrugs, modifiers = []) {
     reason: '現用量で目標未達。同一薬剤の漸増は新薬追加より優先',
     avoidWhen: avoidMap[drug.id] || [],
     forbidden: forbiddenMap[drug.id] || [],
-    reassess: '4-8週後 SUA・AST/ALT・eGFR。ULT開始/増量時は flare 予防にコルヒチン0.5mg併用',
+    reassess: '4-8週後 SUA・AST/ALT・eGFR。尿酸降下薬開始/増量時は flare 予防にコルヒチン0.5mg併用',
     _isDoseUp: true,
     _drugClass: drug.class,
   }));
@@ -577,18 +577,31 @@ export const RECOMMENDATIONS = [
   {
     id: 'maintain_ult_during_attack',
     action: 'MAINTAIN',
-    drug: '既服用 ULT は発作中も継続（中断せず）',
-    reason: '尿酸変動で flare 遷延。新規開始のみ発作中禁',
+    drug: '⚠ 既服用の尿酸降下薬は発作中も継続（中断・減量・変更しない）',
+    reason: '急性発作中のSUA急変で発作遷延。既服用は用量そのまま継続が原則。新規開始のみ厳禁',
+    example: '現行処方: アロプリノール100mg / フェブリク10mg / ベンズブロマロン25mg 等 — すべて同量で継続',
     fromStates: ['mono', 'dual'],
     urgentWhen: ['rf_gout_attack_current'],
     preferredWhen: ['co_on_urate_lowering'],
+    note: '患者が「発作中だから薬を止めようか」と自己判断しがち → 明示的に継続指示を',
+  },
+  {
+    id: 'urgent_no_new_ult_during_attack',
+    action: 'WATCH',
+    drug: '⚠ 急性発作中の新規尿酸降下薬開始は厳禁',
+    reason: '急性発作中に尿酸生成抑制薬（アロプリノール・フェブキソスタット）や尿酸排泄促進薬（ベンズブロマロン）を新規開始すると、SUA急変で発作が遷延・悪化する',
+    example: '今回の発作は NSAID / コルヒチン / PSL short burst で対処。発作消退後 2週を目安に尿酸降下薬を開始',
+    fromStates: ['naive'],
+    urgentWhen: ['rf_gout_attack_current'],
+    preferredWhen: ['rf_gout_attack_current'],
+    note: '「今回の発作をきっかけに尿酸降下薬を」は NG。発作鎮静後に改めて開始',
   },
   {
     id: 'add_colchicine_prophylaxis_ult_start',
     action: 'ADD',
-    drug: 'ULT開始/増量時に flare 予防コルヒチン併用',
+    drug: '尿酸降下薬開始/増量時に flare 予防コルヒチン併用',
     example: 'コルヒチン 0.5mg×1-2/日 × 3-6ヶ月',
-    reason: 'ULT開始直後は SUA 変動で発作誘発しやすい',
+    reason: '尿酸降下薬開始直後は SUA 変動で発作誘発しやすい',
     fromStates: ['mono'],
     drugClass: 'コルヒチン',
     preferredWhen: ['cm_gout_attack_hx', 'cm_gout_tophus'],
@@ -600,7 +613,7 @@ export const RECOMMENDATIONS = [
   {
     id: 'taper_ul_attack_free_5y',
     action: 'TAPER',
-    drug: '5年以上無発作 → ULT 減量検討',
+    drug: '5年以上無発作 → 尿酸降下薬 減量検討',
     example: 'アロプリノール 300mg → 200mg へ段階減量、SUA推移確認',
     reason: '長期無発作で減量検討可。ただし中止は発作再燃リスク',
     fromStates: ['mono', 'dual'],
@@ -611,14 +624,14 @@ export const RECOMMENDATIONS = [
     id: 'discontinue_colchicine_prophylaxis_6mo',
     action: 'STOP',
     drug: 'コルヒチン予防の 3-6ヶ月で中止検討',
-    reason: 'ULT安定期（SUA目標達成）に入ったら予防中止可',
+    reason: '尿酸降下薬安定期（SUA目標達成）に入ったら予防中止可',
     fromStates: ['mono', 'dual', 'triple'],
     preferredWhen: ['co_on_ult_prophylaxis'],
   },
   {
     id: 'taper_overcontrolled_ua',
     action: 'TAPER',
-    drug: '過降下（SUA<3.0）→ ULT 減量',
+    drug: '過降下（SUA<3.0）→ 尿酸降下薬 減量',
     reason: '認知症状・パーキンソン症状リスク。SUA 5.0-6.0を目安に調整',
     fromStates: ['mono', 'dual'],
     preferredWhen: ['se_low_ua_cognitive'],
@@ -646,7 +659,7 @@ export const RECOMMENDATIONS = [
     id: 'refer_recurrent_attack',
     action: 'REFER',
     drug: '頻回発作（年≥3回）→ 専門医紹介',
-    reason: 'ULT最適化・二次性高尿酸血症検索・生物学的製剤（IL-1β阻害）検討',
+    reason: '尿酸降下薬最適化・二次性高尿酸血症検索・生物学的製剤（IL-1β阻害）検討',
     fromStates: ['dual', 'triple'],
     preferredWhen: ['co_attack_frequent'],
     specialistGate: true,
@@ -656,10 +669,12 @@ export const RECOMMENDATIONS = [
   {
     id: 'address_alcohol_excess',
     action: 'WATCH',
-    drug: '節酒指導',
-    reason: 'アルコール過多は SUA 上昇の主要因',
+    drug: '節酒指導（慢性期）',
+    reason: 'アルコール過多は SUA 上昇の主要因。ただし急性発作中は「まず発作対応」が優先、節酒指導は落ち着いてから',
     fromStates: ['naive', 'mono', 'dual'],
     preferredWhen: ['co_alcohol_excess'],
+    avoidWhen: ['rf_gout_attack_current'],
+    note: '急性発作中の「節酒指導」は患者体感として的外れに映る。発作消退後の定期指導で',
   },
   {
     id: 'review_diuretic_induced',
@@ -701,9 +716,9 @@ export const DO_NOT_RULES = [
     reason: '【禁忌】eGFR<30で効果減弱・腎負担',
   },
   {
-    drug: '尿酸降下薬（ULT新規開始）',
+    drug: '尿酸降下薬（新規開始）',
     modifiers: ['rf_gout_attack_current'],
-    reason: '【発作中新規開始禁】発作遷延リスク。既服用は継続',
+    reason: '【急性発作中の新規開始は厳禁】SUA急変で発作遷延・悪化。既に服用中の尿酸降下薬は用量そのまま継続',
   },
   {
     drug: 'コルヒチン',
