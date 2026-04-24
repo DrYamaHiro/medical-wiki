@@ -462,9 +462,79 @@ export function computeInfoAlerts(metricValues, modifiers) {
   return alerts;
 }
 
+// Phase 0 カテゴリーと詳細モディファイアの不整合検出
+function detectPhase0Inconsistency(modifiers) {
+  const phase0Cat = getPhase0Category(modifiers);
+  if (!phase0Cat) return null;
+
+  const requiresFH = modifiers.includes('cm_fh') || modifiers.includes('cm_fh_homo');
+  const hasAscvd = hasAscvdHistory(modifiers);
+  const hasVeryHigh = VERY_HIGH_COMORBIDS.some((id) => modifiers.includes(id));
+  const hasHighPrimary = HIGH_PRIMARY_IDS.some((id) => modifiers.includes(id));
+
+  // FH 併存だが Phase 0 が FH でも二次予防系でもない
+  const fhPhase0s = ['risk_fh_primary', 'risk_fh_secondary'];
+  if (requiresFH && !fhPhase0s.includes(phase0Cat) && phase0Cat !== 'risk_very_high') {
+    const suggestedCat = hasAscvd ? 'risk_fh_secondary' : 'risk_fh_primary';
+    return {
+      type: 'phase0_fh_inconsistency',
+      label: '⚠ Phase 0 とFHモディファイアが不整合',
+      detail: `FH（cm_fh/cm_fh_homo）が選択されていますが Phase 0 は「${PHASE0_CATEGORY_LABELS[phase0Cat]}」です。FHは少なくとも LDL <100（ASCVD併存なら <70）。Phase 0 を「${PHASE0_CATEGORY_LABELS[suggestedCat]}」へ修正を検討`,
+      severity: 'critical',
+    };
+  }
+
+  // ASCVD 既往だが Phase 0 が一次予防
+  const primaryPhase0s = ['risk_primary_low', 'risk_primary_moderate', 'risk_primary_high', 'risk_fh_primary'];
+  if (hasAscvd && primaryPhase0s.includes(phase0Cat)) {
+    const ascvdDrivers = ASCVD_IDS.filter((id) => modifiers.includes(id))
+      .map((id) => ({ cm_ascvd: 'ASCVD', cm_cad: 'CAD', cm_acs_12mo: 'ACS<12M', cm_stroke: '脳梗塞', cm_non_card_stroke: '非心原性脳梗塞', cm_pad: 'PAD' }[id]))
+      .filter(Boolean)
+      .join('/');
+    const suggestedCat = hasVeryHigh || requiresFH ? (requiresFH ? 'risk_fh_secondary' : 'risk_very_high') : 'risk_secondary';
+    return {
+      type: 'phase0_ascvd_inconsistency',
+      label: `⚠ Phase 0 が一次予防だが ${ascvdDrivers} 既往あり`,
+      detail: `ASCVD既往は二次予防（LDL <100）、DM/FH/ACS/非心原性脳梗塞併存なら超高リスク（<70）。Phase 0 を「${PHASE0_CATEGORY_LABELS[suggestedCat]}」へ修正を検討`,
+      severity: 'critical',
+    };
+  }
+
+  // 二次予防選択だが超高リスク条件（DM/FH/ACS/非心原性脳梗塞）併存
+  if (phase0Cat === 'risk_secondary' && (hasVeryHigh || requiresFH)) {
+    const suggestedCat = requiresFH ? 'risk_fh_secondary' : 'risk_very_high';
+    return {
+      type: 'phase0_very_high_upgrade',
+      label: '⚠ Phase 0 を超高リスクへアップグレード検討',
+      detail: `二次予防選択ですが DM/FH/ACS/非心原性脳梗塞 併存で超高リスク相当（LDL <70）。「${PHASE0_CATEGORY_LABELS[suggestedCat]}」へ修正推奨`,
+      severity: 'critical',
+    };
+  }
+
+  // DM/CKD/PAD 併存だが Phase 0 が低-中リスク
+  if (hasHighPrimary && (phase0Cat === 'risk_primary_low' || phase0Cat === 'risk_primary_moderate')) {
+    const drivers = HIGH_PRIMARY_IDS.filter((id) => modifiers.includes(id))
+      .map((id) => ({ cm_dm: 'DM', cm_ckd: 'CKD', cm_ckd_g45: 'CKD G4-5', cm_pad: 'PAD', cm_multi_ascvd_lesion: '多発病変' }[id]))
+      .filter(Boolean)
+      .join('/');
+    return {
+      type: 'phase0_high_primary_inconsistency',
+      label: `⚠ ${drivers} 併存だがリスク層別が低-中リスク`,
+      detail: 'DM/CKD/PAD/多発病変があれば一次予防・高リスク（LDL <120）以上。Phase 0 を「一次予防・高リスク」へ修正を検討',
+    };
+  }
+
+  return null;
+}
+
 export function computeConnectedAlerts({ currentClasses, modifiers, currentDrugs /*, allDrugs, metricValues */ }) {
   const alerts = [];
   const mods = modifiers || [];
+
+  // Phase 0 不整合を最優先で表示
+  const phase0Issue = detectPhase0Inconsistency(mods);
+  if (phase0Issue) alerts.push(phase0Issue);
+
   const hasStatin = currentClasses.has('スタチン');
   const hasFibrate = currentClasses.has('フィブラート');
 
@@ -715,6 +785,8 @@ export const RECOMMENDATIONS = [
       'co_pregnancy', 'cm_fh', 'cm_fh_homo', 'cm_fh_suspect', 'cm_acs_12mo',
       'cm_ascvd', 'cm_cad', 'cm_stroke', 'cm_pad', 'cm_dm', 'cm_ckd_g45',
       'cm_severe_hypertg', 'rf_pancreatitis_risk', 'cm_ldl_very_high',
+      // Phase 0: 高リスク・二次予防・FH は生活習慣のみ不可
+      'risk_primary_high', 'risk_secondary', 'risk_very_high', 'risk_fh_primary', 'risk_fh_secondary',
     ],
     reassess: '3ヶ月後にLDL再評価。改善なければSTEP 1薬物療法',
     note: '高リスク併存・FH・ASCVD既往・TG≥500・LDL≥180 では生活習慣先行せず即薬物療法',
@@ -729,8 +801,8 @@ export const RECOMMENDATIONS = [
     reason: '一次予防 低〜中リスクでは低強度スタチン。CYP非依存で相互作用少、CKD・高齢で有利',
     fromStates: ['naive'],
     drugClass: 'スタチン',
-    preferredWhen: ['cm_primary_moderate_risk'],
-    avoidWhen: ['cm_fh', 'cm_fh_suspect', 'cm_ascvd'],
+    preferredWhen: ['cm_primary_moderate_risk', 'risk_primary_low', 'risk_primary_moderate'],
+    avoidWhen: ['cm_fh', 'cm_fh_suspect', 'cm_ascvd', 'risk_primary_high', 'risk_secondary', 'risk_very_high', 'risk_fh_primary', 'risk_fh_secondary'],
     forbidden: ['co_pregnancy', 'co_lactation', 'cm_liver_severe', 'cm_hepatitis_active'],
     reassess: '4-8週後 AST/ALT + CK (必要時)、12週後 LDL',
   },
@@ -742,7 +814,7 @@ export const RECOMMENDATIONS = [
     reason: '一次予防高リスク（DM・CKD・PAD併存）では中強度スタチン',
     fromStates: ['naive'],
     drugClass: 'スタチン',
-    preferredWhen: ['cm_dm', 'cm_ckd', 'cm_pad', 'cm_multi_ascvd_lesion'],
+    preferredWhen: ['cm_dm', 'cm_ckd', 'cm_pad', 'cm_multi_ascvd_lesion', 'risk_primary_high'],
     forbidden: ['co_pregnancy', 'co_lactation', 'cm_liver_severe', 'cm_hepatitis_active'],
     reassess: '12週後 LDL・AST/ALT',
     note: 'ピタバはDM発症リスク低めの報告。アトルバはCYP3A4阻害薬併用で注意',
@@ -755,7 +827,7 @@ export const RECOMMENDATIONS = [
     reason: 'ASCVD既往・ACS<12ヶ月は高強度スタチンでLDL<70目標',
     fromStates: ['naive'],
     drugClass: 'スタチン',
-    preferredWhen: ['cm_ascvd', 'cm_cad', 'cm_acs_12mo', 'cm_non_card_stroke'],
+    preferredWhen: ['cm_ascvd', 'cm_cad', 'cm_acs_12mo', 'cm_non_card_stroke', 'risk_secondary', 'risk_very_high'],
     urgentWhen: ['cm_acs_12mo'],
     forbidden: ['co_pregnancy', 'co_lactation', 'cm_liver_severe', 'cm_hepatitis_active'],
     reassess: '6-8週後に LDL・AST/ALT・CK、以後12週毎',
@@ -769,8 +841,8 @@ export const RECOMMENDATIONS = [
     reason: 'JAS-FH GL: 診断時点で高強度スタチン。エゼチミブ併用を前提に開始可',
     fromStates: ['naive'],
     drugClass: 'スタチン',
-    urgentWhen: ['cm_fh', 'cm_fh_suspect', 'cm_fh_homo'],
-    preferredWhen: ['cm_fh', 'cm_fh_suspect', 'cm_xanthoma', 'cm_early_cv_family_hx', 'cm_ldl_very_high'],
+    urgentWhen: ['cm_fh', 'cm_fh_suspect', 'cm_fh_homo', 'risk_fh_primary', 'risk_fh_secondary'],
+    preferredWhen: ['cm_fh', 'cm_fh_suspect', 'cm_xanthoma', 'cm_early_cv_family_hx', 'cm_ldl_very_high', 'risk_fh_primary', 'risk_fh_secondary'],
     forbidden: ['co_pregnancy', 'co_lactation', 'cm_liver_severe', 'cm_hepatitis_active'],
     reassess: '6-8週後 LDL（50%低下確認）、AST/ALT・CK',
     note: 'FHは初期から併用療法を想定。LDL目標未達なら3ヶ月以内にエゼチミブ追加',
@@ -812,7 +884,7 @@ export const RECOMMENDATIONS = [
     reason: 'スタチン+エゼチミブ併用でLDL追加18-25%低下。相互作用少、保険適応あり',
     fromStates: ['mono'],
     drugClass: 'エゼチミブ',
-    preferredWhen: ['cm_ldl_unmet', 'cm_statin_intolerance', 'cm_fh', 'cm_ascvd'],
+    preferredWhen: ['cm_ldl_unmet', 'cm_statin_intolerance', 'cm_fh', 'cm_ascvd', 'risk_secondary', 'risk_very_high', 'risk_fh_primary', 'risk_fh_secondary'],
     forbidden: ['co_pregnancy', 'co_lactation'],
     reassess: '6週後 LDL・AST/ALT',
   },
@@ -837,7 +909,7 @@ export const RECOMMENDATIONS = [
     reason: 'JELIS: EPA追加で冠イベント19%低下。二次予防+TG残存で有用',
     fromStates: ['mono'],
     drugClass: 'オメガ-3',
-    preferredWhen: ['cm_ascvd', 'cm_cad', 'cm_tg_residual'],
+    preferredWhen: ['cm_ascvd', 'cm_cad', 'cm_tg_residual', 'risk_secondary', 'risk_very_high', 'risk_fh_secondary'],
     avoidWhen: ['co_warfarin_use'],
     forbidden: ['co_pregnancy'],
   },
@@ -873,7 +945,7 @@ export const RECOMMENDATIONS = [
     reason: 'スタチン+エゼチミブでもLDL未達のFH or ASCVD二次予防。追加40-60%低下',
     fromStates: ['dual'],
     drugClass: 'PCSK9i',
-    preferredWhen: ['cm_fh', 'cm_fh_homo', 'cm_ldl_very_unmet'],
+    preferredWhen: ['cm_fh', 'cm_fh_homo', 'cm_ldl_very_unmet', 'risk_fh_primary', 'risk_fh_secondary'],
     forbidden: ['co_pregnancy', 'co_high_cost_barrier'],
     specialistGate: true,
     note: '保険適応: FH または スタチン+エゼチミブで未達の心血管高リスク。月3-6万円（3割負担で約1-2万円）',
@@ -987,8 +1059,8 @@ export const RECOMMENDATIONS = [
     drug: '脂質専門医紹介（FH / HoFH）',
     reason: 'カスケードスクリーニング指導・遺伝学的検査・LDLアフェレーシス/ロミタピド適応判断',
     fromStates: ['naive', 'mono', 'dual', 'triple', 'quad_plus'],
-    urgentWhen: ['cm_fh_homo', 'cm_fh_suspect'],
-    preferredWhen: ['cm_fh', 'cm_fh_homo'],
+    urgentWhen: ['cm_fh_homo', 'cm_fh_suspect', 'risk_fh_primary', 'risk_fh_secondary'],
+    preferredWhen: ['cm_fh', 'cm_fh_homo', 'risk_fh_primary', 'risk_fh_secondary'],
     note: 'HoFHは全例必須。HeFHは治療抵抗性・若年CV発症例で',
   },
   {
