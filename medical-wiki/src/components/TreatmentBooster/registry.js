@@ -11,6 +11,9 @@ import * as htTreatmentData from './htTreatmentData';
 import * as dmTreatmentData from './dmTreatmentData';
 import * as dlpTreatmentData from './dlpTreatmentData';
 import * as asthmaTreatmentData from './asthmaTreatmentData';
+import * as goutTreatmentData from './goutTreatmentData';
+import * as insomniaTreatmentData from './insomniaTreatmentData';
+import * as constipationTreatmentData from './constipationTreatmentData';
 
 export const TREATMENT_DATA = {
   hypertension: {
@@ -28,5 +31,17 @@ export const TREATMENT_DATA = {
   asthma: {
     data: asthmaTreatmentData,
     subtitle: '気管支喘息の治療修正支援（JGL2024 + GINA 2024準拠）',
+  },
+  gout: {
+    data: goutTreatmentData,
+    subtitle: '痛風・高尿酸血症の治療修正支援（JP GL第3版2022準拠）',
+  },
+  insomnia: {
+    data: insomniaTreatmentData,
+    subtitle: '不眠症の治療修正支援（睡眠薬適正使用GL + 日本睡眠学会GL準拠）',
+  },
+  constipation: {
+    data: constipationTreatmentData,
+    subtitle: '慢性便秘症の治療修正支援（日本消化管学会GL2023 + Rome IV準拠）',
   },
 };
