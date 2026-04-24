@@ -47,10 +47,8 @@ function detectDoseHeadroom(currentDrugs, allDrugs) {
   return headroom;
 }
 
-// Modifiers that contradict "現状維持/観察" — any present = no MAINTAIN / WATCH
-// 慢性の合併症 (cm_ckd_adv, cm_aortic_stenosis) は安定していれば維持可なので除外。
-// 副作用 (se_*) と Red Flag (rf_*) と妊娠のみ。
-const MAINTAIN_BLOCKERS = [
+// Default MAINTAIN blockers (HT). Each disease data module can override via `MAINTAIN_BLOCKERS` export.
+const DEFAULT_HT_MAINTAIN_BLOCKERS = [
   'se_hyperK',
   'se_creatinine_up',
   'se_cough',
@@ -183,6 +181,111 @@ function synthesizeDoseUpRecs(currentDrugs, allDrugs, modifiers) {
       _drugClass: drug.class,
     };
   });
+}
+
+// HT-specific autoFlags / infoAlerts / connectedAlerts defaults
+function defaultHtComputeAutoFlags(metricValues /*, modifiers, currentDrugs, allDrugs */) {
+  const flags = [];
+  const s = metricValues.sbp;
+  const d = metricValues.dbp;
+  const os = metricValues.office_sbp;
+  const od = metricValues.office_dbp;
+  const sd = metricValues.sbp_sd;
+  if ((s !== undefined && s >= 145) || (d !== undefined && d >= 90)) flags.push('co_grade2');
+  if ((s !== undefined && s >= 160) || (d !== undefined && d >= 105)) flags.push('rf_severe_ht');
+  if (
+    ((os !== undefined && os >= 140) || (od !== undefined && od >= 90)) &&
+    ((s === undefined || s < 135) && (d === undefined || d < 85))
+  ) {
+    flags.push('_white_coat_ht');
+  }
+  if (
+    (os !== undefined && os < 140 && od !== undefined && od < 90) &&
+    ((s !== undefined && s >= 135) || (d !== undefined && d >= 85))
+  ) {
+    flags.push('_masked_ht');
+  }
+  if (sd !== undefined && sd > 15) flags.push('_high_bp_variability');
+  return flags;
+}
+
+function defaultHtComputeInfoAlerts(metricValues /*, modifiers */) {
+  const alerts = [];
+  const s = metricValues.sbp;
+  const d = metricValues.dbp;
+  const os = metricValues.office_sbp;
+  const od = metricValues.office_dbp;
+  const sd = metricValues.sbp_sd;
+  if (
+    ((os !== undefined && os >= 140) || (od !== undefined && od >= 90)) &&
+    ((s === undefined || s < 135) && (d === undefined || d < 85))
+  ) {
+    alerts.push({
+      type: 'white_coat',
+      label: '白衣高血圧の可能性',
+      detail: `診察室${os ?? '?'}/${od ?? '?'} vs 家庭${s ?? '?'}/${d ?? '?'}。家庭血圧平均で治療判断を。過降圧リスクあり、診察室値のみで増量しない`,
+    });
+  }
+  if (
+    (os !== undefined && os < 140 && od !== undefined && od < 90) &&
+    ((s !== undefined && s >= 135) || (d !== undefined && d >= 85))
+  ) {
+    alerts.push({
+      type: 'masked',
+      label: '仮面高血圧の可能性',
+      detail: `診察室${os}/${od} は正常範囲でも家庭${s ?? '?'}/${d ?? '?'} が高値。心血管リスクは通常のHT同等以上。治療強化を検討`,
+    });
+  }
+  if (sd !== undefined && sd > 15) {
+    alerts.push({
+      type: 'variability',
+      label: '家庭血圧変動 大 (SD>15)',
+      detail: `日間変動大（SD ${sd}）は心血管イベント独立リスク。Ca拮抗薬（アムロジピン）は変動抑制に有利。測定手技・服薬遵守も確認`,
+    });
+  }
+  return alerts;
+}
+
+function defaultHtComputeConnectedAlerts({ currentClasses, modifiers }) {
+  const alerts = [];
+  const hasARB_or_ACEi = currentClasses.has('ARB') || currentClasses.has('ACE阻害薬');
+  const hasDiuretic = currentClasses.has('利尿薬');
+  const hasBB = currentClasses.has('β遮断薬');
+  if (modifiers.includes('cm_dm') && hasARB_or_ACEi) {
+    alerts.push({
+      type: 'sglt2i',
+      label: 'SGLT2i 併用を検討',
+      detail: 'DM+高血圧でARB/ACEi内服中。SGLT2i併用で心腎保護エビデンス最強（EMPA-KIDNEY・DAPA-CKD）。DM主治医と相談の上、ダパグリフロジン/エンパグリフロジンの追加を検討',
+    });
+  }
+  if (hasARB_or_ACEi && hasDiuretic && modifiers.includes('co_nsaid')) {
+    alerts.push({
+      type: 'triple_whammy',
+      label: '⚠ Triple Whammy（AKI高リスク）',
+      detail: 'ARB/ACEi + 利尿薬 + NSAID の3者併用は急性腎障害リスク急増。NSAID中止orアセトアミノフェン変更を最優先。中止不可なら72時間以内にCr/eGFR再検',
+      severity: 'critical',
+    });
+  }
+  if (modifiers.includes('co_reproductive_age') && hasARB_or_ACEi) {
+    alerts.push({
+      type: 'repro_age',
+      label: '妊娠可能年齢の女性 + ARB/ACEi',
+      detail: '挙児希望・避妊状況の確認を。妊娠時は胎児腎毒性・羊水過少。妊娠判明時は即時中止 → メチルドパ/ラベタロール/ニフェジピン徐放へ切替。挙児希望ならこれらを事前に第一選択検討',
+      severity: 'critical',
+    });
+  }
+  if (hasBB && modifiers.includes('cm_cad')) {
+    alerts.push({
+      type: 'bb_withdrawal',
+      label: 'β遮断薬の急激中止は避ける',
+      detail: '虚血性心疾患併存でβ遮断薬を減量/中止する場合、急激な中止は反跳性頻脈・狭心症悪化・心筋梗塞リスク。2-4週かけて段階的に減量',
+    });
+  }
+  return alerts;
+}
+
+function defaultHtIsHighRiskForWatch(modifiers) {
+  return ['cm_dm', 'cm_post_mi', 'cm_hf', 'cm_proteinuria'].some((m) => modifiers.includes(m));
 }
 
 // detect whether currentDrugs include any drug at its max dose (used for combo-switch gating)
@@ -388,6 +491,21 @@ export default function TreatmentBooster({
   const DO_NOT_RULES = propDoNotRules || registryData?.DO_NOT_RULES || [];
   const subtitle = propSubtitle || registryEntry?.subtitle || '治療修正の思考支援ツール';
 
+  // Disease-specific helper resolution — each disease data module may export these.
+  // Fallback to HT-centric inline defaults when missing.
+  const maintainBlockers = registryData?.MAINTAIN_BLOCKERS ?? DEFAULT_HT_MAINTAIN_BLOCKERS;
+  const fnSynthMaintain = registryData?.synthesizeMaintainRec || synthesizeMaintainRec;
+  const fnSynthWatch = registryData?.synthesizeWatchRec || synthesizeWatchRec;
+  const fnSynthDoseUp = registryData?.synthesizeDoseUpRecs || synthesizeDoseUpRecs;
+  const fnGetCurrentClasses = registryData?.getCurrentClasses || getCurrentClasses;
+  const fnFormatAppliedTarget = registryData?.formatAppliedTarget || formatAppliedTarget;
+  const fnSuggestAgeNudge = registryData?.suggestAgeNudge || suggestAgeNudge;
+  const fnAutoFlagLabel = registryData?.autoFlagLabel || autoFlagLabel;
+  const fnComputeAutoFlags = registryData?.computeAutoFlags || defaultHtComputeAutoFlags;
+  const fnComputeInfoAlerts = registryData?.computeInfoAlerts || defaultHtComputeInfoAlerts;
+  const fnComputeConnectedAlerts = registryData?.computeConnectedAlerts || defaultHtComputeConnectedAlerts;
+  const fnIsHighRiskForWatch = registryData?.isHighRiskForWatch || defaultHtIsHighRiskForWatch;
+
   const [phase, setPhase] = useState(1);
   // currentDrugs: array of { id, dose } objects
   const [currentDrugs, setCurrentDrugs] = useState([]);
@@ -425,83 +543,15 @@ export default function TreatmentBooster({
     setOverrideStatus(null);
   }, []);
 
-  // BP値から自動検出される追加モディファイア（手動選択が不要）
-  // 後で autoFlags から派生する情報アラート（軽度・中等度の教育的ヒント）
-  const infoAlerts = useMemo(() => {
-    const alerts = [];
-    const s = metricValues.sbp;
-    const d = metricValues.dbp;
-    const os = metricValues.office_sbp;
-    const od = metricValues.office_dbp;
-    const sd = metricValues.sbp_sd;
+  const infoAlerts = useMemo(
+    () => fnComputeInfoAlerts(metricValues, modifiers, currentDrugs, DRUGS),
+    [metricValues, modifiers, currentDrugs, DRUGS, fnComputeInfoAlerts]
+  );
 
-    // 白衣高血圧
-    if (
-      ((os !== undefined && os >= 140) || (od !== undefined && od >= 90)) &&
-      ((s === undefined || s < 135) && (d === undefined || d < 85))
-    ) {
-      alerts.push({
-        type: 'white_coat',
-        label: '白衣高血圧の可能性',
-        detail: `診察室${os ?? '?'}/${od ?? '?'} vs 家庭${s ?? '?'}/${d ?? '?'}。家庭血圧平均で治療判断を。過降圧リスクあり、診察室値のみで増量しない`,
-      });
-    }
-    // 仮面高血圧
-    if (
-      (os !== undefined && os < 140 && od !== undefined && od < 90) &&
-      ((s !== undefined && s >= 135) || (d !== undefined && d >= 85))
-    ) {
-      alerts.push({
-        type: 'masked',
-        label: '仮面高血圧の可能性',
-        detail: `診察室${os}/${od} は正常範囲でも家庭${s ?? '?'}/${d ?? '?'} が高値。心血管リスクは通常のHT同等以上。治療強化を検討`,
-      });
-    }
-    // 日間変動大
-    if (sd !== undefined && sd > 15) {
-      alerts.push({
-        type: 'variability',
-        label: '家庭血圧変動 大 (SD>15)',
-        detail: `日間変動大（SD ${sd}）は心血管イベント独立リスク。Ca拮抗薬（アムロジピン）は変動抑制に有利。測定手技・服薬遵守も確認`,
-      });
-    }
-    return alerts;
-  }, [metricValues]);
-
-  const autoFlags = useMemo(() => {
-    const flags = [];
-    const s = metricValues.sbp;
-    const d = metricValues.dbp;
-    const os = metricValues.office_sbp;
-    const od = metricValues.office_dbp;
-    const sd = metricValues.sbp_sd;
-
-    if ((s !== undefined && s >= 145) || (d !== undefined && d >= 90)) {
-      flags.push('co_grade2');
-    }
-    if ((s !== undefined && s >= 160) || (d !== undefined && d >= 105)) {
-      flags.push('rf_severe_ht');
-    }
-    // 白衣高血圧: 診察室≥140/90 + 家庭<135/85
-    if (
-      ((os !== undefined && os >= 140) || (od !== undefined && od >= 90)) &&
-      ((s === undefined || s < 135) && (d === undefined || d < 85))
-    ) {
-      flags.push('_white_coat_ht');
-    }
-    // 仮面高血圧: 診察室<140/90 + 家庭≥135/85
-    if (
-      (os !== undefined && os < 140 && od !== undefined && od < 90) &&
-      ((s !== undefined && s >= 135) || (d !== undefined && d >= 85))
-    ) {
-      flags.push('_masked_ht');
-    }
-    // 日間変動が大きい（SD>15）
-    if (sd !== undefined && sd > 15) {
-      flags.push('_high_bp_variability');
-    }
-    return flags;
-  }, [metricValues]);
+  const autoFlags = useMemo(
+    () => fnComputeAutoFlags(metricValues, modifiers, currentDrugs, DRUGS),
+    [metricValues, modifiers, currentDrugs, DRUGS, fnComputeAutoFlags]
+  );
 
   // 手動選択 + 自動検出のマージ
   const effectiveModifiers = useMemo(() => {
@@ -549,96 +599,54 @@ export default function TreatmentBooster({
 
   // Synthesized recs: DOSE_UP + MAINTAIN
   const doseUpRecs = useMemo(
-    () => synthesizeDoseUpRecs(currentDrugs, DRUGS, effectiveModifiers),
-    [currentDrugs, DRUGS, effectiveModifiers]
+    () => fnSynthDoseUp(currentDrugs, DRUGS, effectiveModifiers),
+    [currentDrugs, DRUGS, effectiveModifiers, fnSynthDoseUp]
   );
 
   // DO_NOT ruleが current regimen に関連するかどうかを判定する
   // （例: 痛風患者でサイアザイドDO_NOTが発火しても、患者がサイアザイド非服用なら MAINTAIN 抑制の必要なし）
   // 連携アラート: 処方+合併症の組み合わせから動的に導出
   const connectedAlerts = useMemo(() => {
-    const alerts = [];
-    const currentClasses = getCurrentClasses(currentDrugs, DRUGS);
-    const hasARB_or_ACEi = currentClasses.has('ARB') || currentClasses.has('ACE阻害薬');
-    const hasDiuretic = currentClasses.has('利尿薬');
-    const hasBB = currentClasses.has('β遮断薬');
-
-    // SGLT2i 連携推奨: DM+ARB/ACEi で心腎保護を強化
-    if (effectiveModifiers.includes('cm_dm') && hasARB_or_ACEi) {
-      alerts.push({
-        type: 'sglt2i',
-        label: 'SGLT2i 併用を検討',
-        detail: 'DM+高血圧でARB/ACEi内服中。SGLT2i併用で心腎保護エビデンス最強（EMPA-KIDNEY・DAPA-CKD）。DM主治医と相談の上、ダパグリフロジン/エンパグリフロジンの追加を検討',
-      });
-    }
-
-    // Triple Whammy: ARB/ACEi + 利尿薬 + NSAID (+CKDで特にリスク増)
-    if (hasARB_or_ACEi && hasDiuretic && effectiveModifiers.includes('co_nsaid')) {
-      alerts.push({
-        type: 'triple_whammy',
-        label: '⚠ Triple Whammy（AKI高リスク）',
-        detail: 'ARB/ACEi + 利尿薬 + NSAID の3者併用は急性腎障害リスク急増。NSAID中止orアセトアミノフェン変更を最優先。中止不可なら72時間以内にCr/eGFR再検',
-        severity: 'critical',
-      });
-    }
-
-    // 妊娠可能年齢 + ARB/ACEi 確認
-    if (effectiveModifiers.includes('co_reproductive_age') && hasARB_or_ACEi) {
-      alerts.push({
-        type: 'repro_age',
-        label: '妊娠可能年齢の女性 + ARB/ACEi',
-        detail: '挙児希望・避妊状況の確認を。妊娠時は胎児腎毒性・羊水過少。妊娠判明時は即時中止 → メチルドパ/ラベタロール/ニフェジピン徐放へ切替。挙児希望ならこれらを事前に第一選択検討',
-        severity: 'critical',
-      });
-    }
-
-    // β遮断薬急激中止の警告（現在のcurrentDrugsではなく、TAPER/STOPを選ぶ際のフラグ）
-    if (hasBB && effectiveModifiers.includes('cm_cad')) {
-      alerts.push({
-        type: 'bb_withdrawal',
-        label: 'β遮断薬の急激中止は避ける',
-        detail: '虚血性心疾患併存でβ遮断薬を減量/中止する場合、急激な中止は反跳性頻脈・狭心症悪化・心筋梗塞リスク。2-4週かけて段階的に減量',
-      });
-    }
-    return alerts;
-  }, [currentDrugs, DRUGS, effectiveModifiers]);
+    const currentClasses = fnGetCurrentClasses(currentDrugs, DRUGS);
+    return fnComputeConnectedAlerts({
+      currentClasses,
+      modifiers: effectiveModifiers,
+      currentDrugs,
+      allDrugs: DRUGS,
+      metricValues,
+    });
+  }, [currentDrugs, DRUGS, effectiveModifiers, metricValues, fnGetCurrentClasses, fnComputeConnectedAlerts]);
 
   const relevantDoNot = useMemo(() => {
-    const currentClasses = getCurrentClasses(currentDrugs, DRUGS);
+    const currentClasses = fnGetCurrentClasses(currentDrugs, DRUGS);
     return DO_NOT_RULES.some((r) => {
       if (!r.modifiers || !r.modifiers.some((m) => effectiveModifiers.includes(m))) return false;
       const ruleText = r.drug || '';
       return [...currentClasses].some((cls) => ruleText.includes(cls));
     });
-  }, [currentDrugs, DRUGS, effectiveModifiers, DO_NOT_RULES]);
+  }, [currentDrugs, DRUGS, effectiveModifiers, DO_NOT_RULES, fnGetCurrentClasses]);
 
   // MAINTAIN: controlStatus === 'controlled' でのみ発火。ブロッカー・緊急・関連DO_NOTで抑制。
   // CKD/DM等の合併症は reassess/note に反映。
   const maintainRec = useMemo(() => {
     if (controlStatus !== 'controlled') return null;
-    if (MAINTAIN_BLOCKERS.some((m) => effectiveModifiers.includes(m))) return null;
+    if (maintainBlockers.some((m) => effectiveModifiers.includes(m))) return null;
     if (urgentRecs.length > 0) return null;
     if (relevantDoNot) return null;
-    return synthesizeMaintainRec(currentDrugs, DRUGS, effectiveModifiers);
-  }, [controlStatus, currentDrugs, DRUGS, effectiveModifiers, urgentRecs, relevantDoNot]);
+    return fnSynthMaintain(currentDrugs, DRUGS, effectiveModifiers);
+  }, [controlStatus, currentDrugs, DRUGS, effectiveModifiers, urgentRecs, relevantDoNot, fnSynthMaintain, maintainBlockers]);
 
-  // WATCH: controlStatus === 'near_target' で発火（目標+5〜+15mmHg、様子見ゾーン）
-  // 高リスク（DM/post-MI/HF/蛋白尿）併存時は WATCH primary を抑制し、介入案を優先表示させる。
   const watchRec = useMemo(() => {
     if (controlStatus !== 'near_target') return null;
-    if (MAINTAIN_BLOCKERS.some((m) => effectiveModifiers.includes(m))) return null;
+    if (maintainBlockers.some((m) => effectiveModifiers.includes(m))) return null;
     if (urgentRecs.length > 0) return null;
     if (relevantDoNot) return null;
-    const isHighRisk = ['cm_dm', 'cm_post_mi', 'cm_hf', 'cm_proteinuria'].some((m) =>
-      effectiveModifiers.includes(m)
-    );
-    if (isHighRisk) return null;
-    // EOL/高度ADL低下では WATCH（2-4週後再評価）は不適切。taper or 個別判断が適切。
+    if (fnIsHighRiskForWatch(effectiveModifiers)) return null;
     if (effectiveModifiers.includes('co_end_of_life') || effectiveModifiers.includes('co_adl_severe')) {
       return null;
     }
-    return synthesizeWatchRec(currentDrugs, DRUGS, effectiveModifiers);
-  }, [controlStatus, currentDrugs, DRUGS, effectiveModifiers, urgentRecs, relevantDoNot]);
+    return fnSynthWatch(currentDrugs, DRUGS, effectiveModifiers);
+  }, [controlStatus, currentDrugs, DRUGS, effectiveModifiers, urgentRecs, relevantDoNot, fnSynthWatch, fnIsHighRiskForWatch, maintainBlockers]);
 
   // Ranked recs (excluding urgent banner items)
   const rankedRecs = useMemo(() => {
@@ -817,13 +825,13 @@ export default function TreatmentBooster({
               </div>
               {(metricValues.sbp !== undefined || metricValues.dbp !== undefined) && (
                 <div className={styles.targetLine}>
-                  適用目標: <strong>{formatAppliedTarget(modifiers)}</strong>
+                  適用目標: <strong>{fnFormatAppliedTarget(modifiers)}</strong>
                   {autoFlags.length > 0 && (
                     <span className={styles.autoFlags}>
-                      &#9888; 自動検出: {autoFlags.map((f) => autoFlagLabel(f)).join(' / ')}
+                      &#9888; 自動検出: {autoFlags.map((f) => fnAutoFlagLabel(f)).join(' / ')}
                     </span>
                   )}
-                  {suggestAgeNudge(metricValues, modifiers) && (
+                  {fnSuggestAgeNudge(metricValues, modifiers) && (
                     <span className={styles.ageNudge}>
                       &#128161; 75歳以上なら健康・機能状態に応じたカテゴリー（カテゴリー1〜4）を選択してください（JSH2025 Table 3）
                     </span>

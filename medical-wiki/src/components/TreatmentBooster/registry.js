@@ -8,14 +8,18 @@
  */
 
 import * as htTreatmentData from './htTreatmentData';
+import * as dmTreatmentData from './dmTreatmentData';
 
 export const TREATMENT_DATA = {
   hypertension: {
     data: htTreatmentData,
     subtitle: '高血圧の治療修正支援（JSH2025準拠）',
   },
+  t2dm: {
+    data: dmTreatmentData,
+    subtitle: '2型糖尿病の治療修正支援（JDS2024 + JGS/JDS高齢者GL2023準拠）',
+  },
   // 将来追加:
-  // t2dm: { data: dmTreatmentData, subtitle: '2型糖尿病の治療修正支援' },
   // dyslipidemia: { data: dlpTreatmentData, subtitle: '脂質異常症の治療修正支援' },
   // asthma: { data: asthmaTreatmentData, subtitle: '気管支喘息の治療修正支援' },
 };
