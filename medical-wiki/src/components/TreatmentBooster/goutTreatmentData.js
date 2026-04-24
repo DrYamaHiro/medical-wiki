@@ -105,7 +105,7 @@ export const MODIFIERS = [
   // 制約
   { id: 'co_attack_frequent', label: '発作年2回以上', cat: '制約', severity: 'critical' },
   { id: 'co_attack_free_5y', label: '5年以上無発作（減量検討可）', cat: '制約' },
-  { id: 'co_on_urate_lowering', label: '尿酸降下薬 既服用中', cat: '制約' },
+  { id: 'co_on_urate_lowering', label: '尿酸降下薬 既服用中', cat: '制約', severity: 'critical' },
   { id: 'co_on_ult_prophylaxis', label: 'コルヒチン予防内服中（尿酸降下薬開始期）', cat: '制約' },
   { id: 'co_cyp3a4_inhibitor', label: 'CYP3A4/P-gp阻害薬併用（マクロライド・ベラパミル・シクロスポリン）', cat: '制約', severity: 'critical' },
   { id: 'co_azathioprine_use', label: 'アザチオプリン併用', cat: '制約', severity: 'critical' },
@@ -290,7 +290,7 @@ export function computeConnectedAlerts({ currentClasses, modifiers, currentDrugs
     alerts.push({
       type: 'benz_stone',
       label: '⚠ ベンズブロマロン + 尿酸結石: 禁忌',
-      detail: '尿中尿酸増加で結石悪化。尿酸降下薬 は尿酸生成抑制薬へ変更',
+      detail: '尿中尿酸増加で結石悪化。尿酸降下薬は尿酸生成抑制薬（アロプリノール/フェブキソスタット）へ変更',
       severity: 'critical',
     });
   }
@@ -613,7 +613,7 @@ export const RECOMMENDATIONS = [
   {
     id: 'taper_ul_attack_free_5y',
     action: 'TAPER',
-    drug: '5年以上無発作 → 尿酸降下薬 減量検討',
+    drug: '5年以上無発作 → 尿酸降下薬の減量検討',
     example: 'アロプリノール 300mg → 200mg へ段階減量、SUA推移確認',
     reason: '長期無発作で減量検討可。ただし中止は発作再燃リスク',
     fromStates: ['mono', 'dual'],
@@ -631,7 +631,7 @@ export const RECOMMENDATIONS = [
   {
     id: 'taper_overcontrolled_ua',
     action: 'TAPER',
-    drug: '過降下（SUA<3.0）→ 尿酸降下薬 減量',
+    drug: '過降下（SUA<3.0）→ 尿酸降下薬の減量',
     reason: '認知症状・パーキンソン症状リスク。SUA 5.0-6.0を目安に調整',
     fromStates: ['mono', 'dual'],
     preferredWhen: ['se_low_ua_cognitive'],

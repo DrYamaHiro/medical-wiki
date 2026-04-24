@@ -241,10 +241,12 @@ export function computeAutoFlags(metricValues, modifiers, currentDrugs, allDrugs
   const exac = metricValues.exacerbations_past_year;
   const hosp = metricValues.hospitalizations_past_year;
   const eos = metricValues.eos;
+  const mmrc = metricValues.mmrc;
   if (exac !== undefined && exac >= 2) flags.push('cm_frequent_exacerbator');
   if (hosp !== undefined && hosp >= 1) flags.push('cm_hospitalized_past_year');
   if (eos !== undefined && eos >= 300) flags.push('cm_eosinophilic_300');
   else if (eos !== undefined && eos < 100) flags.push('cm_eosinophilic_100');
+  if (mmrc !== undefined && mmrc >= 2) flags.push('co_pulm_rehab_candidate');
   return flags;
 }
 
@@ -553,6 +555,18 @@ export const RECOMMENDATIONS = [
     targetClass: 'ICS/LABA/LAMA',
     preferredWhen: ['cm_aco', 'cm_asthma_hx'],
     forbidden: ['cm_active_tb', 'cm_narrow_angle_glaucoma'],
+  },
+  {
+    id: 'start_triple_aco_naive',
+    action: 'STEP_UP',
+    drug: 'ACO未治療 → Triple開始（ICS必須）',
+    example: 'テリルジー 200エリプタ 1回1吸入1日1回',
+    reason: 'ACOは喘息成分があるためICS不可欠。LAMA/LABA単独ではなくTriple',
+    fromStates: ['naive'],
+    targetClass: 'ICS/LABA/LAMA',
+    preferredWhen: ['cm_aco', 'cm_asthma_hx'],
+    forbidden: ['cm_active_tb', 'cm_narrow_angle_glaucoma'],
+    reassess: '4-8週後 CAT・mMRC・副作用確認',
   },
   {
     id: 'stepup_to_triple_single_inhaler',

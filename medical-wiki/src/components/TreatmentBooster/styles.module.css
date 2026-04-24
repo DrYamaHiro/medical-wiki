@@ -356,6 +356,12 @@
   background: var(--ifm-background-color);
   border-radius: 16px;
   cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.statusChipManual {
+  box-shadow: 0 0 0 2px var(--ifm-color-primary-lighter);
+  outline: none;
 }
 
 .status_controlled {

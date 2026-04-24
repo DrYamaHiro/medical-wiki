@@ -154,6 +154,7 @@ export const MODIFIERS = [
   { id: 'cm_ihd_or_stroke', label: '虚血性心疾患 or 脳梗塞既往', cat: '併存疾患', severity: 'critical' },
   { id: 'cm_htn_uncontrolled', label: 'コントロール不良高血圧', cat: '併存疾患' },
   { id: 'cm_asthma', label: '喘息併存（β遮断薬禁忌）', cat: '併存疾患' },
+  { id: 'cm_copd', label: 'COPD併存（非選択β禁忌）', cat: '併存疾患' },
   { id: 'cm_narrow_angle_glaucoma', label: '狭隅角緑内障（TCA禁忌）', cat: '併存疾患', severity: 'critical' },
   { id: 'cm_bph_urinary_retention', label: 'BPH・尿閉', cat: '併存疾患' },
   { id: 'cm_qt_prolongation', label: 'QT延長', cat: '併存疾患' },
@@ -264,15 +265,31 @@ export function autoFlagLabel(f) {
   );
 }
 
-export function computeAutoFlags(metricValues, modifiers /*, currentDrugs, allDrugs */) {
+export function computeAutoFlags(metricValues, modifiers, currentDrugs, allDrugs) {
   const flags = [];
   const d = metricValues.headache_days_per_month;
   const ab = metricValues.abortive_days_per_month;
   if (d !== undefined && d >= 15) flags.push('cm_migraine_chronic');
   if (d !== undefined && d >= 4) flags.push('cm_migraine_freq_4plus');
-  if (ab !== undefined && ab >= 10) flags.push('cm_moh_triptan_overuse');
-  if (ab !== undefined && ab >= 15) flags.push('cm_moh_analgesic_overuse');
-  if (ab !== undefined && ab >= 10) flags.push('cm_moh');
+
+  // MOH 分類: 薬剤クラスごとの閾値が異なる
+  //   トリプタン・エルゴット・合剤（アセトアミノフェン+NSAID+カフェイン等）: 月≥10日
+  //   単純鎮痛薬（NSAID・アセトアミノフェン単剤）: 月≥15日
+  const cls = (currentDrugs || []).map((id) => {
+    const drug = (allDrugs || []).find((x) => x.id === id);
+    return drug ? drug.class : null;
+  }).filter(Boolean);
+  const onTriptanOrCombo = cls.some((c) => c === 'トリプタン' || c === 'ジタン' || c === 'エルゴタミン' || c === '合剤' || c === 'オピオイド');
+  const onSimpleAnalgesic = cls.some((c) => c === '急性期NSAID' || c === '急性期アセトアミノフェン');
+
+  if (ab !== undefined && ab >= 10 && onTriptanOrCombo) {
+    flags.push('cm_moh_triptan_overuse');
+    flags.push('cm_moh');
+  }
+  if (ab !== undefined && ab >= 15 && onSimpleAnalgesic) {
+    flags.push('cm_moh_analgesic_overuse');
+    flags.push('cm_moh');
+  }
   return flags;
 }
 
@@ -437,13 +454,13 @@ export function synthesizeWatchRec(currentDrugs, allDrugs, modifiers = []) {
 
 export function synthesizeDoseUpRecs(currentDrugs, allDrugs, modifiers = []) {
   const avoidMap = {
-    pv_prop: ['cm_asthma', 'cm_bradycardia_av_block'],
+    pv_prop: ['cm_asthma', 'cm_copd', 'cm_bradycardia_av_block'],
     pv_ami: ['cm_narrow_angle_glaucoma', 'cm_bph_urinary_retention', 'cm_qt_prolongation', 'co_elderly_65'],
     pv_val: ['co_pregnancy', 'co_pregnancy_planning', 'cm_liver_severe'],
     cl_vera: ['cm_bradycardia_av_block', 'cm_qt_prolongation'],
   };
   const forbiddenMap = {
-    pv_prop: ['cm_asthma', 'cm_bradycardia_av_block'],
+    pv_prop: ['cm_asthma', 'cm_copd', 'cm_bradycardia_av_block'],
     pv_val: ['co_pregnancy'],
     pv_ami: ['cm_narrow_angle_glaucoma'],
   };
@@ -580,7 +597,7 @@ export const RECOMMENDATIONS = [
     fromStates: ['mono'],
     drugClass: '予防β遮断薬',
     preferredWhen: ['cm_migraine_freq_4plus', 'cm_ht'],
-    forbidden: ['cm_asthma', 'cm_bradycardia_av_block'],
+    forbidden: ['cm_asthma', 'cm_copd', 'cm_bradycardia_av_block'],
   },
   {
     id: 'start_lomerizine_asthma_copd',
@@ -590,7 +607,7 @@ export const RECOMMENDATIONS = [
     reason: '日本で片頭痛予防適応、β遮断薬禁忌例の選択',
     fromStates: ['mono'],
     drugClass: '予防Ca拮抗薬',
-    preferredWhen: ['cm_asthma', 'cm_migraine_freq_4plus'],
+    preferredWhen: ['cm_asthma', 'cm_copd', 'cm_migraine_freq_4plus'],
   },
   {
     id: 'start_amitriptyline_depression_insomnia',
@@ -793,8 +810,8 @@ export const DO_NOT_RULES = [
   },
   {
     drug: 'プロプラノロール',
-    modifiers: ['cm_asthma', 'cm_bradycardia_av_block'],
-    reason: '【禁忌】β2遮断で喘息悪化、徐脈',
+    modifiers: ['cm_asthma', 'cm_copd', 'cm_bradycardia_av_block'],
+    reason: '【禁忌】β2遮断で喘息/COPD悪化（気管支攣縮）、徐脈',
   },
   {
     drug: 'バルプロ酸',

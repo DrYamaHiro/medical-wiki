@@ -481,7 +481,7 @@ export const RECOMMENDATIONS = [
     reason: '転倒・認知機能低下リスク低い。入眠+中途覚醒の両方に有効',
     fromStates: ['naive'],
     drugClass: 'オレキシン受容体拮抗薬',
-    preferredWhen: ['co_elderly_65', 'co_elderly_75', 'cm_insomnia_maintenance', 'cm_insomnia_mixed'],
+    preferredWhen: ['co_elderly_65', 'co_elderly_75', 'cm_insomnia_maintenance', 'cm_insomnia_nonrestorative'],
     forbidden: ['cm_liver_severe', 'co_pregnancy'],
     reassess: '2週後 ISI・日中機能',
   },

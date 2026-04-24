@@ -911,11 +911,12 @@ export default function TreatmentBooster({
                     key={s}
                     className={`${styles.statusChip} ${
                       controlStatus === s ? styles[`status_${s}`] : ''
-                    }`}
+                    } ${overrideStatus === s ? styles.statusChipManual : ''}`}
                     onClick={() => setOverrideStatus(overrideStatus === s ? null : s)}
+                    title={overrideStatus === s ? '手動指定中 — 再クリックで解除' : '数字入力の代わりに状態を直接指定'}
                   >
                     {statusLabel(s)}
-                    {overrideStatus === s ? ' (手動)' : ''}
+                    {overrideStatus === s ? ' ✓' : ''}
                   </button>
                 ))}
               </div>
