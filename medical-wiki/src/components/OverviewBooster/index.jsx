@@ -291,15 +291,35 @@ export default function OverviewBooster() {
 /* ============================================================
    Patient Header
    ============================================================ */
+// 年齢 range → ≥75歳判定
+const AGE_75_RANGES = new Set(['75-79', '80-89', '90+']);
+
 function PatientHeaderPanel({ state, dispatch }) {
-  const update = (patch) => dispatch({ type: 'SET_PATIENT_HEADER', payload: patch });
+  const update = (patch) => {
+    // 年齢が変わったら co_elderly_75 を自動推定
+    if (patch.age !== undefined) {
+      patch.co_elderly_75 = AGE_75_RANGES.has(patch.age);
+    }
+    dispatch({ type: 'SET_PATIENT_HEADER', payload: patch });
+  };
   return (
     <div className={styles.patientHeader}>
       <div className={styles.sectionTitle}>👤 患者ヘッダー <span className={styles.sectionHint}>(全STEP共有・患者切替時消去)</span></div>
       <div className={styles.patientGrid}>
         <div>
-          <label className={styles.fieldLabel} htmlFor="ph_age">年齢</label>
-          <input id="ph_age" type="number" className={styles.fieldInput} value={state.patientHeader.age} onChange={(e) => update({ age: e.target.value })} placeholder="例:65" />
+          <label className={styles.fieldLabel} htmlFor="ph_age">年齢層</label>
+          <select id="ph_age" className={styles.fieldInput} value={state.patientHeader.age || ''} onChange={(e) => update({ age: e.target.value })}>
+            <option value="">--</option>
+            <option value="<40">&lt;40歳</option>
+            <option value="40-49">40-49歳</option>
+            <option value="50-59">50-59歳</option>
+            <option value="60-64">60-64歳</option>
+            <option value="65-69">65-69歳</option>
+            <option value="70-74">70-74歳</option>
+            <option value="75-79">75-79歳</option>
+            <option value="80-89">80-89歳</option>
+            <option value="90+">≥90歳</option>
+          </select>
         </div>
         <div>
           <label className={styles.fieldLabel} htmlFor="ph_sex">性別</label>
@@ -312,7 +332,6 @@ function PatientHeaderPanel({ state, dispatch }) {
         <CheckboxField id="ph_preg" label="妊娠中" checked={state.patientHeader.co_pregnancy} onChange={(v) => update({ co_pregnancy: v })} />
         <CheckboxField id="ph_lact" label="授乳中" checked={state.patientHeader.co_lactation} onChange={(v) => update({ co_lactation: v })} />
         <CheckboxField id="ph_frail" label="フレイル" checked={state.patientHeader.co_frail} onChange={(v) => update({ co_frail: v })} />
-        <CheckboxField id="ph_eld75" label="≥75歳" checked={state.patientHeader.co_elderly_75} onChange={(v) => update({ co_elderly_75: v })} />
       </div>
     </div>
   );
