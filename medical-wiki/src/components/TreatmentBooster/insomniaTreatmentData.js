@@ -85,12 +85,12 @@ export const DRUGS = [
 /*  MODIFIERS                                               */
 /* -------------------------------------------------------- */
 export const MODIFIERS = [
-  // ===== 不眠症タイプ（最優先、主要選択） =====
+  // ===== 不眠症タイプ（最優先、主要選択、4択排他） =====
   // 数字入力不要でここから選ぶだけで大まかな薬剤選択に影響
-  { id: 'cm_insomnia_onset', label: '入眠困難', cat: '不眠症タイプ（主要選択）' },
-  { id: 'cm_insomnia_maintenance', label: '中途覚醒', cat: '不眠症タイプ（主要選択）' },
-  { id: 'cm_insomnia_early_morning', label: '早期覚醒（うつ鑑別要）', cat: '不眠症タイプ（主要選択）' },
-  { id: 'cm_insomnia_nonrestorative', label: '熟眠障害', cat: '不眠症タイプ（主要選択）' },
+  { id: 'cm_insomnia_onset', label: '入眠困難', cat: '不眠症タイプ（主要選択）', radioGroup: 'insomnia_type' },
+  { id: 'cm_insomnia_maintenance', label: '中途覚醒', cat: '不眠症タイプ（主要選択）', radioGroup: 'insomnia_type' },
+  { id: 'cm_insomnia_early_morning', label: '早期覚醒（うつ鑑別要）', cat: '不眠症タイプ（主要選択）', radioGroup: 'insomnia_type' },
+  { id: 'cm_insomnia_nonrestorative', label: '熟眠障害', cat: '不眠症タイプ（主要選択）', radioGroup: 'insomnia_type' },
 
   // 副作用
   { id: 'se_paradoxical_reaction', label: '奇異反応（興奮・攻撃性）', cat: '副作用', severity: 'critical' },

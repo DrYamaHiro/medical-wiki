@@ -37,6 +37,8 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .phaseIndicator {
@@ -47,31 +49,35 @@
 }
 
 .resetBtn {
-  padding: 0.25rem 0.7rem;
-  font-size: 0.75rem;
-  border: 1px solid rgba(255,255,255,0.5);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.78rem;
+  border: 1px dashed rgba(255,255,255,0.6);
   border-radius: 4px;
   background: transparent;
   color: #fff;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .resetBtn:hover {
-  background: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.18);
 }
 
 .resetAllBtn {
-  padding: 0.25rem 0.7rem;
-  font-size: 0.75rem;
-  border: 1px solid #ffab91;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.78rem;
+  border: 2px solid #ffab91;
   border-radius: 4px;
   background: #d84315;
   color: #fff;
   cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .resetAllBtn:hover {
   background: #bf360c;
+  border-color: #ff8a65;
 }
 
 .sharedBadge {
@@ -98,6 +104,52 @@
   content: '◇ ';
   color: #00838f;
   font-weight: 700;
+}
+
+.helpDetails {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: #e0f7fa;
+}
+
+.helpSummary {
+  cursor: pointer;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #00695c;
+  list-style: none;
+  user-select: none;
+}
+
+.helpSummary::-webkit-details-marker {
+  display: none;
+}
+
+.helpSummary:hover {
+  background: #b2ebf2;
+}
+
+.helpBody {
+  padding: 0.5rem 1.4rem 1rem;
+  font-size: 0.85rem;
+  background: #f0fdfd;
+  color: #004d40;
+}
+
+.helpBody p {
+  margin: 0.6rem 0 0.3rem;
+}
+
+.helpBody ul, .helpBody ol {
+  margin: 0.2rem 0 0.5rem 1.2rem;
+  padding-left: 0.5rem;
+}
+
+.helpBody li {
+  margin: 0.2rem 0;
+  line-height: 1.5;
 }
 
 /* 緊急推奨バナー（Red Flag） */

@@ -4,6 +4,184 @@ title: "変更履歴"
 
 # 変更履歴
 
+## ver.3.0.4.0（2026-04-25）
+
+### Treatment Booster v4.1: UX大幅改善・医療安全強化（2026-04-25）
+
+シミュレーション Day 1-4 で4日連続最大の不満だった「修飾子の重複入力」「リセット/全リセットの混乱」「不眠4分類の排他選択漏れ」をまとめて解消。
+
+**「入力クリア」と「次の患者へ」ボタンの分離**:
+- 旧「リセット」→「⟳ 入力クリア」（同じ患者で入力やり直し用、◇共有修飾子は保持）
+- 旧「全リセット」→「👤→👤 次の患者へ」（共有修飾子も含めて全消去、患者切替時用）
+- 「次の患者へ」押下時は **共有修飾子があれば確認ダイアログ**で誤操作防止
+- ヘッダーに **使い方ヘルプバナー（折りたたみ）** を追加。共有修飾子の意味・ボタン使い分け・典型ワークフローを明示
+
+**localStorage schema バージョン管理**:
+- 共有修飾子のデータ形式に `{ version: 1, data: [...] }` のスキーマ導入
+- 古い形式・バージョン不一致は自動消去
+- 削除済み modifier ID が残った場合の自動 sanitize
+
+**radioGroup 排他選択の対象拡張**:
+- 不眠症 4分類（入眠困難/中途覚醒/早期覚醒/熟眠障害）を radioGroup 化
+- 同時選択不能になり、明確な治療パスへ誘導
+
+**SHARED_MODIFIER_IDS 拡張・整合**:
+- ゴーストID（cm_cancer 等、どの Booster にも未定義）を除去
+- 多Boosterで共通使用される修飾子を追加（cm_obese / cm_anxiety / cm_osteoporosis / cm_active_tb / cm_frequent_exacerbator / cm_bph_urinary_retention / cm_narrow_angle_glaucoma / co_reproductive_age / co_smoker_current / co_nsaid / co_cost / co_stable_6mo）
+
+**改善文書化**:
+- 共有修飾子チップに「◇」マーク表示（他Boosterと連動することを可視化）
+- ヘッダーに「🔗 共有 N」バッジ（aria-label 付き）
+- ARIA・タイトル属性・ホバー説明の充実
+
+### Treatment Booster v4: 共有修飾子 + radioGroup（2026-04-25）
+
+シミュレーション Day 1-4 累積の最多要望（修飾子重複入力解消）に対応した大型 UX 改修。
+
+**共有修飾子レイヤー（localStorage 永続化）**:
+- 47個の共通 modifier（cm_dm/cm_ckd/cm_ht/cm_ascvd/co_pregnancy/co_elderly_75 等）を Booster 間で自動共有
+- HT Booster で cm_dm を選んで DM Booster に移動 → 自動で pre-select
+- ヘッダーに「共有 N」バッジ表示
+
+**radioGroup（chip 排他選択）**:
+- DM 高齢者カテゴリー（co_elderly_cat1/2/3、JGS/JDS2023）
+- HT 高齢者カテゴリー（JSH2025 Table 3、co_elderly/co_frail/co_adl_severe/co_end_of_life）
+- 同一グループ内は1つのみ選択可、UI上は破線 border で radio 感を可視化
+
+**コンテンツ強化**:
+- 頭痛 MOH離脱プロトコル詳細 5段階（完全中止→離脱期対症→予防薬→4週評価）
+- DM 紹介待ちブリッジ治療 rec（症候性高血糖でメトホルミン最大量+SGLT2i併用検討、ケトン症状警告）
+- HT 単剤 vs 併用 同等推奨 note（JSH2025 Step 2 解釈）
+- COPD 重症スコープ外明示（FEV1<30 / 呼吸不全 / HOT 適応 / 気管支拡張症 / 間質性肺疾患）
+
+### Treatment Booster v3: 臨床妥当性監査結果反映（2026-04-25）
+
+シミュレーション Day 1-2 の臨床妥当性監査で発見された suboptimal を直接解消。
+
+**suboptimal 解消**:
+- DM CKD G3b の DPP-4i に **リナグリプチン明示 rec** 追加（mono→dual で胆汁排泄・用量調整不要を明示）
+- 不眠+うつでミルタザピンの specialistGate を撤廃 + PHQ-9スコア閾値 note（プライマリケアで踏み込めるように）
+
+**Phase C 残件**:
+- HT ID統一: `cm_ckd_adv` → `cm_ckd_g45`（10箇所）、`cm_liver` → `cm_liver_severe`
+- 痛風コルヒチン+CKD G4-5 禁忌追加（横紋筋融解・骨髄抑制）
+- 不眠 DO_NOT 追加: BZ+アルコール / BZ+オピオイド / スボレキサント+CYP3A4 / BZ+CO2貯留
+- modifiers:[] バグ修正（ラメルテオン+フルボキサミン、トリアゾラム高齢）
+
+**新規 modifier**:
+- オピオイド横断警告: `co_opioid_use` を不眠/頭痛にも
+- CO2貯留: `cm_co2_retention`（不眠）
+- 肝硬変代償期: `cm_liver_compensated`（DM/DLP）
+- GDM: `cm_gdm` + 専用パス（食事+インスリン+3者連携+産後OGTT）
+- 胃切除後: `cm_post_gastrectomy` + 配慮 rec（B12スクリーニング）
+- T1DM Booster ガード rec（対象外+専門医継続を明示）
+- 痛風結節既往: `cm_gout_tophus` を taper rec の avoidWhen に追加
+
+**新規推奨**:
+- 妊娠HT 第一選択 rec: メチルドパ + ラベタロール/ニフェジピン徐放
+- 妊娠判明時の薬剤切替パス（ARB/ACEi/MRA即時中止）
+- 頭痛トピラマート rec（β遮断不可・喘息/COPD/徐脈/肥満で代替、国際GLエビデンスA、日本適応外明示）
+- CGRP抗体 3ヶ月効果判定+50%減少+保険適応条件 note
+
+**TG重症度段階**:
+- `cm_severe_hypertg` (≥500) / `cm_extreme_hypertg` (≥1000、即日精査) に分割
+- TG≥1000 で auto-flag
+
+### Treatment Booster v2: 15並列QA監査結果反映（2026-04-25）
+
+ロット2デプロイ後の15並列QA監査で発見された critical バグを一括修正。
+
+- **不眠**: `cm_insomnia_mixed` stale参照 → `cm_insomnia_nonrestorative`（4分類 refactor 置換漏れ）
+- **痛風**: 「尿酸降下薬 既服用中」の半角スペース・文言統一（4箇所）
+- **COPD**: mMRC≥2 で `co_pulm_rehab_candidate` 自動付与（肺リハ推奨が見落とされない）
+- **COPD**: ACO未治療 → Triple直接開始 rec を naive state に追加
+- **頭痛**: MOH自動検出を**薬剤クラス依存**に修正（トリプタン/合剤 月≥10日・単純鎮痛薬 月≥15日）
+- **頭痛**: プロプラノロール禁忌に `cm_copd` 追加 + `cm_copd` modifier 新設（β2遮断による気管支攣縮、COPD Booster とのクロス安全性）
+- **UX**: 状態チップ手動指定時のみ shadow + ✓ で視覚強化
+
+### Treatment Booster ロット2: COPD + 頭痛追加（2026-04-25）
+
+慢性疾患 9 ブースター体制を完成。
+
+**COPD Treatment Booster** (JRS COPD GL 2022 + GOLD 2024 ABE分類準拠):
+- 20薬剤 (LAMA×5, LABA×1, LAMA/LABA×4, ICS/LABA×2, Triple×2, SABA/SAMAネブ, PSL burst, 抗生剤×3, 禁煙補助×2)
+- GOLD 2024 ABE自動推奨
+- ICS判断ロジック (eos≥300 / ACO → 追加、eos<100 / 肺炎既往 → withdrawal)
+- 増悪 severity別 pathway、α1-AT欠損症スクリーニング、CO2貯留型 SpO2 88-92%目標
+- 25+ recommendations、6 DO_NOT_RULES
+
+**頭痛 Treatment Booster** (頭痛診療GL2021 + ICHD-3準拠):
+- 25薬剤 (急性期NSAID×5, トリプタン×5, ラスミジタン, 制吐×2, 予防薬×4, CGRP抗体×3, ボトックス, 群発×2)
+- Red Flag SNOOP 自動検出（突発性・50歳以降初発・神経学的・全身症状・パターン変化）
+- MOH 自動検出（薬剤クラス別閾値）
+- CV既往対応（トリプタン→ラスミジタン）、前兆+OC脳卒中警告、妊娠時アセトアミノフェン第一
+
+**UX改善**:
+- 数字入力を省略して**状態を直接選択**できる chip を全 Booster で常時表示
+- 不眠症: **4分類 chip**（入眠困難・中途覚醒・早期覚醒・熟眠障害）を主要選択化
+
+### Treatment Booster ロット1: 痛風・不眠症・慢性便秘症（2026-04-23）
+
+**痛風・高尿酸血症** (JP GL第3版2022準拠):
+- アロプリノール/フェブキソスタット/トピロキソスタット/ベンズブロマロン/プロベネシド/ナイキサン/コルヒチン/PSL
+- HLA-B*5801 alert (DIHS/SJS/TEN リスク)
+- ULT略語撤廃→「尿酸降下薬」表記、急性発作中の新規開始厳禁・既服用継続メッセージ
+
+**不眠症** (睡眠薬適正使用GL + 日本睡眠学会GL準拠):
+- BZ系 / Z-drug / オレキシン受容体拮抗薬 / メラトニン受容体作動薬 / 抗うつ薬
+- BZ系の高齢者・OSAS・認知症・依存・3ヶ月以上連用ガード
+- ハルシオン/ゾルピデム/エチゾラム別の特異リスク
+- CBT-I優先、漸減プロトコル
+
+**慢性便秘症** (日本消化管学会GL2023 + Rome IV準拠):
+- 酸化Mg/モビコール/アミティーザ/リンゼス/グーフィス/プルゼニド/ラキソベロン/ナルデメジン
+- 高齢者酸化Mg + CKD アラート（高Mg血症リスク）
+- オピオイド誘発便秘 (OIC) 専用パス
+- Red Flag（体重減少・血便・直腸出血）の精査優先
+
+### Treatment Booster Phase 0 + 喘息・脂質追加（2026-04-22）
+
+**Phase 0（リスク層別）導入** — 脂質異常症で初実装:
+- 一次予防（低/中等度/高リスク）/ 二次予防 / FH一次・二次予防 の7カテゴリー
+- 7択排他選択でリスク層を確定 → Phase 1-3 で具体的薬剤調整
+- FH 不整合検出（risk_primary_low + cm_fh → risk_fh_primary 修正提案）
+- 超高リスク自動 upgrade（risk_secondary + cm_dm → risk_very_high）
+
+**気管支喘息 Treatment Booster** (JGL2024 + GINA 2024準拠):
+- ICS / ICS+LABA / SMART / Triple (ICS+LABA+LAMA) / 生物学的製剤 (ゾレア/ヌーカラ/ファセンラ/デュピクセント/テゼスパイア) / OCS / SABA
+- AERD/Samter triad 自動認識（NSAID完全回避 + LTRA + dupi最適応）
+- フェノタイプ別生物学的製剤選択（IgE/eos/atopy/T2-low）
+- 妊娠喘息ブデソニド優先、ACO（喘息-COPDオーバーラップ）認識
+
+**脂質異常症 Treatment Booster** (JAS動脈硬化性疾患予防GL2022準拠):
+- スタチン7種 / エゼチミブ / フィブラート / EPA・PCSK9阻害薬
+- 二次性脂質異常症（甲状腺機能低下・ネフローゼ・閉塞性黄疸）の検出
+- 低用量start・スタチン+フィブラート併用注意
+- ロミタピド・PCSK9専門医ゲート
+
+### Treatment Booster: HT v0.5 + DM v0.1（2026-04-21）
+
+慢性疾患の治療修正支援ツール（Treatment Booster）構築開始。診断用Diagnostic Boosterの姉妹機能。
+
+**設計原則**:
+- 4状態スキーマ: controlled / near_target / uncontrolled / overcontrolled
+- 11ヘルパー: deriveStatus / computeAutoFlags / computeInfoAlerts / computeConnectedAlerts / synthesizeMaintainRec/WatchRec/DoseUpRecs 等
+- MAINTAIN_BLOCKERS で MAINTAIN 推奨を抑制
+- registry pattern: `<TreatmentBooster disease="X" />` で MDX に挿入
+
+**高血圧 Treatment Booster v0.5** (JSH2025準拠):
+- ARB/ACEi/CCB/利尿薬/MRA/β遮断薬/ARNI/中枢性
+- JSH2025 高齢者カテゴリー1-4で目標血圧自動切替
+- Triple Whammy（ARB+利尿薬+NSAID）警告
+- DM併存SGLT2i連携、痛風×サイアザイド回避（ロサルタン優先）
+- 妊娠時ARB/ACEi 即時禁忌、白衣・仮面HT 検出
+
+**2型糖尿病 Treatment Booster v0.1** (JDS2024 + JGS/JDS高齢者GL2023準拠):
+- メトホルミン/SU/グリニド/DPP-4i/SGLT2i/GLP-1RA/TZD/α-GI/インスリン
+- HF/CKD/ASCVD で SGLT2i・GLP-1RA 強推奨
+- 高齢者Cat I/II/III別目標、フレイル・低血糖頻回でTAPER
+- 妊娠中の経口薬全面禁忌・インスリン化、T1DM 専門医継続
+
 ## ver.3.0.3.0
 
 ### 重大バグ修正: 処方非表示問題の解消（2026-04-19）

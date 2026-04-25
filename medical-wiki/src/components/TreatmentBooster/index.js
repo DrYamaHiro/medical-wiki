@@ -8,6 +8,7 @@ import { TREATMENT_DATA } from './registry';
 // 患者の併存疾患・年齢層・妊娠などは複数Boosterで共通使用するため、
 // localStorage で sessionに渡って保持し、各Booster起動時に自動pre-select。
 // ID は Booster間で共通に使う想定のもののみ列挙。
+// 9 booster の MODIFIERS で実在するもののみ列挙（QA で確認済み）
 const SHARED_MODIFIER_IDS = new Set([
   // 主要併存疾患
   'cm_dm', 'cm_ht', 'cm_ckd', 'cm_ckd_g45', 'cm_proteinuria',
@@ -15,19 +16,23 @@ const SHARED_MODIFIER_IDS = new Set([
   'cm_asthma', 'cm_copd', 'cm_aco', 'cm_osas', 'cm_osas_diagnosed', 'cm_osas_suspected',
   'cm_gout', 'cm_depression', 'cm_dementia', 'cm_parkinson',
   'cm_liver_severe', 'cm_liver_compensated', 'cm_hepatitis_active', 'cm_nafld_mash',
-  'cm_peptic_ulcer_hx', 'cm_pancreatitis_hx', 'cm_cancer',
+  'cm_peptic_ulcer_hx', 'cm_pancreatitis_hx',
   'cm_co2_retention', 'cm_post_gastrectomy',
+  // 多Boosterで共通に使用される追加修飾子（QA で発見）
+  'cm_obesity', 'cm_obese', 'cm_anxiety', 'cm_osteoporosis', 'cm_active_tb',
+  'cm_frequent_exacerbator', 'cm_bph_urinary_retention', 'cm_narrow_angle_glaucoma',
   // 年齢層・体質
   'co_elderly_65', 'co_elderly_75', 'co_frail',
-  // 妊娠・授乳
-  'co_pregnancy', 'co_pregnancy_planning', 'co_lactation',
+  // 妊娠・授乳（critical: 必ず患者切替時に消去）
+  'co_pregnancy', 'co_pregnancy_planning', 'co_lactation', 'co_reproductive_age',
   // 喫煙状態
-  'co_current_smoker', 'co_smoker_past',
-  // 共通薬剤関連
+  'co_current_smoker', 'co_smoker_past', 'co_smoker_current',
+  // 共通薬剤・アレルギー関連
   'co_opioid_use', 'co_polyp', 'co_anticoag_major',
-  'co_cyp3a4_inhibitor',
+  'co_cyp3a4_inhibitor', 'co_nsaid', 'co_cost', 'co_stable_6mo',
 ]);
 const SHARED_MODIFIERS_KEY = 'tx_booster_shared_modifiers';
+const SHARED_MODIFIERS_SCHEMA_VERSION = 1;
 
 function loadSharedModifiers() {
   if (typeof window === 'undefined') return [];
@@ -35,7 +40,17 @@ function loadSharedModifiers() {
     const raw = window.localStorage.getItem(SHARED_MODIFIERS_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    // 後方互換: 配列のみのv0データは消す（schema 不一致）
+    if (Array.isArray(parsed)) {
+      window.localStorage.removeItem(SHARED_MODIFIERS_KEY);
+      return [];
+    }
+    if (!parsed || parsed.version !== SHARED_MODIFIERS_SCHEMA_VERSION) {
+      window.localStorage.removeItem(SHARED_MODIFIERS_KEY);
+      return [];
+    }
+    const data = Array.isArray(parsed.data) ? parsed.data : [];
+    return data.filter((id) => SHARED_MODIFIER_IDS.has(id));
   } catch {
     return [];
   }
@@ -45,7 +60,10 @@ function saveSharedModifiers(modifierIds) {
   if (typeof window === 'undefined') return;
   try {
     const shared = (modifierIds || []).filter((id) => SHARED_MODIFIER_IDS.has(id));
-    window.localStorage.setItem(SHARED_MODIFIERS_KEY, JSON.stringify(shared));
+    window.localStorage.setItem(
+      SHARED_MODIFIERS_KEY,
+      JSON.stringify({ version: SHARED_MODIFIERS_SCHEMA_VERSION, data: shared })
+    );
   } catch {
     /* ignore quota / privacy errors */
   }
@@ -790,6 +808,20 @@ export default function TreatmentBooster({
     return primary;
   }, [maintainRec, watchRec, primary]);
 
+  // 「次の患者へ」ボタン: 共有修飾子があれば確認ダイアログ表示
+  const handleNewPatient = useCallback(() => {
+    if (sharedActiveCount > 0) {
+      const ok = window.confirm(
+        `次の患者の診療を開始します。\n\n` +
+        `現在の共有修飾子（${sharedActiveCount}個: 併存疾患・年齢・妊娠など）を消去します。\n` +
+        `※ 妊娠/併存疾患情報を別の患者に持ち越すと医療事故につながります。\n\n` +
+        `OK で消去・キャンセルで中止`
+      );
+      if (!ok) return;
+    }
+    resetPatient();
+  }, [sharedActiveCount, resetPatient]);
+
   return (
     <div className={styles.booster}>
       <div className={styles.header}>
@@ -803,18 +835,65 @@ export default function TreatmentBooster({
             {PHASE0 && phase === 0 ? ' (リスク層別)' : ''}
           </span>
           {sharedActiveCount > 0 && (
-            <span className={styles.sharedBadge} title="他Boosterと共有される修飾子の数。次患者では『全リセット』を押してください">
-              共有 {sharedActiveCount}
+            <span
+              className={styles.sharedBadge}
+              title={`◇ マークがついた修飾子 ${sharedActiveCount} 個が他のTreatment Boosterに引き継がれます。患者を変える時は必ず「次の患者へ」ボタンを押してください`}
+              aria-label={`共有修飾子 ${sharedActiveCount} 個。患者を変える時は必ず「次の患者へ」を押す`}
+            >
+              🔗 共有 {sharedActiveCount}
             </span>
           )}
-          <button className={styles.resetBtn} onClick={reset} title="この Booster の入力のみリセット（共有修飾子は保持）">
-            リセット
+          <button
+            className={styles.resetBtn}
+            onClick={reset}
+            title="この Booster の入力（薬剤・状態・修飾子）のみクリア。患者は同じで入力やり直し用"
+          >
+            ⟳ 入力クリア
           </button>
-          <button className={styles.resetAllBtn} onClick={resetPatient} title="次の患者を診る時に押す。共有修飾子も含めて全消去">
-            全リセット
+          <button
+            className={styles.resetAllBtn}
+            onClick={handleNewPatient}
+            title="次の患者を診療する時に押す。共有修飾子（◇マーク）も含めて全て消去"
+          >
+            👤→👤 次の患者へ
           </button>
         </div>
       </div>
+
+      {/* 使い方ヘルプ: 共有修飾子の意味と使い分けを明示 */}
+      <details className={styles.helpDetails}>
+        <summary className={styles.helpSummary}>
+          ℹ️ 「入力クリア」と「次の患者へ」の違い・使い方
+        </summary>
+        <div className={styles.helpBody}>
+          <p><strong>このBoosterの基本フロー</strong></p>
+          <ol>
+            <li>患者の現在処方・コントロール状態・併存疾患（修飾子）を入力</li>
+            <li>Phase 3で推奨される治療修正を確認</li>
+            <li>採用するか医師判断で決定</li>
+          </ol>
+          <p><strong>◇マークの「共有修飾子」とは</strong></p>
+          <p>
+            HT/DM/DLPなど複数のTreatment Boosterで共通使用する修飾子（cm_dm・cm_ckd・co_pregnancy・co_elderly_75 等）。
+            一度入力すると、同じ患者で別Boosterを開いた時に自動でpre-selectされ、毎回入力する手間を省きます。
+          </p>
+          <p><strong>ボタンの使い分け</strong></p>
+          <ul>
+            <li><strong>「⟳ 入力クリア」</strong> — <em>同じ患者で入力をやり直したい時</em>。薬剤・状態・修飾子を消去するが、◇共有修飾子は保持されるので別Booster起動時に再利用できる</li>
+            <li><strong>「👤→👤 次の患者へ」</strong> — <em>診療する患者が変わる時に必ず押す</em>。共有修飾子（◇）も含めて全消去。<strong style={{ color: '#c62828' }}>押し忘れると前患者の併存疾患・妊娠などが次患者に引き継がれ、医療事故になり得る</strong></li>
+          </ul>
+          <p><strong>典型的な使い方</strong></p>
+          <ol>
+            <li>患者A（HT+DM併存）を診察開始 → HT Booster で cm_dm・cm_ckd を選択</li>
+            <li>同じ患者AでDM Bookで開く → cm_dm・cm_ckd が自動でチェック済み（◇）</li>
+            <li>患者Aの診察終了 → <strong>「次の患者へ」を押す</strong></li>
+            <li>患者B（HTのみ）を診察開始 → 共有修飾子は空に戻っている</li>
+          </ol>
+          <p style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)' }}>
+            データはブラウザの localStorage に保存されます（サーバーには送信されません）。複数患者の情報が混じらないよう、患者切替時の「次の患者へ」を励行してください。
+          </p>
+        </div>
+      </details>
 
       {urgentRecs.length > 0 && (
         <div className={styles.urgentBox}>
