@@ -48,97 +48,13 @@ keywords: ["気管支喘息", "asthma", "ICS", "MART", "AIR", "生物学的製�
 
 <TreatmentBooster disease="asthma" />
 
-## 🔗 関連ガイドライン
+## 🔗 関連ページ
 
+- [📖 Treatment Booster 機能ガイド](./treatment-booster-overview) — 共通の使い方・特徴的機能の横断解説
+- [変更履歴](/changelog) — Booster の更新情報・新機能追加の履歴
 - [日本アレルギー学会 喘息予防・管理ガイドライン2024（JGL2024）](https://www.jsaweb.jp/)
 - [GINA Global Strategy for Asthma Management and Prevention 2024](https://ginasthma.org/)
 
-## 📝 本ツールについて（v0.1 JGL2024 + GINA 2024準拠）
-
-### 実装薬剤（約30剤）
-
-**コントローラー**:
-- **ICS単剤 6剤**: フルチカゾンプロピオン酸・ブデソニド・モメタゾン・シクレソニド・ベクロメタゾン・フルチカゾンフランカルボン（アニュイティ）
-- **ICS/LABA 5剤**: シムビコート（MART対応）・アドエア・レルベア・フルティフォーム・アテキュラ
-- **LAMA**: チオトロピウム（スピリーバ レスピマット）
-- **ICS/LABA/LAMA 4剤（単吸入triple）**: エナジア（中・高）・テリルジー（100・200）
-- **LTRA 2剤**: モンテルカスト（キプレス）・プランルカスト（オノン）
-- **OCS**: プレドニゾロン（増悪burst + 慢性使用）
-- **テオフィリン徐放**: 相互作用注意下の代替選択肢
-- **Th2サイトカイン阻害**: スプラタスト（アイピーディ）
-
-**リリーバー**:
-- **SABA 2剤**: サルブタモール（サルタノール）・プロカテロール（メプチン）
-
-**生物学的製剤（Step 5、専門医）5剤**:
-- オマリズマブ（anti-IgE、アレルギー型）
-- メポリズマブ / ベンラリズマブ（anti-IL-5系、好酸球性）
-- デュピルマブ（anti-IL-4/13、アトピー・鼻茸・OCS依存）
-- テゼペルマブ（anti-TSLP、T2-low含む全phenotype）
-
-### 特徴的機能
-
-**GINA 2024 Track 1/2 両対応**:
-- Track 1 (AIR/MART) を GINA preferred として最優先提示
-- `mart_capable` フラグで MART 可否判定
-- Track切替推奨（SABA→AIR）
-
-**頻回増悪・OCS依存の自動警告**:
-- 年≥2回の増悪を自動検出 → 生物学的製剤検討ゾーン
-- ICU/挿管歴を "near-fatal asthma" として超高リスク扱い
-
-**SABA 過使用 = 喘息死リスク**:
-- 年≥3 canister or 月≥1 canister 警告
-- `co_saba_only_current` 自動検出（SABA単独使用）
-
-**Type 2 表現型ベースの生物学的製剤マッチング**:
-- eos 150-300 / ≥300 / FeNO ≥25 / 総IgE高値 → 自動推奨
-- `prefer_omalizumab` / `prefer_mepolizumab` / `prefer_dupilumab` / `prefer_tezepelumab`
-
-**Step up 前の3確認ゲート**:
-- 手技 (Teach-back) / アドヒアランス (MPR) / 併存症
-- `co_poor_inhaler_technique` / `co_poor_adherence` で警告
-
-**増悪重症度ラダー**:
-- Mild: SABA連用 + ICS倍量（自宅）
-- Moderate: OCS burst（プレドニン30mg×5-7日）
-- Severe: 救急搬送（O2 + IVステロイド + MgSO4）
-- Life-threatening: 即救急（silent chest/意識障害/bradycardia）
-
-**特殊表現型対応**:
-- **AERD**（Samter triad）: NSAID完全回避 + LTRA優先 + dupilumab候補
-- **ACO**: LAMA早期追加 + 禁煙必須
-- **Exercise-induced**: 運動前 pre-medication
-- **Occupational**: 抗原除去 + 産業医連携
-- **ABPA**: 呼吸器専門医（総IgE・Asp特異的IgE）
-
-**併存症介入優先**:
-- GERD (PPI + 生活指導)
-- アレルギー性鼻炎 (鼻ステロイド + 抗ヒスタミン)
-- 鼻茸 (耳鼻科 + dupilumab)
-- 肥満 (減量指導)
-- OSAS (STOP-BANG → PSG → CPAP)
-- 喫煙 (禁煙支援、ICS効果回復に6-12ヶ月)
-
-**デバイス/手技対応**:
-- DPI吸気力不足 → pMDI + スペーサーへ切替
-- pMDI協調困難 → スペーサー or DPI
-- 複数デバイス → 単一デバイス化（triple単吸入）
-- 1日2回 → 1日1回（レルベア・アニュイティ等）でアドヒアランス向上
-
-**妊娠/小児/高齢者**:
-- 妊娠: ICS継続（ブデソニド優先）、OCS必要時可
-- 5歳未満: 小児科専門紹介必須
-- 高齢者: pMDI+スペーサー推奨、LAMAは緑内障・BPH確認
-
-### Step-down
-- 3ヶ月以上安定 → 25-50%減
-- 季節性抗原直前は避ける
-- LABA中止は慎重（悪化リスク）
-- 最低ICS維持（完全中止避ける）
-
-### 50+ recommendations + 13 DO_NOT_RULES
-
 :::warning 注意
-本ツールは治療思考の補助であり、臨床判断を代替するものではありません。薬剤選択・用量・中止の最終判断は主治医が行ってください。生物学的製剤導入・HoFH相当の重症例・5歳未満・妊娠合併症・ICU歴ある near-fatal asthma は必ず専門医と連携してください。
+本ツールは治療思考の補助であり、臨床判断を代替するものではありません。薬剤選択・用量・中止の最終判断は主治医が行ってください。生物学的製剤導入・5歳未満・妊娠合併症・ICU歴ある near-fatal asthma は必ず専門医と連携してください。
 :::
