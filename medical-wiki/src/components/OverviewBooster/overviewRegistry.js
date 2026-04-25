@@ -437,12 +437,12 @@ export const OVERVIEW_DISEASES = [
     ],
   },
 
-  // ---------------- HFrEF ----------------
+  // ---------------- 心不全 (HF統合 — EF入力で HFrEF/HFmrEF/HFpEF を内部判別) ----------------
   {
-    key: 'hfref', label: '心不全 HFrEF (EF≤40%)', icd: 'I50',
+    key: 'hf', label: '心不全', icd: 'I50',
     category: 'cardiovascular',
     boosterKey: null, deepLink: null,
-    scoreKind: null,
+    scoreKind: 'hf_ef',
     drugClasses: [
       { id: 'hf_arni', label: 'ARNI (4本柱)', tooltip: 'エンレスト',
         drugs: [
@@ -491,47 +491,10 @@ export const OVERVIEW_DISEASES = [
           ]},
         ],
       },
-      { id: 'hf_ivab', label: 'イバブラジン', tooltip: 'コララン (HR≥75かつβ遮断max)',
+      { id: 'hf_ivab', label: 'イバブラジン (HFrEF限定)', tooltip: 'コララン (HR≥75かつβ遮断max)',
         drugs: [
           { id: 'iva', name: 'イバブラジン (コララン)', doses: [
             { value: '2.5x2', label: '2.5mg×2/日 (導入)' }, { value: '5x2', label: '5mg×2/日 (標準)', isDefault: true }, { value: '7.5x2', label: '7.5mg×2/日 (上限)', isMax: true },
-          ]},
-        ],
-      },
-    ],
-  },
-
-  // ---------------- HFpEF ----------------
-  {
-    key: 'hfpef', label: '心不全 HFpEF (EF>40%)', icd: 'I50',
-    category: 'cardiovascular',
-    boosterKey: null, deepLink: null,
-    scoreKind: null,
-    drugClasses: [
-      { id: 'hfpef_sglt2', label: 'SGLT2阻害薬 (第一選択、EMPEROR-Preserved/DELIVER)', tooltip: 'フォシーガ / ジャディアンス',
-        drugs: [
-          { id: 'hfpef_dap', name: 'ダパグリフロジン (フォシーガ)', doses: [{ value: '10', label: '10mg/日', isDefault: true, isMax: true }] },
-          { id: 'hfpef_emp', name: 'エンパグリフロジン (ジャディアンス)', doses: [{ value: '10', label: '10mg/日', isDefault: true, isMax: true }] },
-        ],
-      },
-      { id: 'hfpef_loop', label: 'ループ利尿薬', tooltip: 'うっ血症状緩和',
-        drugs: [
-          { id: 'hfpef_fur', name: 'フロセミド (ラシックス)', doses: [
-            { value: '20', label: '20mg/日', isDefault: true }, { value: '40', label: '40mg/日', isMax: true },
-          ]},
-        ],
-      },
-      { id: 'hfpef_arb', label: 'ARB/ACEi (HT併存)', tooltip: 'HT併存時に追加',
-        drugs: [
-          { id: 'hfpef_los', name: 'ロサルタン (ニューロタン)', doses: [
-            { value: '50', label: '50mg/日 (標準)', isDefault: true }, { value: '100', label: '100mg/日', isMax: true },
-          ]},
-        ],
-      },
-      { id: 'hfpef_mra', label: 'MRA (個別判断)', tooltip: 'TOPCAT試験で限定的だが症例別考慮',
-        drugs: [
-          { id: 'hfpef_spi', name: 'スピロノラクトン (アルダクトンA)', doses: [
-            { value: '12.5', label: '12.5mg/日 (低用量で開始)', isDefault: true }, { value: '25', label: '25mg/日', isMax: true },
           ]},
         ],
       },

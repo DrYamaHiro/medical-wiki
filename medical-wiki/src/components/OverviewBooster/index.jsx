@@ -1,4 +1,4 @@
-import React, { useReducer, useMemo, useCallback, useEffect, useRef } from 'react';
+import React, { useReducer, useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import styles from './styles.module.css';
 import { OVERVIEW_DISEASES, DISEASE_CATEGORIES, GOUT_ULT_THRESHOLDS, HFPEF_SGLT2_EVIDENCE, getAllTreatmentBoosterDrugs } from './overviewRegistry';
 import { LIFESTYLE_OPTIONS, LIFESTYLE_RESTRICTION_REASONS } from './lifestyleOptions';
@@ -67,9 +67,16 @@ const FOLLOW_OPTIONS = [
 // 疾患キー → 患者ヘッダー併存疾患フラグ のマッピング (片方向 forward sync)
 const DISEASE_TO_CM_MAP = {
   ht: 'cm_ht', dlp: 'cm_dlp', t2dm: 'cm_dm',
-  ckd: 'cm_ckd_g45',  // CKD は G4-5 のみ自動 ON ではないが、cm_ckd_g45 は eGFR で別途確定
-  ascvd2: 'cm_ascvd', hfref: 'cm_chf', hfpef: 'cm_chf',
+  ckd: 'cm_ckd_g45',
+  ascvd2: 'cm_ascvd', hf: 'cm_chf',
 };
+
+// 治療状況 (STEP 1)
+const TX_STATUS_OPTIONS = [
+  { id: 'untreated',    label: '未治療' },
+  { id: 'lifestyle_only', label: '生活指導のみ' },
+  { id: 'on_treatment', label: '薬物治療中 (薬剤・用量を選択)' },
+];
 
 const initialState = {
   schemaVersion: 3,
@@ -721,12 +728,28 @@ function DiseaseAccordion({ disease, state, dispatch, violations }) {
             </div>
           )}
 
-          <TreatmentSuggestions disease={disease} state={state} />
+          <div className={styles.fieldLabel}>治療状況:</div>
+          <div className={styles.chipGrid} role="radiogroup" aria-label="治療状況">
+            {TX_STATUS_OPTIONS.map((s) => {
+              const active = (sel.txStatus || '') === s.id;
+              return (
+                <button key={s.id} type="button" role="radio" aria-checked={active}
+                  className={`${styles.chip} ${styles.chipRadio} ${active ? styles.chipActive : ''}`}
+                  onClick={() => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: disease.key, field: 'txStatus', value: active ? '' : s.id } })}>
+                  {s.label}
+                </button>
+              );
+            })}
+          </div>
 
-          <div className={styles.fieldLabel}>薬剤クラス (複数選択可、展開で具体薬剤・用量):</div>
-          {disease.drugClasses.map((dc) => (
-            <DrugClassSection key={dc.id} disease={disease} drugClass={dc} sel={sel} dispatch={dispatch} violations={violations} />
-          ))}
+          {sel.txStatus === 'on_treatment' && (
+            <>
+              <div className={styles.fieldLabel} style={{ marginTop: '0.5rem' }}>薬剤クラス (複数選択可、展開で具体薬剤・用量):</div>
+              {disease.drugClasses.map((dc) => (
+                <DrugClassSection key={dc.id} disease={disease} drugClass={dc} sel={sel} dispatch={dispatch} violations={violations} />
+              ))}
+            </>
+          )}
 
           <LifestyleRow disease={disease} sel={sel} dispatch={dispatch} />
         </div>
@@ -889,46 +912,119 @@ function LifestyleRow({ disease, sel, dispatch }) {
 function Step2Panel({ state, dispatch, onNext, onBack }) {
   return (
     <div className={styles.section}>
-      <div className={styles.sectionTitle}>STEP 2: 今後の治療戦略 <span className={styles.sectionHint}>(疾患ごとに次の一手・フォロー時期)</span></div>
+      <div className={styles.sectionTitle}>STEP 2: 治療提案 <span className={styles.sectionHint}>(GLベース自動生成、各疾患で提案を選択)</span></div>
       {state.selectedDiseases.map((key) => {
         const d = OVERVIEW_DISEASES.find((x) => x.key === key);
         if (!d) return null;
-        const sel = state.selectionsByDisease[key] || {};
-        return (
-          <div key={key} className={`${styles.scorePanel} ${categoryClass(d.category)}`}>
-            <div className={styles.scorePanelTitle}>{d.label}</div>
-            <div className={styles.fieldLabel} style={{ marginTop: '0.4rem' }}>次の一手:</div>
-            <div className={styles.chipGrid} role="radiogroup">
-              {NEXT_ACTIONS.map((a) => (
-                <button key={a.id} type="button" role="radio" aria-checked={sel.nextAction === a.id}
-                  className={`${styles.chip} ${styles.chipRadio} ${sel.nextAction === a.id ? styles.chipActive : ''}`}
-                  onClick={() => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'nextAction', value: sel.nextAction === a.id ? '' : a.id } })}>
-                  {a.label}
-                </button>
-              ))}
-            </div>
-            <div style={{ marginTop: '0.5rem' }}>
-              <label className={styles.fieldLabel} htmlFor={`follow_${key}`}>次回フォロー時期:</label>
-              <select id={`follow_${key}`} className={styles.fieldInput} value={sel.followIn || ''}
-                onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'followIn', value: e.target.value } })}>
-                <option value="">--</option>
-                {FOLLOW_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
-            </div>
-            <div style={{ marginTop: '0.5rem' }}>
-              <label className={styles.fieldLabel} htmlFor={`goalNote_${key}`}>目標メモ (任意):</label>
-              <input id={`goalNote_${key}`} type="text" className={styles.fieldInput} value={sel.goalNote || ''}
-                placeholder="例: HbA1c<7.0、LDL<70、家庭BP<125/75 等"
-                onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'goalNote', value: e.target.value } })} />
-            </div>
-          </div>
-        );
+        return <DiseaseSuggestionCard key={key} disease={d} state={state} dispatch={dispatch} />;
       })}
       <div className={styles.navRow}>
         <button className={`${styles.navBtn} ${styles.navBtnSecondary}`} onClick={onBack}>戻る</button>
         <button className={`${styles.navBtn} ${styles.navBtnPrimary}`} onClick={onNext}>まとめ + コード発行</button>
       </div>
     </div>
+  );
+}
+
+// 疾患ごとの治療提案カード — 1位デフォルト表示、トグルで2位以下、選択でサマリ更新
+function DiseaseSuggestionCard({ disease, state, dispatch }) {
+  const sel = state.selectionsByDisease[disease.key] || {};
+  const recs = useMemo(() => suggestTreatment(disease.key, state), [disease.key, state.patientHeader, state.commonLabs, state.commonHistory, state.scoresByDisease, state.selectionsByDisease]);
+  const [showAll, setShowAll] = useState(false);
+
+  if (!recs || recs.length === 0) {
+    return (
+      <div className={`${styles.scorePanel} ${categoryClass(disease.category)}`}>
+        <div className={styles.scorePanelTitle}>{disease.label}</div>
+        <div style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)' }}>
+          (このセッションでは特別な提案なし: STEP 1で治療状況を選び、必要なら STEP 0.5 のスコアを完了してください)
+        </div>
+        <FollowupRow disease={disease} sel={sel} dispatch={dispatch} />
+      </div>
+    );
+  }
+
+  // 選択された推奨 (selectedRecIdx が無い時は priority 1 を採用)
+  const selectedIdx = sel.selectedRecIdx ?? 0;
+  const selected = recs[selectedIdx] || recs[0];
+
+  const sevClass = (sev) => sev === 'critical' ? styles.alertCritical : sev === 'high' ? styles.alertWarning : styles.alertInfo;
+  const actionLabel = (a) => ({
+    start: '開始', add: '追加', titrate_up: '増量', titrate_down: '減量', titrate: '漸増',
+    switch: '切替', stop: '中止', taper: '減量・漸減', urgent: '緊急対応', maintain: '現状維持',
+    watch: '経過観察', refer: '専門医紹介', monitor: 'モニタ', caution: '注意', consider: '検討',
+    consider_add: '追加検討', consider_alt: '代替検討', alternative: '代替案',
+    lifestyle: '生活指導', lifestyle_first: '生活指導先行', reduce_or_stop: '減量・中止',
+  }[a] || a);
+
+  return (
+    <div className={`${styles.scorePanel} ${categoryClass(disease.category)}`}>
+      <div className={styles.scorePanelTitle}>{disease.label} — 治療提案 ({recs.length}案)</div>
+
+      {/* 選択中の提案 (1位 or ユーザーが選んだもの) */}
+      <div className={`${styles.alertBanner} ${sevClass(selected.severity)}`} style={{ marginTop: '0.5rem' }}>
+        <div>
+          <div style={{ fontSize: '0.78rem', opacity: 0.8 }}>採用中 (第{selectedIdx + 1}案)</div>
+          <strong>{actionLabel(selected.action)}{selected.drug ? `: ${selected.drug}` : ''}</strong>
+          {selected.dose && <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>用法: {selected.dose}</div>}
+          <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>{selected.reason}</div>
+          {selected.gl && <div style={{ fontSize: '0.78rem', marginTop: '0.2rem', opacity: 0.8 }}>根拠: {selected.gl}</div>}
+        </div>
+      </div>
+
+      {/* トグル: 他の案を表示 */}
+      {recs.length > 1 && (
+        <button type="button" className={styles.skipBtn} style={{ marginTop: '0.4rem' }}
+          onClick={() => setShowAll(!showAll)} aria-expanded={showAll}>
+          {showAll ? `▼ 他の案を隠す` : `▶ 他の案を見る (${recs.length - 1}件)`}
+        </button>
+      )}
+
+      {showAll && recs.length > 1 && (
+        <div style={{ marginTop: '0.5rem' }}>
+          {recs.map((r, idx) => {
+            if (idx === selectedIdx) return null;
+            return (
+              <button key={idx} type="button" className={`${styles.alertBanner} ${sevClass(r.severity)}`}
+                style={{ display: 'block', width: '100%', textAlign: 'left', cursor: 'pointer', border: 'none', marginBottom: '0.3rem' }}
+                onClick={() => {
+                  dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: disease.key, field: 'selectedRecIdx', value: idx } });
+                  setShowAll(false);
+                }}>
+                <div style={{ fontSize: '0.78rem', opacity: 0.8 }}>第{idx + 1}案 (クリックで採用)</div>
+                <strong>{actionLabel(r.action)}{r.drug ? `: ${r.drug}` : ''}</strong>
+                {r.dose && <div style={{ fontSize: '0.85rem' }}>用法: {r.dose}</div>}
+                <div style={{ fontSize: '0.85rem' }}>{r.reason}</div>
+                {r.gl && <div style={{ fontSize: '0.78rem', opacity: 0.8 }}>根拠: {r.gl}</div>}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <FollowupRow disease={disease} sel={sel} dispatch={dispatch} />
+    </div>
+  );
+}
+
+function FollowupRow({ disease, sel, dispatch }) {
+  return (
+    <>
+      <div style={{ marginTop: '0.6rem' }}>
+        <label className={styles.fieldLabel} htmlFor={`follow_${disease.key}`}>次回フォロー時期:</label>
+        <select id={`follow_${disease.key}`} className={styles.fieldInput} value={sel.followIn || ''}
+          onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: disease.key, field: 'followIn', value: e.target.value } })}>
+          <option value="">--</option>
+          {FOLLOW_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+      </div>
+      <div style={{ marginTop: '0.4rem' }}>
+        <label className={styles.fieldLabel} htmlFor={`goalNote_${disease.key}`}>目標メモ (任意):</label>
+        <input id={`goalNote_${disease.key}`} type="text" className={styles.fieldInput} value={sel.goalNote || ''}
+          placeholder="例: HbA1c<7.0、LDL<70、家庭BP<125/75"
+          onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: disease.key, field: 'goalNote', value: e.target.value } })} />
+      </div>
+    </>
   );
 }
 

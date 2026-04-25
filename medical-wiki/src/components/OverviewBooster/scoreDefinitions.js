@@ -249,6 +249,33 @@ export function calcHasBled(ctx) {
   return { score: s, tier, label: `HAS-BLED = ${s}点 (${tier === 'high' ? '高出血リスク' : tier === 'moderate' ? '中等度' : '低リスク'})` };
 }
 
+// HF EF分類 — LVEF入力で HFrEF/HFmrEF/HFpEF を判別
+export const HF_EF_OPTIONS = [
+  { value: 'reduced',    label: 'EF ≤40% (HFrEF — 駆出率低下)' },
+  { value: 'mid_range',  label: 'EF 41-49% (HFmrEF — 中間範囲)' },
+  { value: 'preserved',  label: 'EF ≥50% (HFpEF — 駆出率保持)' },
+  { value: 'unknown',    label: 'EF 未測定 (echo 予定)' },
+];
+export const NYHA_OPTIONS = [
+  { value: '1', label: 'NYHA I (無症状)' },
+  { value: '2', label: 'NYHA II (中等度の運動で症状)' },
+  { value: '3', label: 'NYHA III (軽度の運動で症状)' },
+  { value: '4', label: 'NYHA IV (安静時症状)' },
+];
+
+export function calcHfEf(ctx) {
+  const li = ctx.localInput || {};
+  const ef = li.ef_class;
+  const nyha = li.nyha;
+  let label = '心不全 (EF未指定)';
+  if (ef === 'reduced')   label = 'HFrEF (EF≤40%) — 4本柱が標準';
+  else if (ef === 'mid_range') label = 'HFmrEF (EF 41-49%) — SGLT2i + 個別判断';
+  else if (ef === 'preserved') label = 'HFpEF (EF≥50%) — SGLT2i 第一選択 (EMPEROR-Preserved/DELIVER)';
+  else if (ef === 'unknown')   label = 'EF測定推奨 (心エコー優先)';
+  const nyhaLabel = nyha ? ` / NYHA ${['','I','II','III','IV'][parseInt(nyha,10)] || ''}` : '';
+  return { ef, nyha, label: label + nyhaLabel };
+}
+
 // 5. GOLD ABE (COPD)
 export function calcGoldAbe(ctx) {
   const li = ctx.localInput || {};
@@ -311,6 +338,16 @@ export const SCORE_DEFINITIONS = {
       { id: 'inr_labile', label: 'PT-INR不安定 (warfarin使用時)', type: 'checkbox' },
     ],
     calc: (ctx) => ({ chadsvasc: calcChadsVasc(ctx), hasbled: calcHasBled(ctx) }),
+  },
+  hf_ef: {
+    name: 'EF/NYHA分類',
+    discipline: '心不全 / 駆出率と症状重症度',
+    requires: { patientHeader: [], commonLabs: [], commonHistory: [] },
+    localInputs: [
+      { id: 'ef_class', label: 'LVEF (心エコー結果)', type: 'select', options: HF_EF_OPTIONS },
+      { id: 'nyha',     label: 'NYHA分類 (症状重症度)', type: 'select', options: NYHA_OPTIONS },
+    ],
+    calc: calcHfEf,
   },
   gold_abe: {
     name: 'GOLD ABE分類',

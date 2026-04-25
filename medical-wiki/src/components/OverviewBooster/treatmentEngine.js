@@ -382,50 +382,126 @@ function suggestAf(ctx) {
 }
 
 // ============================================================
-// HFrEF 治療提案 (4本柱)
+// HF (統合: EFで分岐)
 // ============================================================
-function suggestHfref(ctx) {
-  const { selection } = ctx;
+function suggestHf(ctx) {
+  const { selection, scoreResult } = ctx;
   const recs = [];
   const drugIds = Object.keys(selection?.classDetails || {});
+  const ef = scoreResult?.ef;
+
+  // EF未測定 → 心エコー強推奨
+  if (!ef || ef === 'unknown') {
+    recs.push({ severity: 'critical', action: 'urgent', priority: 1,
+      reason: 'EF未測定。心エコーで EF測定が最優先 (HFrEF/HFmrEF/HFpEF で治療が大きく異なる)。',
+      gl: 'JCS2024' });
+    return recs;
+  }
+
   const hasArni = drugIds.includes('hf_arni');
   const hasBb = drugIds.includes('hf_bb');
   const hasMra = drugIds.includes('hf_mra');
   const hasSglt2 = drugIds.includes('hf_sglt2');
-  const pillars = [hasArni, hasBb, hasMra, hasSglt2].filter(Boolean).length;
+  const hasLoop = drugIds.includes('hf_loop');
 
-  if (pillars < 4) {
-    const missing = [];
-    if (!hasArni) missing.push('ARNI (エンレスト 100mg×2、目標200mg×2)');
-    if (!hasBb) missing.push('β遮断薬 (カルベジロール 1.25mg×2、漸増)');
-    if (!hasMra) missing.push('MRA (スピロノラクトン 25mg/日、K monitor)');
-    if (!hasSglt2) missing.push('SGLT2i (フォシーガ 10mg/日)');
-
-    recs.push({ severity: 'high', action: 'add', drug: '4本柱の不足成分',
-      dose: missing.join(' / '),
-      reason: `HFrEFの4本柱 ${pillars}/4 のみ。残り${4-pillars}剤追加で予後改善が標準 (JCS2024)。`,
+  if (ef === 'reduced') {
+    // HFrEF: 4本柱
+    const pillars = [hasArni, hasBb, hasMra, hasSglt2].filter(Boolean).length;
+    if (pillars < 4) {
+      const missing = [];
+      if (!hasArni) missing.push('ARNI (エンレスト 100mg×2、目標200mg×2)');
+      if (!hasBb) missing.push('β遮断薬 (カルベジロール 1.25mg×2、漸増)');
+      if (!hasMra) missing.push('MRA (スピロノラクトン 25mg/日、K monitor)');
+      if (!hasSglt2) missing.push('SGLT2i (フォシーガ 10mg/日)');
+      recs.push({ severity: 'high', action: 'add', priority: 1, drug: '4本柱の不足成分',
+        dose: missing.join(' / '),
+        reason: `HFrEF 4本柱 ${pillars}/4 のみ。残り${4-pillars}剤追加で予後改善が標準。`,
+        gl: 'JCS2024' });
+      // 代替: 段階的導入案
+      recs.push({ severity: 'medium', action: 'titrate', priority: 2,
+        reason: '段階的導入 (BP低めなら ARNI低用量から開始 → β遮断薬 → MRA → SGLT2i の順)',
+        gl: 'JCS2024' });
+    } else {
+      recs.push({ severity: 'low', action: 'maintain', priority: 1,
+        reason: '4本柱完成。各薬剤の目標用量達成を確認、未達なら漸増。',
+        gl: 'JCS2024' });
+    }
+    if (!hasLoop) {
+      recs.push({ severity: 'medium', action: 'consider', priority: 3, drug: 'ループ利尿薬',
+        dose: 'うっ血症状あれば フロセミド 20-40mg/日',
+        reason: 'うっ血症状緩和は症状管理として標準。', gl: 'JCS2024' });
+    }
+  } else if (ef === 'preserved') {
+    // HFpEF
+    if (!hasSglt2) {
+      recs.push({ severity: 'high', action: 'start', priority: 1, drug: 'SGLT2阻害薬',
+        dose: 'ダパグリフロジン 10mg/日 or エンパグリフロジン 10mg/日',
+        reason: 'HFpEF全例で第一選択。EMPEROR-Preserved/DELIVER で心不全入院・CV死を有意低下 (HR ~0.79)。EF >40% / DM 有無問わず。',
+        gl: 'JCS2024' });
+    } else {
+      recs.push({ severity: 'low', action: 'maintain', priority: 1,
+        reason: 'SGLT2i継続。うっ血悪化時はループ利尿薬調整。', gl: 'JCS2024' });
+    }
+    recs.push({ severity: 'medium', action: 'consider', priority: 2, drug: 'MRA (個別)',
+      dose: 'スピロノラクトン 12.5-25mg/日',
+      reason: 'HFpEFでの MRA は TOPCAT試験で限定的だが、症状/再入院多い症例で考慮。', gl: 'JCS2024' });
+  } else if (ef === 'mid_range') {
+    // HFmrEF
+    recs.push({ severity: 'high', action: 'start', priority: 1, drug: 'SGLT2阻害薬',
+      dose: 'ダパグリフロジン 10mg/日',
+      reason: 'HFmrEF (EF 41-49%) は SGLT2i 推奨。HFrEF寄りなら 4本柱類似管理を検討。',
       gl: 'JCS2024' });
-  } else {
-    recs.push({ severity: 'low', action: 'maintain',
-      reason: '4本柱完成。各薬剤の目標用量達成を確認、未達なら漸増。',
-      gl: 'JCS2024' });
+    if (!hasArni && !hasBb) {
+      recs.push({ severity: 'medium', action: 'consider', priority: 2, drug: 'ARNI/β遮断薬/MRA',
+        reason: 'HFmrEFの症状重い症例ではHFrEF類似の管理が予後改善期待。',
+        gl: 'JCS2024' });
+    }
   }
-
   return recs;
 }
 
 // ============================================================
-// HFpEF 治療提案
+// 喘息 治療提案 (GINA Step 1-5、明確化)
 // ============================================================
-function suggestHfpef(ctx) {
+function suggestAsthma(ctx) {
   const { selection } = ctx;
   const recs = [];
   const drugIds = Object.keys(selection?.classDetails || {});
-  if (!drugIds.includes('hfpef_sglt2')) {
-    recs.push({ severity: 'high', action: 'start', drug: 'SGLT2阻害薬 (第一選択)',
-      dose: 'ダパグリフロジン 10mg/日 or エンパグリフロジン 10mg/日',
-      reason: 'HFpEF全例で SGLT2i 第一選択。EMPEROR-Preserved/DELIVER で心不全入院・CV死を有意低下 (HR ~0.79)。EF >40% / DM 有無問わず。',
-      gl: 'JCS2024' });
+  const hasMart = drugIds.includes('as_ics_laba_mart');
+  const hasIcs = drugIds.includes('as_ics');
+  const hasLama = drugIds.includes('as_lama');
+  const hasTriple = drugIds.includes('as_triple');
+  const hasBio = drugIds.includes('as_biologic');
+
+  if (drugIds.length === 0) {
+    recs.push({ severity: 'high', action: 'start', priority: 1, drug: 'Step 1-2: as-needed ICS-formoterol',
+      dose: 'シムビコート 1吸入 症状時 (Track 1 / AIR therapy)',
+      reason: 'GINA 2024: 軽症から ICS-formoterol を症状時 reliever として使用。SABA単独は死亡リスクで非推奨。',
+      gl: 'GINA 2024 Track 1 Step 1-2' });
+    recs.push({ severity: 'medium', action: 'alternative', priority: 2, drug: 'Step 1-2 代替: ICS低用量+SABA頓用',
+      dose: 'フルタイド 50μg×2/日 + メプチン 頓用 (Track 2)',
+      reason: 'Track 1 が困難な場合の代替。アドヒアランス課題に注意。',
+      gl: 'GINA 2024 Track 2 Step 1-2' });
+  } else if (hasMart && !hasLama && !hasTriple) {
+    recs.push({ severity: 'high', action: 'titrate_up', priority: 1, drug: 'Step 3-4: ICS-formoterol 用量増',
+      dose: 'シムビコート 2吸入×2/日 + 症状時',
+      reason: 'GINA 2024 Step 3-4: SMART療法で ICS-formoterol を維持+リリーバー兼用。中用量へ増量で約70%がコントロール達成。',
+      gl: 'GINA 2024 Track 1 Step 3-4' });
+    recs.push({ severity: 'medium', action: 'add', priority: 2, drug: 'Step 4: LAMA追加',
+      dose: 'スピリーバ レスピマット 2.5μg×2吸入/日',
+      reason: 'ICS-LABA単独で未達ならStep 4でLAMA追加 (Triple化)。', gl: 'GINA 2024 Step 4' });
+  } else if (hasTriple && !hasBio) {
+    recs.push({ severity: 'high', action: 'consider', priority: 1, drug: 'Step 5: 生物学的製剤検討',
+      dose: 'eos≥300/IgE高/atopy → デュピクセント 300mg SC 2W毎 / メポリズマブ / ベンラリズマブ',
+      reason: 'GINA 2024 Step 5: Triple未達で頻回増悪・OCS依存なら生物学的製剤。表現型 (T2型) で薬剤選択。',
+      gl: 'GINA 2024 Step 5' });
+    recs.push({ severity: 'medium', action: 'consider_alt', priority: 2, drug: 'OCS最小用量維持 (短期)',
+      reason: '生物学的製剤導入待機中の症状コントロール用、長期OCSは骨粗鬆症リスクで回避。', gl: 'GINA 2024' });
+  } else if (hasIcs && !hasMart) {
+    recs.push({ severity: 'medium', action: 'switch', priority: 1, drug: 'ICS単剤 → ICS-LABA SMART (Track 1)',
+      dose: 'フルタイド → シムビコート 2吸入×2 + 症状時',
+      reason: 'Track 2 (ICS+SABA) より Track 1 (SMART) が GINA 2024 では preferred。',
+      gl: 'GINA 2024' });
   }
   return recs;
 }
@@ -506,8 +582,8 @@ const SUGGESTERS = {
   t2dm: suggestT2dm,
   ckd: suggestCkd,
   af: suggestAf,
-  hfref: suggestHfref,
-  hfpef: suggestHfpef,
+  hf: suggestHf,
+  asthma: suggestAsthma,
   copd: suggestCopd,
   gout: suggestGout,
 };
