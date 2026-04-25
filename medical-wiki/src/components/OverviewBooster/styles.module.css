@@ -265,6 +265,19 @@
 }
 .deepLinkBtn:hover { background: #006064; color: white; text-decoration: none; }
 
+/* drug class セクション (展開で具体薬剤+用量) */
+.drugClassRow {
+  margin: 0.4rem 0;
+}
+.drugDetailPanel {
+  margin-top: 0.4rem;
+  margin-left: 1rem;
+  padding: 0.5rem 0.7rem;
+  background: #f3e5f5;
+  border-left: 3px solid #5e35b1;
+  border-radius: 4px;
+}
+
 /* lifestyle 行 */
 .lifestyleRow {
   margin-top: 0.7rem;
