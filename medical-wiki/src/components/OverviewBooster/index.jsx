@@ -217,7 +217,7 @@ export default function OverviewBooster() {
     <div className={styles.booster}>
       <div className={styles.header}>
         <div>
-          <p className={styles.title}>📖 Overview Booster — 慢性疾患統合俯瞰</p>
+          <p className={styles.title}>慢性疾患管理ブースター</p>
           <p className={styles.subtitle}>多疾患併存の薬剤俯瞰・食事運動・フォローコード生成</p>
         </div>
         <div className={styles.headerRight}>
@@ -225,29 +225,29 @@ export default function OverviewBooster() {
             STEP: {state.step === 'entry' ? '入口' : state.step === 'step0' ? '0 (疾患選択)' : state.step === 'step0_5' ? '0.5 (スコア)' : state.step === 'step1' ? '1 (薬剤・食事運動)' : 'まとめ'}
           </span>
           <button className={styles.resetBtn} onClick={handleNewPatient} title="次患者の診療を開始 (全消去)">
-            👤→👤 次の患者へ
+            次の患者へ
           </button>
         </div>
       </div>
 
       <details className={styles.helpDetails}>
-        <summary className={styles.helpSummary}>ℹ️ 使い方ガイド</summary>
+        <summary className={styles.helpSummary}>使い方ガイド</summary>
         <div className={styles.helpBody}>
-          <p><strong>このBoosterの目的</strong></p>
-          <p>慢性疾患を**俯瞰的に把握**し、多疾患併存患者の薬剤・食事運動を1画面で整理。詳細処方判断は個別Treatment Boosterで行ってください。</p>
+          <p><strong>このブースターの目的</strong></p>
+          <p>慢性疾患を俯瞰的に把握し、多疾患併存患者の薬剤・食事運動を1画面で整理。詳細処方判断は個別 Treatment Booster で行ってください。</p>
           <p><strong>STEP フロー</strong></p>
           <ol>
             <li><strong>入口</strong>: フォローコード入力 (再診) or 新規開始</li>
-            <li><strong>STEP 0</strong>: 患者の慢性疾患を chip で選択</li>
+            <li><strong>STEP 0</strong>: 患者の慢性疾患を選択</li>
             <li><strong>STEP 0.5</strong>: 5疾患 (DLP/HT/CKD/AF/COPD) でリスクスコア層別 (任意スキップ可)</li>
-            <li><strong>STEP 1</strong>: 各疾患の主要薬剤 + 食事運動を toggle で選択</li>
+            <li><strong>STEP 1</strong>: 各疾患の主要薬剤 + 食事運動を選択</li>
             <li><strong>まとめ</strong>: フォローコード発行 + 禁忌警告 + 個別 Booster へ deep link</li>
           </ol>
           <p><strong>食事運動 3択</strong></p>
           <ul>
-            <li>🍱 食事療法のみ — 重度整形/心不全代償破綻/運動絶対禁忌</li>
-            <li>🍱+🏃 食事+運動療法 (default)</li>
-            <li>🍱+🏃⚠ 食事+運動 [制限考慮] — 整形/心血管/呼吸/腎/フレイル等で運動制限あり</li>
+            <li>食事療法 — 運動は実施せず食事のみ。重度整形/心不全代償破綻/運動絶対禁忌</li>
+            <li>食事+運動療法 (default)</li>
+            <li>食事+運動療法 [制限考慮] — 整形/心血管/呼吸/腎/フレイル等で運動制限あり</li>
           </ul>
         </div>
       </details>
@@ -304,7 +304,7 @@ function PatientHeaderPanel({ state, dispatch }) {
   };
   return (
     <div className={styles.patientHeader}>
-      <div className={styles.sectionTitle}>👤 患者ヘッダー <span className={styles.sectionHint}>(全STEP共有・患者切替時消去)</span></div>
+      <div className={styles.sectionTitle}>患者ヘッダー <span className={styles.sectionHint}>(全STEP共有・患者切替時消去)</span></div>
       <div className={styles.patientGrid}>
         <div>
           <label className={styles.fieldLabel} htmlFor="ph_age">年齢層</label>
@@ -353,7 +353,7 @@ function CheckboxField({ id, label, checked, onChange }) {
 function EntryPanel({ state, dispatch, onImport, onNew }) {
   return (
     <div className={styles.section}>
-      <div className={styles.sectionTitle}>🚪 入口</div>
+      <div className={styles.sectionTitle}>入口</div>
       <div style={{ marginBottom: '0.8rem' }}>
         <label className={styles.fieldLabel} htmlFor="code_input">フォローコードをお持ちの方 (再診)</label>
         <div className={styles.codeBox}>
@@ -390,7 +390,7 @@ function Step0Panel({ state, dispatch, reverseProposals, onNext, onBack }) {
       {reverseProposals.length > 0 && (
         <div className={styles.reverseTrigger}>
           <div className={styles.reverseTriggerHeader}>
-            <span>🔍 処方薬からの提案 (任意)</span>
+            <span>処方薬からの提案 (任意)</span>
             <button className={styles.reverseTriggerClose} onClick={() => dispatch({ type: 'DISMISS_REVERSE_TRIGGER' })}>✕ 閉じる</button>
           </div>
           <div>
@@ -419,7 +419,7 @@ function Step0Panel({ state, dispatch, reverseProposals, onNext, onBack }) {
               className={`${styles.chip} ${selected ? styles.chipActive : ''} ${categoryClass(d.category)}`}
               onClick={() => dispatch({ type: 'TOGGLE_DISEASE', payload: d.key })}
             >
-              {cat?.icon} {d.label}
+              {d.label}
             </button>
           );
         })}
@@ -491,7 +491,7 @@ function ScoreCard({ disease, state, dispatch }) {
     <div className={`${styles.scorePanel} ${categoryClass(disease.category)}`} role="region" aria-labelledby={`score-${disease.key}`}>
       <div className={styles.scorePanelHeader}>
         <div id={`score-${disease.key}`} className={styles.scorePanelTitle}>
-          {cat?.icon} {disease.label} — {def.name} <span className={styles.sectionHint}>({def.discipline})</span>
+          {disease.label} — {def.name} <span className={styles.sectionHint}>({def.discipline})</span>
         </div>
         <button className={styles.skipBtn} onClick={skip} aria-label={`${def.name} をスキップ`}>後で入力</button>
       </div>
@@ -631,7 +631,7 @@ function DiseaseAccordion({ disease, state, dispatch, violations }) {
         onClick={() => dispatch({ type: 'TOGGLE_ACCORDION', payload: disease.key })}
       >
         <span className={styles.accordionTitle}>
-          {expanded ? '▼' : '▶'} {cat?.icon} {disease.label}
+          {expanded ? '▼' : '▶'} {disease.label}
         </span>
         <span className={summary ? styles.accordionSummary : styles.accordionUnselected}>
           {summary || '…未選択'}
@@ -755,7 +755,7 @@ function LifestyleRow({ disease, sel, dispatch }) {
 function SummaryPanel({ state, violations, onBack, onCopy }) {
   return (
     <div className={styles.section}>
-      <div className={styles.sectionTitle}>📋 まとめ</div>
+      <div className={styles.sectionTitle}>まとめ</div>
 
       {violations.filter((v) => v.severity === 'critical').map((v, i) => (
         <div key={i} className={`${styles.alertBanner} ${styles.alertCritical}`} role="alert">⚠ {v.message}</div>
@@ -769,7 +769,7 @@ function SummaryPanel({ state, violations, onBack, onCopy }) {
           <div className={styles.fieldLabel}>フォローコード (紙カルテに記載してください)</div>
           <div className={styles.codeBox}>
             <span className={styles.codeDisplay}>{state.followupCode.issued}</span>
-            <button className={styles.copyBtn} onClick={onCopy}>📋 コピー</button>
+            <button className={styles.copyBtn} onClick={onCopy}>コピー</button>
           </div>
         </div>
       )}
@@ -785,7 +785,7 @@ function SummaryPanel({ state, violations, onBack, onCopy }) {
             const lo = LIFESTYLE_OPTIONS.find((l) => l.id === sel?.lifestyle);
             return d ? (
               <li key={key} style={{ marginBottom: '0.5rem' }}>
-                <strong>{cat?.icon} {d.label}</strong>: {drugs.length > 0 ? drugs.join(' + ') : '薬剤未選択'}
+                <strong>{d.label}</strong>: {drugs.length > 0 ? drugs.join(' + ') : '薬剤未選択'}
                 {lo && <span> + {lo.label}</span>}
                 {d.deepLink && <a className={styles.deepLinkBtn} href={`${d.deepLink}?currentDrugs=${(sel?.drugIds || []).join(',')}`} target="_blank" rel="noopener noreferrer" style={{ marginLeft: '0.5rem' }}>詳細 →</a>}
               </li>

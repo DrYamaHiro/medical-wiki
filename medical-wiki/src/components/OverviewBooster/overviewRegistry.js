@@ -10,14 +10,14 @@
 
 import { TREATMENT_DATA } from '../TreatmentBooster/registry';
 
-// 疾患カテゴリ色 (a11y: 色だけでなく icon + テキスト併記)
+// 疾患カテゴリ色 (色覚配慮: 太い左ボーダー + テキストカテゴリ名併記)
 export const DISEASE_CATEGORIES = {
-  cardiovascular: { label: '循環器', color: '#c62828', icon: '🫀' },
-  metabolic:      { label: '代謝',   color: '#ef6c00', icon: '💊' },
-  renal:          { label: '腎',     color: '#6a1b9a', icon: '💧' },
-  respiratory:    { label: '呼吸器', color: '#0097a7', icon: '🫁' },
-  mental:         { label: '精神/神経', color: '#2e7d32', icon: '🧠' },
-  musculoskeletal:{ label: '骨/関節', color: '#5d4037', icon: '🦴' },
+  cardiovascular: { label: '循環器',   color: '#c62828' },
+  metabolic:      { label: '代謝',     color: '#ef6c00' },
+  renal:          { label: '腎',       color: '#6a1b9a' },
+  respiratory:    { label: '呼吸器',   color: '#0097a7' },
+  mental:         { label: '精神/神経', color: '#2e7d32' },
+  musculoskeletal:{ label: '骨/関節',   color: '#5d4037' },
 };
 
 // 11疾患マスタ
