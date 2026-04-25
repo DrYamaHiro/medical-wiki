@@ -8,7 +8,7 @@ import { SCORE_DEFINITIONS, COMMON_LAB_FIELDS, COMMON_HISTORY_FIELDS, detectMiss
 import { encodeFollowupCode, decodeFollowupCode } from './followCode';
 import { recordEvent } from './uxLog';
 import { ABBREVIATIONS } from './abbreviations';
-import { suggestTreatment } from './treatmentEngine';
+import { suggestTreatment, detectSharedClasses } from './treatmentEngine';
 
 // 略語ホバー表示コンポーネント (コメディカル配慮)
 function Abbr({ children, term }) {
@@ -751,7 +751,9 @@ function DiseaseAccordion({ disease, state, dispatch, violations }) {
             </>
           )}
 
-          <LifestyleRow disease={disease} sel={sel} dispatch={dispatch} />
+          {(sel.txStatus === 'lifestyle_only' || sel.txStatus === 'on_treatment') && (
+            <LifestyleRow disease={disease} sel={sel} dispatch={dispatch} />
+          )}
         </div>
       )}
     </div>
@@ -910,13 +912,27 @@ function LifestyleRow({ disease, sel, dispatch }) {
    STEP 2: 今後の治療戦略 (v0.2 簡易実装)
    ============================================================ */
 function Step2Panel({ state, dispatch, onNext, onBack }) {
+  const sharedClasses = useMemo(() => detectSharedClasses(state), [state.selectedDiseases, state.scoresByDisease, state.selectionsByDisease, state.patientHeader, state.commonLabs, state.commonHistory]);
   return (
     <div className={styles.section}>
       <div className={styles.sectionTitle}>STEP 2: 治療提案 <span className={styles.sectionHint}>(GLベース自動生成、各疾患で提案を選択)</span></div>
+
+      {sharedClasses.length > 0 && (
+        <div className={styles.sharedClassBox}>
+          <div className={styles.sharedClassTitle}>📌 複数疾患を同時カバーする推奨</div>
+          {sharedClasses.map((sc, i) => (
+            <div key={i} className={styles.sharedClassRow}>
+              <strong>{sc.sharedClass}</strong>: {sc.items.map((it) => OVERVIEW_DISEASES.find((d) => d.key === it.disease)?.label).join(' + ')} の{sc.items.length}疾患を同時カバー
+              {sc.items[0].drug && <span style={{ marginLeft: '0.5rem', color: '#1565c0' }}>→ {sc.items[0].drug}{sc.items[0].dose ? ` (${sc.items[0].dose})` : ''}</span>}
+            </div>
+          ))}
+        </div>
+      )}
+
       {state.selectedDiseases.map((key) => {
         const d = OVERVIEW_DISEASES.find((x) => x.key === key);
         if (!d) return null;
-        return <DiseaseSuggestionCard key={key} disease={d} state={state} dispatch={dispatch} />;
+        return <DiseaseSuggestionCard key={key} disease={d} state={state} dispatch={dispatch} sharedClasses={sharedClasses} />;
       })}
       <div className={styles.navRow}>
         <button className={`${styles.navBtn} ${styles.navBtnSecondary}`} onClick={onBack}>戻る</button>
@@ -926,8 +942,8 @@ function Step2Panel({ state, dispatch, onNext, onBack }) {
   );
 }
 
-// 疾患ごとの治療提案カード — 1位デフォルト表示、トグルで2位以下、選択でサマリ更新
-function DiseaseSuggestionCard({ disease, state, dispatch }) {
+// 疾患ごとの治療提案カード — 採用中をクリックすると他案がトグル展開
+function DiseaseSuggestionCard({ disease, state, dispatch, sharedClasses }) {
   const sel = state.selectionsByDisease[disease.key] || {};
   const recs = useMemo(() => suggestTreatment(disease.key, state), [disease.key, state.patientHeader, state.commonLabs, state.commonHistory, state.scoresByDisease, state.selectionsByDisease]);
   const [showAll, setShowAll] = useState(false);
@@ -937,14 +953,13 @@ function DiseaseSuggestionCard({ disease, state, dispatch }) {
       <div className={`${styles.scorePanel} ${categoryClass(disease.category)}`}>
         <div className={styles.scorePanelTitle}>{disease.label}</div>
         <div style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)' }}>
-          (このセッションでは特別な提案なし: STEP 1で治療状況を選び、必要なら STEP 0.5 のスコアを完了してください)
+          STEP 1で治療状況を選び、必要なら STEP 0.5 のスコアを完了してください。
         </div>
         <FollowupRow disease={disease} sel={sel} dispatch={dispatch} />
       </div>
     );
   }
 
-  // 選択された推奨 (selectedRecIdx が無い時は priority 1 を採用)
   const selectedIdx = sel.selectedRecIdx ?? 0;
   const selected = recs[selectedIdx] || recs[0];
 
@@ -953,48 +968,51 @@ function DiseaseSuggestionCard({ disease, state, dispatch }) {
     start: '開始', add: '追加', titrate_up: '増量', titrate_down: '減量', titrate: '漸増',
     switch: '切替', stop: '中止', taper: '減量・漸減', urgent: '緊急対応', maintain: '現状維持',
     watch: '経過観察', refer: '専門医紹介', monitor: 'モニタ', caution: '注意', consider: '検討',
-    consider_add: '追加検討', consider_alt: '代替検討', alternative: '代替案',
-    lifestyle: '生活指導', lifestyle_first: '生活指導先行', reduce_or_stop: '減量・中止',
+    consider_add: '追加検討', consider_alt: '代替検討', consider_other_disease: '他疾患側で検討',
+    alternative: '代替案', lifestyle: '生活指導', lifestyle_first: '生活指導先行', reduce_or_stop: '減量・中止',
   }[a] || a);
+
+  // 共通薬剤カバー判定
+  const isSharedDrug = sharedClasses?.some((sc) => sc.sharedClass === selected.sharedClass);
 
   return (
     <div className={`${styles.scorePanel} ${categoryClass(disease.category)}`}>
       <div className={styles.scorePanelTitle}>{disease.label} — 治療提案 ({recs.length}案)</div>
 
-      {/* 選択中の提案 (1位 or ユーザーが選んだもの) */}
-      <div className={`${styles.alertBanner} ${sevClass(selected.severity)}`} style={{ marginTop: '0.5rem' }}>
+      {/* 採用中の提案 — クリックで他の案を展開 */}
+      <button type="button" className={`${styles.alertBanner} ${sevClass(selected.severity)} ${styles.suggestionBtn}`}
+        onClick={() => setShowAll(!showAll)}
+        aria-expanded={showAll}
+        style={{ marginTop: '0.5rem', cursor: recs.length > 1 ? 'pointer' : 'default' }}>
         <div>
-          <div style={{ fontSize: '0.78rem', opacity: 0.8 }}>採用中 (第{selectedIdx + 1}案)</div>
+          <div style={{ fontSize: '0.78rem', opacity: 0.8, display: 'flex', justifyContent: 'space-between' }}>
+            <span>採用中 (第{selectedIdx + 1}案){isSharedDrug ? ` ・ 共通: ${selected.sharedClass}` : ''}</span>
+            {recs.length > 1 && <span>{showAll ? '▼ 他の案を隠す' : `▶ クリックで他の案 (${recs.length - 1}件) 表示`}</span>}
+          </div>
           <strong>{actionLabel(selected.action)}{selected.drug ? `: ${selected.drug}` : ''}</strong>
           {selected.dose && <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>用法: {selected.dose}</div>}
           <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>{selected.reason}</div>
+          {selected.concerns && <div style={{ fontSize: '0.82rem', marginTop: '0.3rem', padding: '0.3rem 0.5rem', background: 'rgba(0,0,0,0.05)', borderRadius: '4px' }}>{selected.concerns}</div>}
           {selected.gl && <div style={{ fontSize: '0.78rem', marginTop: '0.2rem', opacity: 0.8 }}>根拠: {selected.gl}</div>}
         </div>
-      </div>
-
-      {/* トグル: 他の案を表示 */}
-      {recs.length > 1 && (
-        <button type="button" className={styles.skipBtn} style={{ marginTop: '0.4rem' }}
-          onClick={() => setShowAll(!showAll)} aria-expanded={showAll}>
-          {showAll ? `▼ 他の案を隠す` : `▶ 他の案を見る (${recs.length - 1}件)`}
-        </button>
-      )}
+      </button>
 
       {showAll && recs.length > 1 && (
-        <div style={{ marginTop: '0.5rem' }}>
+        <div style={{ marginTop: '0.4rem' }}>
           {recs.map((r, idx) => {
             if (idx === selectedIdx) return null;
             return (
-              <button key={idx} type="button" className={`${styles.alertBanner} ${sevClass(r.severity)}`}
-                style={{ display: 'block', width: '100%', textAlign: 'left', cursor: 'pointer', border: 'none', marginBottom: '0.3rem' }}
+              <button key={idx} type="button" className={`${styles.alertBanner} ${sevClass(r.severity)} ${styles.suggestionBtn}`}
+                style={{ display: 'block', width: '100%', textAlign: 'left', cursor: 'pointer', marginBottom: '0.3rem' }}
                 onClick={() => {
                   dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: disease.key, field: 'selectedRecIdx', value: idx } });
                   setShowAll(false);
                 }}>
-                <div style={{ fontSize: '0.78rem', opacity: 0.8 }}>第{idx + 1}案 (クリックで採用)</div>
+                <div style={{ fontSize: '0.78rem', opacity: 0.8 }}>第{idx + 1}案 (クリックで採用){r.sharedClass ? ` ・ ${r.sharedClass}` : ''}</div>
                 <strong>{actionLabel(r.action)}{r.drug ? `: ${r.drug}` : ''}</strong>
                 {r.dose && <div style={{ fontSize: '0.85rem' }}>用法: {r.dose}</div>}
                 <div style={{ fontSize: '0.85rem' }}>{r.reason}</div>
+                {r.concerns && <div style={{ fontSize: '0.8rem', marginTop: '0.2rem', padding: '0.2rem 0.4rem', background: 'rgba(0,0,0,0.05)', borderRadius: '4px' }}>{r.concerns}</div>}
                 {r.gl && <div style={{ fontSize: '0.78rem', opacity: 0.8 }}>根拠: {r.gl}</div>}
               </button>
             );
@@ -1032,6 +1050,8 @@ function FollowupRow({ disease, sel, dispatch }) {
    SUMMARY
    ============================================================ */
 function SummaryPanel({ state, violations, onBack, onCopy }) {
+  const sharedClasses = useMemo(() => detectSharedClasses(state), [state]);
+  const txStatusLabel = (s) => ({ untreated: '未治療', lifestyle_only: '生活指導のみ', on_treatment: '薬物治療中' }[s] || '未指定');
   return (
     <div className={styles.section}>
       <div className={styles.sectionTitle}>まとめ</div>
@@ -1041,6 +1061,19 @@ function SummaryPanel({ state, violations, onBack, onCopy }) {
       {violations.filter((v) => v.severity === 'warning').map((v, i) => (
         <div key={i} className={`${styles.alertBanner} ${styles.alertWarning}`} role="alert">⚡ {v.message}</div>
       ))}
+
+      {sharedClasses.length > 0 && (
+        <div className={styles.sharedClassBox}>
+          <div className={styles.sharedClassTitle}>📌 複数疾患を同時カバーする薬剤</div>
+          {sharedClasses.map((sc, i) => (
+            <div key={i} className={styles.sharedClassRow}>
+              <strong>{sc.sharedClass}</strong>: {sc.items.map((it) => OVERVIEW_DISEASES.find((d) => d.key === it.disease)?.label).join(' + ')}
+              {sc.items[0].drug && <span style={{ marginLeft: '0.5rem', color: '#1565c0' }}>→ {sc.items[0].drug}{sc.items[0].dose ? ` (${sc.items[0].dose})` : ''}</span>}
+            </div>
+          ))}
+        </div>
+      )}
+
       {state.followupCode.issued && (
         <div style={{ marginTop: '0.8rem' }}>
           <div className={styles.fieldLabel}>フォローコード (紙カルテに記載してください)</div>
@@ -1050,11 +1083,13 @@ function SummaryPanel({ state, violations, onBack, onCopy }) {
           </div>
         </div>
       )}
+
       <div style={{ marginTop: '0.8rem' }}>
         <div className={styles.fieldLabel}>選択内容</div>
-        <ul style={{ marginLeft: '1rem', fontSize: '0.88rem' }}>
+        <div>
           {state.selectedDiseases.map((key) => {
             const d = OVERVIEW_DISEASES.find((x) => x.key === key);
+            if (!d) return null;
             const sel = state.selectionsByDisease[key] || {};
             const lo = LIFESTYLE_OPTIONS.find((l) => l.id === sel.lifestyle);
             const drugSummary = Object.entries(sel.classDetails || {}).map(([cid, det]) => {
@@ -1062,18 +1097,46 @@ function SummaryPanel({ state, violations, onBack, onCopy }) {
               const drug = dc?.drugs.find((dr) => dr.id === det.drugId);
               return `${drug?.name || dc?.label} ${det.dose || ''}`.trim();
             }).filter(Boolean);
-            const action = NEXT_ACTIONS.find((a) => a.id === sel.nextAction)?.label;
             const follow = FOLLOW_OPTIONS.find((f) => f.value === sel.followIn)?.label;
-            return d ? (
-              <li key={key} style={{ marginBottom: '0.7rem' }}>
-                <strong>{d.label}</strong>: {drugSummary.length > 0 ? drugSummary.join(' + ') : '薬剤未選択'}
-                {lo && <span> + {lo.label}</span>}
-                {action && <div style={{ marginLeft: '1rem', fontSize: '0.85rem' }}>→ 次の一手: {action}{follow ? ` / フォロー: ${follow}` : ''}{sel.goalNote ? ` / 目標: ${sel.goalNote}` : ''}</div>}
-              </li>
-            ) : null;
+
+            // 採用中の治療提案
+            const recs = suggestTreatment(key, state);
+            const selectedIdx = sel.selectedRecIdx ?? 0;
+            const adoptedRec = recs[selectedIdx];
+
+            return (
+              <div key={key} className={`${styles.summaryDiseaseCard} ${categoryClass(d.category)}`}>
+                <div className={styles.summaryDiseaseTitle}>{d.label}</div>
+                <div className={styles.summaryRow}>
+                  <strong>STEP 1 治療状況:</strong> {txStatusLabel(sel.txStatus)}
+                  {sel.txStatus === 'on_treatment' && drugSummary.length > 0 && <div style={{ marginLeft: '1rem' }}>処方: {drugSummary.join(' + ')}</div>}
+                  {lo && <div style={{ marginLeft: '1rem' }}>生活: {lo.label}</div>}
+                </div>
+                {adoptedRec && (
+                  <div className={styles.summaryRow}>
+                    <strong>STEP 2 採用治療提案 (第{selectedIdx + 1}案):</strong>
+                    <div style={{ marginLeft: '1rem' }}>
+                      {adoptedRec.action}{adoptedRec.drug ? `: ${adoptedRec.drug}` : ''}
+                      {adoptedRec.dose && ` — ${adoptedRec.dose}`}
+                    </div>
+                    <div style={{ marginLeft: '1rem', fontSize: '0.82rem', color: 'var(--ifm-color-emphasis-700)' }}>
+                      {adoptedRec.reason}
+                      {adoptedRec.gl && ` (根拠: ${adoptedRec.gl})`}
+                    </div>
+                  </div>
+                )}
+                {(follow || sel.goalNote) && (
+                  <div className={styles.summaryRow}>
+                    {follow && <span><strong>フォロー:</strong> {follow}</span>}
+                    {sel.goalNote && <span style={{ marginLeft: '1rem' }}><strong>目標:</strong> {sel.goalNote}</span>}
+                  </div>
+                )}
+              </div>
+            );
           })}
-        </ul>
+        </div>
       </div>
+
       <div className={styles.navRow}>
         <button className={`${styles.navBtn} ${styles.navBtnSecondary}`} onClick={onBack}>戻る (再編集)</button>
       </div>
