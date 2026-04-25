@@ -330,8 +330,21 @@ export default function OverviewBooster() {
 /* ============================================================
    Patient Header — 横断共有因子
    ============================================================ */
+// 妊娠可能年齢層 (<50歳) — 妊娠/授乳は女性かつこの年齢層でのみ表示
+const REPRODUCTIVE_AGE_RANGES = new Set(['<40', '40-49']);
+
 function PatientHeaderPanel({ state, dispatch }) {
   const update = (patch) => dispatch({ type: 'SET_PATIENT_HEADER', payload: patch });
+  const showReproductive = state.patientHeader.sex === 'F' && REPRODUCTIVE_AGE_RANGES.has(state.patientHeader.age);
+
+  // 50歳以上 or 男性に変更されたら自動で妊娠/授乳フラグを下げる (誤データ持越し防止)
+  useEffect(() => {
+    if (!showReproductive && (state.patientHeader.co_pregnancy || state.patientHeader.co_lactation)) {
+      update({ co_pregnancy: false, co_lactation: false });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showReproductive]);
+
   return (
     <div className={styles.patientHeader}>
       <div className={styles.sectionTitle}>患者ヘッダー <span className={styles.sectionHint}>(全スコアで共有・患者切替時消去)</span></div>
@@ -360,8 +373,8 @@ function PatientHeaderPanel({ state, dispatch }) {
             <option value="current">現喫煙</option>
           </select>
         </div>
-        <CheckboxField id="ph_preg" label="妊娠中" checked={state.patientHeader.co_pregnancy} onChange={(v) => update({ co_pregnancy: v })} />
-        <CheckboxField id="ph_lact" label="授乳中" checked={state.patientHeader.co_lactation} onChange={(v) => update({ co_lactation: v })} />
+        {showReproductive && <CheckboxField id="ph_preg" label="妊娠中" checked={state.patientHeader.co_pregnancy} onChange={(v) => update({ co_pregnancy: v })} />}
+        {showReproductive && <CheckboxField id="ph_lact" label="授乳中" checked={state.patientHeader.co_lactation} onChange={(v) => update({ co_lactation: v })} />}
         <CheckboxField id="ph_frail" label="フレイル" checked={state.patientHeader.co_frail} onChange={(v) => update({ co_frail: v })} />
       </div>
       <div className={styles.fieldLabel} style={{ marginTop: '0.6rem' }}>主要併存疾患 (横断共有):</div>
