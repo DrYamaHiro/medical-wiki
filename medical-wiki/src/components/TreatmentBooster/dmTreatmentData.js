@@ -169,10 +169,10 @@ export const MODIFIERS = [
   { id: 'cm_underweight', label: '低栄養（BMI<18.5 / Alb<3.5）', cat: '併存疾患' },
   { id: 'cm_gdm', label: '妊娠糖尿病（GDM）', cat: '併存疾患', severity: 'critical' },
 
-  // 制約（高齢者カテゴリーはJGS/JDS2023準拠）
-  { id: 'co_elderly_cat1', label: '高齢者Cat I（ADL自立・認知正常）', cat: '制約' },
-  { id: 'co_elderly_cat2', label: '高齢者Cat II（軽度認知障害/IADL低下）', cat: '制約' },
-  { id: 'co_elderly_cat3', label: '高齢者Cat III（中等度認知症・ADL低下）', cat: '制約', severity: 'critical' },
+  // 制約（高齢者カテゴリーはJGS/JDS2023準拠、3択排他選択）
+  { id: 'co_elderly_cat1', label: '高齢者Cat I（ADL自立・認知正常）', cat: '制約', radioGroup: 'dm_elderly_category' },
+  { id: 'co_elderly_cat2', label: '高齢者Cat II（軽度認知障害/IADL低下）', cat: '制約', radioGroup: 'dm_elderly_category' },
+  { id: 'co_elderly_cat3', label: '高齢者Cat III（中等度認知症・ADL低下）', cat: '制約', severity: 'critical', radioGroup: 'dm_elderly_category' },
   { id: 'co_frail', label: 'フレイル（転倒リスク高）', cat: '制約' },
   { id: 'co_hypo_drug_used', label: '低血糖リスク薬使用中（SU/グリニド/インスリン）', cat: '制約' },
   { id: 'co_hypo_risk', label: '低血糖リスク環境（独居/不規則食事/認知低下）', cat: '制約' },
@@ -701,6 +701,19 @@ export const RECOMMENDATIONS = [
     specialistGate: true,
     note: 'GPで経験浅い場合は糖尿病専門医紹介推奨。1型疑いは必ず専門医',
     reassess: '週次SMBG、4週後HbA1c',
+  },
+  {
+    id: 'bridge_until_specialist_referral',
+    action: 'STEP_UP',
+    drug: '【専門医紹介待ちブリッジ】 メトホルミン最大量 + 1週以内再診',
+    example: 'メトホルミン 500mg×2 → 1週で 500mg×3 → 1500-2250mg/日。HbA1c・体重・尿ケトン週次。\n紹介日まで1週以上の場合は SGLT2i 追加（CKD/HFあれば）。\nケトン陽性 or 嘔吐 or 食事不能 → 即救急',
+    reason: '症候性高血糖（HbA1c≥10%）でインスリン即開始がGP的に難しい場合のブリッジ。メトホルミン単剤では血糖低下不十分なので、紹介待機期間が長いほどリスク',
+    fromStates: ['naive'],
+    drugClass: 'ビグアナイド',
+    preferredWhen: ['rf_symptomatic_hyper'],
+    avoidWhen: ['cm_t1dm', 'cm_ckd_g45', 'co_heavy_drinker', 'co_sickday'],
+    note: '【判断ガイド】\n① 紹介当日〜3日以内 → メトホルミン+生活指導のみ可\n② 4-7日先 → メトホルミン最大量+SGLT2i併用検討（CKD/HF/肥満なら）\n③ 7日以上 or 症状重 → 当院でインスリン開始（basal 0.1-0.2U/kg）\n④ 全例: 患者にケトン症状（吐気・腹痛・呼気アセトン臭）の警告 + 救急受診基準を明示',
+    reassess: '7日以内に再診 or 紹介到達確認',
   },
 
   // --- STEP 2 (mono → dual) ---

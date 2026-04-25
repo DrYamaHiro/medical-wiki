@@ -118,6 +118,8 @@ export const MODIFIERS = [
   // 感染症
   { id: 'cm_active_tb', label: '活動性肺結核', cat: '併存疾患', severity: 'critical' },
   { id: 'cm_pseudomonas_risk', label: '緑膿菌リスク（入院歴・広域抗生剤既往・気管支拡張症）', cat: '併存疾患' },
+  { id: 'cm_bronchiectasis', label: '気管支拡張症（COPD Boosterスコープ外）', cat: '併存疾患' },
+  { id: 'cm_ild', label: '間質性肺疾患（COPD Boosterスコープ外）', cat: '併存疾患' },
 
   // 併存症
   { id: 'cm_ht', label: '高血圧', cat: '併存疾患' },
@@ -136,6 +138,7 @@ export const MODIFIERS = [
   { id: 'co_current_smoker', label: '現喫煙', cat: '制約', severity: 'critical' },
   { id: 'co_smoker_past', label: '過去喫煙（1年以内）', cat: '制約' },
   { id: 'co_on_hot', label: 'HOT（在宅酸素療法）使用中', cat: '制約' },
+  { id: 'co_hot_user', label: 'HOT適応相当（PaO2≤55 or ≤60+臓器障害）', cat: '制約', severity: 'critical' },
   { id: 'co_vaccines_current', label: 'ワクチン最新（インフル/肺炎球菌/COVID/RSV等）', cat: '制約' },
   { id: 'co_pulm_rehab_candidate', label: '肺リハ候補（mMRC≥2）', cat: '制約' },
   { id: 'co_dpi_insufficient_effort', label: 'DPI吸気力不足（<50L/min）', cat: '制約' },
@@ -253,6 +256,30 @@ export function computeAutoFlags(metricValues, modifiers, currentDrugs, allDrugs
 export function computeInfoAlerts(metricValues, modifiers) {
   const alerts = [];
   const mods = modifiers || [];
+  const fev1 = metricValues?.fev1_pct;
+
+  // 重症COPD・呼吸不全・HOT適応相当はBoosterスコープ外
+  if (
+    (fev1 !== undefined && fev1 < 30) ||
+    mods.includes('rf_respiratory_failure') ||
+    mods.includes('co_hot_user')
+  ) {
+    alerts.push({
+      type: 'severe_copd_specialist',
+      label: '⚠ 重症COPD（FEV1<30 or 呼吸不全 or HOT適応） — 呼吸器専門医管理',
+      detail: 'Boosterの推奨は基本管理用。HOT適応評価・在宅医療連携・肺移植検討等は専門医継続。Booster推奨は参考情報として扱い、過介入は避ける',
+    });
+  }
+
+  // 気管支拡張症・間質性肺炎などはCOPD Boosterスコープ外
+  if (mods.includes('cm_bronchiectasis') || mods.includes('cm_ild')) {
+    alerts.push({
+      type: 'out_of_scope',
+      label: 'このBoosterはCOPD専用',
+      detail: '気管支拡張症・間質性肺疾患は本Boosterの対象外。専門医管理推奨。COPD併存ならCOPD部分のみ参照',
+    });
+  }
+
   if (mods.includes('co_current_smoker')) {
     alerts.push({
       type: 'smoking_urgent',

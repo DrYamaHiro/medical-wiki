@@ -1,6 +1,62 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import styles from './styles.module.css';
 import { TREATMENT_DATA } from './registry';
+
+/* -------------------------------------------------------- */
+/*  Shared modifier layer — Booster間で共有される修飾子      */
+/* -------------------------------------------------------- */
+// 患者の併存疾患・年齢層・妊娠などは複数Boosterで共通使用するため、
+// localStorage で sessionに渡って保持し、各Booster起動時に自動pre-select。
+// ID は Booster間で共通に使う想定のもののみ列挙。
+const SHARED_MODIFIER_IDS = new Set([
+  // 主要併存疾患
+  'cm_dm', 'cm_ht', 'cm_ckd', 'cm_ckd_g45', 'cm_proteinuria',
+  'cm_hf', 'cm_hfref', 'cm_cad', 'cm_ascvd', 'cm_post_mi', 'cm_stroke', 'cm_af',
+  'cm_asthma', 'cm_copd', 'cm_aco', 'cm_osas', 'cm_osas_diagnosed', 'cm_osas_suspected',
+  'cm_gout', 'cm_depression', 'cm_dementia', 'cm_parkinson',
+  'cm_liver_severe', 'cm_liver_compensated', 'cm_hepatitis_active', 'cm_nafld_mash',
+  'cm_peptic_ulcer_hx', 'cm_pancreatitis_hx', 'cm_cancer',
+  'cm_co2_retention', 'cm_post_gastrectomy',
+  // 年齢層・体質
+  'co_elderly_65', 'co_elderly_75', 'co_frail',
+  // 妊娠・授乳
+  'co_pregnancy', 'co_pregnancy_planning', 'co_lactation',
+  // 喫煙状態
+  'co_current_smoker', 'co_smoker_past',
+  // 共通薬剤関連
+  'co_opioid_use', 'co_polyp', 'co_anticoag_major',
+  'co_cyp3a4_inhibitor',
+]);
+const SHARED_MODIFIERS_KEY = 'tx_booster_shared_modifiers';
+
+function loadSharedModifiers() {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.localStorage.getItem(SHARED_MODIFIERS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveSharedModifiers(modifierIds) {
+  if (typeof window === 'undefined') return;
+  try {
+    const shared = (modifierIds || []).filter((id) => SHARED_MODIFIER_IDS.has(id));
+    window.localStorage.setItem(SHARED_MODIFIERS_KEY, JSON.stringify(shared));
+  } catch {
+    /* ignore quota / privacy errors */
+  }
+}
+
+function clearSharedModifiers() {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.removeItem(SHARED_MODIFIERS_KEY);
+  } catch { /* ignore */ }
+}
 
 /* -------------------------------------------------------- */
 /*  Helpers                                                 */
@@ -516,6 +572,22 @@ export default function TreatmentBooster({
   const [metricValues, setMetricValues] = useState({});
   const [overrideStatus, setOverrideStatus] = useState(null);
 
+  // 共有修飾子: マウント時に localStorage から読み込み、Booster側 MODIFIERS に存在する ID のみpre-select
+  useEffect(() => {
+    const sharedIds = loadSharedModifiers();
+    if (sharedIds.length === 0) return;
+    const validIds = sharedIds.filter((id) => MODIFIERS.some((m) => m.id === id));
+    if (validIds.length > 0) {
+      setModifiers((prev) => Array.from(new Set([...prev, ...validIds])));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [MODIFIERS]);
+
+  // 共有修飾子: 選択変更時に localStorage に永続化（共有候補のみ）
+  useEffect(() => {
+    saveSharedModifiers(modifiers);
+  }, [modifiers]);
+
   const toggleDrug = useCallback(
     (id) => {
       setCurrentDrugs((prev) => {
@@ -535,8 +607,20 @@ export default function TreatmentBooster({
   }, []);
 
   const toggleModifier = useCallback((id) => {
-    setModifiers((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-  }, []);
+    setModifiers((prev) => {
+      const m = MODIFIERS.find((x) => x.id === id);
+      // radioGroup 指定があれば、同じ group 内の他IDを除外してから toggle
+      if (m && m.radioGroup) {
+        const groupIds = MODIFIERS
+          .filter((x) => x.radioGroup === m.radioGroup)
+          .map((x) => x.id);
+        const isSelected = prev.includes(id);
+        const withoutGroup = prev.filter((x) => !groupIds.includes(x));
+        return isSelected ? withoutGroup : [...withoutGroup, id];
+      }
+      return prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
+    });
+  }, [MODIFIERS]);
 
   const reset = useCallback(() => {
     setPhase(PHASE0 ? 0 : 1);
@@ -545,6 +629,22 @@ export default function TreatmentBooster({
     setMetricValues({});
     setOverrideStatus(null);
   }, [PHASE0]);
+
+  // 患者ごと完全リセット: localStorage の共有修飾子も消す（次の患者を診る時に使う）
+  const resetPatient = useCallback(() => {
+    clearSharedModifiers();
+    setPhase(PHASE0 ? 0 : 1);
+    setCurrentDrugs([]);
+    setModifiers([]);
+    setMetricValues({});
+    setOverrideStatus(null);
+  }, [PHASE0]);
+
+  // 共有修飾子として保存されている ID を計算（UI badge表示用）
+  const sharedActiveCount = useMemo(
+    () => modifiers.filter((id) => SHARED_MODIFIER_IDS.has(id)).length,
+    [modifiers]
+  );
 
   // Phase 0: mutually exclusive risk category selection. Toggling off leaves none selected.
   const selectRiskCategory = useCallback(
@@ -702,8 +802,16 @@ export default function TreatmentBooster({
             Phase {phase}/{PHASE0 ? 3 : 3}
             {PHASE0 && phase === 0 ? ' (リスク層別)' : ''}
           </span>
-          <button className={styles.resetBtn} onClick={reset}>
+          {sharedActiveCount > 0 && (
+            <span className={styles.sharedBadge} title="他Boosterと共有される修飾子の数。次患者では『全リセット』を押してください">
+              共有 {sharedActiveCount}
+            </span>
+          )}
+          <button className={styles.resetBtn} onClick={reset} title="この Booster の入力のみリセット（共有修飾子は保持）">
             リセット
+          </button>
+          <button className={styles.resetAllBtn} onClick={resetPatient} title="次の患者を診る時に押す。共有修飾子も含めて全消去">
+            全リセット
           </button>
         </div>
       </div>
@@ -924,24 +1032,36 @@ export default function TreatmentBooster({
             </div>
           )}
 
-          {Object.entries(modifierGroups).map(([cat, items]) => (
-            <div key={cat} className={styles.catGroup}>
-              <span className={styles.catLabel}>{cat}</span>
-              <div className={styles.chipGrid}>
-                {items.map((m) => (
-                  <button
-                    key={m.id}
-                    className={`${styles.chip} ${
-                      modifiers.includes(m.id) ? styles.chipActive : ''
-                    } ${m.severity === 'critical' ? styles.chipCritical : ''}`}
-                    onClick={() => toggleModifier(m.id)}
-                  >
-                    {m.label}
-                  </button>
-                ))}
+          {Object.entries(modifierGroups).map(([cat, items]) => {
+            // radioGroup を持つ items を group ごとにまとめて、ヘッダー表記を変える
+            const radioGroupSet = new Set(items.filter((m) => m.radioGroup).map((m) => m.radioGroup));
+            return (
+              <div key={cat} className={styles.catGroup}>
+                <span className={styles.catLabel}>
+                  {cat}
+                  {radioGroupSet.size > 0 && (
+                    <span className={styles.radioGroupHint}> ※カテゴリ内は1つだけ選択</span>
+                  )}
+                </span>
+                <div className={styles.chipGrid}>
+                  {items.map((m) => (
+                    <button
+                      key={m.id}
+                      className={`${styles.chip} ${
+                        modifiers.includes(m.id) ? styles.chipActive : ''
+                      } ${m.severity === 'critical' ? styles.chipCritical : ''} ${
+                        m.radioGroup ? styles.chipRadio : ''
+                      } ${SHARED_MODIFIER_IDS.has(m.id) ? styles.chipShared : ''}`}
+                      onClick={() => toggleModifier(m.id)}
+                      title={SHARED_MODIFIER_IDS.has(m.id) ? '他Boosterと共有される修飾子' : undefined}
+                    >
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {phase === 2 && (
             <button className={styles.nextBtn} onClick={() => setPhase(3)}>

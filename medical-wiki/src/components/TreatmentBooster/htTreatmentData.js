@@ -172,11 +172,11 @@ export const MODIFIERS = [
   { id: 'cm_liver_severe', label: '肝機能障害（Child-Pugh B以上）', cat: '併存疾患', severity: 'critical' },
   { id: 'cm_salt_sensitive', label: '食塩感受性高血圧（推定）', cat: '併存疾患' },
 
-  // 制約（JSH2025 高齢者カテゴリー Table 3 準拠）
-  { id: 'co_elderly', label: '75歳以上・ADL保持（カテゴリー1、目標 <125/75）', cat: '制約' },
-  { id: 'co_frail', label: 'フレイル〜要介護（カテゴリー2、目標 <135/85）', cat: '制約' },
-  { id: 'co_adl_severe', label: '基本的ADL低下・通院困難（カテゴリー3、目標 <145/90、<120回避）', cat: '制約', severity: 'critical' },
-  { id: 'co_end_of_life', label: 'エンド・オブ・ライフ（カテゴリー4、個別判断）', cat: '制約', severity: 'critical' },
+  // 制約（JSH2025 高齢者カテゴリー Table 3 準拠、4択排他選択）
+  { id: 'co_elderly', label: '75歳以上・ADL保持（カテゴリー1、目標 <125/75）', cat: '制約', radioGroup: 'ht_elderly_category' },
+  { id: 'co_frail', label: 'フレイル〜要介護（カテゴリー2、目標 <135/85）', cat: '制約', radioGroup: 'ht_elderly_category' },
+  { id: 'co_adl_severe', label: '基本的ADL低下・通院困難（カテゴリー3、目標 <145/90、<120回避）', cat: '制約', severity: 'critical', radioGroup: 'ht_elderly_category' },
+  { id: 'co_end_of_life', label: 'エンド・オブ・ライフ（カテゴリー4、個別判断）', cat: '制約', severity: 'critical', radioGroup: 'ht_elderly_category' },
   { id: 'co_pregnancy', label: '妊娠/妊娠希望', cat: '制約', severity: 'critical' },
   { id: 'co_lactation', label: '授乳中', cat: '制約' },
   { id: 'co_polyp', label: 'ポリファーマシー（5剤以上）', cat: '制約' },
@@ -309,6 +309,7 @@ export const RECOMMENDATIONS = [
     avoidWhen: ['se_edema', 'fh_ccb_edema'],
     reassess: '2週後に家庭血圧・浮腫確認',
     drugClass: 'Ca拮抗薬',
+    note: 'JSH2025: 単剤未達時は「増量」と「併用」がほぼ同等推奨。\n・最大量未達 → 増量先行が許容\n・最大量近く / 高齢者で副作用懸念 → 併用先行\n・grade III(>180/110)・臓器障害あり → 併用優先',
   },
   {
     id: 'mono_add_thiazide',

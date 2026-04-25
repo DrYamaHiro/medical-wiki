@@ -60,6 +60,46 @@
   background: rgba(255,255,255,0.15);
 }
 
+.resetAllBtn {
+  padding: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+  border: 1px solid #ffab91;
+  border-radius: 4px;
+  background: #d84315;
+  color: #fff;
+  cursor: pointer;
+}
+
+.resetAllBtn:hover {
+  background: #bf360c;
+}
+
+.sharedBadge {
+  font-size: 0.72rem;
+  padding: 0.18rem 0.55rem;
+  background: #4dd0e1;
+  color: #00363d;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.radioGroupHint {
+  font-size: 0.72rem;
+  color: var(--ifm-color-emphasis-600);
+  font-weight: 400;
+  margin-left: 0.4rem;
+}
+
+.chipRadio {
+  border-style: dashed;
+}
+
+.chipShared::before {
+  content: '◇ ';
+  color: #00838f;
+  font-weight: 700;
+}
+
 /* 緊急推奨バナー（Red Flag） */
 .urgentBox {
   padding: 0.8rem 1.2rem;

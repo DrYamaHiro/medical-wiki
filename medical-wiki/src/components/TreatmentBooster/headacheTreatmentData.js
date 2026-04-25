@@ -730,12 +730,12 @@ export const RECOMMENDATIONS = [
     id: 'moh_withdraw_offending',
     action: 'STOP',
     drug: '⚠ MOH: 原因薬中止（離脱）',
-    example: 'トリプタン/合剤/オピオイドは突然中止可、単純鎮痛は漸減も可。離脱期2-10日',
-    reason: '薬物乱用頭痛は原因薬中止で寛解',
+    example: 'トリプタン/合剤/オピオイド/エルゴ → 突然中止。NSAID/アセトアミノフェン → 2週間で漸減 (毎週半減)',
+    reason: '薬物乱用頭痛は原因薬中止で寛解。「制限」では効果不十分、完全中止 or 別系統への切替が GL推奨',
     fromStates: ['mono', 'dual', 'triple'],
     urgentWhen: ['cm_moh'],
     preferredWhen: ['cm_moh_triptan_overuse', 'cm_moh_analgesic_overuse'],
-    note: '離脱期は制吐・輸液・短期NSAID（別クラス）で対症',
+    note: '【MOH 離脱プロトコル詳細】\n① 薬剤完全中止（突然 or 漸減）2-4週\n② 離脱期は制吐（メトクロプラミド）・輸液・短期PSL 30mg×5日 or 短期NSAID（別クラス使用していなければ）\n③ 同時に予防薬導入 (プロプラノロール/アミトリプチリン/CGRP抗体)\n④ 4週後評価：頭痛日数50%減なら継続、増悪なら入院・専門医\n⑤ 制限（週2-3回）のみは離脱効果不十分。GL第一は「中止」',
   },
   {
     id: 'moh_start_prevention',
@@ -745,6 +745,7 @@ export const RECOMMENDATIONS = [
     reason: 'MOH離脱のみでは再発多い',
     fromStates: ['mono', 'dual'],
     preferredWhen: ['cm_moh'],
+    note: '効果判定は3ヶ月。MIDAS/HIT-6 + 急性期薬日数で評価',
   },
 
   // === Special populations ===
