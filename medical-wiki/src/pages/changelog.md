@@ -4,6 +4,72 @@ title: "変更履歴"
 
 # 変更履歴
 
+## ver.3.0.5.0（2026-04-26）
+
+### Overview Booster v0.1 リリース — 慢性疾患統合俯瞰ツール（2026-04-26）
+
+クリニックで生活習慣病・慢性心不全・慢性腎臓病・心房細動・COPD など、相互に密接した慢性疾患を **網羅的に把握** する第3軸のブースター。Treatment(深掘り) / Diagnostic(鑑別) と並ぶ Overview(俯瞰) を担当。
+
+**4プラン作成 + 7並列監査3ラウンド (合計21監査)** を経て全エージェント合格 (R3) となった設計を MVP 実装。
+
+**新カテゴリ**: `docs/000-Chronic-Hub/` (sidebar position -1、001-Undifferentiated より前)
+
+**主要機能 (v0.1)**:
+- **STEP 0**: 11疾患マルチセレクト (HT/DLP/T2DM/CKD/AF/HFrEF/HFpEF/喘息/COPD/痛風/動脈硬化二次予防)
+- **STEP 0.5**: 5疾患リスクスコア自動計算 (久山町/JSH2025/KDIGO Heat Map/CHA₂DS₂-VASc+HAS-BLED/GOLD ABE) — 各スコアスキップ可
+- **STEP 1**: 各疾患の主要薬剤クラスを toggle 選択 + **食事運動 3択** + (制限考慮) サブ理由7種
+- **食事運動 3択**: (a) 食事のみ / (b) 食事+運動 / (c) 食事+運動 [制限考慮]
+- **(c) サブ理由 (radio排他必須)**: 整形/心血管/呼吸器/腎リハ適応/腎制限/フレイル/その他
+- **疾患別食事運動推奨内容** をリアルタイム表示 (痛風 ULT 閾値・CKD ステージ別蛋白制限・HFrEF 心リハ等)
+
+**フォローコード**:
+- Crockford Base32 + bitfield + CRC-8、形式 `OB1-XXXX-XXXX-...-CC`
+- 紙カルテ書込み可 (3疾患併存で 24-32字)
+- スコア入力数値・患者識別情報を **含まない** (古い検査値信頼回避、PHI混入防止)
+- 復元時は STEP 0.5 自動遷移 + 赤alert で「今日の検査値再入力」強制
+
+**軽量 DO_NOT_RULES** (14ルール、SUMMARY赤バナー強制):
+- 痛風 + HCTZ / 喘息+COPD と非選択性β遮断薬 / CKD G4-5 と NSAID/ベンズブロマロン/コルヒチン
+- 妊娠 + ARB/ACEi/ARNI/SGLT2i/スタチン/フィブラート
+- ARB/ACEi/ARNI 併用排他 / DOAC+ワルファリン排他 / DOAC+抗血小板薬注意
+- K上昇リスク薬3種以上累積警告
+- フォローコード復元時の古い検査警告
+
+**個別 Booster との連動**:
+- Overview から個別 Booster へ deep link (`?currentDrugs=arb_azl,ccb_am`)
+- 既存 TreatmentBooster index.js に URLSearchParams 受信を追加
+
+**逆引きトリガー**:
+- 患者ヘッダーの処方薬一覧から関連疾患を自動提案 (拒絶=「✕閉じる」で永久 dismiss、押し付け回避)
+
+**痛風 ULT 閾値 (新設)**:
+- 治療開始: 結節or発作既往=常時 / 無症候+合併症=SUA≥8 / 単独=SUA≥9
+- アロプリノール初期用量: eGFR≥60→100mg, 30-59→50mg, &lt;30→50mg隔日 (専門医併診)
+- フェブキソスタット選択: eGFR&lt;30 / HLA-B*5801陽性 / CARES試験 CV高リスク警告
+
+**HFpEF SGLT2i 第一選択**: EMPEROR-Preserved (NEJM 2021) + DELIVER (NEJM 2022) を rec.note 明記。HR ~0.79、EF >40% 全例第一選択、DM 有無問わず。
+
+**a11y (WCAG 2.2 AA 対応)**:
+- 全 chip に role=checkbox/radio + aria-checked + aria-label
+- アコーディオンに aria-expanded/aria-controls
+- スコア結果に aria-live="polite" announce
+- 色覚3重表現 (色 + icon + テキスト + 太border)
+- tap target ≥44px、200% ズーム対応、ハイコントラスト forced-color-adjust
+
+**禁忌ルール版管理**:
+- `OVERVIEW_CONTRAINDICATIONS_VERSION = 1` (2026-04-26 最終更新)
+- 各画面右下に表示
+- 新薬追加時の append-only 強制方針 (将来 ESLint 化)
+
+**UXログ**:
+- 9イベント計測 (booster_open / step_X / code_issued / decode_success/fail / time_total_ms 等)
+- localStorage、サーバ送信なし、直近1000件保持
+
+**v0.2 以降の予定**:
+- 頭痛/不眠/便秘の追加
+- 食事運動推奨内容の構造化拡充
+- 個別 Booster からの双方向同期
+
 ## ver.3.0.4.0（2026-04-25）
 
 ### Treatment Booster v4.1: UX大幅改善・医療安全強化（2026-04-25）

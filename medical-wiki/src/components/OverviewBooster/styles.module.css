@@ -1,0 +1,459 @@
+/* ============================================
+   Overview Booster (慢性疾患統合俯瞰ツール)
+   ============================================ */
+
+.booster {
+  max-width: 900px;
+  margin: 1.5rem auto;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--ifm-background-color);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  background: linear-gradient(135deg, #5e35b1 0%, #7e57c2 100%);
+  color: white;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.title { margin: 0; font-size: 1.1rem; font-weight: 700; }
+.subtitle { margin: 0; font-size: 0.85rem; opacity: 0.9; }
+.headerRight {
+  display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+}
+.stepIndicator {
+  font-size: 0.78rem;
+  padding: 0.2rem 0.6rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+.resetBtn {
+  padding: 0.3rem 0.8rem;
+  font-size: 0.78rem;
+  border: 2px solid #ffab91;
+  border-radius: 4px;
+  background: #d84315;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+.resetBtn:hover { background: #bf360c; }
+
+/* 使い方ヘルプ */
+.helpDetails {
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: #ede7f6;
+}
+.helpSummary {
+  cursor: pointer;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4527a0;
+  list-style: none;
+}
+.helpSummary::-webkit-details-marker { display: none; }
+.helpBody {
+  padding: 0.5rem 1.4rem 1rem;
+  font-size: 0.85rem;
+  background: #f3e5f5;
+  color: #311b92;
+}
+.helpBody p { margin: 0.6rem 0 0.3rem; }
+.helpBody ol, .helpBody ul {
+  margin: 0.2rem 0 0.5rem 1.2rem; padding-left: 0.5rem;
+}
+.helpBody li { margin: 0.2rem 0; line-height: 1.5; }
+
+/* セクション */
+.section {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+.sectionTitle {
+  margin: 0 0 0.7rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-800);
+}
+.sectionHint {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--ifm-color-emphasis-600);
+  margin-left: 0.5rem;
+}
+
+/* 患者ヘッダー */
+.patientHeader {
+  padding: 0.8rem 1.2rem;
+  background: #f0f4c3;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+.patientGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.fieldLabel {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 0.2rem;
+}
+.fieldInput {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  background: #fff;
+}
+.fieldInput:focus {
+  border-color: #5e35b1;
+  outline: 2px solid rgba(94,53,177,0.2);
+}
+
+/* チップ群 */
+.chipGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  background: #fff;
+  border-radius: 16px;
+  cursor: pointer;
+  min-height: 44px;
+  white-space: nowrap;
+  transition: all 0.1s ease;
+  forced-color-adjust: none;
+}
+.chip:hover { background: var(--ifm-color-emphasis-100); }
+.chip:focus-visible { outline: 3px solid #5e35b1; outline-offset: 2px; }
+.chipActive {
+  background: #ede7f6;
+  border-color: #5e35b1;
+  color: #311b92;
+  font-weight: 600;
+}
+.chipActive::after {
+  content: '✓';
+  margin-left: 0.3rem;
+  font-weight: 700;
+  color: #5e35b1;
+}
+.chipCritical {
+  border-color: #c62828;
+  color: #b71c1c;
+}
+.chipRadio { border-style: dashed; }
+
+/* 疾患カテゴリ別カラー (左ボーダー) */
+.categoryCardiovascular { border-left: 4px solid #c62828; }
+.categoryMetabolic      { border-left: 4px solid #ef6c00; }
+.categoryRenal          { border-left: 4px solid #6a1b9a; }
+.categoryRespiratory    { border-left: 4px solid #0097a7; }
+.categoryMental         { border-left: 4px solid #2e7d32; }
+.categoryMusculoskeletal{ border-left: 4px solid #5d4037; }
+
+/* スコアパネル */
+.scorePanel {
+  margin: 0.6rem 0;
+  padding: 0.8rem 1rem;
+  background: #fafafa;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+}
+.scorePanelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.scorePanelTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.scoreInputGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.5rem;
+}
+.scoreResult {
+  margin-top: 0.7rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.scoreResultLow      { background: #c8e6c9; color: #1b5e20; }
+.scoreResultMedium   { background: #fff9c4; color: #f57f17; }
+.scoreResultHigh     { background: #ffe0b2; color: #e65100; }
+.scoreResultVeryHigh { background: #ffcdd2; color: #b71c1c; }
+
+.skipBtn {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.78rem;
+  border: 1px dashed var(--ifm-color-emphasis-400);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ifm-color-emphasis-700);
+  cursor: pointer;
+}
+
+/* アコーディオン */
+.accordion {
+  margin: 0.6rem 0;
+  border: 2px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.accordionHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.7rem 1rem;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.95rem;
+  min-height: 48px;
+}
+.accordionHeader:hover { background: var(--ifm-color-emphasis-100); }
+.accordionHeader:focus-visible { outline: 3px solid #5e35b1; outline-offset: -2px; }
+.accordionTitle { font-weight: 700; }
+.accordionSummary {
+  font-size: 0.82rem;
+  color: var(--ifm-color-emphasis-700);
+  font-weight: 400;
+  margin-left: 0.6rem;
+}
+.accordionUnselected {
+  font-size: 0.78rem;
+  color: var(--ifm-color-emphasis-500);
+  font-style: italic;
+}
+.accordionBody {
+  padding: 0.8rem 1rem;
+  background: #fafafa;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+.deepLinkBtn {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  background: #00838f;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.deepLinkBtn:hover { background: #006064; color: white; text-decoration: none; }
+
+/* lifestyle 行 */
+.lifestyleRow {
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--ifm-color-emphasis-200);
+}
+.lifestyleLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+.restrictionPanel {
+  margin-top: 0.5rem;
+  padding: 0.6rem;
+  background: #fff3e0;
+  border: 1px solid #ffb74d;
+  border-radius: 6px;
+}
+.restrictionLabel {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #e65100;
+  margin-bottom: 0.3rem;
+}
+.restrictionRequired {
+  color: #b71c1c;
+  font-weight: 700;
+}
+.lifestyleRec {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  background: #e3f2fd;
+  border-left: 3px solid #1976d2;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #0d47a1;
+}
+
+/* 警告バナー */
+.alertBanner {
+  margin: 0.6rem 0;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.alertCritical {
+  background: #ffcdd2;
+  border-left: 4px solid #c62828;
+  color: #b71c1c;
+}
+.alertWarning {
+  background: #fff3e0;
+  border-left: 4px solid #ef6c00;
+  color: #e65100;
+}
+.alertInfo {
+  background: #e1f5fe;
+  border-left: 4px solid #0288d1;
+  color: #01579b;
+}
+
+/* フォローコード */
+.codeBox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
+}
+.codeDisplay {
+  padding: 0.5rem 0.8rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: #e3f2fd;
+  border: 2px solid #1976d2;
+  border-radius: 6px;
+  color: #0d47a1;
+}
+.codeInput {
+  padding: 0.5rem 0.8rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.95rem;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  width: 280px;
+  text-transform: uppercase;
+}
+.codeInput:focus {
+  border-color: #1976d2;
+  outline: 2px solid rgba(25,118,210,0.2);
+}
+.copyBtn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.copyBtn:hover { background: #0d47a1; }
+
+/* ナビボタン */
+.navRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  background: #fafafa;
+  position: sticky;
+  bottom: 0;
+}
+.navBtn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 44px;
+  border: 2px solid transparent;
+}
+.navBtnPrimary {
+  background: #5e35b1;
+  color: white;
+  border-color: #5e35b1;
+}
+.navBtnPrimary:hover { background: #4527a0; }
+.navBtnPrimary:disabled {
+  background: var(--ifm-color-emphasis-300);
+  border-color: var(--ifm-color-emphasis-300);
+  cursor: not-allowed;
+}
+.navBtnSecondary {
+  background: white;
+  color: var(--ifm-color-emphasis-800);
+  border-color: var(--ifm-color-emphasis-400);
+}
+
+/* バージョン表記 */
+.versionLabel {
+  font-size: 0.72rem;
+  color: var(--ifm-color-emphasis-500);
+  text-align: right;
+  padding: 0.3rem 1rem;
+}
+
+/* 逆引きトリガー */
+.reverseTrigger {
+  margin: 0.8rem 0;
+  padding: 0.6rem 0.8rem;
+  background: #e8f5e9;
+  border: 1px solid #66bb6a;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+.reverseTriggerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  color: #1b5e20;
+}
+.reverseTriggerClose {
+  font-size: 0.78rem;
+  background: transparent;
+  border: 1px solid #66bb6a;
+  color: #1b5e20;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  cursor: pointer;
+}
+
+/* ハイコントラスト対応 */
+@media (prefers-contrast: more) {
+  .chip { border-width: 3px; }
+  .chipActive { border-width: 3px; }
+}
+
+/* モバイル */
+@media (max-width: 600px) {
+  .header { flex-direction: column; align-items: flex-start; }
+  .codeInput { width: 100%; }
+  .scoreInputGrid { grid-template-columns: 1fr; }
+}

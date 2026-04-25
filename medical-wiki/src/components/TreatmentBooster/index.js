@@ -601,6 +601,31 @@ export default function TreatmentBooster({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [MODIFIERS]);
 
+  // Overview Booster からの deep link 受信: ?currentDrugs=arb_azl,ccb_am
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const incomingDrugs = params.get('currentDrugs');
+      if (incomingDrugs) {
+        const ids = incomingDrugs.split(',').filter(Boolean);
+        const validIds = ids.filter((id) => DRUGS.some((d) => d.id === id));
+        if (validIds.length > 0) {
+          const defaultDose = (id) => {
+            const drug = DRUGS.find((d) => d.id === id);
+            return drug?.doses?.find((x) => x.isDefault)?.value || drug?.doses?.[0]?.value || null;
+          };
+          setCurrentDrugs((prev) => {
+            const existing = new Set(prev.map((p) => p.id));
+            const additions = validIds.filter((id) => !existing.has(id)).map((id) => ({ id, dose: defaultDose(id) }));
+            return additions.length > 0 ? [...prev, ...additions] : prev;
+          });
+        }
+      }
+    } catch { /* ignore */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [DRUGS]);
+
   // 共有修飾子: 選択変更時に localStorage に永続化（共有候補のみ）
   useEffect(() => {
     saveSharedModifiers(modifiers);
