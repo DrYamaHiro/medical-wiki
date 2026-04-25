@@ -152,6 +152,7 @@ export const MODIFIERS = [
 
   // 併存疾患 — TG dominant
   { id: 'cm_severe_hypertg', label: 'TG≥500 mg/dL（膵炎リスク）', cat: '併存疾患', severity: 'critical' },
+  { id: 'cm_extreme_hypertg', label: 'TG≥1000 mg/dL（急性膵炎切迫・即日精査）', cat: '併存疾患', severity: 'critical' },
   { id: 'cm_tg_residual', label: 'TG 200-500（スタチン下で残存）', cat: '併存疾患' },
   { id: 'cm_tg_mild', label: 'TG 150-300（軽度高値）', cat: '併存疾患' },
   { id: 'cm_mixed_dyslipidemia', label: 'LDL+TG 両高値（混合型）', cat: '併存疾患' },
@@ -174,8 +175,10 @@ export const MODIFIERS = [
 
   // 併存疾患 — 肝・相互作用
   { id: 'cm_hepatitis_active', label: '活動性肝炎（AST/ALT >3×ULN）', cat: '併存疾患', severity: 'critical' },
+  { id: 'cm_liver_compensated', label: '肝硬変 代償期（Child-Pugh A）', cat: '併存疾患' },
   { id: 'cm_liver_severe', label: '肝機能障害 Child-Pugh B以上', cat: '併存疾患', severity: 'critical' },
   { id: 'cm_child_pugh_c', label: '肝機能障害 Child-Pugh C', cat: '併存疾患', severity: 'critical' },
+  { id: 'cm_nafld_mash', label: 'NAFLD / MASH', cat: '併存疾患' },
   { id: 'cm_cyp3a4_inhibitor_use', label: 'CYP3A4阻害薬併用中（クラリス/イトラコナゾール/グレープフルーツ/シクロスポリン等）', cat: '併存疾患', severity: 'critical' },
 
   // 制約
@@ -411,7 +414,10 @@ export function computeAutoFlags(metricValues, modifiers, currentDrugs, allDrugs
   const flags = [];
   const tg = metricValues.tg;
   if (tg !== undefined && tg >= 500) flags.push('cm_severe_hypertg');
-  if (tg !== undefined && tg >= 1000) flags.push('rf_pancreatitis_risk');
+  if (tg !== undefined && tg >= 1000) {
+    flags.push('cm_extreme_hypertg');
+    flags.push('rf_pancreatitis_risk');
+  }
   // ハイ強度スタチン使用の自動検出
   if (currentDrugs && currentDrugs.length > 0 && allDrugs) {
     const highIntense = currentDrugs.some((entry) => {

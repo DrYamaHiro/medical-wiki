@@ -76,6 +76,12 @@ export const DRUGS = [
       { value: '400_qd', label: '400mg/日' },
       { value: '600_qd', label: '600mg/日', isMax: true },
     ] },
+  { id: 'pv_top', label: 'トピラマート（トピナ、片頭痛予防は適応外使用）', class: '予防抗てんかん薬',
+    doses: [
+      { value: '25_qd', label: '25mg/日 開始（夜）', isDefault: true },
+      { value: '50_qd', label: '50mg/日（25mg×2）' },
+      { value: '100_qd', label: '100mg/日（50mg×2、効果と忍容性の最適点）', isMax: true },
+    ] },
 
   // CGRP抗体 (皮下注、専門医)
   { id: 'cgrp_ere', label: 'エレヌマブ（アイモビーグ）anti-CGRP受容体', class: 'CGRP抗体',
@@ -180,6 +186,8 @@ export const MODIFIERS = [
   { id: 'co_anticoag_major', label: '抗凝固薬併用（ワルファリン/DOAC）', cat: '制約' },
   { id: 'co_driving_occupation', label: '運転業務（ラスミジタン8h制限）', cat: '制約' },
   { id: 'co_cyp3a4_inhibitor', label: 'CYP3A4阻害薬（エレトリプタン注意）', cat: '制約' },
+  { id: 'co_opioid_use', label: 'オピオイド使用中', cat: '制約', severity: 'critical' },
+  { id: 'co_kidney_stone_hx', label: '腎結石既往（トピラマート慎重）', cat: '制約' },
 ];
 
 /* -------------------------------------------------------- */
@@ -632,6 +640,19 @@ export const RECOMMENDATIONS = [
     preferredWhen: ['cm_epilepsy'],
     forbidden: ['co_pregnancy', 'co_pregnancy_planning', 'cm_liver_severe'],
   },
+  {
+    id: 'start_topiramate_alt_first_line',
+    action: 'STEP_UP',
+    drug: 'トピラマート（β遮断薬不可・肥満/てんかん併存）',
+    example: 'トピナ 25mg夜 開始 → 2週毎漸増 → 50-100mg/日',
+    reason: '国際GL（AAN/AHS）で片頭痛予防エビデンスA。喘息/COPD/徐脈でβ遮断薬不可な症例の代替。日本では適応外使用',
+    fromStates: ['mono'],
+    drugClass: '予防抗てんかん薬',
+    preferredWhen: ['cm_asthma', 'cm_copd', 'cm_bradycardia_av_block', 'cm_obesity', 'cm_epilepsy', 'cm_migraine_freq_4plus'],
+    forbidden: ['co_pregnancy', 'co_pregnancy_planning'],
+    avoidWhen: ['co_kidney_stone_hx', 'cm_glaucoma'],
+    note: '副作用: 体重減・感覚異常・認知緩慢・腎結石・代謝性アシドーシス。日本適応外なので説明文書化',
+  },
 
   // === CGRP抗体（難治、専門医） ===
   {
@@ -644,6 +665,7 @@ export const RECOMMENDATIONS = [
     preferredWhen: ['cm_prior_prevention_2_failure', 'cm_migraine_chronic', 'cm_migraine_freq_4plus'],
     forbidden: ['co_pregnancy'],
     specialistGate: true,
+    note: '効果判定は3ヶ月（12週）で MIDAS/HIT-6/頭痛日数を比較。50%以上減少で継続。保険適応条件: 従来予防薬 2剤以上無効/禁忌、月片頭痛日数≥4',
   },
   {
     id: 'refer_botox_chronic_migraine',
@@ -837,5 +859,15 @@ export const DO_NOT_RULES = [
     drug: 'ベラパミル',
     modifiers: ['cm_bradycardia_av_block'],
     reason: '【禁忌】QT延長・AVブロックで悪化。ECG要モニタ',
+  },
+  {
+    drug: 'オピオイド（頭痛治療目的）',
+    modifiers: ['co_opioid_use', 'cm_migraine_chronic', 'cm_migraine_freq_4plus'],
+    reason: '【非推奨】片頭痛にオピオイドはMOH/依存リスク高、効果も乏しい。トリプタン+予防薬+CGRP抗体の優先',
+  },
+  {
+    drug: 'トピラマート',
+    modifiers: ['co_pregnancy', 'co_pregnancy_planning'],
+    reason: '【禁忌】催奇形性（口唇口蓋裂リスク増）。妊娠希望時は中止',
   },
 ];

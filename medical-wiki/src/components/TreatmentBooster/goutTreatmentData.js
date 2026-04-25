@@ -618,7 +618,8 @@ export const RECOMMENDATIONS = [
     reason: '長期無発作で減量検討可。ただし中止は発作再燃リスク',
     fromStates: ['mono', 'dual'],
     requiresAny: ['co_attack_free_5y'],
-    note: '結節あり or 過去に重症発作ある場合は継続が安全',
+    avoidWhen: ['cm_gout_tophus', 'co_attack_frequent'],
+    note: '結節あり or 過去に重症発作ある場合は継続が安全（このrecは抑制される）',
   },
   {
     id: 'discontinue_colchicine_prophylaxis_6mo',
@@ -724,6 +725,11 @@ export const DO_NOT_RULES = [
     drug: 'コルヒチン',
     modifiers: ['co_cyp3a4_inhibitor'],
     reason: '【禁忌級】マクロライド・ベラパミル・シクロスポリン併用で血中濃度急上昇、死亡例',
+  },
+  {
+    drug: 'コルヒチン',
+    modifiers: ['cm_ckd_g45'],
+    reason: '【禁忌級】eGFR<30で蓄積し横紋筋融解・骨髄抑制死亡例。eGFR 30-60は減量（0.5mg隔日）',
   },
   {
     drug: 'NSAID',
