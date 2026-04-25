@@ -4,7 +4,7 @@ import { OVERVIEW_DISEASES, DISEASE_CATEGORIES, GOUT_ULT_THRESHOLDS, HFPEF_SGLT2
 import { LIFESTYLE_OPTIONS, LIFESTYLE_RESTRICTION_REASONS } from './lifestyleOptions';
 import { LIFESTYLE_RECOMMENDATIONS_V01 } from './lifestyleRecommendationsV01';
 import { OVERVIEW_CONTRAINDICATIONS_VERSION, OVERVIEW_CONTRAINDICATIONS_LAST_UPDATED, evaluateContraindications } from './overviewContraindications';
-import { SCORE_DEFINITIONS } from './scoreDefinitions';
+import { SCORE_DEFINITIONS, COMMON_LAB_FIELDS, COMMON_HISTORY_FIELDS, detectMissingFactors } from './scoreDefinitions';
 import { encodeFollowupCode, decodeFollowupCode } from './followCode';
 import { recordEvent } from './uxLog';
 
@@ -54,8 +54,16 @@ const FOLLOW_OPTIONS = [
 /* ============================================================
    State / Reducer
    ============================================================ */
+// 疾患キー → 患者ヘッダー併存疾患フラグ のマッピング (片方向 forward sync)
+const DISEASE_TO_CM_MAP = {
+  ht: 'cm_ht', dlp: 'cm_dlp', t2dm: 'cm_dm',
+  ckd: 'cm_ckd_g45',  // CKD は G4-5 のみ自動 ON ではないが、cm_ckd_g45 は eGFR で別途確定
+  ascvd2: 'cm_ascvd', hfref: 'cm_chf', hfpef: 'cm_chf',
+};
+
 const initialState = {
-  step: 'entry', // 'entry' | 'step0' | 'step0_5' | 'step1' | 'step2' | 'summary'
+  schemaVersion: 3,
+  step: 'entry',
   patientHeader: {
     age: '', sex: '', smoking: '',
     co_pregnancy: false, co_lactation: false, co_frail: false,
@@ -63,6 +71,18 @@ const initialState = {
     cm_ht: false, cm_dm: false, cm_dlp: false,
     cm_ascvd: false, cm_chf: false, cm_ckd_g45: false, cm_fh: false,
     note: '',
+  },
+  commonLabs: {
+    sbp_range: '', dbp_range: '',
+    ldl_range: '', hdl_range: '', tg_range: '',
+    hba1c_range: '',
+    egfr_range: '', uacr_range: '',
+    bmi_range: '', k_range: '',
+  },
+  commonHistory: {
+    stroke: false, mi_pci: false, pad: false,
+    bleed_hx: false, liver_dysfx: false, organ_damage: false,
+    nsaid_use: false, antiplatelet: false, alcohol_heavy: false,
   },
   selectedDiseases: [],
   scoresByDisease: {},
@@ -91,11 +111,21 @@ function reducer(state, action) {
         set.delete(id);
         const newSel = { ...state.selectionsByDisease }; delete newSel[id];
         const newScore = { ...state.scoresByDisease }; delete newScore[id];
+        // 削除時は cm_* を触らない (既往は事実として残す)
         return { ...state, selectedDiseases: [...set], selectionsByDisease: newSel, scoresByDisease: newScore };
       } else {
         set.add(id);
-        return { ...state, selectedDiseases: [...set] };
+        // forward sync: cm_* を自動 ON (片方向、解除時は触らない)
+        const cmKey = DISEASE_TO_CM_MAP[id];
+        const newPh = (cmKey && cmKey !== 'cm_ckd_g45') ? { ...state.patientHeader, [cmKey]: true } : state.patientHeader;
+        return { ...state, selectedDiseases: [...set], patientHeader: newPh };
       }
+    }
+    case 'SET_COMMON_LAB': {
+      return { ...state, commonLabs: { ...state.commonLabs, ...action.payload } };
+    }
+    case 'SET_COMMON_HISTORY': {
+      return { ...state, commonHistory: { ...state.commonHistory, ...action.payload } };
     }
     case 'SET_SCORE_INPUT': {
       const { disease, input } = action.payload;
@@ -424,18 +454,45 @@ function Step0Panel({ state, dispatch, onNext, onBack }) {
    ============================================================ */
 function Step05Panel({ state, dispatch, onNext, onBack }) {
   const scorableDiseases = state.selectedDiseases.map((key) => OVERVIEW_DISEASES.find((d) => d.key === key)).filter((d) => d && d.scoreKind);
+
+  // 選択疾患のスコアが必要とする lab/history フィールドだけを表示 (動的フィルタ)
+  const requiredLabIds = useMemo(() => {
+    const set = new Set();
+    for (const d of scorableDiseases) {
+      const def = SCORE_DEFINITIONS[d.scoreKind];
+      (def?.requires?.commonLabs || []).forEach((id) => set.add(id));
+    }
+    return [...set];
+  }, [scorableDiseases.map((d) => d.key).join(',')]);
+
+  const requiredHistoryIds = useMemo(() => {
+    const set = new Set();
+    for (const d of scorableDiseases) {
+      const def = SCORE_DEFINITIONS[d.scoreKind];
+      (def?.requires?.commonHistory || []).forEach((id) => set.add(id));
+    }
+    return [...set];
+  }, [scorableDiseases.map((d) => d.key).join(',')]);
+
   if (scorableDiseases.length === 0) {
     useEffect(() => { onNext(); }, []);
     return null;
   }
   return (
     <div className={styles.section}>
-      <div className={styles.sectionTitle}>STEP 0.5: リスクスコア層別 <span className={styles.sectionHint}>(患者ヘッダーから自動継承、追加項目のみ入力)</span></div>
+      <div className={styles.sectionTitle}>STEP 0.5: リスクスコア層別 <span className={styles.sectionHint}>(共通検査値を1度入力 → 全スコアで自動計算)</span></div>
       {state.followupCode.oldDataWarning && (
         <div className={`${styles.alertBanner} ${styles.alertCritical}`} role="alert">
           ⚠ 前回のスコアです。<strong>今日の検査値で再入力</strong>してください
         </div>
       )}
+
+      {/* 共通検査値パネル — 選択疾患に必要な項目のみ表示 */}
+      {requiredLabIds.length > 0 && <CommonLabsPanel state={state} dispatch={dispatch} requiredIds={requiredLabIds} />}
+
+      {/* 共通病歴パネル — 選択疾患に必要な項目のみ表示 */}
+      {requiredHistoryIds.length > 0 && <CommonHistoryPanel state={state} dispatch={dispatch} requiredIds={requiredHistoryIds} />}
+
       {scorableDiseases.map((d) => (
         <ScoreCard key={d.key} disease={d} state={state} dispatch={dispatch} />
       ))}
@@ -447,19 +504,87 @@ function Step05Panel({ state, dispatch, onNext, onBack }) {
   );
 }
 
+// 共通検査値パネル
+function CommonLabsPanel({ state, dispatch, requiredIds }) {
+  return (
+    <div className={styles.scorePanel} style={{ background: '#e3f2fd', borderColor: '#1976d2' }}>
+      <div className={styles.scorePanelTitle}>共通検査値 <span className={styles.sectionHint}>(複数スコアで自動共有)</span></div>
+      <div className={styles.scoreInputGrid}>
+        {COMMON_LAB_FIELDS.filter((f) => requiredIds.includes(f.id)).map((f) => (
+          <div key={f.id}>
+            <label className={styles.fieldLabel} htmlFor={`lab_${f.id}`}>
+              {f.label} <span className={styles.sectionHint}>→ {f.usedBy.join(', ')}</span>
+            </label>
+            <select id={`lab_${f.id}`} className={styles.fieldInput}
+              value={state.commonLabs[f.id] || ''}
+              onChange={(e) => dispatch({ type: 'SET_COMMON_LAB', payload: { [f.id]: e.target.value } })}>
+              <option value="">--</option>
+              {f.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </select>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// 共通病歴パネル
+function CommonHistoryPanel({ state, dispatch, requiredIds }) {
+  return (
+    <div className={styles.scorePanel} style={{ background: '#fff3e0', borderColor: '#ef6c00' }}>
+      <div className={styles.scorePanelTitle}>既往・生活因子 <span className={styles.sectionHint}>(複数スコアで自動共有)</span></div>
+      <div className={styles.chipGrid}>
+        {COMMON_HISTORY_FIELDS.filter((f) => requiredIds.includes(f.id)).map((f) => {
+          const checked = !!state.commonHistory[f.id];
+          return (
+            <button key={f.id} type="button" role="checkbox" aria-checked={checked}
+              className={`${styles.chip} ${checked ? styles.chipActive : ''}`}
+              onClick={() => dispatch({ type: 'SET_COMMON_HISTORY', payload: { [f.id]: !checked } })}>
+              {f.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function ScoreCard({ disease, state, dispatch }) {
   const def = SCORE_DEFINITIONS[disease.scoreKind];
   if (!def) return null;
   const sc = state.scoresByDisease[disease.key] || {};
-  const update = (input) => {
-    dispatch({ type: 'SET_SCORE_INPUT', payload: { disease: disease.key, input } });
-    const newInput = { ...(sc.input || {}), ...input };
+
+  // ctx を構築して calc 実行
+  const recompute = (newLocalInput) => {
+    const ctx = {
+      patientHeader: state.patientHeader,
+      commonLabs: state.commonLabs,
+      commonHistory: state.commonHistory,
+      localInput: newLocalInput,
+    };
     try {
-      const result = def.calc(newInput, def.usePatientHeader ? state.patientHeader : undefined);
+      const result = def.calc(ctx);
       dispatch({ type: 'SET_SCORE_RESULT', payload: { disease: disease.key, kind: disease.scoreKind, result } });
     } catch {}
   };
+
+  const update = (patch) => {
+    dispatch({ type: 'SET_SCORE_INPUT', payload: { disease: disease.key, input: patch } });
+    const newInput = { ...(sc.input || {}), ...patch };
+    recompute(newInput);
+  };
+
+  // 共通入力 (commonLabs/commonHistory/patientHeader) が変わった時もここで再計算
+  useEffect(() => {
+    if (!sc.skipped) recompute(sc.input || {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.commonLabs, state.commonHistory, state.patientHeader]);
+
   const skip = () => dispatch({ type: 'SKIP_SCORE', payload: { disease: disease.key } });
+
+  // 不足因子検出
+  const missing = useMemo(() => detectMissingFactors(disease.scoreKind, state), [disease.scoreKind, state.patientHeader, state.commonLabs, state.commonHistory]);
+  const hasMissing = missing && (missing.patientHeader.length > 0 || missing.commonLabs.length > 0);
 
   return (
     <div className={`${styles.scorePanel} ${categoryClass(disease.category)}`} role="region" aria-labelledby={`score-${disease.key}`}>
@@ -469,16 +594,22 @@ function ScoreCard({ disease, state, dispatch }) {
         </div>
         <button className={styles.skipBtn} onClick={skip} aria-label={`${def.name} をスキップ`}>後で入力</button>
       </div>
-      {!sc.skipped && (
+      {hasMissing && !sc.skipped && (
+        <div className={`${styles.alertBanner} ${styles.alertWarning}`} role="alert" style={{ margin: '0.4rem 0' }}>
+          未入力因子: {[...missing.patientHeader.map((k) => `患者ヘッダー.${k}`), ...missing.commonLabs.map((k) => `検査値.${k}`)].join(', ')} — 入力すると自動計算されます
+        </div>
+      )}
+      {!sc.skipped && def.localInputs && def.localInputs.length > 0 && (
         <>
+          <div className={styles.fieldLabel} style={{ marginTop: '0.4rem' }}>このスコア固有の項目:</div>
           <div className={styles.scoreInputGrid}>
-            {def.inputs.map((inp) => (
+            {def.localInputs.map((inp) => (
               <ScoreInputField key={inp.id} input={inp} value={sc.input?.[inp.id]} onChange={(v) => update({ [inp.id]: v })} />
             ))}
           </div>
-          {sc.result && <ScoreResultDisplay kind={disease.scoreKind} result={sc.result} />}
         </>
       )}
+      {!sc.skipped && sc.result && <ScoreResultDisplay kind={disease.scoreKind} result={sc.result} />}
       {sc.skipped && <div style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)' }}>スコア未入力 (STEP 1 で全候補表示)</div>}
     </div>
   );
