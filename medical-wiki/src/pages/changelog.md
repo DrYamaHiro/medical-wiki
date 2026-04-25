@@ -52,7 +52,7 @@ title: "変更履歴"
 - 頭痛 MOH離脱プロトコル詳細 5段階（完全中止→離脱期対症→予防薬→4週評価）
 - DM 紹介待ちブリッジ治療 rec（症候性高血糖でメトホルミン最大量+SGLT2i併用検討、ケトン症状警告）
 - HT 単剤 vs 併用 同等推奨 note（JSH2025 Step 2 解釈）
-- COPD 重症スコープ外明示（FEV1<30 / 呼吸不全 / HOT 適応 / 気管支拡張症 / 間質性肺疾患）
+- COPD 重症スコープ外明示（FEV1&lt;30 / 呼吸不全 / HOT 適応 / 気管支拡張症 / 間質性肺疾患）
 
 ### Treatment Booster v3: 臨床妥当性監査結果反映（2026-04-25）
 
@@ -106,7 +106,7 @@ title: "変更履歴"
 **COPD Treatment Booster** (JRS COPD GL 2022 + GOLD 2024 ABE分類準拠):
 - 20薬剤 (LAMA×5, LABA×1, LAMA/LABA×4, ICS/LABA×2, Triple×2, SABA/SAMAネブ, PSL burst, 抗生剤×3, 禁煙補助×2)
 - GOLD 2024 ABE自動推奨
-- ICS判断ロジック (eos≥300 / ACO → 追加、eos<100 / 肺炎既往 → withdrawal)
+- ICS判断ロジック (eos≥300 / ACO → 追加、eos&lt;100 / 肺炎既往 → withdrawal)
 - 増悪 severity別 pathway、α1-AT欠損症スクリーニング、CO2貯留型 SpO2 88-92%目標
 - 25+ recommendations、6 DO_NOT_RULES
 
