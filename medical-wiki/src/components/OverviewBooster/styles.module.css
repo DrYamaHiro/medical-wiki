@@ -265,6 +265,21 @@
 }
 .deepLinkBtn:hover { background: #006064; color: white; text-decoration: none; }
 
+/* 治療提案カード */
+.suggestionsBox {
+  margin: 0.5rem 0 0.8rem;
+  padding: 0.6rem 0.8rem;
+  background: #ede7f6;
+  border-left: 4px solid #5e35b1;
+  border-radius: 6px;
+}
+.suggestionsTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #311b92;
+  margin-bottom: 0.4rem;
+}
+
 /* drug class セクション (展開で具体薬剤+用量) */
 .drugClassRow {
   margin: 0.4rem 0;

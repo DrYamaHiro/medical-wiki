@@ -4,53 +4,19 @@ title: "慢性疾患管理ブースター"
 sidebar_label: "慢性疾患管理ブースター"
 sidebar_position: 0
 hide_table_of_contents: false
-description: "慢性疾患を網羅的に把握する管理ツール。STEP 0で疾患選択、STEP 0.5でリスクスコア層別、STEP 1で薬剤・食事運動を選択、フォローコードで再診時に再現。多疾患併存の俯瞰・台帳化に。"
-keywords: ["慢性疾患管理ブースター", "Chronic Care Booster", "フォローコード", "多疾患併存", "高血圧", "糖尿病", "脂質異常症", "CKD", "心不全", "心房細動", "COPD"]
+description: "慢性疾患を網羅的に管理するブースター。STEP 0で疾患選択、STEP 0.5でリスクスコア層別、STEP 1で薬剤・食事運動、STEP 2で治療戦略。フォローコードで再診時に再現。"
+keywords: ["慢性疾患管理ブースター", "Chronic Care Booster", "フォローコード", "多疾患併存"]
 ---
 
 import OverviewBooster from '@site/src/components/OverviewBooster';
-
-# 慢性疾患管理ブースター
-
-クリニックで生活習慣病・慢性心不全・慢性腎臓病・心房細動・COPD など、相互に密接した慢性疾患を **網羅的に把握** するためのツールです。
-
-:::info このツールの位置づけ
-- **慢性疾患管理ブースター (本ページ)**: 多疾患の俯瞰・治療台帳・フォローコード生成
-- **個別 Treatment Booster**: 1疾患の細かい治療修正・推奨ロジック
-- 両者は連動: 本ブースターから「個別 Booster で詳細編集」リンクで深掘り可能
-:::
-
-:::tip 4ステップフロー
-1. **入口**: フォローコード入力 (再診で前回再現) or 新規セッション開始
-2. **STEP 0**: 患者の慢性疾患を選択 (複数可)。患者の処方薬から逆引き提案も
-3. **STEP 0.5**: 5疾患 (DLP/HT/CKD/AF/COPD) でリスクスコア層別 (任意スキップ可、自動計算)
-4. **STEP 1**: 各疾患の主要薬剤クラス + 食事運動を選択。禁忌違反を自動警告
-5. **まとめ**: フォローコード発行 (紙カルテ書込み可) + 選択一覧 + 個別 Booster へ deep link
-:::
-
-:::warning 設計境界
-- 本ブースターは俯瞰用ツールで、推奨ロジックは持ちません
-- 細かい用量・修飾子・禁忌チェックは個別 Treatment Booster で行ってください
-- 「個別 Booster で詳細編集」リンクから飛ぶと、選択済み薬剤が引き継がれます
-- フォローコードに患者識別情報 (氏名・生年月日・カルテ番号) は一切含まれません
-- 次の患者を診る時は「次の患者へ」を必ず押してください (前患者の情報汚染防止)
-:::
 
 <OverviewBooster />
 
 ## 関連ページ
 
-- [Treatment Booster 機能ガイド](/docs/002-Chronic-Treatment/treatment-booster-overview) — 個別9疾患Boosterの詳細解説
-- [変更履歴](/changelog) — 本ブースターの更新情報
+- [Treatment Booster 機能ガイド](/docs/002-Chronic-Treatment/treatment-booster-overview)
+- [変更履歴](/changelog)
 
-## 準拠ガイドライン (v0.1)
+## 準拠ガイドライン
 
-- JSH2025 (高血圧) / JDS2024 (T2DM) / JAS2022 (脂質)
-- KDIGO 2024 (CKD) / JCS2024 (心不全) / JCS2020-AF (心房細動)
-- GOLD 2024 (COPD) / GINA 2024 (喘息)
-- 痛風 GL第3版2022 / 頭痛診療GL2021 (将来追加)
-- 久山町スコア (DLP リスク評価)
-
-:::warning 注意
-本ツールは治療思考の補助です。臨床判断・処方決定は主治医が行ってください。
-:::
+JSH2025 / JDS2024 / JAS2022 / KDIGO 2024 / JCS2024 / JCS2020-AF / GOLD 2024 / GINA 2024 / 痛風GL第3版2022 / 頭痛診療GL2021 / 久山町スコア

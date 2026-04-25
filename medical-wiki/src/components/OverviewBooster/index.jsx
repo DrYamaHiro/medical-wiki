@@ -7,6 +7,16 @@ import { OVERVIEW_CONTRAINDICATIONS_VERSION, OVERVIEW_CONTRAINDICATIONS_LAST_UPD
 import { SCORE_DEFINITIONS, COMMON_LAB_FIELDS, COMMON_HISTORY_FIELDS, detectMissingFactors } from './scoreDefinitions';
 import { encodeFollowupCode, decodeFollowupCode } from './followCode';
 import { recordEvent } from './uxLog';
+import { ABBREVIATIONS } from './abbreviations';
+import { suggestTreatment } from './treatmentEngine';
+
+// 略語ホバー表示コンポーネント (コメディカル配慮)
+function Abbr({ children, term }) {
+  const t = term || children;
+  const full = ABBREVIATIONS[t];
+  if (!full) return <>{children}</>;
+  return <abbr title={full} style={{ borderBottom: '1px dotted currentColor', cursor: 'help', textDecoration: 'none' }}>{children}</abbr>;
+}
 
 /* ============================================================
    患者ヘッダー: 横断共有される因子を一括入力
@@ -288,29 +298,6 @@ export default function OverviewBooster() {
         </div>
       </div>
 
-      <details className={styles.helpDetails}>
-        <summary className={styles.helpSummary}>使い方ガイド</summary>
-        <div className={styles.helpBody}>
-          <p><strong>このブースターの目的</strong></p>
-          <p>慢性疾患を俯瞰的に把握し、薬剤・食事運動・今後の治療戦略を1画面で整理。</p>
-          <p><strong>STEP フロー</strong></p>
-          <ol>
-            <li>患者ヘッダー: 全STEP共有の年齢・性別・喫煙・主要併存・妊娠等を1回だけ入力</li>
-            <li>STEP 0: 患者の慢性疾患を選択</li>
-            <li>STEP 0.5: 5疾患でリスクスコア層別 (患者ヘッダーから自動継承、再入力不要)</li>
-            <li>STEP 1: 各疾患の現在の薬剤 + 食事運動を選択</li>
-            <li>STEP 2: 今後の治療戦略 (現状維持/増量/追加/切替/減量/紹介 + フォロー時期)</li>
-            <li>まとめ: フォローコード発行 + 禁忌警告 + 個別 Booster へ deep link</li>
-          </ol>
-          <p><strong>薬剤選択の3階層</strong></p>
-          <ul>
-            <li>薬剤クラス chip (例: ARB)</li>
-            <li>展開で具体薬剤 chip (アジルバ / ロサルタン / テルミサルタン …)</li>
-            <li>各薬剤に用量 select (10mg/20mg/40mg …)</li>
-          </ul>
-        </div>
-      </details>
-
       <PatientHeaderPanel state={state} dispatch={dispatch} />
 
       {state.step === 'entry' && <EntryPanel state={state} dispatch={dispatch} onImport={handleImportCode} onNew={() => goto('step0')} />}
@@ -376,21 +363,6 @@ function PatientHeaderPanel({ state, dispatch }) {
         {showReproductive && <CheckboxField id="ph_preg" label="妊娠中" checked={state.patientHeader.co_pregnancy} onChange={(v) => update({ co_pregnancy: v })} />}
         {showReproductive && <CheckboxField id="ph_lact" label="授乳中" checked={state.patientHeader.co_lactation} onChange={(v) => update({ co_lactation: v })} />}
         <CheckboxField id="ph_frail" label="フレイル" checked={state.patientHeader.co_frail} onChange={(v) => update({ co_frail: v })} />
-      </div>
-      <div className={styles.fieldLabel} style={{ marginTop: '0.6rem' }}>主要併存疾患 (横断共有):</div>
-      <div className={styles.chipGrid}>
-        {COMORBIDITY_FLAGS.map((cm) => (
-          <button
-            key={cm.id}
-            type="button"
-            role="checkbox"
-            aria-checked={!!state.patientHeader[cm.id]}
-            className={`${styles.chip} ${state.patientHeader[cm.id] ? styles.chipActive : ''}`}
-            onClick={() => update({ [cm.id]: !state.patientHeader[cm.id] })}
-          >
-            {cm.label}
-          </button>
-        ))}
       </div>
     </div>
   );
@@ -749,22 +721,61 @@ function DiseaseAccordion({ disease, state, dispatch, violations }) {
             </div>
           )}
 
+          <TreatmentSuggestions disease={disease} state={state} />
+
           <div className={styles.fieldLabel}>薬剤クラス (複数選択可、展開で具体薬剤・用量):</div>
           {disease.drugClasses.map((dc) => (
             <DrugClassSection key={dc.id} disease={disease} drugClass={dc} sel={sel} dispatch={dispatch} violations={violations} />
           ))}
-
-          {disease.deepLink && (
-            <a className={styles.deepLinkBtn} href={disease.deepLink} target="_blank" rel="noopener noreferrer">
-              個別 Booster で詳細編集 (修飾子・推奨ロジック含む)
-            </a>
-          )}
 
           <LifestyleRow disease={disease} sel={sel} dispatch={dispatch} />
         </div>
       )}
     </div>
   );
+}
+
+// 治療提案カード — このブースター内で完結する次の一手の自動提示
+function TreatmentSuggestions({ disease, state }) {
+  const recs = useMemo(() => suggestTreatment(disease.key, state), [disease.key, state.patientHeader, state.commonLabs, state.commonHistory, state.scoresByDisease, state.selectionsByDisease]);
+  if (!recs || recs.length === 0) return null;
+  const sevClass = (sev) => sev === 'critical' ? styles.alertCritical : sev === 'high' ? styles.alertWarning : styles.alertInfo;
+  const actionLabel = (a) => ({
+    start: '開始', add: '追加', titrate_up: '増量', titrate_down: '減量', switch: '切替', stop: '中止',
+    taper: '減量・漸減', urgent: '緊急対応', maintain: '現状維持', watch: '経過観察',
+    refer: '専門医紹介', monitor: 'モニタ', caution: '注意', consider: '検討',
+    consider_add: '追加検討', lifestyle: '生活指導', lifestyle_first: '生活指導先行', reduce_or_stop: '減量・中止',
+  }[a] || a);
+  return (
+    <div className={styles.suggestionsBox}>
+      <div className={styles.suggestionsTitle}>治療提案 (自動生成)</div>
+      {recs.map((r, i) => (
+        <div key={i} className={`${styles.alertBanner} ${sevClass(r.severity)}`} role="alert">
+          <div>
+            <strong>{actionLabel(r.action)}{r.drug ? `: ${r.drug}` : ''}</strong>
+            {r.dose && <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>用法: {r.dose}</div>}
+            <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>{r.reason}</div>
+            {r.gl && <div style={{ fontSize: '0.78rem', marginTop: '0.2rem', opacity: 0.8 }}>根拠: {r.gl}</div>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// 薬剤クラスラベルから略語を取り出して Abbr化 (例: "ARB" → ホバーで正式名)
+function renderClassLabel(label) {
+  // 略語辞書のキーがラベル中に含まれている場合は <abbr> 化
+  // 順序重要: 長いキーから先にマッチ
+  const tokens = label.split(/(\s|\(|\)|\/|\+)/);
+  return tokens.map((tok, i) => {
+    const trimmed = tok.trim();
+    const full = ABBREVIATIONS[trimmed];
+    if (full) {
+      return <abbr key={i} title={full} style={{ borderBottom: '1px dotted currentColor', cursor: 'help', textDecoration: 'none' }}>{tok}</abbr>;
+    }
+    return <span key={i}>{tok}</span>;
+  });
 }
 
 function DrugClassSection({ disease, drugClass, sel, dispatch, violations }) {
@@ -782,7 +793,7 @@ function DrugClassSection({ disease, drugClass, sel, dispatch, violations }) {
         onClick={() => dispatch({ type: 'TOGGLE_DRUG_CLASS', payload: { disease: disease.key, classId: drugClass.id, drugClass } })}
         title={drugClass.tooltip}
       >
-        {drugClass.label}
+        {renderClassLabel(drugClass.label)}
       </button>
       {isSelected && (
         <div className={styles.drugDetailPanel}>
@@ -962,7 +973,6 @@ function SummaryPanel({ state, violations, onBack, onCopy }) {
                 <strong>{d.label}</strong>: {drugSummary.length > 0 ? drugSummary.join(' + ') : '薬剤未選択'}
                 {lo && <span> + {lo.label}</span>}
                 {action && <div style={{ marginLeft: '1rem', fontSize: '0.85rem' }}>→ 次の一手: {action}{follow ? ` / フォロー: ${follow}` : ''}{sel.goalNote ? ` / 目標: ${sel.goalNote}` : ''}</div>}
-                {d.deepLink && <a className={styles.deepLinkBtn} href={d.deepLink} target="_blank" rel="noopener noreferrer" style={{ marginLeft: '0.5rem', marginTop: '0.3rem' }}>個別 Booster</a>}
               </li>
             ) : null;
           })}
