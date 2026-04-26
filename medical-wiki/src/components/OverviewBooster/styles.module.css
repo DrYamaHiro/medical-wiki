@@ -94,6 +94,28 @@
   background: #f0f4c3;
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
+.patientHeaderCompact {
+  padding: 0.4rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+}
+.compactBadge {
+  font-weight: 600;
+  color: #4e342e;
+}
+.compactEditBtn {
+  padding: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid #8d6e63;
+  color: #4e342e;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.compactEditBtn:hover { background: #efebe9; }
 .patientGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));

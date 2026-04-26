@@ -9,6 +9,7 @@ import { encodeFollowupCode, decodeFollowupCode } from './followCode';
 import { recordEvent } from './uxLog';
 import { ABBREVIATIONS, annotateAbbreviations } from './abbreviations';
 import { suggestTreatment, detectSharedClasses } from './treatmentEngine';
+import { detectOverlap, detectInteractions, detectToggleThrash } from './drugInteractions';
 
 // 略語ホバー表示コンポーネント (コメディカル配慮)
 function Abbr({ children, term }) {
@@ -51,12 +52,12 @@ const COMORBIDITY_FLAGS = [
    Phase 2: 今後の治療戦略
    ============================================================ */
 const FOLLOW_OPTIONS = [
-  { value: '1w',  label: '1週後' },
-  { value: '2w',  label: '2週後' },
-  { value: '4w',  label: '4週後' },
-  { value: '8w',  label: '8-12週後' },
-  { value: '6m',  label: '半年後' },
-  { value: '12m', label: '1年後' },
+  { value: '1w',  label: '1週後 (緊急/不安定)' },
+  { value: '2w',  label: '2週後 (要早期再評価)' },
+  { value: '4w',  label: '1ヶ月後 (基本)' },
+  { value: '8w',  label: '2ヶ月後 (安定)' },
+  { value: '12w', label: '3ヶ月後 (処方限度・最長)' },
+  { value: '12m', label: '1年後/有事再診 (検診経過観察)' },
 ];
 
 /* ============================================================
@@ -107,7 +108,7 @@ const initialState = {
   //   nextAction, followIn, goalNote                   // STEP 2
   // }
   selectionsByDisease: {},
-  uiState: { expandedDiseaseId: null, expandedSuggestionId: null, globalFollowIn: '', globalFollowAuto: true, reverseTriggerDismissed: false },
+  uiState: { expandedDiseaseId: null, expandedSuggestionId: null, globalFollowIn: '', globalFollowAuto: true, reverseTriggerDismissed: false, linkDisabled: {}, toggleHistory: [] },
   followupCode: { issued: '', importBuf: '', importError: null, oldDataWarning: false },
 };
 
@@ -175,7 +176,8 @@ function reducer(state, action) {
       let newSelections = { ...state.selectionsByDisease, [disease]: { ...cur, classDetails: newDetails, txStatus: curTxStatus } };
       // 横断 auto-link: sharedClass 一致クラスを他の選択疾患でも自動 ON/OFF
       const sc = drugClass.sharedClass;
-      if (sc && allDiseases) {
+      const linkDisabled = state.uiState.linkDisabled || {};
+      if (sc && allDiseases && !linkDisabled[sc]) {
         for (const otherDk of state.selectedDiseases) {
           if (otherDk === disease) continue;
           const otherMeta = allDiseases.find((d) => d.key === otherDk);
@@ -215,9 +217,12 @@ function reducer(state, action) {
       const { disease, classId, drugId, dose, drugClass, allDiseases } = action.payload;
       const cur = state.selectionsByDisease[disease] || { classDetails: {}, lifestyle: '', restriction: null };
       let newSelections = { ...state.selectionsByDisease, [disease]: { ...cur, classDetails: { ...cur.classDetails, [classId]: { drugId, dose } } } };
-      // 横断 dose sync: sharedClass 一致クラスを他の選択疾患でも同期
+      // 横断 dose sync: sharedClass 一致クラスを他の選択疾患でも同期 (link 有効時のみ)
       const sc = drugClass?.sharedClass;
-      if (sc && allDiseases) {
+      const linkDisabled = state.uiState.linkDisabled || {};
+      // toggle history 追加 (drug 切替を thrash 検出に利用)
+      const newHistory = [...(state.uiState.toggleHistory || []), { sharedClass: sc, drugId, t: Date.now() }].slice(-12);
+      if (sc && allDiseases && !linkDisabled[sc]) {
         for (const otherDk of state.selectedDiseases) {
           if (otherDk === disease) continue;
           const otherMeta = allDiseases.find((d) => d.key === otherDk);
@@ -240,7 +245,12 @@ function reducer(state, action) {
           newSelections[otherDk] = { ...otherCur, classDetails: { ...otherCur.classDetails, [otherClass.id]: { drugId: targetDrug.id, dose: newDose } } };
         }
       }
-      return { ...state, selectionsByDisease: newSelections };
+      return { ...state, selectionsByDisease: newSelections, uiState: { ...state.uiState, toggleHistory: newHistory } };
+    }
+    case 'TOGGLE_LINK_DISABLED': {
+      const { sharedClass } = action.payload;
+      const cur = state.uiState.linkDisabled || {};
+      return { ...state, uiState: { ...state.uiState, linkDisabled: { ...cur, [sharedClass]: !cur[sharedClass] } } };
     }
     case 'SET_LIFESTYLE': {
       const { disease, lifestyle } = action.payload;
@@ -412,10 +422,15 @@ export default function OverviewBooster() {
 // 妊娠可能年齢層 (<50歳) — 妊娠/授乳は女性かつこの年齢層でのみ表示
 const REPRODUCTIVE_AGE_RANGES = new Set(['<40', '40-49']);
 
+// Phase が進んだら詳細を畳む対象 step
+const COMPACT_HEADER_STEPS = new Set(['step1', 'step2', 'summary']);
+
 function PatientHeaderPanel({ state, dispatch }) {
   const update = (patch) => dispatch({ type: 'SET_PATIENT_HEADER', payload: patch });
   const ph = state.patientHeader;
   const showReproductive = ph.sex === 'F' && REPRODUCTIVE_AGE_RANGES.has(ph.age);
+  const compact = COMPACT_HEADER_STEPS.has(state.step);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     if (!showReproductive && (ph.co_pregnancy || ph.co_lactation)) {
@@ -428,9 +443,26 @@ function PatientHeaderPanel({ state, dispatch }) {
   const sexLabel = ph.sex === 'M' ? '男性' : ph.sex === 'F' ? '女性' : '';
   const smokeLabel = ph.smoking === 'never' ? '非喫煙' : ph.smoking === 'past' ? '過去喫煙' : ph.smoking === 'current' ? '現喫煙' : '';
 
+  // Phase 3 以降: コンパクト表示 (年齢・性別・主要フラグだけを横一列、編集不可)
+  if (compact && ph.age && ph.sex && ph.smoking && !showAll) {
+    const flags = [];
+    if (ph.co_pregnancy) flags.push('妊娠中');
+    if (ph.co_lactation) flags.push('授乳中');
+    if (ph.co_frail) flags.push('フレイル');
+    return (
+      <div className={`${styles.patientHeader} ${styles.patientHeaderCompact}`}>
+        <span className={styles.compactBadge}>👤 {ageLabel} / {sexLabel} / {smokeLabel}{flags.length > 0 ? ` / ${flags.join('・')}` : ''}</span>
+        <button type="button" className={styles.compactEditBtn} onClick={() => setShowAll(true)}>変更</button>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.patientHeader}>
-      <div className={styles.sectionTitle}>患者ヘッダー <span className={styles.sectionHint}>(全スコアで共有・患者切替時消去)</span></div>
+      <div className={styles.sectionTitle}>
+        患者ヘッダー <span className={styles.sectionHint}>(全スコアで共有・患者切替時消去)</span>
+        {compact && <button type="button" className={styles.compactEditBtn} style={{ marginLeft: '0.6rem' }} onClick={() => setShowAll(false)}>畳む</button>}
+      </div>
 
       {!ph.age && (
         <div className={styles.bigPickerBlock}>
@@ -856,12 +888,75 @@ function Step1Panel({ state, dispatch, violations, onNext, onBack }) {
       )}
       {sharedTagged.size > 0 && (
         <div className={styles.sharedClassBox}>
-          <div className={styles.sharedClassTitle}>🔗 複数疾患で共通の薬剤クラス</div>
-          <div className={styles.sharedClassRow}>
-            {[...sharedTagged].join(' / ')} はどの疾患で選んでも、他の対象疾患でも自動で同時選択されます。
+          <div className={styles.sharedClassTitle}>🔗 複数疾患で共通の薬剤クラス — 連動 ON/OFF</div>
+          <div className={styles.sharedClassRow} style={{ marginBottom: '0.4rem' }}>
+            連動 ON: 一方を選ぶと他疾患でも自動同期 (薬剤・用量とも) / OFF: 各疾患で独立選択
+          </div>
+          <div className={styles.chipGrid}>
+            {[...sharedTagged].map((sc) => {
+              const disabled = !!state.uiState.linkDisabled?.[sc];
+              return (
+                <button key={sc} type="button"
+                  className={`${styles.bigPickerBtnSm} ${disabled ? '' : styles.bigPickerBtnActive}`}
+                  onClick={() => dispatch({ type: 'TOGGLE_LINK_DISABLED', payload: { sharedClass: sc } })}
+                  title={disabled ? `${sc} 連動 OFF (各疾患で独立)` : `${sc} 連動 ON (タップで OFF)`}>
+                  {disabled ? '🔓' : '🔗'} {sc} {disabled ? '(独立)' : '(連動)'}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
+
+      {/* トグル交互押し検出 */}
+      {(() => {
+        const thrash = detectToggleThrash(state.uiState.toggleHistory);
+        if (!thrash) return null;
+        const disabled = !!state.uiState.linkDisabled?.[thrash.sharedClass];
+        if (disabled) return null;
+        return (
+          <div className={`${styles.alertBanner} ${styles.alertWarning}`}>
+            <div>
+              💡 {thrash.sharedClass} の薬剤を短時間で何度も切替えています。各疾患で別の薬剤を使いたい場合は連動を OFF にできます。
+              <button className={styles.copyBtn} style={{ marginLeft: '0.5rem' }}
+                onClick={() => dispatch({ type: 'TOGGLE_LINK_DISABLED', payload: { sharedClass: thrash.sharedClass } })}>
+                {thrash.sharedClass} 連動を OFF にする
+              </button>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* 同効薬重複警告 (連動 OFF 時に発生) */}
+      {(() => {
+        const overlaps = detectOverlap(state, OVERVIEW_DISEASES);
+        if (overlaps.length === 0) return null;
+        return overlaps.map((o, i) => (
+          <div key={`ov-${i}`} className={`${styles.alertBanner} ${o.severity === 'critical' ? styles.alertCritical : styles.alertWarning}`} role="alert">
+            <div>
+              <strong>⚠ 同効薬重複: {o.sharedClass}</strong>
+              <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>{o.message}</div>
+              <div style={{ fontSize: '0.78rem', marginTop: '0.2rem', opacity: 0.85 }}>
+                対象疾患: {o.diseases.map((dk) => OVERVIEW_DISEASES.find((d) => d.key === dk)?.label).join(' / ')}
+              </div>
+            </div>
+          </div>
+        ));
+      })()}
+
+      {/* 飲み合わせ警告 */}
+      {(() => {
+        const interactions = detectInteractions(state, OVERVIEW_DISEASES);
+        if (interactions.length === 0) return null;
+        return interactions.map((it, i) => (
+          <div key={`int-${i}`} className={`${styles.alertBanner} ${it.severity === 'critical' ? styles.alertCritical : styles.alertWarning}`} role="alert">
+            <div>
+              <strong>💊 飲み合わせ: {it.message}</strong>
+              {it.hint && <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>{it.hint}</div>}
+            </div>
+          </div>
+        ));
+      })()}
       {state.selectedDiseases.map((key) => {
         const d = OVERVIEW_DISEASES.find((x) => x.key === key);
         if (!d) return null;
@@ -1203,25 +1298,56 @@ function RecBody({ rec, compact }) {
 }
 
 // 全疾患を見渡して次回再診目安を推奨する
+// 院内方針: 処方は最長3ヶ月。慢性疾患を3ヶ月フォローと表示すること自体がリスク。
+//   - 基本: 1-2ヶ月
+//   - しぶしぶ許容: 3ヶ月
+//   - 治療薬なし & 指摘事項なし (検診で軽度ひっかかったが治療適応外): 1年/有事再診
+const FOLLOW_LEVELS = { URGENT: 0, SHORT: 1, NORMAL_1M: 2, NORMAL_2M: 3, MAX_3M: 4, ANNUAL: 5 };
+const FOLLOW_VALUE_MAP = { 0: '1w', 1: '2w', 2: '4w', 3: '8w', 4: '12w', 5: '12m' };
+
 function recommendFollowUp(state, violations) {
   const reasons = [];
-  let level = 5; // 0=即日, 1=1w, 2=2w, 3=4w, 4=8-12w, 5=6m, 6=1y
-  const set = (lv, why) => { if (lv < level) { level = lv; } reasons.push(why); };
+  let level = FOLLOW_LEVELS.NORMAL_1M; // デフォルトは 1ヶ月
+  const setMin = (lv, why) => { if (lv < level) level = lv; reasons.push(why); };
+  const setMax = (lv, why) => { if (lv > level) level = lv; reasons.push(why); };
+
+  const cl = state.commonLabs || {};
+  const ph = state.patientHeader || {};
+
+  // 治療なし・指摘事項なしケース判定
+  const allUntreatedOrLifestyle = state.selectedDiseases.length > 0 && state.selectedDiseases.every((dk) => {
+    const sel = state.selectionsByDisease?.[dk] || {};
+    const noDrugs = Object.keys(sel.classDetails || {}).length === 0;
+    return noDrugs && (sel.txStatus === 'untreated' || sel.txStatus === 'lifestyle_only' || !sel.txStatus);
+  });
+  const noWorrisomeLab = !cl.sbp_range || ['<120','120-129','130-139'].includes(cl.sbp_range);
+  const noAbnormalHba1c = !cl.hba1c_range || ['unmeasured_normal','<5.6','5.6-5.9'].includes(cl.hba1c_range);
+  const noAbnormalLdl = !cl.ldl_range || ['<70','70-99','100-119'].includes(cl.ldl_range);
+  const noViolations = violations.length === 0;
+  if (state.selectedDiseases.length === 0) {
+    // 疾患選択なし → 表示しない (一覧外)
+    setMax(FOLLOW_LEVELS.ANNUAL, '疾患選択なし');
+    return { level: FOLLOW_LEVELS.ANNUAL, recommendedValue: FOLLOW_VALUE_MAP[FOLLOW_LEVELS.ANNUAL], reasons: ['疾患未選択'] };
+  }
+  if (allUntreatedOrLifestyle && noWorrisomeLab && noAbnormalHba1c && noAbnormalLdl && noViolations) {
+    setMax(FOLLOW_LEVELS.ANNUAL, '治療薬なし・指摘事項なし → 1年後/有事再診 (来年検診で異常あれば来院)');
+    return { level: FOLLOW_LEVELS.ANNUAL, recommendedValue: FOLLOW_VALUE_MAP[FOLLOW_LEVELS.ANNUAL], reasons };
+  }
 
   // 危険系
-  if (violations.some((v) => v.severity === 'critical')) set(0, '禁忌違反あり → 即日見直し');
-  const cl = state.commonLabs || {};
-  if (cl.sbp_range === '180+') set(0, 'SBP≥180 → 当日精査・1週以内');
-  if (cl.hba1c_range === '10+') set(1, 'HbA1c≥10 → 1-2週');
-  if (cl.tg_range === '1000+') set(0, 'TG≥1000 → 即日精査 (膵炎リスク)');
+  if (violations.some((v) => v.severity === 'critical')) setMin(FOLLOW_LEVELS.URGENT, '禁忌違反あり → 即日見直し・1週以内');
+  if (cl.sbp_range === '180+') setMin(FOLLOW_LEVELS.URGENT, 'SBP≥180 → 当日精査・1週以内');
+  if (cl.hba1c_range === '10+') setMin(FOLLOW_LEVELS.SHORT, 'HbA1c≥10 → 2週');
+  if (cl.tg_range === '1000+') setMin(FOLLOW_LEVELS.URGENT, 'TG≥1000 → 即日精査 (膵炎リスク)');
 
   // コントロール不良
   for (const dk of state.selectedDiseases) {
     const sel = state.selectionsByDisease?.[dk];
-    if (sel?.uncontrolled) set(2, `${OVERVIEW_DISEASES.find((d) => d.key === dk)?.label || dk} がコントロール不良 → 2-4週で再評価`);
+    if (sel?.uncontrolled) setMin(FOLLOW_LEVELS.SHORT, `${OVERVIEW_DISEASES.find((d) => d.key === dk)?.label || dk} がコントロール不良 → 2週で再評価`);
   }
 
-  // 新規開始/大幅変更 — 採用提案が start/switch/titrate_up/add で severity high以上
+  // 新規開始/大幅変更
+  let bigChange = false;
   for (const dk of state.selectedDiseases) {
     try {
       const sel = state.selectionsByDisease?.[dk] || {};
@@ -1231,22 +1357,23 @@ function recommendFollowUp(state, violations) {
       if (!adopted) continue;
       const big = ['start', 'switch', 'titrate_up', 'add'].includes(adopted.action);
       if (big && (adopted.severity === 'critical' || adopted.severity === 'high')) {
-        set(3, `${OVERVIEW_DISEASES.find((d) => d.key === dk)?.label || dk} で薬剤大幅変更 → 4週で効果・副作用確認`);
+        bigChange = true;
+        setMin(FOLLOW_LEVELS.NORMAL_1M, `${OVERVIEW_DISEASES.find((d) => d.key === dk)?.label || dk} で薬剤大幅変更 → 1ヶ月で効果・副作用確認`);
       }
     } catch (e) { /* skip */ }
   }
 
-  // CKD G4-G5 / HF NYHA III-IV / AF DOAC開始
-  const ph = state.patientHeader || {};
-  if (ph.cm_ckd_g45) set(3, 'CKD G4-5 → 4週ごとに腎機能・K再評価');
+  if (ph.cm_ckd_g45) setMin(FOLLOW_LEVELS.NORMAL_1M, 'CKD G4-5 → 1ヶ月ごとに腎機能・K再評価');
   const hfScore = state.scoresByDisease?.hf?.result;
-  if (hfScore?.nyha === '3' || hfScore?.nyha === '4') set(2, 'NYHA III-IV → 2週で再評価');
+  if (hfScore?.nyha === '3' || hfScore?.nyha === '4') setMin(FOLLOW_LEVELS.SHORT, 'NYHA III-IV → 2週で再評価');
 
-  // 何もなければ安定例
-  if (level === 5 && state.selectedDiseases.length > 0) reasons.push('安定例 → 通常フォロー');
+  // 安定例 → 1-2ヶ月。3ヶ月は「しぶしぶ許容」のみ
+  if (level === FOLLOW_LEVELS.NORMAL_1M && !bigChange) {
+    // 安定で大幅変更もない → 2ヶ月に緩めても許容
+    setMax(FOLLOW_LEVELS.NORMAL_2M, '症状・検査値安定、大幅な薬剤変更なし → 2ヶ月後でも許容');
+  }
 
-  const labelMap = { 0: '1w', 1: '1w', 2: '2w', 3: '4w', 4: '8w', 5: '6m', 6: '12m' };
-  return { level, recommendedValue: labelMap[level], reasons };
+  return { level, recommendedValue: FOLLOW_VALUE_MAP[level], reasons };
 }
 
 // severity ソート (critical→high→medium→low)
