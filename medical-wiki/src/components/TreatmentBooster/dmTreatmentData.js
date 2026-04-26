@@ -168,6 +168,7 @@ export const MODIFIERS = [
   { id: 'cm_post_gastrectomy', label: '胃切除後（吸収不良/低栄養/dumping）', cat: '併存疾患', severity: 'critical' },
   { id: 'cm_underweight', label: '低栄養（BMI<18.5 / Alb<3.5）', cat: '併存疾患' },
   { id: 'cm_gdm', label: '妊娠糖尿病（GDM）', cat: '併存疾患', severity: 'critical' },
+  { id: 'cm_pcos', label: 'PCOS（多嚢胞性卵巣症候群、月経不順+IR）', cat: '併存疾患' },
 
   // 制約（高齢者カテゴリーはJGS/JDS2023準拠、3択排他選択）
   { id: 'co_elderly_cat1', label: '高齢者Cat I（ADL自立・認知正常）', cat: '制約', radioGroup: 'dm_elderly_category' },
@@ -614,11 +615,20 @@ export const RECOMMENDATIONS = [
     reason: 'UKPDS・長年の実績。体重増加なし・低血糖なし・CV benefit。肥満DMで第一選択',
     fromStates: ['naive'],
     drugClass: 'ビグアナイド',
-    preferredWhen: ['co_obese', 'cm_nash'],
+    preferredWhen: ['co_obese', 'cm_nash', 'cm_pcos'],
     avoidWhen: ['co_elderly_cat3', 'co_frail'],
     forbidden: ['cm_ckd_g45', 'cm_liver_severe', 'co_heavy_drinker', 'co_sickday', 'co_pregnancy', 'co_contrast_use'],
     reassess: '4週後GI症状・3ヶ月後HbA1c・eGFR・VitB12',
     note: 'eGFR 30-45で減量（最大1000mg/日）、<30で禁忌',
+  },
+  {
+    id: 'metformin_for_pcos',
+    action: 'NOTE',
+    drug: '🎯 PCOS + 境界DM/DM: メトホルミン第一+婦人科併診',
+    reason: 'PCOSのインスリン抵抗性改善で月経改善・妊孕性向上の効果あり',
+    fromStates: ['naive', 'mono'],
+    preferredWhen: ['cm_pcos'],
+    note: '【PCOS + DM/IGT】メトホルミン 500mg×2/日（GI症状で漸増）が標準。月経正常化・排卵誘発・妊娠率改善のエビデンス（適応外だが GL内推奨）。妊娠希望時は婦人科併診で排卵誘発（クロミフェン併用も検討）。GLP-1RA は減量効果大だが PCOS適応外、肥満症適応で考慮。スピロノラクトン (高アンドロゲン症状向け) は婦人科主導。',
   },
   {
     id: 'start_sglt2i_hf',

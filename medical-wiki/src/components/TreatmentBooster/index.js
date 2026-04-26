@@ -320,6 +320,79 @@ function defaultHtComputeInfoAlerts(metricValues /*, modifiers */) {
   return alerts;
 }
 
+// 全Booster共通の薬剤相互作用アラート (triple whammy 等)
+// HT booster だけでなく DM/DLP/CKD/COPD どの Booster でも処方クラスから検出
+function genericInteractionAlerts({ currentClasses, modifiers }) {
+  const alerts = [];
+  const has = (...names) => names.some((n) => currentClasses.has(n));
+  const hasARB_or_ACEi = has('ARB', 'ACE阻害薬', 'ACEi', 'ARNI');
+  const hasDiuretic = has('利尿薬', 'サイアザイド', 'ループ利尿薬');
+  const hasMRA = has('MRA', 'スピロノラクトン', 'ミネラルコルチコイド受容体拮抗薬');
+  const hasBB = has('β遮断薬');
+  const hasCCBnonDHP = has('非DHP系CCB', 'ベラパミル', 'ジルチアゼム');
+  const hasSU = has('SU', 'スルホニル尿素');
+  const hasSGLT2 = has('SGLT2阻害薬', 'SGLT2i');
+  const hasStatin = has('スタチン');
+  const hasDOAC = has('DOAC');
+  const hasAntiplatelet = has('抗血小板薬', 'アスピリン', 'クロピドグレル');
+
+  // Triple whammy
+  if (hasARB_or_ACEi && hasDiuretic && modifiers.includes('co_nsaid')) {
+    alerts.push({
+      type: 'triple_whammy',
+      label: '⚠ Triple Whammy（AKI高リスク）',
+      detail: 'ARB/ACEi + 利尿薬 + NSAID の3者併用は急性腎障害リスク急増。NSAID中止 or アセトアミノフェン変更を最優先。中止不可なら72時間以内に Cr/eGFR 再検',
+      severity: 'critical',
+    });
+  }
+  // RAS二重ブロック
+  if (currentClasses.has('ARB') && currentClasses.has('ACE阻害薬')) {
+    alerts.push({ type: 'ras_dual', label: '⚠ RAS二重ブロック (ARB+ACEi)', severity: 'critical',
+      detail: '高K・AKI・低血圧リスク増。どちらか1剤に統一。' });
+  }
+  if (currentClasses.has('ARNI') && (currentClasses.has('ARB') || currentClasses.has('ACE阻害薬'))) {
+    alerts.push({ type: 'arni_dual', label: '⚠ ARNI + ARB/ACEi 併用は禁忌', severity: 'critical',
+      detail: 'ARNI 開始前に ARB/ACEi を中止 + 36時間以上 washout（血管浮腫リスク）' });
+  }
+  // ARB/ACEi + MRA + 高K
+  if (hasARB_or_ACEi && hasMRA && (modifiers.includes('co_hyperkalemia') || modifiers.includes('cm_ckd_g4_g5'))) {
+    alerts.push({ type: 'k_rise_combo', label: '⚠ K上昇リスク薬の累積',
+      detail: 'ARB/ACEi + MRA + (高K or CKD G4-5)。K monitor 強化、5.5以上で K吸着薬追加',
+      severity: 'warning' });
+  }
+  // βB + 非DHP系CCB
+  if (hasBB && hasCCBnonDHP) {
+    alerts.push({ type: 'bb_nondhp_ccb', label: '⚠ β遮断薬 + 非DHP系CCB',
+      detail: '徐脈・房室ブロックリスク。DHP系（アムロジピン等）への切替 or どちらか減量',
+      severity: 'warning' });
+  }
+  // SU + βB
+  if (hasSU && hasBB) {
+    alerts.push({ type: 'su_bb', label: 'SU + β遮断薬',
+      detail: '低血糖無自覚（発汗・動悸が masked）。高齢者・運転者で特に危険。SU 減量 or DPP-4i 切替検討',
+      severity: 'warning' });
+  }
+  // SGLT2i + 利尿薬
+  if (hasSGLT2 && hasDiuretic) {
+    alerts.push({ type: 'sglt2_diuretic', label: 'SGLT2i + 利尿薬',
+      detail: '脱水・低血圧リスク。Sick day rule（嘔吐下痢時 SGLT2i 一時中止）を患者教育',
+      severity: 'warning' });
+  }
+  // SGLT2i + フレイル
+  if (hasSGLT2 && (modifiers.includes('co_frail') || modifiers.includes('co_elderly_75'))) {
+    alerts.push({ type: 'sglt2_frail', label: 'SGLT2i + フレイル/超高齢',
+      detail: '脱水・サルコペニア・尿路感染リスク。体重・栄養状態を慎重 monitor',
+      severity: 'warning' });
+  }
+  // DOAC + 抗血小板薬
+  if (hasDOAC && hasAntiplatelet) {
+    alerts.push({ type: 'doac_antiplatelet', label: 'DOAC + 抗血小板薬',
+      detail: '出血リスク増。PCI後は期間限定（1-12ヶ月）で許容、それ以外は単剤化を検討',
+      severity: 'warning' });
+  }
+  return alerts;
+}
+
 function defaultHtComputeConnectedAlerts({ currentClasses, modifiers }) {
   const alerts = [];
   const hasARB_or_ACEi = currentClasses.has('ARB') || currentClasses.has('ACE阻害薬');
@@ -765,16 +838,15 @@ export default function TreatmentBooster({
 
   // DO_NOT ruleが current regimen に関連するかどうかを判定する
   // （例: 痛風患者でサイアザイドDO_NOTが発火しても、患者がサイアザイド非服用なら MAINTAIN 抑制の必要なし）
-  // 連携アラート: 処方+合併症の組み合わせから動的に導出
+  // 連携アラート: 疾患特化 + 全Booster共通の汎用相互作用アラート (triple whammy 等) をマージ
   const connectedAlerts = useMemo(() => {
     const currentClasses = fnGetCurrentClasses(currentDrugs, DRUGS);
-    return fnComputeConnectedAlerts({
-      currentClasses,
-      modifiers: effectiveModifiers,
-      currentDrugs,
-      allDrugs: DRUGS,
-      metricValues,
-    });
+    const ctx = { currentClasses, modifiers: effectiveModifiers, currentDrugs, allDrugs: DRUGS, metricValues };
+    const diseaseAlerts = fnComputeConnectedAlerts(ctx) || [];
+    const genericAlerts = genericInteractionAlerts(ctx) || [];
+    // 重複排除 (同 type は片方のみ採用、疾患特化を優先)
+    const seenTypes = new Set(diseaseAlerts.map((a) => a.type));
+    return [...diseaseAlerts, ...genericAlerts.filter((a) => !seenTypes.has(a.type))];
   }, [currentDrugs, DRUGS, effectiveModifiers, metricValues, fnGetCurrentClasses, fnComputeConnectedAlerts]);
 
   const relevantDoNot = useMemo(() => {
@@ -989,20 +1061,28 @@ export default function TreatmentBooster({
           )}
           <div className={styles.catGroup}>
             {PHASE0.groupLabel && (
-              <span className={styles.catLabel}>{PHASE0.groupLabel}</span>
+              <span className={styles.catLabel}>
+                {PHASE0.groupLabel}
+                <span className={styles.radioGroupHint}> ※1つだけ選択</span>
+              </span>
             )}
-            <div className={styles.chipGrid}>
-              {PHASE0.categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  className={`${styles.chip} ${
-                    modifiers.includes(cat.id) ? styles.chipActive : ''
-                  }`}
-                  onClick={() => selectRiskCategory(cat.id)}
-                >
-                  {cat.label}
-                </button>
-              ))}
+            <div className={styles.chipGrid} role="radiogroup" aria-label={PHASE0.groupLabel || 'リスク層別化'}>
+              {PHASE0.categories.map((cat) => {
+                const checked = modifiers.includes(cat.id);
+                return (
+                  <button
+                    key={cat.id}
+                    role="radio"
+                    aria-checked={checked}
+                    className={`${styles.chip} ${styles.chipRadio} ${
+                      checked ? styles.chipActive : ''
+                    }`}
+                    onClick={() => selectRiskCategory(cat.id)}
+                  >
+                    {cat.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
           <div className={styles.targetLine}>
@@ -1147,21 +1227,31 @@ export default function TreatmentBooster({
                     <span className={styles.radioGroupHint}> ※カテゴリ内は1つだけ選択</span>
                   )}
                 </span>
-                <div className={styles.chipGrid}>
-                  {items.map((m) => (
-                    <button
-                      key={m.id}
-                      className={`${styles.chip} ${
-                        modifiers.includes(m.id) ? styles.chipActive : ''
-                      } ${m.severity === 'critical' ? styles.chipCritical : ''} ${
-                        m.radioGroup ? styles.chipRadio : ''
-                      } ${SHARED_MODIFIER_IDS.has(m.id) ? styles.chipShared : ''}`}
-                      onClick={() => toggleModifier(m.id)}
-                      title={SHARED_MODIFIER_IDS.has(m.id) ? '他Boosterと共有される修飾子' : undefined}
-                    >
-                      {m.label}
-                    </button>
-                  ))}
+                <div
+                  className={styles.chipGrid}
+                  role={radioGroupSet.size > 0 ? 'radiogroup' : 'group'}
+                  aria-label={cat}
+                >
+                  {items.map((m) => {
+                    const checked = modifiers.includes(m.id);
+                    const isRadio = !!m.radioGroup;
+                    return (
+                      <button
+                        key={m.id}
+                        role={isRadio ? 'radio' : 'checkbox'}
+                        aria-checked={checked}
+                        className={`${styles.chip} ${
+                          checked ? styles.chipActive : ''
+                        } ${m.severity === 'critical' ? styles.chipCritical : ''} ${
+                          isRadio ? styles.chipRadio : ''
+                        } ${SHARED_MODIFIER_IDS.has(m.id) ? styles.chipShared : ''}`}
+                        onClick={() => toggleModifier(m.id)}
+                        title={SHARED_MODIFIER_IDS.has(m.id) ? '他Boosterと共有される修飾子' : undefined}
+                      >
+                        {m.label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             );

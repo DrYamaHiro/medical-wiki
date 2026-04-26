@@ -150,6 +150,9 @@ export const MODIFIERS = [
   { id: 'se_gynecomastia', label: '女性化乳房', cat: '副作用' },
   { id: 'se_uric_up', label: '尿酸上昇/痛風発作', cat: '副作用' },
   { id: 'se_bradycardia', label: '徐脈（HR<50）', cat: '副作用' },
+  { id: 'se_ed', label: 'ED/性機能低下（薬剤性疑い）', cat: '副作用' },
+  { id: 'se_fatigue', label: '倦怠感（薬剤性疑い）', cat: '副作用' },
+  { id: 'se_cold_extremities', label: '末梢冷感（薬剤性疑い）', cat: '副作用' },
 
   // 併存疾患
   { id: 'cm_dm', label: '2型糖尿病', cat: '併存疾患' },
@@ -206,6 +209,21 @@ export const MODIFIERS = [
 /*  RECOMMENDATIONS                                         */
 /* -------------------------------------------------------- */
 export const RECOMMENDATIONS = [
+  // ===========================================
+  // 薬剤性副作用への代替薬切替（β遮断薬→ED 等）
+  // ===========================================
+  {
+    id: 'switch_bb_for_se_ed',
+    action: 'SWITCH',
+    drug: '🔄 β遮断薬 → ARB/CCB へ切替（ED/倦怠感/末梢冷感の副作用疑い）',
+    reason: 'β遮断薬副作用 (ED・倦怠感・末梢冷感) で QOL低下。代替薬で降圧維持可能',
+    fromStates: ['mono', 'dual', 'triple'],
+    preferredWhen: ['se_ed', 'se_fatigue', 'se_cold_extremities'],
+    forbidden: ['cm_post_mi', 'cm_hf', 'cm_atrial_fibrillation'],
+    reassess: '切替後 2-4週で家庭血圧再評価',
+    note: '【代替薬選択フロー】\n• βB → ARB（アジルバ/オルメサルタン）または CCB（アムロジピン）\n• ARB → ACEi（咳が問題なら）or CCB\n• サイアザイド → ARB+CCB（痛風・低K悪化時）\n• CCB → ARB（浮腫が問題な時）\n\n【βB継続必要例】MI後・HF・AF (rate control) — 切替不可、むしろβB継続+ED対応 (PDE5阻害薬・他のリスク因子検索) を推奨',
+  },
+
   // ===========================================
   // 無治療: 生活習慣指導が先か、薬物療法開始か
   // ===========================================
@@ -380,7 +398,17 @@ export const RECOMMENDATIONS = [
     fromStates: ['triple', 'quad_plus'],
     preferredWhen: ['rf_2nd_suspect', 'rf_hypoK_severe', 'rf_target_organ'],
     urgentWhen: ['rf_severe_ht', 'rf_target_organ'],
-    note: '【二次性HTスクリーニング】原発性アルドステロン症: PAC/PRA比 ≥200 + PAC ≥120 pg/mL / 褐色細胞腫: 24時間尿メタネフリン・ノルメタネフリン / 腎血管性HT: 腎動脈Doppler or MRA / クッシング症候群: 24時間尿遊離コルチゾール / 甲状腺機能: TSH・FT4',
+    note: '【二次性HTスクリーニング適応】治療抵抗性HT (3剤+MRAで未達) / 重症HT (grade III, SBP≥180) / 急性発症 / 若年発症+難治性 / 低K血症併存 / 臓器障害進行例 — に限定。\n\n【過剰検査回避】軽症～中等症HT・grade 1-2・無症候の若年単独例 では網羅的二次性精査は推奨されない（コスト・偽陽性・患者負担）。生活指導+単剤治療を先行し、未達でステップアップ。\n\n【検査項目】原発性アルドステロン症: PAC/PRA比 ≥200 + PAC ≥120 pg/mL / 褐色細胞腫: 24時間尿メタネフリン・ノルメタネフリン / 腎血管性HT: 腎動脈Doppler or MRA / クッシング症候群: 24時間尿遊離コルチゾール / 甲状腺機能: TSH・FT4',
+  },
+  {
+    id: 'avoid_excess_secondary_screen',
+    action: 'NOTE',
+    drug: '⚠ 二次性HT精査は適応を絞る',
+    reason: '若年grade 1-2の無症候HTで網羅検査は推奨外',
+    fromStates: ['untreated', 'mono'],
+    preferredWhen: ['co_young_adult'],
+    avoidWhen: ['rf_2nd_suspect', 'rf_severe_ht', 'rf_hypoK_severe', 'rf_target_organ'],
+    note: '【過剰検査リスク】若年・軽中等症・無症候HTで PAC/PRA・カテコラミン・コルチゾール一括は GL推奨外。指針: ① 治療抵抗性 (3剤+MRAで未達) ② 急性発症・進行性 ③ 重症 (grade III) ④ 臓器障害進行 ⑤ 低K血症併存 ⑥ 家族歴 — のいずれかで考慮。それ以外は生活指導+単剤治療を先行。',
   },
   {
     id: 'screen_osa',
