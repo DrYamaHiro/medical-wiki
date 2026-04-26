@@ -30,8 +30,9 @@ export const OVERVIEW_DISEASES = [
     boosterKey: 'hypertension',
     deepLink: '/docs/002-Chronic-Treatment/i10-hypertension-treatment',
     scoreKind: 'jsh2025_risk',
+    controlIndicator: true,
     drugClasses: [
-      { id: 'ht_arb', label: 'ARB', tooltip: 'アジルバ / ロサルタン / テルミサルタン / バルサルタン',
+      { id: 'ht_arb', label: 'ARB', tooltip: 'アジルバ / ロサルタン / テルミサルタン / バルサルタン', sharedClass: 'ARB',
         drugs: [
           { id: 'arb_azl', name: 'アジルサルタン (アジルバ)', doses: [
             { value: '10', label: '10mg/日' }, { value: '20', label: '20mg/日 (標準)', isDefault: true }, { value: '40', label: '40mg/日 (上限)', isMax: true },
@@ -109,7 +110,7 @@ export const OVERVIEW_DISEASES = [
           ]},
         ],
       },
-      { id: 'ht_bb', label: 'β遮断薬', tooltip: 'ビソプロロール / カルベジロール / ニビボロール',
+      { id: 'ht_bb', label: 'β遮断薬', tooltip: 'ビソプロロール / カルベジロール / ニビボロール', sharedClass: 'β遮断薬',
         drugs: [
           { id: 'bb_bis', name: 'ビソプロロール (メインテート)', doses: [
             { value: '0.625', label: '0.625mg/日 (HF開始量)' }, { value: '1.25', label: '1.25mg/日' }, { value: '2.5', label: '2.5mg/日 (標準)', isDefault: true }, { value: '5', label: '5mg/日 (上限HT)', isMax: true },
@@ -129,6 +130,7 @@ export const OVERVIEW_DISEASES = [
     boosterKey: 'dyslipidemia',
     deepLink: '/docs/002-Chronic-Treatment/e78-dyslipidemia-treatment',
     scoreKind: 'hisayama',
+    controlIndicator: true,
     drugClasses: [
       { id: 'dlp_statin_low', label: 'スタチン (低強度)', tooltip: 'プラバスタチン / シンバスタチン',
         drugs: [
@@ -204,6 +206,7 @@ export const OVERVIEW_DISEASES = [
     boosterKey: 't2dm',
     deepLink: '/docs/002-Chronic-Treatment/e11-t2dm-treatment',
     scoreKind: null,
+    controlIndicator: true,
     drugClasses: [
       { id: 'dm_met', label: 'メトホルミン', tooltip: 'メトグルコ',
         drugs: [
@@ -212,7 +215,7 @@ export const OVERVIEW_DISEASES = [
           ]},
         ],
       },
-      { id: 'dm_sglt2', label: 'SGLT2阻害薬', tooltip: 'エンパ / ダパ',
+      { id: 'dm_sglt2', label: 'SGLT2阻害薬', tooltip: 'エンパ / ダパ', sharedClass: 'SGLT2i',
         drugs: [
           { id: 'sglt_emp', name: 'エンパグリフロジン (ジャディアンス)', doses: [
             { value: '10', label: '10mg/日 (標準)', isDefault: true }, { value: '25', label: '25mg/日', isMax: true },
@@ -285,7 +288,7 @@ export const OVERVIEW_DISEASES = [
     boosterKey: null, deepLink: null,
     scoreKind: 'kdigo_heatmap',
     drugClasses: [
-      { id: 'ckd_arb', label: 'ARB/ACEi (腎保護)', tooltip: 'ロサルタン / イミダプリル / アジルバ',
+      { id: 'ckd_arb', label: 'ARB/ACEi (腎保護)', tooltip: 'ロサルタン / イミダプリル / アジルバ', sharedClass: 'ARB',
         drugs: [
           { id: 'ckd_arb_los', name: 'ロサルタン (ニューロタン)', doses: [
             { value: '25', label: '25mg/日 (CKD導入)' }, { value: '50', label: '50mg/日 (標準)', isDefault: true }, { value: '100', label: '100mg/日 (上限)', isMax: true },
@@ -298,7 +301,7 @@ export const OVERVIEW_DISEASES = [
           ]},
         ],
       },
-      { id: 'ckd_sglt2', label: 'SGLT2阻害薬', tooltip: 'ダパ / エンパ — KDIGO 2024 強推奨',
+      { id: 'ckd_sglt2', label: 'SGLT2阻害薬', tooltip: 'ダパ / エンパ — KDIGO 2024 強推奨', sharedClass: 'SGLT2i',
         drugs: [
           { id: 'ckd_sglt_dap', name: 'ダパグリフロジン (フォシーガ)', doses: [
             { value: '10', label: '10mg/日 (CKDで eGFR制限なし)', isDefault: true, isMax: true },
@@ -407,7 +410,7 @@ export const OVERVIEW_DISEASES = [
           ]},
         ],
       },
-      { id: 'af_bb', label: 'β遮断薬 (レート制御)', tooltip: 'ビソプロロール / カルベジロール',
+      { id: 'af_bb', label: 'β遮断薬 (レート制御)', tooltip: 'ビソプロロール / カルベジロール', sharedClass: 'β遮断薬',
         drugs: [
           { id: 'af_bis', name: 'ビソプロロール (メインテート)', doses: [
             { value: '2.5', label: '2.5mg/日 (標準)', isDefault: true }, { value: '5', label: '5mg/日', isMax: true },
@@ -443,6 +446,7 @@ export const OVERVIEW_DISEASES = [
     category: 'cardiovascular',
     boosterKey: null, deepLink: null,
     scoreKind: 'hf_ef',
+    controlIndicator: true,
     drugClasses: [
       { id: 'hf_arni', label: 'ARNI (4本柱)', tooltip: 'エンレスト',
         drugs: [
@@ -451,7 +455,7 @@ export const OVERVIEW_DISEASES = [
           ]},
         ],
       },
-      { id: 'hf_bb', label: 'β遮断薬 (4本柱)', tooltip: 'カルベジロール / ビソプロロール',
+      { id: 'hf_bb', label: 'β遮断薬 (4本柱)', tooltip: 'カルベジロール / ビソプロロール', sharedClass: 'β遮断薬',
         drugs: [
           { id: 'hf_car', name: 'カルベジロール (アーチスト)', doses: [
             { value: '1.25x2', label: '1.25mg×2/日 (HF開始量)', isDefault: true }, { value: '2.5x2', label: '2.5mg×2/日' }, { value: '5x2', label: '5mg×2/日' }, { value: '10x2', label: '10mg×2/日 (HF目標)', isMax: true },
@@ -471,7 +475,7 @@ export const OVERVIEW_DISEASES = [
           ]},
         ],
       },
-      { id: 'hf_sglt2', label: 'SGLT2阻害薬 (4本柱)', tooltip: 'フォシーガ / ジャディアンス',
+      { id: 'hf_sglt2', label: 'SGLT2阻害薬 (4本柱)', tooltip: 'フォシーガ / ジャディアンス', sharedClass: 'SGLT2i',
         drugs: [
           { id: 'hf_dap', name: 'ダパグリフロジン (フォシーガ)', doses: [
             { value: '10', label: '10mg/日 (固定)', isDefault: true, isMax: true },
@@ -508,8 +512,10 @@ export const OVERVIEW_DISEASES = [
     boosterKey: 'asthma',
     deepLink: '/docs/002-Chronic-Treatment/j45-asthma-treatment',
     scoreKind: null,
+    hideLifestyle: true,  // 喘息は食事療法/運動療法ではなく吸入手技・併存症介入が主
+    controlIndicator: true,  // コントロール不良時に吸入手技/アドヒアランス/併存症介入を上位提案
     drugClasses: [
-      { id: 'as_ics_laba_mart', label: 'ICS-LABA SMART (Track 1)', tooltip: 'シムビコート — 維持+リリーバー兼用',
+      { id: 'as_ics_laba_mart', label: 'ICS-LABA SMART (Track 1)', tooltip: 'シムビコート — 維持+リリーバー兼用', sharedClass: 'ICS-LABA',
         drugs: [
           { id: 'as_sym', name: 'ブデソニド/ホルモテロール (シムビコート)', doses: [
             { value: '160_1x2', label: '160/4.5 1吸入×2/日 + 症状時' }, { value: '160_2x2', label: '160/4.5 2吸入×2/日 + 症状時', isDefault: true }, { value: '320_2x2', label: '320/9 2吸入×2/日', isMax: true },
@@ -526,14 +532,14 @@ export const OVERVIEW_DISEASES = [
           ]},
         ],
       },
-      { id: 'as_lama', label: 'LAMA (Step 4-5)', tooltip: 'スピリーバ',
+      { id: 'as_lama', label: 'LAMA (Step 4-5)', tooltip: 'スピリーバ', sharedClass: 'LAMA',
         drugs: [
           { id: 'as_tio', name: 'チオトロピウム (スピリーバ レスピマット)', doses: [
             { value: '2.5_2', label: '2.5μg 2吸入/日 (固定)', isDefault: true, isMax: true },
           ]},
         ],
       },
-      { id: 'as_triple', label: 'Triple (Step 5)', tooltip: 'テリルジー / エナジア',
+      { id: 'as_triple', label: 'Triple (Step 5)', tooltip: 'テリルジー / エナジア', sharedClass: 'ICS-LABA-LAMA',
         drugs: [
           { id: 'as_tri', name: 'テリルジー 100エリプタ (FF/UMEC/VI)', doses: [
             { value: '100', label: '1吸入/日 (標準)', isDefault: true }, { value: '200', label: 'テリルジー200 1吸入/日 (高)', isMax: true },
@@ -580,8 +586,9 @@ export const OVERVIEW_DISEASES = [
     boosterKey: 'copd',
     deepLink: '/docs/002-Chronic-Treatment/j44-copd-treatment',
     scoreKind: 'gold_abe',
+    controlIndicator: true,  // 増悪/症状コントロール不良時に吸入手技・併存症介入を優先
     drugClasses: [
-      { id: 'copd_lama', label: 'LAMA (Group A)', tooltip: 'スピリーバ / シーブリ',
+      { id: 'copd_lama', label: 'LAMA (Group A)', tooltip: 'スピリーバ / シーブリ', sharedClass: 'LAMA',
         drugs: [
           { id: 'copd_tio', name: 'チオトロピウム (スピリーバ レスピマット)', doses: [{ value: '2.5_2', label: '2.5μg 2吸入/日', isDefault: true, isMax: true }] },
           { id: 'copd_gly', name: 'グリコピロニウム (シーブリ)', doses: [{ value: '50', label: '50μg 1吸入/日', isDefault: true, isMax: true }] },
@@ -594,13 +601,13 @@ export const OVERVIEW_DISEASES = [
           { id: 'copd_ult', name: 'ウルティブロ (IND/GLY)', doses: [{ value: '1', label: '1カプセル/日 吸入', isDefault: true, isMax: true }] },
         ],
       },
-      { id: 'copd_triple', label: 'Triple (Group E + eos≥300/ACO)', tooltip: 'テリルジー / ビレーズトリ',
+      { id: 'copd_triple', label: 'Triple (Group E + eos≥300/ACO)', tooltip: 'テリルジー / ビレーズトリ', sharedClass: 'ICS-LABA-LAMA',
         drugs: [
           { id: 'copd_tri', name: 'テリルジー 100エリプタ', doses: [{ value: '1', label: '1吸入/日', isDefault: true, isMax: true }] },
           { id: 'copd_bil', name: 'ビレーズトリ エアロスフィア', doses: [{ value: '2x2', label: '2吸入×2/日', isDefault: true, isMax: true }] },
         ],
       },
-      { id: 'copd_ics_laba', label: 'ICS/LABA (ACO限定)', tooltip: 'シムビコート / レルベア',
+      { id: 'copd_ics_laba', label: 'ICS/LABA (ACO限定)', tooltip: 'シムビコート / レルベア', sharedClass: 'ICS-LABA',
         drugs: [
           { id: 'copd_sym', name: 'シムビコート', doses: [{ value: '2x2', label: '2吸入×2/日', isDefault: true }] },
           { id: 'copd_rel', name: 'レルベア (FF/VI)', doses: [{ value: '100', label: 'レルベア100 1吸入/日', isDefault: true }, { value: '200', label: 'レルベア200 1吸入/日', isMax: true }] },
@@ -719,12 +726,12 @@ export const OVERVIEW_DISEASES = [
           { id: 'asc_evo', name: 'エボロクマブ (レパーサ)', doses: [{ value: '140_2w', label: '140mg SC 2週毎', isDefault: true }] },
         ],
       },
-      { id: 'asc_arb', label: 'ARB/ACEi (心保護)', tooltip: 'PCI後/MI後',
+      { id: 'asc_arb', label: 'ARB/ACEi (心保護)', tooltip: 'PCI後/MI後', sharedClass: 'ARB',
         drugs: [
           { id: 'asc_los', name: 'ロサルタン (ニューロタン)', doses: [{ value: '50', label: '50mg/日', isDefault: true }, { value: '100', label: '100mg/日', isMax: true }] },
         ],
       },
-      { id: 'asc_bb', label: 'β遮断薬 (心保護)', tooltip: 'MI後/低EF',
+      { id: 'asc_bb', label: 'β遮断薬 (心保護)', tooltip: 'MI後/低EF', sharedClass: 'β遮断薬',
         drugs: [
           { id: 'asc_bis', name: 'ビソプロロール (メインテート)', doses: [{ value: '2.5', label: '2.5mg/日', isDefault: true }, { value: '5', label: '5mg/日', isMax: true }] },
         ],

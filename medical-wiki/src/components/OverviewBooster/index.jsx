@@ -1,6 +1,6 @@
 import React, { useReducer, useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import styles from './styles.module.css';
-import { OVERVIEW_DISEASES, DISEASE_CATEGORIES, GOUT_ULT_THRESHOLDS, HFPEF_SGLT2_EVIDENCE, getAllTreatmentBoosterDrugs } from './overviewRegistry';
+import { OVERVIEW_DISEASES, DISEASE_CATEGORIES } from './overviewRegistry';
 import { LIFESTYLE_OPTIONS, LIFESTYLE_RESTRICTION_REASONS } from './lifestyleOptions';
 import { LIFESTYLE_RECOMMENDATIONS_V01 } from './lifestyleRecommendationsV01';
 import { OVERVIEW_CONTRAINDICATIONS_VERSION, OVERVIEW_CONTRAINDICATIONS_LAST_UPDATED, evaluateContraindications } from './overviewContraindications';
@@ -42,16 +42,8 @@ const COMORBIDITY_FLAGS = [
 ];
 
 /* ============================================================
-   STEP 2: 今後の治療戦略 (v0.2 簡易実装)
+   Phase 2: 今後の治療戦略
    ============================================================ */
-const NEXT_ACTIONS = [
-  { id: 'maintain',  label: '現状維持' },
-  { id: 'titrate_up',label: '増量' },
-  { id: 'add',       label: '追加' },
-  { id: 'switch',    label: '切替' },
-  { id: 'taper',     label: '減量' },
-  { id: 'refer',     label: '専門医紹介' },
-];
 const FOLLOW_OPTIONS = [
   { value: '1w',  label: '1週後' },
   { value: '2w',  label: '2週後' },
@@ -109,7 +101,7 @@ const initialState = {
   //   nextAction, followIn, goalNote                   // STEP 2
   // }
   selectionsByDisease: {},
-  uiState: { expandedDiseaseId: null, reverseTriggerDismissed: false },
+  uiState: { expandedDiseaseId: null, expandedSuggestionId: null, reverseTriggerDismissed: false },
   followupCode: { issued: '', importBuf: '', importError: null, oldDataWarning: false },
 };
 
@@ -157,18 +149,40 @@ function reducer(state, action) {
       return { ...state, scoresByDisease: { ...state.scoresByDisease, [disease]: { ...(state.scoresByDisease[disease] || {}), skipped: true } } };
     }
     case 'TOGGLE_DRUG_CLASS': {
-      const { disease, classId, drugClass } = action.payload;
+      const { disease, classId, drugClass, allDiseases } = action.payload;
       const cur = state.selectionsByDisease[disease] || { classDetails: {}, lifestyle: '', restriction: null };
       const newDetails = { ...cur.classDetails };
-      if (newDetails[classId]) {
+      const turningOn = !newDetails[classId];
+      if (!turningOn) {
         delete newDetails[classId];
       } else {
-        // 初回: default 薬剤・用量を自動選択
         const firstDrug = drugClass.drugs?.[0];
         const defaultDose = firstDrug?.doses?.find((d) => d.isDefault) || firstDrug?.doses?.[0];
         newDetails[classId] = { drugId: firstDrug?.id || '', dose: defaultDose?.value || '' };
       }
-      return { ...state, selectionsByDisease: { ...state.selectionsByDisease, [disease]: { ...cur, classDetails: newDetails } } };
+      let newSelections = { ...state.selectionsByDisease, [disease]: { ...cur, classDetails: newDetails } };
+      // 横断 auto-link: sharedClass 一致クラスを他の選択疾患でも自動 ON/OFF
+      const sc = drugClass.sharedClass;
+      if (sc && allDiseases) {
+        for (const otherDk of state.selectedDiseases) {
+          if (otherDk === disease) continue;
+          const otherMeta = allDiseases.find((d) => d.key === otherDk);
+          if (!otherMeta) continue;
+          const otherClass = otherMeta.drugClasses.find((c) => c.sharedClass === sc);
+          if (!otherClass) continue;
+          const otherCur = newSelections[otherDk] || { classDetails: {}, lifestyle: '', restriction: null };
+          const otherDetails = { ...otherCur.classDetails };
+          if (turningOn && !otherDetails[otherClass.id]) {
+            const fd = otherClass.drugs?.[0];
+            const dd = fd?.doses?.find((x) => x.isDefault) || fd?.doses?.[0];
+            otherDetails[otherClass.id] = { drugId: fd?.id || '', dose: dd?.value || '' };
+          } else if (!turningOn && otherDetails[otherClass.id]) {
+            delete otherDetails[otherClass.id];
+          }
+          newSelections[otherDk] = { ...otherCur, classDetails: otherDetails };
+        }
+      }
+      return { ...state, selectionsByDisease: newSelections };
     }
     case 'SET_DRUG_IN_CLASS': {
       const { disease, classId, drugId, dose } = action.payload;
@@ -195,6 +209,8 @@ function reducer(state, action) {
       const id = action.payload;
       return { ...state, uiState: { ...state.uiState, expandedDiseaseId: state.uiState.expandedDiseaseId === id ? null : id } };
     }
+    case 'SET_UI_EXPANDED_SUGGESTION':
+      return { ...state, uiState: { ...state.uiState, expandedSuggestionId: action.payload } };
     case 'DISMISS_REVERSE_TRIGGER':
       return { ...state, uiState: { ...state.uiState, reverseTriggerDismissed: true } };
     case 'SET_FOLLOWUP_CODE':
@@ -299,7 +315,7 @@ export default function OverviewBooster() {
         </div>
         <div className={styles.headerRight}>
           <span className={styles.stepIndicator}>
-            STEP: {state.step === 'entry' ? '入口' : state.step === 'step0' ? '0 (疾患選択)' : state.step === 'step0_5' ? '0.5 (スコア)' : state.step === 'step1' ? '1 (薬剤・食事運動)' : state.step === 'step2' ? '2 (治療戦略)' : 'まとめ'}
+            Phase: {state.step === 'entry' ? '入口' : state.step === 'step0' ? '1 疾患選択' : state.step === 'step0_5' ? '2 リスク層別' : state.step === 'step1' ? '3 現在の処方' : state.step === 'step2' ? '4 治療戦略' : 'まとめ'}
           </span>
           <button className={styles.resetBtn} onClick={handleNewPatient} title="次患者の診療を開始 (全消去)">次の患者へ</button>
         </div>
@@ -312,7 +328,7 @@ export default function OverviewBooster() {
       {state.step === 'step0_5' && <Step05Panel state={state} dispatch={dispatch} onNext={() => goto('step1')} onBack={() => goto('step0')} />}
       {state.step === 'step1' && <Step1Panel state={state} dispatch={dispatch} violations={violations} onNext={() => goto('step2')} onBack={() => goto('step0_5')} />}
       {state.step === 'step2' && <Step2Panel state={state} dispatch={dispatch} onNext={() => { handleIssueCode(); goto('summary'); }} onBack={() => goto('step1')} />}
-      {state.step === 'summary' && <SummaryPanel state={state} violations={violations} onBack={() => goto('step2')} onCopy={() => navigator.clipboard?.writeText(state.followupCode.issued)} />}
+      {state.step === 'summary' && <SummaryPanel state={state} dispatch={dispatch} violations={violations} onBack={() => goto('step2')} onCopy={() => navigator.clipboard?.writeText(state.followupCode.issued)} />}
 
       <div className={styles.versionLabel}>
         禁忌ルール v{OVERVIEW_CONTRAINDICATIONS_VERSION} (最終更新: {OVERVIEW_CONTRAINDICATIONS_LAST_UPDATED})
@@ -329,48 +345,81 @@ const REPRODUCTIVE_AGE_RANGES = new Set(['<40', '40-49']);
 
 function PatientHeaderPanel({ state, dispatch }) {
   const update = (patch) => dispatch({ type: 'SET_PATIENT_HEADER', payload: patch });
-  const showReproductive = state.patientHeader.sex === 'F' && REPRODUCTIVE_AGE_RANGES.has(state.patientHeader.age);
+  const ph = state.patientHeader;
+  const showReproductive = ph.sex === 'F' && REPRODUCTIVE_AGE_RANGES.has(ph.age);
 
-  // 50歳以上 or 男性に変更されたら自動で妊娠/授乳フラグを下げる (誤データ持越し防止)
   useEffect(() => {
-    if (!showReproductive && (state.patientHeader.co_pregnancy || state.patientHeader.co_lactation)) {
+    if (!showReproductive && (ph.co_pregnancy || ph.co_lactation)) {
       update({ co_pregnancy: false, co_lactation: false });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showReproductive]);
 
+  const ageLabel = AGE_RANGE_OPTIONS.find((o) => o.value === ph.age)?.label;
+  const sexLabel = ph.sex === 'M' ? '男性' : ph.sex === 'F' ? '女性' : '';
+  const smokeLabel = ph.smoking === 'never' ? '非喫煙' : ph.smoking === 'past' ? '過去喫煙' : ph.smoking === 'current' ? '現喫煙' : '';
+
   return (
     <div className={styles.patientHeader}>
       <div className={styles.sectionTitle}>患者ヘッダー <span className={styles.sectionHint}>(全スコアで共有・患者切替時消去)</span></div>
-      <div className={styles.patientGrid}>
-        <div>
-          <label className={styles.fieldLabel} htmlFor="ph_age">年齢層</label>
-          <select id="ph_age" className={styles.fieldInput} value={state.patientHeader.age || ''} onChange={(e) => update({ age: e.target.value })}>
-            <option value="">--</option>
-            {AGE_RANGE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
+
+      {!ph.age && (
+        <div className={styles.bigPickerBlock}>
+          <div className={styles.bigPickerLabel}>年齢層をタップ</div>
+          <div className={styles.bigPickerGrid}>
+            {AGE_RANGE_OPTIONS.map((o) => (
+              <button key={o.value} type="button" className={styles.bigPickerBtn} onClick={() => update({ age: o.value })}>{o.label}</button>
+            ))}
+          </div>
         </div>
-        <div>
-          <label className={styles.fieldLabel} htmlFor="ph_sex">性別</label>
-          <select id="ph_sex" className={styles.fieldInput} value={state.patientHeader.sex || ''} onChange={(e) => update({ sex: e.target.value })}>
-            <option value="">--</option>
-            <option value="M">男性</option>
-            <option value="F">女性</option>
-          </select>
+      )}
+      {ph.age && !ph.sex && (
+        <div className={styles.bigPickerBlock}>
+          <div className={styles.bigPickerLabel}>性別をタップ</div>
+          <div className={styles.bigPickerGrid}>
+            <button type="button" className={styles.bigPickerBtn} onClick={() => update({ sex: 'M' })}>男性</button>
+            <button type="button" className={styles.bigPickerBtn} onClick={() => update({ sex: 'F' })}>女性</button>
+          </div>
         </div>
-        <div>
-          <label className={styles.fieldLabel} htmlFor="ph_smoking">喫煙状態</label>
-          <select id="ph_smoking" className={styles.fieldInput} value={state.patientHeader.smoking || ''} onChange={(e) => update({ smoking: e.target.value })}>
-            <option value="">--</option>
-            <option value="never">非喫煙</option>
-            <option value="past">過去喫煙</option>
-            <option value="current">現喫煙</option>
-          </select>
+      )}
+      {ph.age && ph.sex && !ph.smoking && (
+        <div className={styles.bigPickerBlock}>
+          <div className={styles.bigPickerLabel}>喫煙状態をタップ</div>
+          <div className={styles.bigPickerGrid}>
+            <button type="button" className={styles.bigPickerBtn} onClick={() => update({ smoking: 'never' })}>非喫煙</button>
+            <button type="button" className={styles.bigPickerBtn} onClick={() => update({ smoking: 'past' })}>過去喫煙</button>
+            <button type="button" className={styles.bigPickerBtn} onClick={() => update({ smoking: 'current' })}>現喫煙</button>
+          </div>
         </div>
-        {showReproductive && <CheckboxField id="ph_preg" label="妊娠中" checked={state.patientHeader.co_pregnancy} onChange={(v) => update({ co_pregnancy: v })} />}
-        {showReproductive && <CheckboxField id="ph_lact" label="授乳中" checked={state.patientHeader.co_lactation} onChange={(v) => update({ co_lactation: v })} />}
-        <CheckboxField id="ph_frail" label="フレイル" checked={state.patientHeader.co_frail} onChange={(v) => update({ co_frail: v })} />
-      </div>
+      )}
+
+      {(ph.age || ph.sex || ph.smoking) && (
+        <div className={styles.patientSummaryRow}>
+          {ph.age && (
+            <button type="button" className={styles.patientSummaryChip} onClick={() => update({ age: '' })} title="変更">
+              年齢: {ageLabel} ✎
+            </button>
+          )}
+          {ph.sex && (
+            <button type="button" className={styles.patientSummaryChip} onClick={() => update({ sex: '' })} title="変更">
+              性別: {sexLabel} ✎
+            </button>
+          )}
+          {ph.smoking && (
+            <button type="button" className={styles.patientSummaryChip} onClick={() => update({ smoking: '' })} title="変更">
+              喫煙: {smokeLabel} ✎
+            </button>
+          )}
+        </div>
+      )}
+
+      {ph.age && ph.sex && ph.smoking && (
+        <div className={styles.patientGrid} style={{ marginTop: '0.5rem' }}>
+          {showReproductive && <CheckboxField id="ph_preg" label="妊娠中" checked={ph.co_pregnancy} onChange={(v) => update({ co_pregnancy: v })} />}
+          {showReproductive && <CheckboxField id="ph_lact" label="授乳中" checked={ph.co_lactation} onChange={(v) => update({ co_lactation: v })} />}
+          <CheckboxField id="ph_frail" label="フレイル" checked={ph.co_frail} onChange={(v) => update({ co_frail: v })} />
+        </div>
+      )}
     </div>
   );
 }
@@ -414,7 +463,7 @@ function EntryPanel({ state, dispatch, onImport, onNew }) {
 function Step0Panel({ state, dispatch, onNext, onBack }) {
   return (
     <div className={styles.section}>
-      <div className={styles.sectionTitle}>STEP 0: 慢性疾患の選択 <span className={styles.sectionHint}>(複数選択可)</span></div>
+      <div className={styles.sectionTitle}>Phase 1: 慢性疾患の選択 <span className={styles.sectionHint}>(複数選択可)</span></div>
       <div className={styles.chipGrid} role="group" aria-label="慢性疾患選択 (複数選択可)">
         {OVERVIEW_DISEASES.map((d) => {
           const selected = state.selectedDiseases.includes(d.key);
@@ -435,7 +484,7 @@ function Step0Panel({ state, dispatch, onNext, onBack }) {
       </div>
       <div className={styles.navRow}>
         <button className={`${styles.navBtn} ${styles.navBtnSecondary}`} onClick={onBack}>戻る</button>
-        <button className={`${styles.navBtn} ${styles.navBtnPrimary}`} disabled={state.selectedDiseases.length === 0} onClick={onNext}>次へ → STEP 0.5</button>
+        <button className={`${styles.navBtn} ${styles.navBtnPrimary}`} disabled={state.selectedDiseases.length === 0} onClick={onNext}>次へ → Phase 2 リスク層別</button>
       </div>
     </div>
   );
@@ -472,7 +521,7 @@ function Step05Panel({ state, dispatch, onNext, onBack }) {
   }
   return (
     <div className={styles.section}>
-      <div className={styles.sectionTitle}>STEP 0.5: リスクスコア層別 <span className={styles.sectionHint}>(共通検査値を1度入力 → 全スコアで自動計算)</span></div>
+      <div className={styles.sectionTitle}>Phase 2: リスクスコア層別 <span className={styles.sectionHint}>(共通検査値を1度入力 → 全スコアで自動計算)</span></div>
       {state.followupCode.oldDataWarning && (
         <div className={`${styles.alertBanner} ${styles.alertCritical}`} role="alert">
           ⚠ 前回のスコアです。<strong>今日の検査値で再入力</strong>してください
@@ -490,7 +539,7 @@ function Step05Panel({ state, dispatch, onNext, onBack }) {
       ))}
       <div className={styles.navRow}>
         <button className={`${styles.navBtn} ${styles.navBtnSecondary}`} onClick={onBack}>戻る</button>
-        <button className={`${styles.navBtn} ${styles.navBtnPrimary}`} onClick={onNext}>次へ → STEP 1</button>
+        <button className={`${styles.navBtn} ${styles.navBtnPrimary}`} onClick={onNext}>次へ → Phase 3 現在の処方</button>
       </div>
     </div>
   );
@@ -602,7 +651,7 @@ function ScoreCard({ disease, state, dispatch }) {
         </>
       )}
       {!sc.skipped && sc.result && <ScoreResultDisplay kind={disease.scoreKind} result={sc.result} />}
-      {sc.skipped && <div style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)' }}>スコア未入力 (STEP 1 で全候補表示)</div>}
+      {sc.skipped && <div style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)' }}>スコア未入力 (Phase 3 で全候補表示)</div>}
     </div>
   );
 }
@@ -661,18 +710,38 @@ function Step1Panel({ state, dispatch, violations, onNext, onBack }) {
     return sel?.lifestyle === 'lifestyle_diet_exercise_restricted' && !sel?.restriction;
   });
   const canProceed = incompleteRestrictions.length === 0;
+  // 横断 sharedClass 検出 — 複数の選択疾患で同じ sharedClass を持つクラスを抽出
+  const sharedTagged = useMemo(() => {
+    const counts = {};
+    for (const dk of state.selectedDiseases) {
+      const meta = OVERVIEW_DISEASES.find((d) => d.key === dk);
+      if (!meta) continue;
+      for (const c of meta.drugClasses) {
+        if (c.sharedClass) counts[c.sharedClass] = (counts[c.sharedClass] || 0) + 1;
+      }
+    }
+    return new Set(Object.entries(counts).filter(([_, n]) => n >= 2).map(([k]) => k));
+  }, [state.selectedDiseases.join(',')]);
   return (
     <div className={styles.section}>
-      <div className={styles.sectionTitle}>STEP 1: 現在の薬剤・食事運動 <span className={styles.sectionHint}>(クラス→薬剤→用量の3段階)</span></div>
+      <div className={styles.sectionTitle}>Phase 3: 現在の処方 <span className={styles.sectionHint}>(クラス→薬剤→用量、必要に応じて食事運動)</span></div>
       {violations.filter((v) => v.severity === 'critical').length > 0 && (
         <div className={`${styles.alertBanner} ${styles.alertCritical}`} role="alert" aria-live="assertive">
           ⚠ 禁忌違反 {violations.filter((v) => v.severity === 'critical').length}件 — 該当薬剤を確認してください
         </div>
       )}
+      {sharedTagged.size > 0 && (
+        <div className={styles.sharedClassBox}>
+          <div className={styles.sharedClassTitle}>🔗 複数疾患で共通の薬剤クラス</div>
+          <div className={styles.sharedClassRow}>
+            {[...sharedTagged].join(' / ')} はどの疾患で選んでも、他の対象疾患でも自動で同時選択されます。
+          </div>
+        </div>
+      )}
       {state.selectedDiseases.map((key) => {
         const d = OVERVIEW_DISEASES.find((x) => x.key === key);
         if (!d) return null;
-        return <DiseaseAccordion key={key} disease={d} state={state} dispatch={dispatch} violations={violations} />;
+        return <DiseaseAccordion key={key} disease={d} state={state} dispatch={dispatch} violations={violations} sharedTagged={sharedTagged} />;
       })}
       {!canProceed && (
         <div className={`${styles.alertBanner} ${styles.alertWarning}`} role="alert">
@@ -681,13 +750,13 @@ function Step1Panel({ state, dispatch, violations, onNext, onBack }) {
       )}
       <div className={styles.navRow}>
         <button className={`${styles.navBtn} ${styles.navBtnSecondary}`} onClick={onBack}>戻る</button>
-        <button className={`${styles.navBtn} ${styles.navBtnPrimary}`} disabled={!canProceed} onClick={onNext}>次へ → STEP 2 治療戦略</button>
+        <button className={`${styles.navBtn} ${styles.navBtnPrimary}`} disabled={!canProceed} onClick={onNext}>次へ → Phase 4 治療戦略</button>
       </div>
     </div>
   );
 }
 
-function DiseaseAccordion({ disease, state, dispatch, violations }) {
+function DiseaseAccordion({ disease, state, dispatch, violations, sharedTagged }) {
   const expanded = state.uiState.expandedDiseaseId === disease.key;
   const sel = state.selectionsByDisease[disease.key] || { classDetails: {}, lifestyle: '', restriction: null };
   const cat = DISEASE_CATEGORIES[disease.category];
@@ -715,19 +784,6 @@ function DiseaseAccordion({ disease, state, dispatch, violations }) {
       </button>
       {expanded && (
         <div id={`panel-${disease.key}`} role="region" className={styles.accordionBody}>
-          {disease.key === 'gout' && (
-            <div className={styles.lifestyleRec}>
-              <strong>痛風 ULT 閾値:</strong> 結節 SUA&lt;5.0 / 発作既往&lt;6.0 / 無症候+合併症&lt;7.0 / 過降下フロア 3.0
-              <br /><strong>アロプリノール開始:</strong> eGFR≥60→100mg, 30-59→50mg, &lt;30→50mg隔日 (専門医併診)
-              <br /><strong>{GOUT_ULT_THRESHOLDS.cares_warning}</strong>
-            </div>
-          )}
-          {disease.key === 'hfpef' && (
-            <div className={styles.lifestyleRec}>
-              <strong>SGLT2i 第一選択:</strong> {HFPEF_SGLT2_EVIDENCE}
-            </div>
-          )}
-
           <div className={styles.fieldLabel}>治療状況:</div>
           <div className={styles.chipGrid} role="radiogroup" aria-label="治療状況">
             {TX_STATUS_OPTIONS.map((s) => {
@@ -746,44 +802,19 @@ function DiseaseAccordion({ disease, state, dispatch, violations }) {
             <>
               <div className={styles.fieldLabel} style={{ marginTop: '0.5rem' }}>薬剤クラス (複数選択可、展開で具体薬剤・用量):</div>
               {disease.drugClasses.map((dc) => (
-                <DrugClassSection key={dc.id} disease={disease} drugClass={dc} sel={sel} dispatch={dispatch} violations={violations} />
+                <DrugClassSection key={dc.id} disease={disease} drugClass={dc} sel={sel} dispatch={dispatch} violations={violations} sharedTagged={sharedTagged} />
               ))}
             </>
           )}
 
-          {(sel.txStatus === 'lifestyle_only' || sel.txStatus === 'on_treatment') && (
+          {(sel.txStatus === 'lifestyle_only' || sel.txStatus === 'on_treatment') && !disease.hideLifestyle && (
             <LifestyleRow disease={disease} sel={sel} dispatch={dispatch} />
+          )}
+          {sel.txStatus === 'on_treatment' && disease.controlIndicator && (
+            <ControlStatusRow disease={disease} sel={sel} dispatch={dispatch} />
           )}
         </div>
       )}
-    </div>
-  );
-}
-
-// 治療提案カード — このブースター内で完結する次の一手の自動提示
-function TreatmentSuggestions({ disease, state }) {
-  const recs = useMemo(() => suggestTreatment(disease.key, state), [disease.key, state.patientHeader, state.commonLabs, state.commonHistory, state.scoresByDisease, state.selectionsByDisease]);
-  if (!recs || recs.length === 0) return null;
-  const sevClass = (sev) => sev === 'critical' ? styles.alertCritical : sev === 'high' ? styles.alertWarning : styles.alertInfo;
-  const actionLabel = (a) => ({
-    start: '開始', add: '追加', titrate_up: '増量', titrate_down: '減量', switch: '切替', stop: '中止',
-    taper: '減量・漸減', urgent: '緊急対応', maintain: '現状維持', watch: '経過観察',
-    refer: '専門医紹介', monitor: 'モニタ', caution: '注意', consider: '検討',
-    consider_add: '追加検討', lifestyle: '生活指導', lifestyle_first: '生活指導先行', reduce_or_stop: '減量・中止',
-  }[a] || a);
-  return (
-    <div className={styles.suggestionsBox}>
-      <div className={styles.suggestionsTitle}>治療提案 (自動生成)</div>
-      {recs.map((r, i) => (
-        <div key={i} className={`${styles.alertBanner} ${sevClass(r.severity)}`} role="alert">
-          <div>
-            <strong>{actionLabel(r.action)}{r.drug ? `: ${r.drug}` : ''}</strong>
-            {r.dose && <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>用法: {r.dose}</div>}
-            <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>{r.reason}</div>
-            {r.gl && <div style={{ fontSize: '0.78rem', marginTop: '0.2rem', opacity: 0.8 }}>根拠: {r.gl}</div>}
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
@@ -803,10 +834,11 @@ function renderClassLabel(label) {
   });
 }
 
-function DrugClassSection({ disease, drugClass, sel, dispatch, violations }) {
+function DrugClassSection({ disease, drugClass, sel, dispatch, violations, sharedTagged }) {
   const isSelected = !!sel.classDetails?.[drugClass.id];
   const detail = sel.classDetails?.[drugClass.id];
   const violation = violations.find((v) => v.message?.includes(drugClass.label) || v.ruleId?.includes(drugClass.id));
+  const isShared = !!drugClass.sharedClass && sharedTagged?.has(drugClass.sharedClass);
 
   return (
     <div className={styles.drugClassRow}>
@@ -814,11 +846,12 @@ function DrugClassSection({ disease, drugClass, sel, dispatch, violations }) {
         type="button"
         role="checkbox"
         aria-checked={isSelected}
-        className={`${styles.chip} ${isSelected ? styles.chipActive : ''} ${violation ? styles.chipCritical : ''}`}
-        onClick={() => dispatch({ type: 'TOGGLE_DRUG_CLASS', payload: { disease: disease.key, classId: drugClass.id, drugClass } })}
-        title={drugClass.tooltip}
+        className={`${styles.chip} ${isSelected ? styles.chipActive : ''} ${violation ? styles.chipCritical : ''} ${isShared ? styles.chipShared : ''}`}
+        onClick={() => dispatch({ type: 'TOGGLE_DRUG_CLASS', payload: { disease: disease.key, classId: drugClass.id, drugClass, allDiseases: OVERVIEW_DISEASES } })}
+        title={drugClass.tooltip + (isShared ? ` — 他疾患と共通 (${drugClass.sharedClass}): 同時選択されます` : '')}
       >
         {renderClassLabel(drugClass.label)}
+        {isShared && <span className={styles.sharedTag} aria-label={`${drugClass.sharedClass} 共通薬剤`}>🔗 {drugClass.sharedClass}</span>}
       </button>
       {isSelected && (
         <div className={styles.drugDetailPanel}>
@@ -857,6 +890,33 @@ function DrugClassSection({ disease, drugClass, sel, dispatch, violations }) {
               </div>
             );
           })()}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// コントロール状態行 (喘息・COPDなど) — 「コントロール不良」ON時に提案エンジンで吸入手技/アドヒアランス/併存症介入が上位提案される
+function ControlStatusRow({ disease, sel, dispatch }) {
+  const checked = !!sel.uncontrolled;
+  return (
+    <div className={styles.lifestyleRow}>
+      <div className={styles.lifestyleLabel}>コントロール状態:</div>
+      <div className={styles.chipGrid} role="radiogroup" aria-label="コントロール状態">
+        <button type="button" role="radio" aria-checked={!checked}
+          className={`${styles.chip} ${styles.chipRadio} ${!checked ? styles.chipActive : ''}`}
+          onClick={() => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: disease.key, field: 'uncontrolled', value: false } })}>
+          コントロール良好
+        </button>
+        <button type="button" role="radio" aria-checked={checked}
+          className={`${styles.chip} ${styles.chipRadio} ${checked ? styles.chipActive : ''}`}
+          onClick={() => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: disease.key, field: 'uncontrolled', value: true } })}>
+          コントロール不良
+        </button>
+      </div>
+      {checked && (
+        <div className={styles.lifestyleRec} style={{ background: '#fff3e0', borderLeftColor: '#ef6c00', color: '#e65100' }}>
+          コントロール不良時は、増量前にまず<strong>吸入手技・アドヒアランス・併存症介入</strong>が上位提案として表示されます (Phase 4)。
         </div>
       )}
     </div>
@@ -915,7 +975,7 @@ function Step2Panel({ state, dispatch, onNext, onBack }) {
   const sharedClasses = useMemo(() => detectSharedClasses(state), [state.selectedDiseases, state.scoresByDisease, state.selectionsByDisease, state.patientHeader, state.commonLabs, state.commonHistory]);
   return (
     <div className={styles.section}>
-      <div className={styles.sectionTitle}>STEP 2: 治療提案 <span className={styles.sectionHint}>(GLベース自動生成、各疾患で提案を選択)</span></div>
+      <div className={styles.sectionTitle}>Phase 4: 治療戦略 <span className={styles.sectionHint}>(GLベース自動生成、疾患毎に提案を採用)</span></div>
 
       {sharedClasses.length > 0 && (
         <div className={styles.sharedClassBox}>
@@ -942,114 +1002,110 @@ function Step2Panel({ state, dispatch, onNext, onBack }) {
   );
 }
 
-// 疾患ごとの治療提案カード — 採用中をクリックすると他案がトグル展開
+// 推奨ラベルテーブル
+const ACTION_LABEL = {
+  start: '開始', add: '追加', titrate_up: '増量', titrate_down: '減量', titrate: '漸増',
+  switch: '切替', stop: '中止', taper: '減量・漸減', urgent: '緊急対応', maintain: '現状維持',
+  watch: '経過観察', refer: '専門医紹介', monitor: 'モニタ', caution: '注意', consider: '検討',
+  consider_add: '追加検討', consider_alt: '代替検討', consider_other_disease: '他疾患側で検討',
+  alternative: '代替案', lifestyle: '生活指導', lifestyle_first: '生活指導先行', reduce_or_stop: '減量・中止',
+  check: '確認',
+};
+function actionLabel(a) { return ACTION_LABEL[a] || a; }
+function sevClassName(sev) {
+  if (sev === 'critical') return styles.alertCritical;
+  if (sev === 'high') return styles.alertWarning;
+  return styles.alertInfo;
+}
+
+// 推奨カード本文 — primary/detail/stepFlow を優先、なければ drug/reason へフォールバック
+function RecBody({ rec, compact }) {
+  const headline = rec.primary || rec.drug || actionLabel(rec.action);
+  const subline = rec.detail || rec.reason || rec.concerns;
+  return (
+    <>
+      <div className={styles.recHeadline}>
+        <span className={styles.recAction}>{actionLabel(rec.action)}</span>
+        <span className={styles.recPrimary}>{headline}</span>
+      </div>
+      {rec.stepFlow && <div className={styles.recStepFlow}>📍 {rec.stepFlow}</div>}
+      {rec.dose && <div className={styles.recDose}>用法: {rec.dose}</div>}
+      {subline && <div className={styles.recDetail}>{subline}</div>}
+      {rec.concerns && rec.detail && <div className={styles.recConcerns}>{rec.concerns}</div>}
+      {rec.gl && !compact && <div className={styles.recGl}>根拠: {rec.gl}</div>}
+    </>
+  );
+}
+
+// 疾患ごとの治療提案カード — アコーディオン: 閉じている時は採用提案のみ、開くと候補一覧
 function DiseaseSuggestionCard({ disease, state, dispatch, sharedClasses }) {
   const sel = state.selectionsByDisease[disease.key] || {};
   const recs = useMemo(() => suggestTreatment(disease.key, state), [disease.key, state.patientHeader, state.commonLabs, state.commonHistory, state.scoresByDisease, state.selectionsByDisease]);
-  const [showAll, setShowAll] = useState(false);
+  const expanded = state.uiState.expandedSuggestionId === disease.key;
+  const setExpanded = (open) => dispatch({ type: 'SET_UI_EXPANDED_SUGGESTION', payload: open ? disease.key : null });
 
   if (!recs || recs.length === 0) {
     return (
       <div className={`${styles.scorePanel} ${categoryClass(disease.category)}`}>
         <div className={styles.scorePanelTitle}>{disease.label}</div>
         <div style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)' }}>
-          STEP 1で治療状況を選び、必要なら STEP 0.5 のスコアを完了してください。
+          Phase 3 で治療状況を選び、必要なら Phase 2 のスコアを完了してください。
         </div>
-        <FollowupRow disease={disease} sel={sel} dispatch={dispatch} />
       </div>
     );
   }
 
   const selectedIdx = sel.selectedRecIdx ?? 0;
   const selected = recs[selectedIdx] || recs[0];
-
-  const sevClass = (sev) => sev === 'critical' ? styles.alertCritical : sev === 'high' ? styles.alertWarning : styles.alertInfo;
-  const actionLabel = (a) => ({
-    start: '開始', add: '追加', titrate_up: '増量', titrate_down: '減量', titrate: '漸増',
-    switch: '切替', stop: '中止', taper: '減量・漸減', urgent: '緊急対応', maintain: '現状維持',
-    watch: '経過観察', refer: '専門医紹介', monitor: 'モニタ', caution: '注意', consider: '検討',
-    consider_add: '追加検討', consider_alt: '代替検討', consider_other_disease: '他疾患側で検討',
-    alternative: '代替案', lifestyle: '生活指導', lifestyle_first: '生活指導先行', reduce_or_stop: '減量・中止',
-  }[a] || a);
-
-  // 共通薬剤カバー判定
   const isSharedDrug = sharedClasses?.some((sc) => sc.sharedClass === selected.sharedClass);
 
   return (
-    <div className={`${styles.scorePanel} ${categoryClass(disease.category)}`}>
-      <div className={styles.scorePanelTitle}>{disease.label} — 治療提案 ({recs.length}案)</div>
-
-      {/* 採用中の提案 — クリックで他の案を展開 */}
-      <button type="button" className={`${styles.alertBanner} ${sevClass(selected.severity)} ${styles.suggestionBtn}`}
-        onClick={() => setShowAll(!showAll)}
-        aria-expanded={showAll}
-        style={{ marginTop: '0.5rem', cursor: recs.length > 1 ? 'pointer' : 'default' }}>
-        <div>
-          <div style={{ fontSize: '0.78rem', opacity: 0.8, display: 'flex', justifyContent: 'space-between' }}>
-            <span>採用中 (第{selectedIdx + 1}案){isSharedDrug ? ` ・ 共通: ${selected.sharedClass}` : ''}</span>
-            {recs.length > 1 && <span>{showAll ? '▼ 他の案を隠す' : `▶ クリックで他の案 (${recs.length - 1}件) 表示`}</span>}
-          </div>
-          <strong>{actionLabel(selected.action)}{selected.drug ? `: ${selected.drug}` : ''}</strong>
-          {selected.dose && <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>用法: {selected.dose}</div>}
-          <div style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>{selected.reason}</div>
-          {selected.concerns && <div style={{ fontSize: '0.82rem', marginTop: '0.3rem', padding: '0.3rem 0.5rem', background: 'rgba(0,0,0,0.05)', borderRadius: '4px' }}>{selected.concerns}</div>}
-          {selected.gl && <div style={{ fontSize: '0.78rem', marginTop: '0.2rem', opacity: 0.8 }}>根拠: {selected.gl}</div>}
-        </div>
+    <div className={`${styles.suggestionAccordion} ${categoryClass(disease.category)}`}>
+      <button className={styles.suggestionAccordionHeader}
+        aria-expanded={expanded}
+        onClick={() => setExpanded(!expanded)}>
+        <span className={styles.suggestionAccordionTitle}>
+          {expanded ? '▼' : '▶'} {disease.label}
+          <span className={styles.suggestionCount}>({recs.length}案)</span>
+          {isSharedDrug && <span className={styles.sharedTag}>🔗 {selected.sharedClass}</span>}
+        </span>
       </button>
 
-      {showAll && recs.length > 1 && (
-        <div style={{ marginTop: '0.4rem' }}>
+      {/* 閉じている時も採用案は常に表示 */}
+      <div className={`${styles.alertBanner} ${sevClassName(selected.severity)} ${styles.adoptedRec}`}>
+        <div style={{ width: '100%' }}>
+          <div className={styles.adoptedHeader}>採用中 (第{selectedIdx + 1}案 / {recs.length}案中)</div>
+          <RecBody rec={selected} compact={!expanded} />
+        </div>
+      </div>
+
+      {expanded && recs.length > 1 && (
+        <div className={styles.suggestionAlternatives}>
+          <div className={styles.suggestionAltLabel}>他の候補 (クリックで採用):</div>
           {recs.map((r, idx) => {
             if (idx === selectedIdx) return null;
             return (
-              <button key={idx} type="button" className={`${styles.alertBanner} ${sevClass(r.severity)} ${styles.suggestionBtn}`}
-                style={{ display: 'block', width: '100%', textAlign: 'left', cursor: 'pointer', marginBottom: '0.3rem' }}
+              <button key={idx} type="button" className={`${styles.alertBanner} ${sevClassName(r.severity)} ${styles.suggestionBtn} ${styles.altRec}`}
                 onClick={() => {
                   dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: disease.key, field: 'selectedRecIdx', value: idx } });
-                  setShowAll(false);
                 }}>
-                <div style={{ fontSize: '0.78rem', opacity: 0.8 }}>第{idx + 1}案 (クリックで採用){r.sharedClass ? ` ・ ${r.sharedClass}` : ''}</div>
-                <strong>{actionLabel(r.action)}{r.drug ? `: ${r.drug}` : ''}</strong>
-                {r.dose && <div style={{ fontSize: '0.85rem' }}>用法: {r.dose}</div>}
-                <div style={{ fontSize: '0.85rem' }}>{r.reason}</div>
-                {r.concerns && <div style={{ fontSize: '0.8rem', marginTop: '0.2rem', padding: '0.2rem 0.4rem', background: 'rgba(0,0,0,0.05)', borderRadius: '4px' }}>{r.concerns}</div>}
-                {r.gl && <div style={{ fontSize: '0.78rem', opacity: 0.8 }}>根拠: {r.gl}</div>}
+                <div style={{ width: '100%' }}>
+                  <div className={styles.adoptedHeader}>第{idx + 1}案{r.sharedClass ? ` ・ ${r.sharedClass}` : ''}</div>
+                  <RecBody rec={r} compact />
+                </div>
               </button>
             );
           })}
         </div>
       )}
-
-      <FollowupRow disease={disease} sel={sel} dispatch={dispatch} />
     </div>
-  );
-}
-
-function FollowupRow({ disease, sel, dispatch }) {
-  return (
-    <>
-      <div style={{ marginTop: '0.6rem' }}>
-        <label className={styles.fieldLabel} htmlFor={`follow_${disease.key}`}>次回フォロー時期:</label>
-        <select id={`follow_${disease.key}`} className={styles.fieldInput} value={sel.followIn || ''}
-          onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: disease.key, field: 'followIn', value: e.target.value } })}>
-          <option value="">--</option>
-          {FOLLOW_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
-      </div>
-      <div style={{ marginTop: '0.4rem' }}>
-        <label className={styles.fieldLabel} htmlFor={`goalNote_${disease.key}`}>目標メモ (任意):</label>
-        <input id={`goalNote_${disease.key}`} type="text" className={styles.fieldInput} value={sel.goalNote || ''}
-          placeholder="例: HbA1c<7.0、LDL<70、家庭BP<125/75"
-          onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: disease.key, field: 'goalNote', value: e.target.value } })} />
-      </div>
-    </>
   );
 }
 
 /* ============================================================
    SUMMARY
    ============================================================ */
-function SummaryPanel({ state, violations, onBack, onCopy }) {
+function SummaryPanel({ state, dispatch, violations, onBack, onCopy }) {
   const sharedClasses = useMemo(() => detectSharedClasses(state), [state]);
   const txStatusLabel = (s) => ({ untreated: '未治療', lifestyle_only: '生活指導のみ', on_treatment: '薬物治療中' }[s] || '未指定');
   return (
@@ -1097,40 +1153,52 @@ function SummaryPanel({ state, violations, onBack, onCopy }) {
               const drug = dc?.drugs.find((dr) => dr.id === det.drugId);
               return `${drug?.name || dc?.label} ${det.dose || ''}`.trim();
             }).filter(Boolean);
-            const follow = FOLLOW_OPTIONS.find((f) => f.value === sel.followIn)?.label;
 
-            // 採用中の治療提案
             const recs = suggestTreatment(key, state);
             const selectedIdx = sel.selectedRecIdx ?? 0;
             const adoptedRec = recs[selectedIdx];
+            const adoptedHead = adoptedRec ? (adoptedRec.primary || adoptedRec.drug || actionLabel(adoptedRec.action)) : '';
+            const adoptedSub  = adoptedRec ? (adoptedRec.detail || adoptedRec.reason) : '';
 
             return (
               <div key={key} className={`${styles.summaryDiseaseCard} ${categoryClass(d.category)}`}>
                 <div className={styles.summaryDiseaseTitle}>{d.label}</div>
                 <div className={styles.summaryRow}>
-                  <strong>STEP 1 治療状況:</strong> {txStatusLabel(sel.txStatus)}
+                  <strong>現在の処方 (Phase 3):</strong> {txStatusLabel(sel.txStatus)}
                   {sel.txStatus === 'on_treatment' && drugSummary.length > 0 && <div style={{ marginLeft: '1rem' }}>処方: {drugSummary.join(' + ')}</div>}
                   {lo && <div style={{ marginLeft: '1rem' }}>生活: {lo.label}</div>}
+                  {sel.uncontrolled && <div style={{ marginLeft: '1rem', color: '#e65100' }}>※ コントロール不良</div>}
                 </div>
                 {adoptedRec && (
                   <div className={styles.summaryRow}>
-                    <strong>STEP 2 採用治療提案 (第{selectedIdx + 1}案):</strong>
+                    <strong>採用治療提案 (Phase 4 第{selectedIdx + 1}案):</strong>
                     <div style={{ marginLeft: '1rem' }}>
-                      {adoptedRec.action}{adoptedRec.drug ? `: ${adoptedRec.drug}` : ''}
+                      {actionLabel(adoptedRec.action)}: {adoptedHead}
                       {adoptedRec.dose && ` — ${adoptedRec.dose}`}
                     </div>
+                    {adoptedRec.stepFlow && <div style={{ marginLeft: '1rem', fontSize: '0.82rem' }}>📍 {adoptedRec.stepFlow}</div>}
                     <div style={{ marginLeft: '1rem', fontSize: '0.82rem', color: 'var(--ifm-color-emphasis-700)' }}>
-                      {adoptedRec.reason}
+                      {adoptedSub}
                       {adoptedRec.gl && ` (根拠: ${adoptedRec.gl})`}
                     </div>
                   </div>
                 )}
-                {(follow || sel.goalNote) && (
-                  <div className={styles.summaryRow}>
-                    {follow && <span><strong>フォロー:</strong> {follow}</span>}
-                    {sel.goalNote && <span style={{ marginLeft: '1rem' }}><strong>目標:</strong> {sel.goalNote}</span>}
+                <div className={styles.summaryRow} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-end', flexWrap: 'wrap', marginTop: '0.6rem' }}>
+                  <div style={{ minWidth: '160px' }}>
+                    <label className={styles.fieldLabel} htmlFor={`sum_follow_${key}`}>次回フォロー時期:</label>
+                    <select id={`sum_follow_${key}`} className={styles.fieldInput} value={sel.followIn || ''}
+                      onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'followIn', value: e.target.value } })}>
+                      <option value="">--</option>
+                      {FOLLOW_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
                   </div>
-                )}
+                  <div style={{ flex: '1 1 240px' }}>
+                    <label className={styles.fieldLabel} htmlFor={`sum_goal_${key}`}>目標メモ (任意):</label>
+                    <input id={`sum_goal_${key}`} type="text" className={styles.fieldInput} value={sel.goalNote || ''}
+                      placeholder="例: HbA1c<7.0、LDL<70、家庭BP<125/75"
+                      onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'goalNote', value: e.target.value } })} />
+                  </div>
+                </div>
               </div>
             );
           })}

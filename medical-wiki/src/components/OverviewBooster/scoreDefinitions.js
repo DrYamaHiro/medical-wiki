@@ -300,7 +300,10 @@ export const SCORE_DEFINITIONS = {
       commonHistory: [],
     },
     localInputs: [
-      { id: 'glucose', label: '耐糖能異常 (HbA1cが未入力時のみ)', type: 'select', options: [{ value: 'no', label: 'なし' }, { value: 'yes', label: 'あり' }] },
+      { id: 'glucose', label: '耐糖能異常 (HbA1cが未入力時のみ)', type: 'select',
+        options: [{ value: 'no', label: 'なし' }, { value: 'yes', label: 'あり' }],
+        showWhen: (state) => !state.commonLabs?.hba1c_range,  // HbA1c未入力時のみ表示
+      },
     ],
     calc: calcHisayama,
   },

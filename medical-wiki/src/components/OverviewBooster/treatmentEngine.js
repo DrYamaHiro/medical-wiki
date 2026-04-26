@@ -580,6 +580,17 @@ function suggestAsthma(ctx) {
   const hasBio = drugIds.includes('as_biologic');
   const hasLtra = drugIds.includes('as_ltra');
   const hasOcs = drugIds.includes('as_ocs');
+  const uncontrolled = !!selection?.uncontrolled;  // Phase 3 で「コントロール不良」がトグルされた場合 true
+
+  // コントロール不良時 — 増量前にまず確認すべき項目を最上位
+  if (uncontrolled && drugIds.length > 0) {
+    recs.push({ severity: 'high', action: 'check', primary: '吸入手技を Teach-back 法で確認',
+      detail: 'デバイス操作・吸気タイミング・口すすぎを医師の前で実演させ、誤りを修正。', gl: 'GINA 2024' });
+    recs.push({ severity: 'high', action: 'check', primary: 'アドヒアランス確認',
+      detail: '処方残数チェック・自己申告 (MPR≥80%目標)。アドヒアランス不良なら増量前に教育。', gl: 'GINA 2024' });
+    recs.push({ severity: 'high', action: 'check', primary: '併存症介入',
+      detail: 'GERD (PPI)・アレルギー鼻炎 (鼻噴霧ステロイド)・肥満 (減量)・OSAS (CPAP)・喫煙 (禁煙)。"見かけ上uncontrolled"の50-70%は併存症由来。', gl: 'GINA 2024' });
+  }
 
   // 現在の Step 推定 (GINA 2024 Track 1 ベース)
   let currentStep = '未治療';
@@ -592,99 +603,74 @@ function suggestAsthma(ctx) {
   const concernsBase = '吸入手技 (Teach-back)・アドヒアランス・併存症 (GERD/アレルギー性鼻炎/肥満/OSAS/喫煙) を再確認。"見かけ上uncontrolled"の50-70%は上記が原因。';
 
   if (drugIds.length === 0) {
-    recs.push({ severity: 'high', action: 'start',
-      drug: '【現在: 未治療 → Step 1-2 へ GO】 as-needed ICS-formoterol (Track 1 / AIR)',
-      dose: 'シムビコート 1吸入 症状時 (Maintenance不要・症状時のみ)',
-      reason: 'GINA 2024 軽症: ICS-formoterol を症状時 reliever 兼用が preferred。SABA単独は死亡リスクで非推奨。',
+    recs.push({ severity: 'high', action: 'start', stepFlow: '未治療 → Step 1-2',
+      primary: 'as-needed ICS-formoterol (Track 1 / AIR)',
+      dose: 'シムビコート 1吸入 症状時',
+      detail: 'GINA 2024 軽症: ICS-formoterol を症状時 reliever 兼用が preferred。SABA単独は死亡リスクで非推奨。',
       gl: 'GINA 2024 Track 1 Step 1-2',
-      concerns: '懸念点: 吸入手技指導が必要 (デバイス慣れ)・症状時のみで定期使用なし→アドヒアランス課題あり。',
       sharedClass: 'ICS-LABA' });
-    recs.push({ severity: 'medium', action: 'alternative',
-      drug: '【代替: Step 1-2 Track 2】 ICS低用量+SABA頓用',
+    recs.push({ severity: 'medium', action: 'alternative', stepFlow: '未治療 → Step 1-2 Track 2',
+      primary: 'ICS低用量+SABA頓用',
       dose: 'フルタイド 50μg×2/日 + メプチン 頓用',
-      reason: 'Track 1 が困難な場合の代替。', gl: 'GINA 2024 Track 2 Step 1-2',
-      concerns: '懸念点: SABA過使用 (年≥3 canister) は死亡リスク増。' });
-    recs.push({ severity: 'medium', action: 'consider', drug: 'LTRA併用 (鼻炎/AERD併存)',
+      detail: 'Track 1 が困難な場合の代替。SABA過使用 (年≥3 canister) は死亡リスク増。', gl: 'GINA 2024 Track 2 Step 1-2' });
+    recs.push({ severity: 'medium', action: 'consider', primary: 'LTRA併用 (鼻炎/AERD併存)',
       dose: 'モンテルカスト 10mg夜',
-      reason: 'アレルギー性鼻炎/AERD併存例で ICS補助。', gl: 'GINA 2024',
-      concerns: '神経精神症状 (悪夢・うつ) を稀に報告。' });
+      detail: 'アレルギー性鼻炎/AERD併存例で ICS補助。', gl: 'GINA 2024' });
   } else if (hasMart && !hasLama && !hasTriple) {
-    recs.push({ severity: 'high', action: 'titrate_up',
-      drug: `【現在: ${currentStep} → Step 3-4 へ GO】 ICS-formoterol を中用量へ増量`,
+    recs.push({ severity: 'high', action: 'titrate_up', stepFlow: `${currentStep} → Step 3-4`,
+      primary: 'ICS-formoterol を中用量へ増量',
       dose: 'シムビコート 2吸入×2/日 + 症状時',
-      reason: 'GINA 2024 Step 3-4: SMART療法で中用量へ増量、約70%でコントロール達成。',
-      gl: 'GINA 2024 Track 1 Step 3-4',
-      concerns: `懸念点: ${concernsBase} 増量前に吸入手技を Teach-back で必ず確認。`,
-      sharedClass: 'ICS-LABA' });
-    recs.push({ severity: 'medium', action: 'add',
-      drug: `【現在: ${currentStep} → Step 4 へ GO】 LAMA追加 (Triple化)`,
+      detail: 'GINA 2024 Step 3-4: SMART療法で中用量へ増量、約70%でコントロール達成。',
+      gl: 'GINA 2024 Track 1 Step 3-4', sharedClass: 'ICS-LABA' });
+    recs.push({ severity: 'medium', action: 'add', stepFlow: `${currentStep} → Step 4`,
+      primary: 'LAMA追加 (Triple化)',
       dose: 'スピリーバ レスピマット 2.5μg×2吸入/日',
-      reason: 'ICS-LABA未達ならStep 4でLAMA追加。',
-      gl: 'GINA 2024 Step 4',
-      concerns: '懸念点: 緑内障・前立腺肥大で慎重。3デバイス→単吸入Triple化で アドヒアランス向上検討。' });
+      detail: 'ICS-LABA未達ならStep 4でLAMA追加。緑内障・前立腺肥大で慎重。3デバイス→単吸入Triple化でアドヒアランス向上。',
+      gl: 'GINA 2024 Step 4', sharedClass: 'LAMA' });
     if (!hasLtra) {
-      recs.push({ severity: 'medium', action: 'add',
-        drug: '【補助: 鼻炎/AERD併存時】 LTRA追加',
+      recs.push({ severity: 'medium', action: 'add', primary: 'LTRA追加 (鼻炎/AERD併存時)',
         dose: 'モンテルカスト 10mg夜',
-        reason: 'アレルギー鼻炎・運動誘発喘息で LTRA補助。', gl: 'GINA 2024',
-        concerns: '神経精神症状 (悪夢・うつ) 稀。' });
+        detail: 'アレルギー鼻炎・運動誘発喘息で補助。', gl: 'GINA 2024' });
     }
   } else if (hasTriple && !hasBio) {
-    recs.push({ severity: 'high', action: 'consider',
-      drug: `【現在: ${currentStep} → Step 5 へ GO】 生物学的製剤: アンチIgE (オマリズマブ)`,
+    recs.push({ severity: 'high', action: 'consider', stepFlow: `${currentStep} → Step 5`,
+      primary: '生物学的製剤: アンチIgE (オマリズマブ)',
       dose: '体重・IgE別 SC 2-4週毎',
-      reason: 'アレルギー型 (IgE高/atopy多種) → omalizumab。',
-      gl: 'GINA 2024 Step 5',
-      concerns: '懸念点: 高額・アナフィラキシー稀・専門医導入必須。導入前に Type 2 表現型評価 (eos/FeNO/IgE)。',
-      sharedClass: 'Biologic' });
-    recs.push({ severity: 'high', action: 'consider',
-      drug: `【現在: ${currentStep} → Step 5 へ GO】 生物学的製剤: アンチIL-5 (メポ/ベンラ)`,
+      detail: 'アレルギー型 (IgE高/atopy多種) → omalizumab。専門医導入必須。',
+      gl: 'GINA 2024 Step 5', sharedClass: 'Biologic' });
+    recs.push({ severity: 'high', action: 'consider', stepFlow: `${currentStep} → Step 5`,
+      primary: '生物学的製剤: アンチIL-5 (メポ/ベンラ)',
       dose: 'メポリズマブ 100mg SC 4週毎 / ベンラリズマブ 30mg SC 8週毎',
-      reason: '好酸球性 (eos≥300) → mepolizumab/benralizumab。',
-      gl: 'GINA 2024 Step 5',
-      concerns: '懸念点: eos値で適応判断、専門医導入。',
-      sharedClass: 'Biologic' });
-    recs.push({ severity: 'high', action: 'consider',
-      drug: `【現在: ${currentStep} → Step 5 へ GO】 生物学的製剤: アンチIL-4/13 (デュピルマブ)`,
+      detail: '好酸球性 (eos≥300) → mepolizumab/benralizumab。',
+      gl: 'GINA 2024 Step 5', sharedClass: 'Biologic' });
+    recs.push({ severity: 'high', action: 'consider', stepFlow: `${currentStep} → Step 5`,
+      primary: '生物学的製剤: アンチIL-4/13 (デュピルマブ)',
       dose: 'デュピクセント 300mg SC 2週毎',
-      reason: 'アトピー/鼻茸/AERD/OCS依存 → dupilumab最適応 (蕁麻疹・アトピーにも効果)。',
-      gl: 'GINA 2024 Step 5',
-      concerns: '懸念点: 結膜炎・好酸球一過性上昇。',
-      sharedClass: 'Biologic' });
-    recs.push({ severity: 'high', action: 'consider',
-      drug: `【現在: ${currentStep} → Step 5 へ GO】 生物学的製剤: アンチTSLP (テゼペルマブ)`,
+      detail: 'アトピー/鼻茸/AERD/OCS依存 → dupilumab最適応 (蕁麻疹・アトピーにも効果)。',
+      gl: 'GINA 2024 Step 5', sharedClass: 'Biologic' });
+    recs.push({ severity: 'high', action: 'consider', stepFlow: `${currentStep} → Step 5`,
+      primary: '生物学的製剤: アンチTSLP (テゼペルマブ)',
       dose: 'テゼスパイア 210mg SC 4週毎',
-      reason: 'T2-low含む全表現型に有効、最新選択肢 (NAVIGATOR試験)。',
-      gl: 'GINA 2024 Step 5',
-      concerns: '懸念点: 比較的新しい薬剤、長期データ蓄積中。',
-      sharedClass: 'Biologic' });
+      detail: 'T2-low含む全表現型に有効、最新選択肢 (NAVIGATOR試験)。',
+      gl: 'GINA 2024 Step 5', sharedClass: 'Biologic' });
     recs.push({ severity: 'medium', action: 'consider_alt',
-      drug: '【代替: 生物学的製剤待機中】 OCS最小量 (短期)',
+      primary: 'OCS最小量 (短期、生物学的製剤待機中)',
       dose: 'プレドニン 5-10mg/日',
-      reason: '生物学的製剤導入待機中の症状コントロール。',
-      gl: 'GINA 2024',
-      concerns: '懸念点: 長期OCSは骨粗鬆症・糖尿病・白内障リスク。生物学的製剤導入後は離脱目標。' });
+      detail: '長期OCSは骨粗鬆症・糖尿病・白内障リスク。生物学的製剤導入後は離脱目標。',
+      gl: 'GINA 2024' });
   } else if (hasIcs && !hasMart) {
-    recs.push({ severity: 'medium', action: 'switch',
-      drug: `【現在: ${currentStep} → Step 1-2 Track 1 へ GO】 ICS単剤 → ICS-formoterol SMART`,
+    recs.push({ severity: 'medium', action: 'switch', stepFlow: `${currentStep} → Step 1-2 Track 1`,
+      primary: 'ICS単剤 → ICS-formoterol SMART',
       dose: 'フルタイド → シムビコート 2吸入×2 + 症状時',
-      reason: 'Track 2 (ICS+SABA) より Track 1 (SMART) が GINA 2024 で preferred。',
-      gl: 'GINA 2024',
-      concerns: '懸念点: デバイス変更で手技再指導必要。',
-      sharedClass: 'ICS-LABA' });
+      detail: 'Track 2 (ICS+SABA) より Track 1 (SMART) が GINA 2024 で preferred。',
+      gl: 'GINA 2024', sharedClass: 'ICS-LABA' });
   }
 
   if (hasOcs) {
-    recs.push({ severity: 'high', action: 'taper',
-      drug: '【OCS依存からの離脱】 生物学的製剤導入 + OCS漸減',
-      reason: '長期OCSは予後悪化。生物学的製剤導入で OCS離脱が GINA 2024 推奨。',
-      gl: 'GINA 2024',
-      concerns: '副腎不全に注意、急速中止禁止。漸減プロトコル必要。' });
+    recs.push({ severity: 'high', action: 'taper', primary: 'OCS依存からの離脱: 生物学的製剤導入 + OCS漸減',
+      detail: '長期OCSは予後悪化。生物学的製剤導入で OCS離脱が GINA 2024 推奨。副腎不全注意、急速中止禁止。',
+      gl: 'GINA 2024' });
   }
-
-  recs.push({ severity: 'low', action: 'lifestyle',
-    reason: `${concernsBase} 妊娠中はブデソニド優先 (リスクデータ最も多い)。AERD は NSAID完全回避。`,
-    gl: 'GINA 2024', sharedClass: 'Lifestyle' });
 
   return recs;
 }
@@ -872,6 +858,26 @@ const SUGGESTERS = {
   ascvd2: suggestAscvd2,
 };
 
+// 内服系コントロール不良トリガ — 各疾患の suggestion 結果に prepend
+function prependOralComplianceChecks(recs, ctx, diseaseKey) {
+  const sel = ctx.selection || {};
+  const drugIds = Object.keys(sel.classDetails || {});
+  if (!sel.uncontrolled || drugIds.length === 0) return recs;
+  // 喘息/COPD は各 suggester が個別に吸入手技を扱うのでスキップ
+  if (diseaseKey === 'asthma' || diseaseKey === 'copd') return recs;
+  const out = [];
+  out.push({ severity: 'high', action: 'check', primary: 'アドヒアランス確認',
+    detail: '残薬カウント・自己申告 (MPR≥80%目標)。飲み忘れ/中断パターン (週何回・どの時間帯) と理由 (副作用/費用/忘却) を聞く。増量より先に。',
+    gl: '一般診療原則' });
+  out.push({ severity: 'high', action: 'check', primary: '生活習慣の遵守度',
+    detail: '塩分・糖質・運動・節酒・禁煙の実行度を再確認。指導内容と実生活のギャップを埋める。',
+    gl: '一般診療原則' });
+  out.push({ severity: 'high', action: 'check', primary: '併存症・生理的要因の介入',
+    detail: 'OSAS (CPAP)・うつ/不安・甲状腺機能・服薬数過多 (deprescribing)・痛み・睡眠不足など。"見かけ上uncontrolled"の多くは併存症由来。',
+    gl: '一般診療原則' });
+  return [...out, ...recs];
+}
+
 export function suggestTreatment(diseaseKey, state) {
   const fn = SUGGESTERS[diseaseKey];
   if (!fn) return [];
@@ -882,7 +888,12 @@ export function suggestTreatment(diseaseKey, state) {
     scoreResult: state.scoresByDisease?.[diseaseKey]?.result,
     selection: state.selectionsByDisease?.[diseaseKey],
   };
-  try { return fn(ctx) || []; } catch (e) { return []; }
+  try {
+    const recs = fn(ctx) || [];
+    return prependOralComplianceChecks(recs, ctx, diseaseKey);
+  } catch (e) {
+    return [];
+  }
 }
 
 // ============================================================
