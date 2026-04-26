@@ -40,6 +40,8 @@ export const TG_RANGES = [
   { value: '500-999', label: '500-999 (膵炎リスク)' }, { value: '1000+', label: '≥1000 (即日精査)' },
 ];
 export const HBA1C_RANGES = [
+  { value: 'unmeasured_normal', label: '未検査・耐糖能正常 (自己申告)' },
+  { value: 'unmeasured_igt', label: '未検査・耐糖能異常あり (糖尿病予備群と言われた等)' },
   { value: '<5.6', label: '<5.6 (正常)' }, { value: '5.6-5.9', label: '5.6-5.9 (前糖尿病)' },
   { value: '6.0-6.4', label: '6.0-6.4 (境界)' }, { value: '6.5-6.9', label: '6.5-6.9 (DM軽度)' },
   { value: '7.0-7.9', label: '7.0-7.9 (DM中等)' }, { value: '8.0-9.9', label: '8.0-9.9 (DM不良)' }, { value: '10+', label: '≥10 (DM重症)' },
@@ -122,7 +124,6 @@ function deriveBpGrade(sbpRange, dbpRange) {
 export function calcHisayama(ctx) {
   const ph = ctx.patientHeader || {};
   const cl = ctx.commonLabs || {};
-  const li = ctx.localInput || {};
   const ageMap = { '<40': 0, '40-49': 1, '50-59': 2, '60-64': 3, '65-69': 3, '70-74': 4, '75-79': 4, '80-89': 4, '90+': 4 };
   const sbpMap = { '<120': 0, '120-129': 0, '130-139': 1, '140-159': 2, '160-179': 3, '180+': 3 };
   const ldlMap = { '<70': 0, '70-99': 0, '100-119': 0, '120-139': 1, '140-159': 2, '160-179': 2, '180+': 3 };
@@ -136,8 +137,9 @@ export function calcHisayama(ctx) {
   points += ldlMap[cl.ldl_range] ?? 0;
   points += hdlMap[cl.hdl_range] ?? 0;
   if (ph.smoking === 'current') points += 2;
-  // 耐糖能異常: cm_dm 既知 or HbA1c≥6.0 or 局所入力 yes
-  const dmKnown = ph.cm_dm || (cl.hba1c_range && ['6.0-6.4','6.5-6.9','7.0-7.9','8.0-9.9','10+'].includes(cl.hba1c_range)) || li.glucose === 'yes';
+  // 耐糖能異常: cm_dm 既知 or HbA1c が境界以上 or 自己申告 IGT
+  const dmKnown = ph.cm_dm
+    || ['6.0-6.4','6.5-6.9','7.0-7.9','8.0-9.9','10+','unmeasured_igt'].includes(cl.hba1c_range);
   if (dmKnown) points += 2;
   points += bmiMap[cl.bmi_range] ?? 0;
 
@@ -299,12 +301,7 @@ export const SCORE_DEFINITIONS = {
       commonLabs:    ['sbp_range', 'ldl_range', 'hdl_range', 'bmi_range', 'hba1c_range'],
       commonHistory: [],
     },
-    localInputs: [
-      { id: 'glucose', label: '耐糖能異常 (HbA1cが未入力時のみ)', type: 'select',
-        options: [{ value: 'no', label: 'なし' }, { value: 'yes', label: 'あり' }],
-        showWhen: (state) => !state.commonLabs?.hba1c_range,  // HbA1c未入力時のみ表示
-      },
-    ],
+    localInputs: [],
     calc: calcHisayama,
   },
   jsh2025_risk: {

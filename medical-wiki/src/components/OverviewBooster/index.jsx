@@ -160,7 +160,11 @@ function reducer(state, action) {
         const defaultDose = firstDrug?.doses?.find((d) => d.isDefault) || firstDrug?.doses?.[0];
         newDetails[classId] = { drugId: firstDrug?.id || '', dose: defaultDose?.value || '' };
       }
-      let newSelections = { ...state.selectionsByDisease, [disease]: { ...cur, classDetails: newDetails } };
+      // 自疾患でも薬剤を選んだら治療状況を「薬物治療中」に自動格上げ
+      const curTxStatus = (turningOn && Object.keys(newDetails).length > 0)
+        ? 'on_treatment'
+        : cur.txStatus;
+      let newSelections = { ...state.selectionsByDisease, [disease]: { ...cur, classDetails: newDetails, txStatus: curTxStatus } };
       // 横断 auto-link: sharedClass 一致クラスを他の選択疾患でも自動 ON/OFF
       const sc = drugClass.sharedClass;
       if (sc && allDiseases) {
@@ -179,7 +183,10 @@ function reducer(state, action) {
           } else if (!turningOn && otherDetails[otherClass.id]) {
             delete otherDetails[otherClass.id];
           }
-          newSelections[otherDk] = { ...otherCur, classDetails: otherDetails };
+          // 他疾患の treatmentStatus も連動: 1つでも処方が残っていれば on_treatment、無ければ未触
+          const otherHas = Object.keys(otherDetails).length > 0;
+          const otherTxStatus = otherHas ? 'on_treatment' : otherCur.txStatus;
+          newSelections[otherDk] = { ...otherCur, classDetails: otherDetails, txStatus: otherTxStatus };
         }
       }
       return { ...state, selectionsByDisease: newSelections };
@@ -414,10 +421,29 @@ function PatientHeaderPanel({ state, dispatch }) {
       )}
 
       {ph.age && ph.sex && ph.smoking && (
-        <div className={styles.patientGrid} style={{ marginTop: '0.5rem' }}>
-          {showReproductive && <CheckboxField id="ph_preg" label="妊娠中" checked={ph.co_pregnancy} onChange={(v) => update({ co_pregnancy: v })} />}
-          {showReproductive && <CheckboxField id="ph_lact" label="授乳中" checked={ph.co_lactation} onChange={(v) => update({ co_lactation: v })} />}
-          <CheckboxField id="ph_frail" label="フレイル" checked={ph.co_frail} onChange={(v) => update({ co_frail: v })} />
+        <div className={styles.bigPickerBlock} style={{ marginTop: '0.5rem' }}>
+          <div className={styles.bigPickerLabel}>追加情報 (該当時タップ)</div>
+          <div className={styles.bigPickerGrid}>
+            {showReproductive && (
+              <button type="button"
+                className={`${styles.bigPickerBtn} ${ph.co_pregnancy ? styles.bigPickerBtnActive : ''}`}
+                onClick={() => update({ co_pregnancy: !ph.co_pregnancy })}>
+                妊娠中 {ph.co_pregnancy ? '✓' : ''}
+              </button>
+            )}
+            {showReproductive && (
+              <button type="button"
+                className={`${styles.bigPickerBtn} ${ph.co_lactation ? styles.bigPickerBtnActive : ''}`}
+                onClick={() => update({ co_lactation: !ph.co_lactation })}>
+                授乳中 {ph.co_lactation ? '✓' : ''}
+              </button>
+            )}
+            <button type="button"
+              className={`${styles.bigPickerBtn} ${ph.co_frail ? styles.bigPickerBtnActive : ''}`}
+              onClick={() => update({ co_frail: !ph.co_frail })}>
+              フレイル {ph.co_frail ? '✓' : ''}
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -545,26 +571,62 @@ function Step05Panel({ state, dispatch, onNext, onBack }) {
   );
 }
 
+// 折りたたみ式ボタンピッカー — 未選択時はヘッダーのみ、タップで展開、選択後はサマリー表示
+function ButtonPicker({ id, label, value, options, onChange, hint }) {
+  const [open, setOpen] = useState(!value);
+  useEffect(() => { if (!value) setOpen(true); }, [value]);
+  const currentLabel = options.find((o) => o.value === value)?.label;
+  return (
+    <div className={styles.labPickerBlock}>
+      <button type="button"
+        className={`${styles.labPickerHeader} ${value ? styles.labPickerHeaderSelected : ''}`}
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}>
+        <span>
+          {label}
+          {hint && <span className={styles.sectionHint}> → {hint}</span>}
+        </span>
+        <span>
+          {value
+            ? <span className={styles.labPickerCurrent}>{currentLabel} ✎</span>
+            : <span className={styles.labPickerEmpty}>未選択 ▶</span>}
+        </span>
+      </button>
+      {open && (
+        <div className={styles.labPickerOptions}>
+          {options.map((o) => (
+            <button key={o.value} type="button"
+              className={`${styles.bigPickerBtnSm} ${value === o.value ? styles.bigPickerBtnActive : ''}`}
+              onClick={() => { onChange(o.value); setOpen(false); }}>
+              {o.label}
+            </button>
+          ))}
+          {value && (
+            <button type="button" className={styles.bigPickerBtnSm} onClick={() => { onChange(''); }}>
+              クリア
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // 共通検査値パネル
 function CommonLabsPanel({ state, dispatch, requiredIds }) {
   return (
     <div className={styles.scorePanel} style={{ background: '#e3f2fd', borderColor: '#1976d2' }}>
       <div className={styles.scorePanelTitle}>共通検査値 <span className={styles.sectionHint}>(複数スコアで自動共有)</span></div>
-      <div className={styles.scoreInputGrid}>
-        {COMMON_LAB_FIELDS.filter((f) => requiredIds.includes(f.id)).map((f) => (
-          <div key={f.id}>
-            <label className={styles.fieldLabel} htmlFor={`lab_${f.id}`}>
-              {f.label} <span className={styles.sectionHint}>→ {f.usedBy.join(', ')}</span>
-            </label>
-            <select id={`lab_${f.id}`} className={styles.fieldInput}
-              value={state.commonLabs[f.id] || ''}
-              onChange={(e) => dispatch({ type: 'SET_COMMON_LAB', payload: { [f.id]: e.target.value } })}>
-              <option value="">--</option>
-              {f.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
-          </div>
-        ))}
-      </div>
+      {COMMON_LAB_FIELDS.filter((f) => requiredIds.includes(f.id)).map((f) => (
+        <ButtonPicker key={f.id}
+          id={`lab_${f.id}`}
+          label={f.label}
+          hint={f.usedBy.join(', ')}
+          value={state.commonLabs[f.id] || ''}
+          options={f.options}
+          onChange={(v) => dispatch({ type: 'SET_COMMON_LAB', payload: { [f.id]: v } })}
+        />
+      ))}
     </div>
   );
 }
@@ -657,19 +719,19 @@ function ScoreCard({ disease, state, dispatch }) {
 }
 
 function ScoreInputField({ input, value, onChange }) {
-  const id = `score_input_${input.id}`;
   if (input.type === 'select') {
     return (
-      <div>
-        <label className={styles.fieldLabel} htmlFor={id}>{input.label}</label>
-        <select id={id} className={styles.fieldInput} value={value || ''} onChange={(e) => onChange(e.target.value)}>
-          <option value="">--</option>
-          {input.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
-      </div>
+      <ButtonPicker
+        id={`score_input_${input.id}`}
+        label={input.label}
+        value={value || ''}
+        options={input.options}
+        onChange={onChange}
+      />
     );
   }
   if (input.type === 'checkbox') {
+    const id = `score_input_${input.id}`;
     return (
       <div>
         <label className={styles.fieldLabel} htmlFor={id}>
@@ -880,13 +942,20 @@ function DrugClassSection({ disease, drugClass, sel, dispatch, violations, share
             const drug = drugClass.drugs.find((d) => d.id === detail.drugId);
             if (!drug) return null;
             return (
-              <div style={{ marginTop: '0.4rem' }}>
-                <label className={styles.fieldLabel} htmlFor={`dose_${disease.key}_${drugClass.id}`}>用量:</label>
-                <select id={`dose_${disease.key}_${drugClass.id}`} className={styles.fieldInput}
-                  value={detail.dose || ''}
-                  onChange={(e) => dispatch({ type: 'SET_DRUG_IN_CLASS', payload: { disease: disease.key, classId: drugClass.id, drugId: detail.drugId, dose: e.target.value } })}>
-                  {drug.doses.map((dose) => <option key={dose.value} value={dose.value}>{dose.label}</option>)}
-                </select>
+              <div style={{ marginTop: '0.5rem' }}>
+                <div className={styles.fieldLabel}>用量:</div>
+                <div className={styles.chipGrid}>
+                  {drug.doses.map((dose) => {
+                    const active = detail.dose === dose.value;
+                    return (
+                      <button key={dose.value} type="button"
+                        className={`${styles.bigPickerBtnSm} ${active ? styles.bigPickerBtnActive : ''}`}
+                        onClick={() => dispatch({ type: 'SET_DRUG_IN_CLASS', payload: { disease: disease.key, classId: drugClass.id, drugId: detail.drugId, dose: dose.value } })}>
+                        {dose.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             );
           })()}
@@ -1183,21 +1252,23 @@ function SummaryPanel({ state, dispatch, violations, onBack, onCopy }) {
                     </div>
                   </div>
                 )}
-                <div className={styles.summaryRow} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-end', flexWrap: 'wrap', marginTop: '0.6rem' }}>
-                  <div style={{ minWidth: '160px' }}>
-                    <label className={styles.fieldLabel} htmlFor={`sum_follow_${key}`}>次回フォロー時期:</label>
-                    <select id={`sum_follow_${key}`} className={styles.fieldInput} value={sel.followIn || ''}
-                      onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'followIn', value: e.target.value } })}>
-                      <option value="">--</option>
-                      {FOLLOW_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-                    </select>
+                <div className={styles.summaryRow} style={{ marginTop: '0.6rem' }}>
+                  <div className={styles.fieldLabel}>次回フォロー時期:</div>
+                  <div className={styles.chipGrid}>
+                    {FOLLOW_OPTIONS.map((o) => (
+                      <button key={o.value} type="button"
+                        className={`${styles.bigPickerBtnSm} ${sel.followIn === o.value ? styles.bigPickerBtnActive : ''}`}
+                        onClick={() => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'followIn', value: sel.followIn === o.value ? '' : o.value } })}>
+                        {o.label}
+                      </button>
+                    ))}
                   </div>
-                  <div style={{ flex: '1 1 240px' }}>
-                    <label className={styles.fieldLabel} htmlFor={`sum_goal_${key}`}>目標メモ (任意):</label>
-                    <input id={`sum_goal_${key}`} type="text" className={styles.fieldInput} value={sel.goalNote || ''}
-                      placeholder="例: HbA1c<7.0、LDL<70、家庭BP<125/75"
-                      onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'goalNote', value: e.target.value } })} />
-                  </div>
+                </div>
+                <div className={styles.summaryRow}>
+                  <label className={styles.fieldLabel} htmlFor={`sum_goal_${key}`}>目標メモ (任意):</label>
+                  <input id={`sum_goal_${key}`} type="text" className={styles.fieldInput} value={sel.goalNote || ''}
+                    placeholder="例: HbA1c<7.0、LDL<70、家庭BP<125/75"
+                    onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'goalNote', value: e.target.value } })} />
                 </div>
               </div>
             );

@@ -541,11 +541,13 @@ export const OVERVIEW_DISEASES = [
       },
       { id: 'as_triple', label: 'Triple (Step 5)', tooltip: 'テリルジー / エナジア', sharedClass: 'ICS-LABA-LAMA',
         drugs: [
-          { id: 'as_tri', name: 'テリルジー 100エリプタ (FF/UMEC/VI)', doses: [
-            { value: '100', label: '1吸入/日 (標準)', isDefault: true }, { value: '200', label: 'テリルジー200 1吸入/日 (高)', isMax: true },
+          { id: 'as_tri', name: 'テリルジー エリプタ (FF/UMEC/VI)', doses: [
+            { value: '100', label: 'テリルジー100 1吸入/日 (標準)', isDefault: true },
+            { value: '200', label: 'テリルジー200 1吸入/日 (高用量)', isMax: true },
           ]},
           { id: 'as_ena', name: 'エナジア (MF/IND/GLY)', doses: [
-            { value: 'mid', label: '中用量 1吸入/日 (標準)', isDefault: true }, { value: 'high', label: '高用量 1吸入/日', isMax: true },
+            { value: 'mid', label: 'エナジア中用量 1吸入/日 (標準)', isDefault: true },
+            { value: 'high', label: 'エナジア高用量 1吸入/日', isMax: true },
           ]},
         ],
       },
@@ -603,14 +605,26 @@ export const OVERVIEW_DISEASES = [
       },
       { id: 'copd_triple', label: 'Triple (Group E + eos≥300/ACO)', tooltip: 'テリルジー / ビレーズトリ', sharedClass: 'ICS-LABA-LAMA',
         drugs: [
-          { id: 'copd_tri', name: 'テリルジー 100エリプタ', doses: [{ value: '1', label: '1吸入/日', isDefault: true, isMax: true }] },
-          { id: 'copd_bil', name: 'ビレーズトリ エアロスフィア', doses: [{ value: '2x2', label: '2吸入×2/日', isDefault: true, isMax: true }] },
+          { id: 'copd_tri', name: 'テリルジー エリプタ (FF/UMEC/VI)', doses: [
+            { value: '100', label: 'テリルジー100 1吸入/日 (標準)', isDefault: true },
+            { value: '200', label: 'テリルジー200 1吸入/日 (高用量)', isMax: true },
+          ]},
+          { id: 'copd_bil', name: 'ビレーズトリ エアロスフィア (BUD/GLY/FOR)', doses: [
+            { value: '2x2', label: '2吸入×2/日', isDefault: true, isMax: true },
+          ]},
         ],
       },
       { id: 'copd_ics_laba', label: 'ICS/LABA (ACO限定)', tooltip: 'シムビコート / レルベア', sharedClass: 'ICS-LABA',
         drugs: [
-          { id: 'copd_sym', name: 'シムビコート', doses: [{ value: '2x2', label: '2吸入×2/日', isDefault: true }] },
-          { id: 'copd_rel', name: 'レルベア (FF/VI)', doses: [{ value: '100', label: 'レルベア100 1吸入/日', isDefault: true }, { value: '200', label: 'レルベア200 1吸入/日', isMax: true }] },
+          { id: 'copd_sym', name: 'ブデソニド/ホルモテロール (シムビコート)', doses: [
+            { value: '160_1x2', label: '160/4.5 1吸入×2/日 (低用量)' },
+            { value: '160_2x2', label: '160/4.5 2吸入×2/日 (中用量)', isDefault: true },
+            { value: '320_2x2', label: '320/9 2吸入×2/日 (高用量)', isMax: true },
+          ]},
+          { id: 'copd_rel', name: 'フルチカゾンフラン/ビランテロール (レルベア)', doses: [
+            { value: '100', label: 'レルベア100 1吸入/日 (標準)', isDefault: true },
+            { value: '200', label: 'レルベア200 1吸入/日 (高用量)', isMax: true },
+          ]},
         ],
       },
       { id: 'copd_saba', label: 'SABA/SAMA (頓用)', tooltip: 'サルタノール / アトロベント',

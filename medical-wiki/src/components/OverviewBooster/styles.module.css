@@ -575,6 +575,78 @@
   outline: 3px solid #5e35b1;
   outline-offset: 2px;
 }
+.bigPickerBtnActive {
+  background: #5e35b1;
+  color: #fff;
+  border-color: #4527a0;
+}
+.bigPickerBtnActive:hover {
+  background: #4527a0;
+  color: #fff;
+}
+.bigPickerBtnSm {
+  min-height: 40px;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: #ede7f6;
+  border: 2px solid #b39ddb;
+  color: #311b92;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.bigPickerBtnSm:hover {
+  background: #d1c4e9;
+}
+.bigPickerBtnSm.bigPickerBtnActive {
+  background: #5e35b1;
+  color: #fff;
+  border-color: #4527a0;
+}
+
+/* 共通検査値・スコア入力 折りたたみ式ボタンピッカー */
+.labPickerBlock {
+  margin: 0.4rem 0;
+}
+.labPickerHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  background: #fff;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  min-height: 48px;
+}
+.labPickerHeader:hover { background: #f3e5f5; }
+.labPickerHeaderSelected {
+  background: #ede7f6;
+  border-color: #5e35b1;
+}
+.labPickerCurrent {
+  font-weight: 700;
+  color: #311b92;
+}
+.labPickerEmpty {
+  color: var(--ifm-color-emphasis-500);
+  font-style: italic;
+  font-weight: 400;
+}
+.labPickerOptions {
+  margin-top: 0.4rem;
+  padding: 0.6rem;
+  background: #faf7ff;
+  border: 1px dashed #b39ddb;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
 
 .patientSummaryRow {
   display: flex;
