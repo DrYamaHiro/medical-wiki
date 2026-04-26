@@ -811,3 +811,61 @@
   opacity: 0.7;
   font-style: italic;
 }
+
+/* スコア結果サマリー (Phase 4 提案先頭) */
+.scoreSummaryBox {
+  margin: 0 0.8rem 0.6rem;
+  padding: 0.6rem 0.85rem;
+  background: #fffde7;
+  border: 2px solid #fdd835;
+  border-left-width: 6px;
+  border-radius: 8px;
+}
+.scoreSummaryTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #5d4037;
+  margin-bottom: 0.3rem;
+}
+.scoreSummaryLine {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #4e342e;
+  margin: 0.15rem 0;
+}
+
+/* 危険な禁忌違反の sticky バナー (画面上部) */
+.criticalSticky {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  margin: 0;
+  padding: 0.6rem 1rem;
+  background: #b71c1c;
+  color: #fff;
+  font-weight: 700;
+  border-bottom: 2px solid #7f0000;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.criticalStickyDetail {
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+/* カルテ貼付用テキストエリア */
+.carteText {
+  width: 100%;
+  min-height: 280px;
+  padding: 0.7rem;
+  font-family: 'Courier New', 'Hiragino Sans', monospace;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  border: 2px solid #5e35b1;
+  border-radius: 6px;
+  background: #fff;
+  color: #311b92;
+  resize: vertical;
+}

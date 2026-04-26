@@ -16,8 +16,8 @@ export const ABBREVIATIONS = {
   HeFH: 'ヘテロ接合体FH',
   CKD: '慢性腎臓病 (Chronic Kidney Disease)',
   HF: '心不全 (Heart Failure)',
-  HFrEF: '駆出率低下心不全 (HF with reduced EF, EF≤40%)',
-  HFpEF: '駆出率保持心不全 (HF with preserved EF, EF>40%)',
+  HFrEF: '駆出率低下心不全 (HF with reduced EF, EF≤40%、4本柱: ARNI/ACEi+βB+MRA+SGLT2i)',
+  HFpEF: '駆出率保持心不全 (HF with preserved EF, EF≥50%、第一選択: SGLT2i)',
   HFmrEF: '中間範囲駆出率心不全 (HF with mid-range EF, EF 41-49%)',
   AF: '心房細動 (Atrial Fibrillation)',
   ACS: '急性冠症候群 (Acute Coronary Syndrome)',
@@ -30,7 +30,7 @@ export const ABBREVIATIONS = {
   TIA: '一過性脳虚血発作 (Transient Ischemic Attack)',
   COPD: '慢性閉塞性肺疾患 (Chronic Obstructive Pulmonary Disease)',
   ACO: '喘息-COPDオーバーラップ (Asthma-COPD Overlap)',
-  AERD: 'アスピリン誘発呼吸器疾患 (Aspirin-Exacerbated Respiratory Disease, Samter triad)',
+  AERD: 'アスピリン誘発呼吸器疾患 (Aspirin-Exacerbated Respiratory Disease、Samter triad: 喘息+鼻茸+NSAID不耐)',
   OSAS: '閉塞性睡眠時無呼吸症候群 (Obstructive Sleep Apnea Syndrome)',
   MOH: '薬物乱用頭痛 (Medication Overuse Headache)',
   IBS: '過敏性腸症候群 (Irritable Bowel Syndrome)',
@@ -43,7 +43,7 @@ export const ABBREVIATIONS = {
   CCB: 'カルシウム拮抗薬 (Calcium Channel Blocker)',
   DHP: 'ジヒドロピリジン系 (Dihydropyridine)',
   MRA: 'ミネラルコルチコイド受容体拮抗薬 (Mineralocorticoid Receptor Antagonist)',
-  ARNI: 'アンジオテンシン受容体ネプリライシン阻害薬 (Angiotensin Receptor-Neprilysin Inhibitor)',
+  ARNI: 'アンジオテンシン受容体ネプリライシン阻害薬 (サクビトリル + バルサルタン、エンレスト)',
   SGLT2i: 'ナトリウム/グルコース共役輸送体2阻害薬 (Sodium-Glucose Cotransporter 2 Inhibitor)',
   'GLP-1RA': 'グルカゴン様ペプチド-1受容体作動薬 (Glucagon-Like Peptide-1 Receptor Agonist)',
   'DPP-4i': 'ジペプチジルペプチダーゼ-4阻害薬',
@@ -67,10 +67,6 @@ export const ABBREVIATIONS = {
   XOI: 'キサンチンオキシダーゼ阻害薬 (Xanthine Oxidase Inhibitor)',
   CGRP: 'カルシトニン遺伝子関連ペプチド (Calcitonin Gene-Related Peptide)',
   MART: '維持療法+リリーバー兼用治療 (Maintenance and Reliever Therapy)',
-  SMART: 'シムビコート維持リリーバー療法',
-  AIR: 'as-needed ICS-formoterol Reliever',
-  Triple: 'ICS/LABA/LAMA 3剤合剤',
-  DAPT: '抗血小板薬2剤併用療法 (Dual Antiplatelet Therapy)',
   ULT: '尿酸降下療法 (Urate-Lowering Therapy)',
   HOT: '在宅酸素療法 (Home Oxygen Therapy)',
   CPAP: '持続陽圧呼吸療法',
@@ -168,6 +164,78 @@ export const ABBREVIATIONS = {
   RAS: 'レニン・アンジオテンシン系',
   'TG≥500': 'トリグリセリド 500mg/dL以上 (膵炎リスク)',
   'eGFR<30': 'eGFR 30未満 (高度CKD/G4-5)',
+
+  // 追加 (誤解しやすい略語・ローカル略語)
+  LVH: '左室肥大 (Left Ventricular Hypertrophy)',
+  RV: '右室 (Right Ventricle) ※「Residual Volume 残気量」と区別',
+  LV: '左室 (Left Ventricle)',
+  IGT: '耐糖能異常 (Impaired Glucose Tolerance、糖尿病予備群)',
+  IFG: '空腹時血糖異常 (Impaired Fasting Glucose)',
+  IHD: '虚血性心疾患 (Ischemic Heart Disease)',
+  HR: '心拍数 (Heart Rate) ※「ハザード比 Hazard Ratio」と文脈で区別',
+  GERD: '胃食道逆流症 (Gastroesophageal Reflux Disease)',
+  CS: '※多義語: Colonoscopy(消化管)/Cesarean Section(産科)/Cardiogenic Shock(循環器)/Coronary Spasm。文脈確認',
+  RA: '関節リウマチ (Rheumatoid Arthritis) ※「Right Atrium 右房」「Renin Activity」と区別',
+  RR: '呼吸数 (Respiratory Rate) または リスク比 (Risk Ratio)',
+  CR: 'クレアチニン (Creatinine) または完全寛解 (Complete Response)',
+  AS: '大動脈弁狭窄 (Aortic Stenosis) ※「強直性脊椎炎 Ankylosing Spondylitis」と文脈で区別',
+  MR: '僧帽弁逆流 (Mitral Regurgitation) ※「Modified Release」「Magnetic Resonance」と文脈で区別',
+  PR: '肺動脈弁逆流 / PR間隔 / Partial Response 文脈で区別',
+  EM: 'エパキサS / 緊急 / 外来 — 文脈で異なる略称',
+  SMART: '喘息 SMART療法 (シムビコート維持リリーバー) ※「SMART目標 Specific/Measurable...」とは無関係',
+  Triple: 'Triple = ICS+LABA+LAMA 3剤合剤 (吸入)',
+  GL: 'ガイドライン (Guideline)',
+  PRN: '頓用 (pro re nata、必要時)',
+  prn: '頓用 (pro re nata、必要時)',
+  basal: '基礎インスリン (持効型)',
+  bolus: '追加インスリン (超速効型)',
+  burst: '短期高用量ステロイド (例: PSL 30mg/日 ×5日)',
+  taper: '漸減 (急に止めず段階的に減量)',
+  'as-needed': '頓用 (症状時のみ)',
+  'Teach-back': 'ティーチバック法 (患者に説明内容を自分の言葉で再現させる確認手法)',
+  MPR: '服薬遵守率 (Medication Possession Ratio、80%以上が良好の目安)',
+  DAS: '疾患活動性スコア (Disease Activity Score)',
+  DASH: 'DASH食 (野菜・果物・低脂肪乳製品中心、降圧食事療法)',
+  DAPT: '抗血小板薬2剤併用療法 (Dual Antiplatelet Therapy、PCI後の標準)',
+  SAPT: '抗血小板薬単剤療法 (Single Antiplatelet Therapy)',
+  AIR: 'GINA Track 1 reliever-only ICS-formoterol (Anti-Inflammatory Reliever)',
+  'CHA₂DS₂': 'CHA₂DS₂-VAScの省略形',
+  NAFLD: '非アルコール性脂肪性肝疾患',
+  MASLD: '代謝関連脂肪性肝疾患 (NAFLD改称)',
+  HD: '血液透析 (Hemodialysis)',
+  PD: '腹膜透析 (Peritoneal Dialysis) ※「パーキンソン病 (Parkinson Disease)」と文脈で区別',
+  KT: '腎移植 (Kidney Transplantation)',
+  ECG: '心電図 (Electrocardiogram)',
+  EKG: '心電図 (独語 Elektrokardiogramm 由来)',
+  CHO: '炭水化物 (Carbohydrate)',
+  Cl: 'クロール (Chloride) または クリアランス (Clearance)',
+  K: 'カリウム (Potassium、血清K)',
+  Na: 'ナトリウム (Sodium)',
+  Ca: 'カルシウム (Calcium)',
+  P: 'リン (Phosphorus)',
+  iPTH: '副甲状腺ホルモン (intact Parathyroid Hormone)',
+  HCO3: '重炭酸イオン (代謝性アシドーシスの指標)',
+  IDDM: 'インスリン依存型糖尿病 (旧称、現在はT1DM)',
+  NIDDM: 'インスリン非依存型糖尿病 (旧称、現在はT2DM)',
+  CVD: '心血管疾患 (Cardiovascular Disease)',
+  CV: '心血管 (Cardiovascular)',
+  ACE: 'アンジオテンシン変換酵素 (Angiotensin Converting Enzyme)',
+  ARI: 'アンジオテンシン受容体阻害 (上位概念)',
+  RAS阻害: 'レニン・アンジオテンシン系阻害 (ARB/ACEiの総称)',
+  // 心不全関連の追加
+  βB: 'β遮断薬 (Beta-Blocker)',
+  βblocker: 'β遮断薬',
+  // GINA Step 関連
+  'Track 1': 'GINA 2024 推奨経路: ICS-formoterol を維持・症状時兼用 (SMART/AIR)',
+  'Track 2': 'GINA 2024 代替経路: ICS+SABA頓用 (Track 1困難時)',
+  'Step 1': 'GINA Step 1 — 症状月2回未満の軽症',
+  'Step 2': 'GINA Step 2 — 症状月2回以上 < 毎日',
+  'Step 3': 'GINA Step 3 — 毎日症状あり',
+  'Step 4': 'GINA Step 4 — 中等症 (中用量ICS-LABA + LAMA考慮)',
+  'Step 5': 'GINA Step 5 — 重症 (高用量・生物学的製剤検討)',
+  'Group A': 'GOLD 2024 — 軽症COPD (mMRC 0-1, CAT<10, 増悪≤1/年)',
+  'Group B': 'GOLD 2024 — 症状あり、増悪少 (mMRC≥2 or CAT≥10, 増悪≤1)',
+  'Group E': 'GOLD 2024 — 増悪多発 (≥2/年 or 入院)',
 };
 
 /**
@@ -176,4 +244,48 @@ export const ABBREVIATIONS = {
  */
 export function getFullName(term) {
   return ABBREVIATIONS[term] || null;
+}
+
+// マッチさせる略語のリスト (長いキーから順に)。短いキーが長いキーの一部にあると誤検出するため要ソート。
+const ABBR_KEYS_SORTED = Object.keys(ABBREVIATIONS).sort((a, b) => b.length - a.length);
+
+/**
+ * 文字列を React 要素配列に変換。略語を <abbr title> に置き換える。
+ * 全略語の自動ハイライトを行うことで、コメディカルが「これ何？」を流さない動線を作る。
+ *
+ * 戻り値は React.Fragment 内に並べる前提の配列。
+ */
+export function annotateAbbreviations(text, React) {
+  if (!text || typeof text !== 'string') return text;
+  // 正規表現用に長いキーから順に escape して連結
+  const pattern = ABBR_KEYS_SORTED
+    .map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join('|');
+  if (!pattern) return text;
+  const re = new RegExp('(' + pattern + ')', 'g');
+  const parts = [];
+  let lastIndex = 0;
+  let m;
+  let key = 0;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > lastIndex) {
+      parts.push(text.slice(lastIndex, m.index));
+    }
+    const abbr = m[0];
+    const full = ABBREVIATIONS[abbr];
+    parts.push(
+      React.createElement(
+        'abbr',
+        {
+          key: `abbr-${key++}`,
+          title: full,
+          style: { borderBottom: '1px dotted currentColor', cursor: 'help', textDecoration: 'none' },
+        },
+        abbr
+      )
+    );
+    lastIndex = m.index + abbr.length;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
 }

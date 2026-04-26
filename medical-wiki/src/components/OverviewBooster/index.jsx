@@ -7,7 +7,7 @@ import { OVERVIEW_CONTRAINDICATIONS_VERSION, OVERVIEW_CONTRAINDICATIONS_LAST_UPD
 import { SCORE_DEFINITIONS, COMMON_LAB_FIELDS, COMMON_HISTORY_FIELDS, detectMissingFactors } from './scoreDefinitions';
 import { encodeFollowupCode, decodeFollowupCode } from './followCode';
 import { recordEvent } from './uxLog';
-import { ABBREVIATIONS } from './abbreviations';
+import { ABBREVIATIONS, annotateAbbreviations } from './abbreviations';
 import { suggestTreatment, detectSharedClasses } from './treatmentEngine';
 
 // 略語ホバー表示コンポーネント (コメディカル配慮)
@@ -16,6 +16,12 @@ function Abbr({ children, term }) {
   const full = ABBREVIATIONS[t];
   if (!full) return <>{children}</>;
   return <abbr title={full} style={{ borderBottom: '1px dotted currentColor', cursor: 'help', textDecoration: 'none' }}>{children}</abbr>;
+}
+
+// 任意のテキストを自動注釈付きでレンダリング (略語をすべて <abbr title> 化)
+function AnnotatedText({ children }) {
+  if (!children || typeof children !== 'string') return <>{children}</>;
+  return <>{annotateAbbreviations(children, React)}</>;
 }
 
 /* ============================================================
@@ -101,7 +107,7 @@ const initialState = {
   //   nextAction, followIn, goalNote                   // STEP 2
   // }
   selectionsByDisease: {},
-  uiState: { expandedDiseaseId: null, expandedSuggestionId: null, reverseTriggerDismissed: false },
+  uiState: { expandedDiseaseId: null, expandedSuggestionId: null, globalFollowIn: '', reverseTriggerDismissed: false },
   followupCode: { issued: '', importBuf: '', importError: null, oldDataWarning: false },
 };
 
@@ -192,9 +198,35 @@ function reducer(state, action) {
       return { ...state, selectionsByDisease: newSelections };
     }
     case 'SET_DRUG_IN_CLASS': {
-      const { disease, classId, drugId, dose } = action.payload;
+      const { disease, classId, drugId, dose, drugClass, allDiseases } = action.payload;
       const cur = state.selectionsByDisease[disease] || { classDetails: {}, lifestyle: '', restriction: null };
-      return { ...state, selectionsByDisease: { ...state.selectionsByDisease, [disease]: { ...cur, classDetails: { ...cur.classDetails, [classId]: { drugId, dose } } } } };
+      let newSelections = { ...state.selectionsByDisease, [disease]: { ...cur, classDetails: { ...cur.classDetails, [classId]: { drugId, dose } } } };
+      // 横断 dose sync: sharedClass 一致クラスを他の選択疾患でも同期
+      const sc = drugClass?.sharedClass;
+      if (sc && allDiseases) {
+        for (const otherDk of state.selectedDiseases) {
+          if (otherDk === disease) continue;
+          const otherMeta = allDiseases.find((d) => d.key === otherDk);
+          if (!otherMeta) continue;
+          const otherClass = otherMeta.drugClasses.find((c) => c.sharedClass === sc);
+          if (!otherClass) continue;
+          const otherCur = newSelections[otherDk];
+          if (!otherCur || !otherCur.classDetails?.[otherClass.id]) continue;
+          // 同名薬剤を otherClass.drugs から探す (name の前半が一致するものを優先)
+          const sourceDrug = drugClass.drugs.find((d) => d.id === drugId);
+          let targetDrug = null;
+          if (sourceDrug) {
+            const sourceBrand = (sourceDrug.name.match(/\((.+?)\)/)?.[1] || sourceDrug.name).split('/')[0];
+            targetDrug = otherClass.drugs.find((d) => d.name.includes(sourceBrand)) || otherClass.drugs.find((d) => d.name.split(' ')[0] === sourceDrug.name.split(' ')[0]);
+          }
+          if (!targetDrug) continue;
+          // dose が targetDrug.doses にあれば同期、無ければそのまま
+          const matchedDose = targetDrug.doses.find((d) => d.value === dose);
+          const newDose = matchedDose ? dose : (targetDrug.doses.find((d) => d.isDefault)?.value || targetDrug.doses[0]?.value || '');
+          newSelections[otherDk] = { ...otherCur, classDetails: { ...otherCur.classDetails, [otherClass.id]: { drugId: targetDrug.id, dose: newDose } } };
+        }
+      }
+      return { ...state, selectionsByDisease: newSelections };
     }
     case 'SET_LIFESTYLE': {
       const { disease, lifestyle } = action.payload;
@@ -218,6 +250,8 @@ function reducer(state, action) {
     }
     case 'SET_UI_EXPANDED_SUGGESTION':
       return { ...state, uiState: { ...state.uiState, expandedSuggestionId: action.payload } };
+    case 'SET_GLOBAL_FOLLOW':
+      return { ...state, uiState: { ...state.uiState, globalFollowIn: action.payload } };
     case 'DISMISS_REVERSE_TRIGGER':
       return { ...state, uiState: { ...state.uiState, reverseTriggerDismissed: true } };
     case 'SET_FOLLOWUP_CODE':
@@ -327,6 +361,18 @@ export default function OverviewBooster() {
           <button className={styles.resetBtn} onClick={handleNewPatient} title="次患者の診療を開始 (全消去)">次の患者へ</button>
         </div>
       </div>
+
+      {violations.filter((v) => v.severity === 'critical').length > 0 && (
+        <div className={styles.criticalSticky} role="alert" aria-live="assertive">
+          <span>⚠ 禁忌違反 {violations.filter((v) => v.severity === 'critical').length}件</span>
+          <span className={styles.criticalStickyDetail}>
+            {violations.filter((v) => v.severity === 'critical').slice(0, 2).map((v, i) => (
+              <span key={i}>{i > 0 ? ' / ' : ''}{v.message}</span>
+            ))}
+            {violations.filter((v) => v.severity === 'critical').length > 2 && ' …他'}
+          </span>
+        </div>
+      )}
 
       <PatientHeaderPanel state={state} dispatch={dispatch} />
 
@@ -881,19 +927,9 @@ function DiseaseAccordion({ disease, state, dispatch, violations, sharedTagged }
   );
 }
 
-// 薬剤クラスラベルから略語を取り出して Abbr化 (例: "ARB" → ホバーで正式名)
+// 薬剤クラスラベル等の略語を auto-annotate (新方式: annotateAbbreviations 経由で全略語を自動置換)
 function renderClassLabel(label) {
-  // 略語辞書のキーがラベル中に含まれている場合は <abbr> 化
-  // 順序重要: 長いキーから先にマッチ
-  const tokens = label.split(/(\s|\(|\)|\/|\+)/);
-  return tokens.map((tok, i) => {
-    const trimmed = tok.trim();
-    const full = ABBREVIATIONS[trimmed];
-    if (full) {
-      return <abbr key={i} title={full} style={{ borderBottom: '1px dotted currentColor', cursor: 'help', textDecoration: 'none' }}>{tok}</abbr>;
-    }
-    return <span key={i}>{tok}</span>;
-  });
+  return annotateAbbreviations(label, React);
 }
 
 function DrugClassSection({ disease, drugClass, sel, dispatch, violations, sharedTagged }) {
@@ -930,7 +966,7 @@ function DrugClassSection({ disease, drugClass, sel, dispatch, violations, share
                   className={`${styles.chip} ${styles.chipRadio} ${drugSelected ? styles.chipActive : ''}`}
                   onClick={() => {
                     const defaultDose = drug.doses.find((d) => d.isDefault) || drug.doses[0];
-                    dispatch({ type: 'SET_DRUG_IN_CLASS', payload: { disease: disease.key, classId: drugClass.id, drugId: drug.id, dose: defaultDose?.value || '' } });
+                    dispatch({ type: 'SET_DRUG_IN_CLASS', payload: { disease: disease.key, classId: drugClass.id, drugId: drug.id, dose: defaultDose?.value || '', drugClass, allDiseases: OVERVIEW_DISEASES } });
                   }}
                 >
                   {drug.name}
@@ -950,7 +986,7 @@ function DrugClassSection({ disease, drugClass, sel, dispatch, violations, share
                     return (
                       <button key={dose.value} type="button"
                         className={`${styles.bigPickerBtnSm} ${active ? styles.bigPickerBtnActive : ''}`}
-                        onClick={() => dispatch({ type: 'SET_DRUG_IN_CLASS', payload: { disease: disease.key, classId: drugClass.id, drugId: detail.drugId, dose: dose.value } })}>
+                        onClick={() => dispatch({ type: 'SET_DRUG_IN_CLASS', payload: { disease: disease.key, classId: drugClass.id, drugId: detail.drugId, dose: dose.value, drugClass, allDiseases: OVERVIEW_DISEASES } })}>
                         {dose.label}
                       </button>
                     );
@@ -1095,23 +1131,72 @@ function RecBody({ rec, compact }) {
     <>
       <div className={styles.recHeadline}>
         <span className={styles.recAction}>{actionLabel(rec.action)}</span>
-        <span className={styles.recPrimary}>{headline}</span>
+        <span className={styles.recPrimary}><AnnotatedText>{headline}</AnnotatedText></span>
       </div>
-      {rec.stepFlow && <div className={styles.recStepFlow}>📍 {rec.stepFlow}</div>}
-      {rec.dose && <div className={styles.recDose}>用法: {rec.dose}</div>}
-      {subline && <div className={styles.recDetail}>{subline}</div>}
-      {rec.concerns && rec.detail && <div className={styles.recConcerns}>{rec.concerns}</div>}
-      {rec.gl && !compact && <div className={styles.recGl}>根拠: {rec.gl}</div>}
+      {rec.stepFlow && <div className={styles.recStepFlow}>📍 <AnnotatedText>{rec.stepFlow}</AnnotatedText></div>}
+      {rec.dose && <div className={styles.recDose}>用法: <AnnotatedText>{rec.dose}</AnnotatedText></div>}
+      {subline && <div className={styles.recDetail}><AnnotatedText>{subline}</AnnotatedText></div>}
+      {rec.concerns && rec.detail && <div className={styles.recConcerns}><AnnotatedText>{rec.concerns}</AnnotatedText></div>}
+      {rec.gl && !compact && <div className={styles.recGl}>根拠: <AnnotatedText>{rec.gl}</AnnotatedText></div>}
     </>
   );
+}
+
+// severity ソート (critical→high→medium→low)
+const SEV_ORDER = { critical: 0, high: 1, medium: 2, low: 3 };
+function sortRecsBySeverity(recs) {
+  return [...recs].map((r, i) => ({ r, i })).sort((a, b) => {
+    const sa = SEV_ORDER[a.r.severity] ?? 4;
+    const sb = SEV_ORDER[b.r.severity] ?? 4;
+    if (sa !== sb) return sa - sb;
+    return a.i - b.i;
+  }).map((x) => x.r);
+}
+
+// スコア結果からの管理目標サマリー (疾患別)
+function computeScoreSummary(disease, state) {
+  const sc = state.scoresByDisease?.[disease.key];
+  if (!sc?.result) return null;
+  const r = sc.result;
+  const lines = [];
+  if (disease.key === 'dlp' && r.ldlTarget) {
+    lines.push(`LDL管理目標: <${r.ldlTarget} mg/dL`);
+    lines.push(`リスク区分: ${r.label}`);
+  } else if (disease.key === 'ht') {
+    const grade = r.derivedGrade;
+    const tierJp = { low: '低', medium: '中', high: '高', very_high: '非常に高' }[r.tier] || r.tier;
+    lines.push(`リスク区分: ${tierJp}リスク (${r.label})`);
+    if (grade) {
+      const target = state.patientHeader?.cm_dm || state.patientHeader?.cm_ckd_g45 || state.commonHistory?.stroke
+        ? '<130/80 (高リスクは強化目標)'
+        : '<140/90 (一般)';
+      lines.push(`BP管理目標: ${target}`);
+    }
+  } else if (disease.key === 'ckd') {
+    lines.push(`病期: ${r.gStage}${r.aStage} (${r.risk}リスク)`);
+    lines.push(`蛋白尿あれば ARB+SGLT2i が KDIGO 強推奨`);
+  } else if (disease.key === 'af') {
+    if (r.chadsvasc) lines.push(`CHA₂DS₂-VASc=${r.chadsvasc.score}点 → 抗凝固${r.chadsvasc.anticoag === 'recommend' ? '推奨' : r.chadsvasc.anticoag === 'consider' ? '考慮' : '不要'}`);
+    if (r.hasbled) lines.push(`HAS-BLED=${r.hasbled.score}点 (${r.hasbled.tier === 'high' ? '高出血リスク' : r.hasbled.tier === 'moderate' ? '中等度' : '低リスク'})`);
+  } else if (disease.key === 'hf') {
+    lines.push(r.label || '');
+    if (r.ef === 'reduced') lines.push('管理目標: 4本柱 (ARNI/ACEi+βB+MRA+SGLT2i) すべて導入');
+    else if (r.ef === 'preserved') lines.push('管理目標: SGLT2i 第一選択+うっ血対症');
+  } else if (disease.key === 'copd') {
+    lines.push(`GOLD ${r.group}: ${r.label}`);
+  }
+  if (lines.length === 0) return null;
+  return lines;
 }
 
 // 疾患ごとの治療提案カード — アコーディオン: 閉じている時は採用提案のみ、開くと候補一覧
 function DiseaseSuggestionCard({ disease, state, dispatch, sharedClasses }) {
   const sel = state.selectionsByDisease[disease.key] || {};
-  const recs = useMemo(() => suggestTreatment(disease.key, state), [disease.key, state.patientHeader, state.commonLabs, state.commonHistory, state.scoresByDisease, state.selectionsByDisease]);
+  const recsRaw = useMemo(() => suggestTreatment(disease.key, state), [disease.key, state.patientHeader, state.commonLabs, state.commonHistory, state.scoresByDisease, state.selectionsByDisease]);
+  const recs = useMemo(() => sortRecsBySeverity(recsRaw), [recsRaw]);
   const expanded = state.uiState.expandedSuggestionId === disease.key;
   const setExpanded = (open) => dispatch({ type: 'SET_UI_EXPANDED_SUGGESTION', payload: open ? disease.key : null });
+  const scoreSummary = computeScoreSummary(disease, state);
 
   if (!recs || recs.length === 0) {
     return (
@@ -1139,6 +1224,16 @@ function DiseaseSuggestionCard({ disease, state, dispatch, sharedClasses }) {
           {isSharedDrug && <span className={styles.sharedTag}>🔗 {selected.sharedClass}</span>}
         </span>
       </button>
+
+      {/* スコア結果サマリー — 全案に先立って管理目標を提示 */}
+      {scoreSummary && (
+        <div className={styles.scoreSummaryBox}>
+          <div className={styles.scoreSummaryTitle}>📊 リスク評価・管理目標</div>
+          {scoreSummary.map((line, i) => (
+            <div key={i} className={styles.scoreSummaryLine}><AnnotatedText>{line}</AnnotatedText></div>
+          ))}
+        </div>
+      )}
 
       {/* 閉じている時も採用案は常に表示 */}
       <div className={`${styles.alertBanner} ${sevClassName(selected.severity)} ${styles.adoptedRec}`}>
@@ -1174,9 +1269,68 @@ function DiseaseSuggestionCard({ disease, state, dispatch, sharedClasses }) {
 /* ============================================================
    SUMMARY
    ============================================================ */
+// カルテ貼付用テキスト生成
+function buildCarteText(state) {
+  const lines = [];
+  lines.push('【慢性疾患管理ブースター 出力】');
+  const ph = state.patientHeader;
+  const ageL = AGE_RANGE_OPTIONS.find((o) => o.value === ph.age)?.label;
+  const sexL = ph.sex === 'M' ? '男性' : ph.sex === 'F' ? '女性' : '';
+  const smkL = ph.smoking === 'never' ? '非喫煙' : ph.smoking === 'past' ? '過去喫煙' : ph.smoking === 'current' ? '現喫煙' : '';
+  const phBits = [ageL, sexL, smkL].filter(Boolean).join(' / ');
+  lines.push(`患者: ${phBits}${ph.co_pregnancy ? ' / 妊娠中' : ''}${ph.co_lactation ? ' / 授乳中' : ''}${ph.co_frail ? ' / フレイル' : ''}`);
+
+  const txStatusLabel = (s) => ({ untreated: '未治療', lifestyle_only: '生活指導のみ', on_treatment: '薬物治療中' }[s] || '未指定');
+  for (const key of state.selectedDiseases) {
+    const d = OVERVIEW_DISEASES.find((x) => x.key === key);
+    if (!d) continue;
+    const sel = state.selectionsByDisease[key] || {};
+    const drugSummary = Object.entries(sel.classDetails || {}).map(([cid, det]) => {
+      const dc = d.drugClasses.find((c) => c.id === cid);
+      const drug = dc?.drugs.find((dr) => dr.id === det.drugId);
+      const doseLabel = drug?.doses.find((x) => x.value === det.dose)?.label || det.dose;
+      return `${drug?.name || dc?.label} ${doseLabel}`.trim();
+    }).filter(Boolean);
+    lines.push('');
+    lines.push(`■ ${d.label}`);
+    lines.push(`  状況: ${txStatusLabel(sel.txStatus)}${sel.uncontrolled ? ' (コントロール不良)' : ''}`);
+    if (drugSummary.length > 0) lines.push(`  処方: ${drugSummary.join(' + ')}`);
+
+    const recs = suggestTreatment(key, state);
+    const sortedRecs = [...recs].sort((a, b) => (({ critical: 0, high: 1, medium: 2, low: 3 }[a.severity] ?? 4) - ({ critical: 0, high: 1, medium: 2, low: 3 }[b.severity] ?? 4)));
+    const adopted = sortedRecs[sel.selectedRecIdx ?? 0];
+    if (adopted) {
+      const head = adopted.primary || adopted.drug || '';
+      const dose = adopted.dose ? ` (${adopted.dose})` : '';
+      lines.push(`  治療提案: ${actionLabel(adopted.action)}: ${head}${dose}`);
+      if (adopted.detail || adopted.reason) lines.push(`    根拠: ${adopted.detail || adopted.reason}${adopted.gl ? ` [${adopted.gl}]` : ''}`);
+    }
+    const score = state.scoresByDisease?.[key]?.result;
+    if (score?.label) lines.push(`  評価: ${score.label}`);
+  }
+  const followLabel = FOLLOW_OPTIONS.find((o) => o.value === state.uiState?.globalFollowIn)?.label;
+  if (followLabel) {
+    lines.push('');
+    lines.push(`次回フォロー: ${followLabel}`);
+  }
+  if (state.followupCode.issued) {
+    lines.push(`フォローコード: ${state.followupCode.issued}`);
+  }
+  return lines.join('\n');
+}
+
 function SummaryPanel({ state, dispatch, violations, onBack, onCopy }) {
   const sharedClasses = useMemo(() => detectSharedClasses(state), [state]);
   const txStatusLabel = (s) => ({ untreated: '未治療', lifestyle_only: '生活指導のみ', on_treatment: '薬物治療中' }[s] || '未指定');
+  const carteText = useMemo(() => buildCarteText(state), [state]);
+  const [copied, setCopied] = useState(false);
+  const handleCopyCarte = useCallback(() => {
+    navigator.clipboard?.writeText(carteText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [carteText]);
+  const globalFollow = state.uiState?.globalFollowIn || '';
   return (
     <div className={styles.section}>
       <div className={styles.sectionTitle}>まとめ</div>
@@ -1252,28 +1406,33 @@ function SummaryPanel({ state, dispatch, violations, onBack, onCopy }) {
                     </div>
                   </div>
                 )}
-                <div className={styles.summaryRow} style={{ marginTop: '0.6rem' }}>
-                  <div className={styles.fieldLabel}>次回フォロー時期:</div>
-                  <div className={styles.chipGrid}>
-                    {FOLLOW_OPTIONS.map((o) => (
-                      <button key={o.value} type="button"
-                        className={`${styles.bigPickerBtnSm} ${sel.followIn === o.value ? styles.bigPickerBtnActive : ''}`}
-                        onClick={() => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'followIn', value: sel.followIn === o.value ? '' : o.value } })}>
-                        {o.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.summaryRow}>
-                  <label className={styles.fieldLabel} htmlFor={`sum_goal_${key}`}>目標メモ (任意):</label>
-                  <input id={`sum_goal_${key}`} type="text" className={styles.fieldInput} value={sel.goalNote || ''}
-                    placeholder="例: HbA1c<7.0、LDL<70、家庭BP<125/75"
-                    onChange={(e) => dispatch({ type: 'SET_STEP2_FIELD', payload: { disease: key, field: 'goalNote', value: e.target.value } })} />
-                </div>
               </div>
             );
           })}
         </div>
+      </div>
+
+      {/* 全疾患まとめて単一の次回フォロー時期 */}
+      <div className={styles.section} style={{ background: '#fff8e1', borderRadius: '8px', padding: '0.8rem 1rem', margin: '1rem 0' }}>
+        <div className={styles.sectionTitle}>次回フォロー時期 (全疾患共通)</div>
+        <div className={styles.chipGrid}>
+          {FOLLOW_OPTIONS.map((o) => (
+            <button key={o.value} type="button"
+              className={`${styles.bigPickerBtn} ${globalFollow === o.value ? styles.bigPickerBtnActive : ''}`}
+              onClick={() => dispatch({ type: 'SET_GLOBAL_FOLLOW', payload: globalFollow === o.value ? '' : o.value })}>
+              {o.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* カルテ貼付用テキスト */}
+      <div className={styles.section} style={{ padding: '0.8rem 1rem' }}>
+        <div className={styles.sectionTitle}>カルテ貼付用 <span className={styles.sectionHint}>(コピーして電子カルテへ。メモはカルテ側に記載)</span></div>
+        <textarea readOnly className={styles.carteText} value={carteText} />
+        <button className={`${styles.navBtn} ${styles.navBtnPrimary}`} onClick={handleCopyCarte} style={{ marginTop: '0.5rem' }}>
+          {copied ? '✓ コピー済み' : '📋 全文コピー'}
+        </button>
       </div>
 
       <div className={styles.navRow}>

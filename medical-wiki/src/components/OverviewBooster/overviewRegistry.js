@@ -539,7 +539,7 @@ export const OVERVIEW_DISEASES = [
           ]},
         ],
       },
-      { id: 'as_triple', label: 'Triple (Step 5)', tooltip: 'テリルジー / エナジア', sharedClass: 'ICS-LABA-LAMA',
+      { id: 'as_triple', label: 'Triple (ICS+LABA+LAMA 三剤吸入合剤、Step 5)', tooltip: 'テリルジー / エナジア — 吸入ステロイド+長時間β2刺激+長時間抗コリン', sharedClass: 'ICS-LABA-LAMA',
         drugs: [
           { id: 'as_tri', name: 'テリルジー エリプタ (FF/UMEC/VI)', doses: [
             { value: '100', label: 'テリルジー100 1吸入/日 (標準)', isDefault: true },
@@ -603,7 +603,7 @@ export const OVERVIEW_DISEASES = [
           { id: 'copd_ult', name: 'ウルティブロ (IND/GLY)', doses: [{ value: '1', label: '1カプセル/日 吸入', isDefault: true, isMax: true }] },
         ],
       },
-      { id: 'copd_triple', label: 'Triple (Group E + eos≥300/ACO)', tooltip: 'テリルジー / ビレーズトリ', sharedClass: 'ICS-LABA-LAMA',
+      { id: 'copd_triple', label: 'Triple (ICS+LABA+LAMA 三剤吸入合剤、Group E + eos≥300/ACO)', tooltip: 'テリルジー / ビレーズトリ — 吸入ステロイド+長時間β2刺激+長時間抗コリン', sharedClass: 'ICS-LABA-LAMA',
         drugs: [
           { id: 'copd_tri', name: 'テリルジー エリプタ (FF/UMEC/VI)', doses: [
             { value: '100', label: 'テリルジー100 1吸入/日 (標準)', isDefault: true },
