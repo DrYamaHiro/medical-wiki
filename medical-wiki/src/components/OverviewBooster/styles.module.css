@@ -855,6 +855,43 @@
   font-size: 0.85rem;
 }
 
+/* 次回再診目安 (Phase 4 上部) */
+.followBox {
+  margin: 0 0 1rem;
+  padding: 0.8rem 1rem;
+  background: #e1f5fe;
+  border: 2px solid #0288d1;
+  border-left-width: 6px;
+  border-radius: 8px;
+}
+.followTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #01579b;
+  margin-bottom: 0.4rem;
+}
+.followAutoTag {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.72rem;
+  background: #4caf50;
+  color: #fff;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.followReasons {
+  font-size: 0.85rem;
+  color: #01579b;
+  line-height: 1.55;
+  margin: 0.3rem 0;
+}
+.followOverride {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #4fc3f7;
+}
+
 /* カルテ貼付用テキストエリア */
 .carteText {
   width: 100%;
