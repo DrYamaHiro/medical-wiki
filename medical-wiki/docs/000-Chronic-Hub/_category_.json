@@ -1,9 +1,10 @@
 {
-  "label": "000 慢性疾患管理ブースター",
-  "position": -1,
-  "collapsed": false,
+  "label": "（旧）慢性疾患管理ブースター",
+  "position": 999,
+  "collapsed": true,
+  "className": "hidden",
   "link": {
     "type": "doc",
-    "id": "overview-booster"
+    "id": "overview-booster-redirect"
   }
 }

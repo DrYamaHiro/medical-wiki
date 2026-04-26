@@ -914,6 +914,49 @@
   border-top: 1px dashed #4fc3f7;
 }
 
+/* 詳細治療設計 (Treatment Booster inline) */
+.detailedTreatmentBlock {
+  margin: 0.5rem 0.8rem 0.8rem;
+  border-top: 1px dashed var(--ifm-color-emphasis-300);
+  padding-top: 0.6rem;
+}
+.detailedTreatmentBtn {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
+  color: #01579b;
+  border: 2px solid #0288d1;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  min-height: 48px;
+}
+.detailedTreatmentBtn:hover {
+  background: linear-gradient(135deg, #b3e5fc 0%, #81d4fa 100%);
+}
+.detailedTreatmentBtn:focus-visible {
+  outline: 3px solid #0288d1;
+  outline-offset: 2px;
+}
+.embeddedTreatment {
+  margin-top: 0.6rem;
+  padding: 0.8rem;
+  background: #fafafa;
+  border: 2px solid #0288d1;
+  border-radius: 8px;
+}
+.embeddedTreatmentHint {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #01579b;
+  background: #e1f5fe;
+  padding: 0.5rem 0.7rem;
+  border-radius: 4px;
+  margin-bottom: 0.6rem;
+}
+
 /* カルテ貼付用テキストエリア */
 .carteText {
   width: 100%;

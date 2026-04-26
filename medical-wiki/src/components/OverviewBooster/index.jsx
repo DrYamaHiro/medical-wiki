@@ -10,6 +10,7 @@ import { recordEvent } from './uxLog';
 import { ABBREVIATIONS, annotateAbbreviations } from './abbreviations';
 import { suggestTreatment, detectSharedClasses } from './treatmentEngine';
 import { detectOverlap, detectInteractions, detectToggleThrash } from './drugInteractions';
+import TreatmentBooster from '../TreatmentBooster';
 
 // 略語ホバー表示コンポーネント (コメディカル配慮)
 function Abbr({ children, term }) {
@@ -108,7 +109,7 @@ const initialState = {
   //   nextAction, followIn, goalNote                   // STEP 2
   // }
   selectionsByDisease: {},
-  uiState: { expandedDiseaseId: null, expandedSuggestionId: null, globalFollowIn: '', globalFollowAuto: true, reverseTriggerDismissed: false, linkDisabled: {}, toggleHistory: [] },
+  uiState: { expandedDiseaseId: null, expandedSuggestionId: null, expandedTreatmentId: null, globalFollowIn: '', globalFollowAuto: true, reverseTriggerDismissed: false, linkDisabled: {}, toggleHistory: [] },
   followupCode: { issued: '', importBuf: '', importError: null, oldDataWarning: false },
 };
 
@@ -274,6 +275,8 @@ function reducer(state, action) {
     }
     case 'SET_UI_EXPANDED_SUGGESTION':
       return { ...state, uiState: { ...state.uiState, expandedSuggestionId: action.payload } };
+    case 'SET_UI_EXPANDED_TREATMENT':
+      return { ...state, uiState: { ...state.uiState, expandedTreatmentId: action.payload } };
     case 'SET_GLOBAL_FOLLOW':
       return { ...state, uiState: { ...state.uiState, globalFollowIn: action.payload } };
     case 'SET_GLOBAL_FOLLOW_AUTO':
@@ -1535,6 +1538,46 @@ function DiseaseSuggestionCard({ disease, state, dispatch, sharedClasses }) {
               </button>
             );
           })}
+        </div>
+      )}
+
+      {/* 詳細治療設計: Treatment Booster inline 連携 */}
+      <DetailedTreatmentBlock disease={disease} state={state} dispatch={dispatch} />
+    </div>
+  );
+}
+
+// Treatment Booster inline 呼び出しブロック
+function DetailedTreatmentBlock({ disease, state, dispatch }) {
+  if (!disease.boosterKey) return null;
+  const open = state.uiState.expandedTreatmentId === disease.key;
+  const setOpen = (v) => dispatch({ type: 'SET_UI_EXPANDED_TREATMENT', payload: v ? disease.key : null });
+  const sel = state.selectionsByDisease[disease.key] || {};
+  // 俯瞰側の選択を Treatment Booster の prefill 用に変換
+  const prefilledDrugs = useMemo(() => {
+    const drugIds = Object.keys(sel.classDetails || {});
+    return drugIds.map((cid) => {
+      const klass = disease.drugClasses.find((c) => c.id === cid);
+      const drug = klass?.drugs.find((d) => d.id === sel.classDetails[cid].drugId);
+      return drug?.name || klass?.label;
+    }).filter(Boolean).join(',');
+  }, [sel.classDetails, disease.drugClasses]);
+
+  return (
+    <div className={styles.detailedTreatmentBlock}>
+      <button type="button" className={styles.detailedTreatmentBtn}
+        onClick={() => setOpen(!open)} aria-expanded={open}>
+        {open ? '▼ 詳細治療設計を閉じる' : `▶ ${disease.label} の詳細治療設計 (Treatment Booster で薬剤・用量・修飾子を深掘り)`}
+      </button>
+      {open && (
+        <div className={styles.embeddedTreatment}>
+          <div className={styles.embeddedTreatmentHint}>
+            🔗 俯瞰側の選択 ({prefilledDrugs || '未選択'}) を引継ぎ。深掘り後の判断はカルテに記載してください
+          </div>
+          <TreatmentBooster
+            disease={disease.boosterKey}
+            initialDrugs={prefilledDrugs}
+          />
         </div>
       )}
     </div>

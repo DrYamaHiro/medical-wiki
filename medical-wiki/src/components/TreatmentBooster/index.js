@@ -627,6 +627,8 @@ export default function TreatmentBooster({
   recommendations: propRecommendations,
   doNotRules: propDoNotRules,
   subtitle: propSubtitle,
+  initialDrugs: propInitialDrugs,
+  initialModifiers: propInitialModifiers,
 }) {
   const registryEntry = propDisease ? TREATMENT_DATA[propDisease] : null;
   const registryData = registryEntry?.data;
@@ -674,15 +676,27 @@ export default function TreatmentBooster({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [MODIFIERS]);
 
-  // Overview Booster からの deep link 受信: ?currentDrugs=arb_azl,ccb_am
+  // Overview Booster からの deep link/inline 連携受信
+  // 1) URL: ?currentDrugs=arb_azl,ccb_am
+  // 2) propInitialDrugs (string カンマ区切り or 配列): inline embed 用
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
       const params = new URLSearchParams(window.location.search);
-      const incomingDrugs = params.get('currentDrugs');
+      let incomingDrugs = params.get('currentDrugs');
+      if (!incomingDrugs && propInitialDrugs) {
+        incomingDrugs = Array.isArray(propInitialDrugs) ? propInitialDrugs.join(',') : String(propInitialDrugs);
+      }
       if (incomingDrugs) {
-        const ids = incomingDrugs.split(',').filter(Boolean);
-        const validIds = ids.filter((id) => DRUGS.some((d) => d.id === id));
+        const tokens = incomingDrugs.split(',').map((t) => t.trim()).filter(Boolean);
+        // ID マッチを試みて、ダメならドラッグの label/name 部分一致でマッチ
+        const validIds = [];
+        for (const tok of tokens) {
+          const byId = DRUGS.find((d) => d.id === tok);
+          if (byId) { validIds.push(byId.id); continue; }
+          const byName = DRUGS.find((d) => (d.label || d.name || '').includes(tok) || tok.includes(d.label || d.name || ''));
+          if (byName) validIds.push(byName.id);
+        }
         if (validIds.length > 0) {
           const defaultDose = (id) => {
             const drug = DRUGS.find((d) => d.id === id);
@@ -695,9 +709,17 @@ export default function TreatmentBooster({
           });
         }
       }
+      // 修飾子の prefill
+      if (propInitialModifiers) {
+        const modIds = Array.isArray(propInitialModifiers) ? propInitialModifiers : String(propInitialModifiers).split(',').map((s) => s.trim()).filter(Boolean);
+        const validMods = modIds.filter((id) => MODIFIERS.some((m) => m.id === id));
+        if (validMods.length > 0) {
+          setModifiers((prev) => Array.from(new Set([...prev, ...validMods])));
+        }
+      }
     } catch { /* ignore */ }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [DRUGS]);
+  }, [DRUGS, MODIFIERS, propInitialDrugs, propInitialModifiers]);
 
   // 共有修飾子: 選択変更時に localStorage に永続化（共有候補のみ）
   useEffect(() => {

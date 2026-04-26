@@ -174,7 +174,7 @@ export const MODIFIERS = [
   { id: 'co_elderly_cat1', label: '高齢者Cat I（ADL自立・認知正常）', cat: '制約', radioGroup: 'dm_elderly_category' },
   { id: 'co_elderly_cat2', label: '高齢者Cat II（軽度認知障害/IADL低下）', cat: '制約', radioGroup: 'dm_elderly_category' },
   { id: 'co_elderly_cat3', label: '高齢者Cat III（中等度認知症・ADL低下）', cat: '制約', severity: 'critical', radioGroup: 'dm_elderly_category' },
-  { id: 'co_frail', label: 'フレイル（転倒リスク高）', cat: '制約' },
+  { id: 'co_frail', label: 'フレイル（全身機能低下、認知/ADL Cat と独立。+0.5% 緩和）', cat: '制約' },
   { id: 'co_hypo_drug_used', label: '低血糖リスク薬使用中（SU/グリニド/インスリン）', cat: '制約' },
   { id: 'co_hypo_risk', label: '低血糖リスク環境（独居/不規則食事/認知低下）', cat: '制約' },
   { id: 'co_obese', label: '肥満（BMI≥25）', cat: '制約' },
@@ -221,9 +221,12 @@ export const CONTROL_METRIC = {
     const a1c = v.hba1c;
     if (a1c === undefined) return null;
 
-    const cat3 = modifiers.includes('co_elderly_cat3') || modifiers.includes('co_frail');
+    // ⚠ co_frail は認知/ADL Cat とは独立した「全身機能低下」修飾子。
+    // Cat3 は co_elderly_cat3 単独で発火。co_frail は別途 +0.5% の独立緩和を加える。
+    const cat3 = modifiers.includes('co_elderly_cat3');
     const cat2 = modifiers.includes('co_elderly_cat2');
     const cat1 = modifiers.includes('co_elderly_cat1');
+    const frailty = modifiers.includes('co_frail');
     const pregnancy = modifiers.includes('co_pregnancy');
     const hypoDrugUsed = modifiers.includes('co_hypo_drug_used');
     const severeHypoRecent =
@@ -238,6 +241,11 @@ export const CONTROL_METRIC = {
     else if (cat1) {
       if (hypoDrugUsed) { upper = 7.5; lower = 6.5; }
       else { upper = 7.0; lower = null; }
+    }
+    // フレイル単独の独立緩和: 上限 +0.5% (低血糖薬使用時は下限も+0.5%)
+    if (frailty) {
+      upper = Math.min(upper + 0.5, 8.5);
+      if (lower !== null) lower = Math.min(lower + 0.5, 7.5);
     }
 
     // Overcontrolled (hypoglycemic) priority
@@ -273,24 +281,28 @@ export const MAINTAIN_BLOCKERS = [
 /* -------------------------------------------------------- */
 export function formatAppliedTarget(modifiers) {
   if (modifiers.includes('co_pregnancy')) return 'HbA1c <6.5%（妊娠中・専門医管理）';
-  if (modifiers.includes('co_elderly_cat3') || modifiers.includes('co_frail'))
-    return 'HbA1c <8.5%（Cat III、下限7.5%）';
+  const frail = modifiers.includes('co_frail');
+  const frailSuffix = frail ? ' + フレイル独立緩和 (+0.5%)' : '';
+  if (modifiers.includes('co_elderly_cat3'))
+    return `HbA1c <${frail ? '9.0' : '8.5'}%（Cat III、下限${frail ? '8.0' : '7.5'}%${frailSuffix}）`;
   if (modifiers.includes('co_elderly_cat2'))
     return modifiers.includes('co_hypo_drug_used')
-      ? 'HbA1c <8.0%（Cat II、下限7.0%、低血糖薬あり）'
-      : 'HbA1c <8.0%（Cat II）';
+      ? `HbA1c <${frail ? '8.5' : '8.0'}%（Cat II、下限${frail ? '7.5' : '7.0'}%、低血糖薬あり${frailSuffix}）`
+      : `HbA1c <${frail ? '8.5' : '8.0'}%（Cat II${frailSuffix}）`;
   if (modifiers.includes('co_elderly_cat1'))
     return modifiers.includes('co_hypo_drug_used')
-      ? 'HbA1c <7.5%（Cat I、下限6.5%、低血糖薬あり）'
-      : 'HbA1c <7.0%（Cat I）';
+      ? `HbA1c <${frail ? '8.0' : '7.5'}%（Cat I、下限${frail ? '7.0' : '6.5'}%、低血糖薬あり${frailSuffix}）`
+      : `HbA1c <${frail ? '7.5' : '7.0'}%（Cat I${frailSuffix}）`;
+  if (frail) return 'HbA1c <7.5%（一般成人 + フレイル独立緩和）※認知/ADL Cat も選択推奨';
   return 'HbA1c <7.0%（一般成人・合併症予防）';
 }
 
 export function suggestAgeNudge(values, modifiers) {
-  const hasAge = ['co_elderly_cat1', 'co_elderly_cat2', 'co_elderly_cat3', 'co_frail'].some((m) =>
+  const hasCat = ['co_elderly_cat1', 'co_elderly_cat2', 'co_elderly_cat3'].some((m) =>
     modifiers.includes(m)
   );
-  if (hasAge) return false;
+  // 認知/ADL Cat が未選択 (フレイル単独でも) なら nudge して入力を促す
+  if (hasCat) return false;
   const a1c = values.hba1c;
   return a1c !== undefined && a1c >= 7.0 && a1c < 8.5;
 }
@@ -715,9 +727,9 @@ export const RECOMMENDATIONS = [
   {
     id: 'bridge_until_specialist_referral',
     action: 'STEP_UP',
-    drug: '【専門医紹介待ちブリッジ】 メトホルミン最大量 + 1週以内再診',
-    example: 'メトホルミン 500mg×2 → 1週で 500mg×3 → 1500-2250mg/日。HbA1c・体重・尿ケトン週次。\n紹介日まで1週以上の場合は SGLT2i 追加（CKD/HFあれば）。\nケトン陽性 or 嘔吐 or 食事不能 → 即救急',
-    reason: '症候性高血糖（HbA1c≥10%）でインスリン即開始がGP的に難しい場合のブリッジ。メトホルミン単剤では血糖低下不十分なので、紹介待機期間が長いほどリスク',
+    drug: '【専門医紹介待ちブリッジ】 メトホルミン漸増 + 1週以内再診',
+    example: '①開始: メトホルミン 250mg×2 食直後 (eGFR≥45)\n②2週後: GI症状なければ 500mg×2 へ漸増\n③4週後: 必要なら 500mg×3 (1500mg/日) へ漸増。最大2250mg/日\n→ 用量増量は 2-4週間隔で段階的に (1週で増量は GI不耐 → 中断率上昇)\n紹介日まで2週以上の場合は SGLT2i 追加（CKD/HF/肥満あれば）。\nケトン陽性 or 嘔吐 or 食事不能 → 即救急',
+    reason: '症候性高血糖（HbA1c≥10%）でインスリン即開始がGP的に難しい場合のブリッジ。メトホルミン漸増は2-4週間隔が GI忍容性確保に必要 (1週は急ぎすぎで中断リスク)',
     fromStates: ['naive'],
     drugClass: 'ビグアナイド',
     preferredWhen: ['rf_symptomatic_hyper'],
