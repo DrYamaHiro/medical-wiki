@@ -381,7 +381,7 @@ export default function OverviewBooster() {
       <div className={styles.header}>
         <div>
           <p className={styles.title}>慢性疾患管理ブースター</p>
-          <p className={styles.subtitle}>多疾患併存の薬剤俯瞰・食事運動・治療戦略・フォローコード</p>
+          <p className={styles.subtitle}>慢性疾患の薬剤・食事運動・治療戦略・フォローコード</p>
         </div>
         <div className={styles.headerRight}>
           <span className={styles.stepIndicator}>
@@ -1553,7 +1553,7 @@ function DetailedTreatmentBlock({ disease, state, dispatch }) {
   const open = state.uiState.expandedTreatmentId === disease.key;
   const setOpen = (v) => dispatch({ type: 'SET_UI_EXPANDED_TREATMENT', payload: v ? disease.key : null });
   const sel = state.selectionsByDisease[disease.key] || {};
-  // 俯瞰側の選択を Treatment Booster の prefill 用に変換
+  // 現在の選択を Treatment Booster の prefill 用に変換
   const prefilledDrugs = useMemo(() => {
     const drugIds = Object.keys(sel.classDetails || {});
     return drugIds.map((cid) => {
@@ -1567,12 +1567,12 @@ function DetailedTreatmentBlock({ disease, state, dispatch }) {
     <div className={styles.detailedTreatmentBlock}>
       <button type="button" className={styles.detailedTreatmentBtn}
         onClick={() => setOpen(!open)} aria-expanded={open}>
-        {open ? '▼ 詳細治療設計を閉じる' : `▶ ${disease.label} の詳細治療設計 (Treatment Booster で薬剤・用量・修飾子を深掘り)`}
+        {open ? '▼ 詳細治療設計を閉じる' : `▶ ${disease.label} の詳細治療設計を開く`}
       </button>
       {open && (
         <div className={styles.embeddedTreatment}>
           <div className={styles.embeddedTreatmentHint}>
-            🔗 俯瞰側の選択 ({prefilledDrugs || '未選択'}) を引継ぎ。深掘り後の判断はカルテに記載してください
+            🔗 現在の選択 ({prefilledDrugs || '未選択'}) を引継ぎ。詳細設計後の判断はカルテに記載してください
           </div>
           <TreatmentBooster
             disease={disease.boosterKey}
