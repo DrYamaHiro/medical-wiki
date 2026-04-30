@@ -37,6 +37,9 @@ export const SYMPTOMS = [
   { id: 'smoking', label: '喫煙歴', cat: 'リスク' },
   { id: 'alcohol', label: '大量飲酒歴', cat: 'リスク' },
   { id: 'over_5pct', label: '6ヶ月で5%以上の減少', cat: 'リスク' },
+  // GCA/PMR (Phase 2 #7)
+  { id: 'temporal_headache', label: '新規の側頭部頭痛/顎跛行/視力障害', cat: '全身' },
+  { id: 'morning_stiffness_long', label: '両肩・腰帯のこわばり/朝の起床困難', cat: '全身' },
 ];
 
 export const FINDINGS = [
@@ -51,6 +54,7 @@ export const FINDINGS = [
   // 常時表示
   { id: 'cachexia', label: 'るいそう（明らかな栄養不良）', triggers: [] },
   { id: 'low_albumin', label: '低アルブミン血症', triggers: [] },
+  { id: 'temporal_artery_tenderness', label: '側頭動脈圧痛・索状硬化', triggers: ['temporal_headache'], weight: 4 },
 ];
 
 export const DIFFERENTIALS = [
@@ -139,6 +143,22 @@ export const DIFFERENTIALS = [
     nextStep: '早朝コルチゾール。低Na+好酸球増多+低血圧+色素沈着→Addison病。再受診基準: 嘔吐・下痢・発熱時のシックデイ→即受診（副腎クリーゼリスク→即搬送）。',
     link: null,
     comment: '見逃されやすい。ステロイド長期使用歴→二次性副腎不全。色素沈着は一次性の特徴。',
+  },
+  // === 膠原病 (Phase 2 #7) ===
+  {
+    id: 'gca_pmr',
+    name: 'GCA / PMR',
+    cat: '膠原病 / 緊急',
+    freq: '低〜中頻度',
+    prevalenceWeight: 2,
+    severityWeight: 3,
+    resolvedStillDangerous: true,
+    symptoms: ['elderly', 'over_5pct', 'fatigue', 'fever', 'appetite_decreased', 'temporal_headache', 'morning_stiffness_long'],
+    findings: ['temporal_artery_tenderness'],
+    redFlags: ['temporal_artery_tenderness'],
+    nextStep: 'ESR+CRP。50歳以上+体重減少+低悪性度発熱+両肩腰帯のこわばり→PMR/GCAを疑う。視力障害/側頭部頭痛/顎跛行→GCA→失明予防にプレドニゾロン40-60mg/日先行+即日眼科+リウマチ科紹介。',
+    link: null,
+    comment: '50歳以上の体重減少では悪性腫瘍と並んで除外すべき。「不明熱+体重減少」のセットで見逃される。PMRは肩・腰回りが動かず食事量低下を来す機序でも体重減少。',
   },
   // === 消化器 ===
   {
@@ -276,6 +296,11 @@ export const DIFFERENTIALS = [
 ];
 
 export const RED_FLAGS = [
+  {
+    conditions: ['temporal_artery_tenderness'],
+    message: '側頭動脈圧痛: GCAを疑う。失明リスク。プレドニゾロン先行+即日眼科+リウマチ科紹介。',
+    severity: 'critical',
+  },
   {
     conditions: ['over_5pct'],
     message: '6ヶ月で5%以上の非意図的体重減少: 悪性腫瘍の確率が有意に上昇。系統的精査を開始。',

@@ -43,13 +43,20 @@ export const SYMPTOMS = [
   // リスク
   { id: 'steroid_history', label: 'ステロイド長期使用歴', cat: 'リスク' },
   { id: 'unrefreshing_sleep', label: '睡眠で回復しない', cat: 'リスク' },
+  // GCA/PMR・敗血症 (Phase 2 #7 #8)
+  { id: 'temporal_headache', label: '新規の側頭部頭痛/顎跛行', cat: 'リスク' },
+  { id: 'morning_stiffness_long', label: '両肩/腰帯の朝のこわばり 30分以上', cat: 'リスク' },
+  { id: 'tachycardia_sym', label: '頻脈・呼吸促迫', cat: '全身' },
+  { id: 'altered_mental', label: '意識変容・せん妄', cat: '全身' },
 ];
 
 export const FINDINGS = [
   { id: 'pallor', label: '眼瞼結膜蒼白', triggers: ['exertional_dyspnea', 'palpitations', 'easy_fatigability'] },
   { id: 'thyroid_enlargement', label: '甲状腺腫大', triggers: ['cold_intolerance', 'weight_gain', 'constipation', 'dry_skin'] },
   { id: 'delayed_reflex', label: '深部腱反射の弛緩相遅延', triggers: ['cold_intolerance', 'weight_gain', 'constipation'] },
-  { id: 'proximal_weakness', label: '近位筋筋力低下（起立・階段困難）', triggers: ['muscle_weakness', 'steroid_history'] },
+  { id: 'proximal_weakness', label: '近位筋筋力低下（起立・階段困難）', triggers: ['muscle_weakness', 'steroid_history', 'morning_stiffness_long'] },
+  { id: 'temporal_artery_tenderness', label: '側頭動脈圧痛・索状硬化', triggers: ['temporal_headache'], weight: 4 },
+  { id: 'qsofa_positive', label: 'qSOFA≥2 (RR≥22 / 意識変容 / SBP≤100)', triggers: ['altered_mental', 'tachycardia_sym'], weight: 4 },
   { id: 'hepatomegaly', label: '肝腫大', triggers: ['jaundice', 'edema', 'anorexia'] },
   { id: 'splenomegaly', label: '脾腫', triggers: ['lymphadenopathy', 'fever'] },
   { id: 'pitting_edema', label: '圧痕性浮腫', triggers: ['edema', 'exertional_dyspnea', 'orthopnea'] },
@@ -244,6 +251,37 @@ export const DIFFERENTIALS = [
     link: '/docs/170-psychiatry',
     comment: '入眠障害・中途覚醒・早朝覚醒。睡眠衛生の乱れ（スマホ・カフェイン・不規則な就寝時間）が多い。うつ病の合併を見逃さない。',
   },
+  // === GCA/PMR・敗血症 (Phase 2 #7 #8) ===
+  {
+    id: 'gca_pmr',
+    name: 'GCA / PMR（巨細胞性動脈炎・リウマチ性多発筋痛症）',
+    cat: '膠原病 / 緊急',
+    freq: '低〜中頻度',
+    prevalenceWeight: 2,
+    severityWeight: 3,
+    resolvedStillDangerous: true,
+    symptoms: ['easy_fatigability', 'subacute', 'chronic', 'anorexia', 'weight_loss', 'fever', 'temporal_headache', 'morning_stiffness_long'],
+    findings: ['temporal_artery_tenderness', 'proximal_weakness'],
+    redFlags: ['temporal_artery_tenderness', 'morning_stiffness_long'],
+    nextStep: 'ESR+CRP（ESR著明高値が典型）。50歳以上の説明困難な倦怠感+両肩腰帯のこわばり→PMR疑い、側頭部頭痛/視力障害→GCA併発疑い。GCA疑いは失明予防にプレドニゾロン40-60mg/日先行+即日眼科+リウマチ科紹介。',
+    link: null,
+    comment: '高齢者の倦怠感+低悪性度発熱+体重減少の見落とし鑑別。「年のせい/うつ」で見逃される。GCAの40-50%にPMR、PMRの15-20%にGCAが併発。両肩・腰帯のこわばりは headache/polyarthralgia booster とクロスリファレンス。',
+  },
+  {
+    id: 'sepsis',
+    name: '敗血症（高齢者の非特異的不調）',
+    cat: '感染症 / 緊急',
+    freq: '低〜中頻度',
+    prevalenceWeight: 2,
+    severityWeight: 5,
+    resolvedStillDangerous: true,
+    symptoms: ['acute', 'easy_fatigability', 'anorexia', 'fever', 'altered_mental', 'tachycardia_sym'],
+    findings: ['low_bp', 'qsofa_positive'],
+    redFlags: ['altered_mental', 'qsofa_positive', 'low_bp'],
+    nextStep: 'バイタル+qSOFA評価。高齢者は発熱が乏しく「いつもと違う/食欲ない/動けない」のみで来院。qSOFA≥2 or SIRS陽性→即搬送。血液培養2セット+乳酸+CBC+CRP。',
+    link: null,
+    comment: '高齢者の倦怠感の最大の見落とし。発熱を欠き「ぐったり」「せん妄」「食欲低下」のみで受診することが多い。尿路・肺・胆道・皮膚軟部組織の感染源スクリーニング必須。',
+  },
   // === 機能性 ===
   {
     id: 'cfs',
@@ -279,6 +317,16 @@ export const DIFFERENTIALS = [
 ];
 
 export const RED_FLAGS = [
+  {
+    conditions: ['temporal_artery_tenderness'],
+    message: '側頭動脈圧痛: GCAを疑う。失明リスク。プレドニゾロン先行+即日眼科+リウマチ科紹介。',
+    severity: 'critical',
+  },
+  {
+    conditions: ['qsofa_positive'],
+    message: 'qSOFA陽性（高齢者の倦怠感+意識変容/頻呼吸/低血圧）: 敗血症を疑う。即搬送+血液培養+乳酸。',
+    severity: 'critical',
+  },
   {
     conditions: ['weight_loss'],
     message: '説明のつかない体重減少: 悪性腫瘍・副腎不全・甲状腺機能亢進症を考慮。精査。',

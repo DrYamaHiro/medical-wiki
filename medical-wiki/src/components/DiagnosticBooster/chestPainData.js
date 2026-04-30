@@ -33,6 +33,9 @@ export const SYMPTOMS = [
   { id: 'cv_risk', label: '冠危険因子あり（高血圧/DM/脂質/喫煙/家族歴）', cat: 'リスク' },
   { id: 'dvt_risk', label: 'DVTリスク（長期臥床/術後/OC/悪性腫瘍）', cat: 'リスク' },
   { id: 'leg_swelling', label: '下肢腫脹（片側性）', cat: 'リスク' },
+  // Phase 2 #8: 肺高血圧・心タンポナーデ
+  { id: 'lower_extremity_edema', label: '両下腿浮腫（慢性）', cat: 'リスク' },
+  { id: 'pulsus_paradoxus_sym', label: '吸気時の脈拍微弱化', cat: '随伴症状' },
 ];
 
 export const FINDINGS = [
@@ -50,6 +53,9 @@ export const FINDINGS = [
   { id: 'subcutaneous_emphysema', label: '皮下気腫', triggers: ['post_vomiting', 'sudden_onset'], weight: 4 },
   { id: 'normal_o2sat', label: '【陰性】SpO2 正常 (≥96% 室内気)', triggers: [], cat: '陰性所見' },
   { id: 'normal_lung_sound', label: '【陰性】両肺呼吸音 清明', triggers: [], cat: '陰性所見' },
+  { id: 'loud_p2', label: 'II音肺動脈成分 (P2) 亢進', triggers: ['exertional', 'dyspnea', 'lower_extremity_edema'] },
+  { id: 'muffled_heart_sounds', label: '心音減弱', triggers: ['dyspnea', 'fever', 'syncope'] },
+  { id: 'pulsus_paradoxus', label: '奇脈 (吸気時SBP>10mmHg低下)', triggers: ['dyspnea', 'syncope', 'pulsus_paradoxus_sym'], weight: 4 },
   // その他
   { id: 'chest_wall_tenderness', label: '胸壁圧痛（再現性あり）', triggers: ['reproducible', 'pleuritic'] },
   { id: 'unilateral_rash', label: '片側性水疱性皮疹（帯状疱疹）', triggers: ['pleuritic', 'burning'] },
@@ -181,6 +187,36 @@ export const DIFFERENTIALS = [
     nextStep: '12誘導心電図+胸部X線。心不全徴候があれば即紹介/搬送。若年者の感冒後の心不全を疑え。',
     link: null,
     comment: '感冒後1-2週の若年者の胸痛+心不全症状。劇症型は急速にショックに進展。トロポニン・BNPは当院測定不可→心筋炎疑いなら即紹介。',
+  },
+  // === Phase 2 #8 追加: 肺高血圧・心タンポナーデ ===
+  {
+    id: 'pulmonary_hypertension',
+    name: '肺高血圧症',
+    cat: '循環器',
+    freq: '低頻度',
+    prevalenceWeight: 1,
+    severityWeight: 3,
+    symptoms: ['exertional', 'dyspnea', 'syncope', 'palpitations', 'retrosternal', 'lower_extremity_edema'],
+    findings: ['loud_p2', 'jvd'],
+    redFlags: ['syncope'],
+    nextStep: '労作時呼吸困難+労作時失神+P2亢進+JVD→肺高血圧症を疑う。胸部X線（肺動脈拡大）+心電図（右室肥大/右軸偏位）。心エコー必須→循環器紹介（当院不可）。CTEPH除外のため換気血流シンチも考慮。',
+    link: null,
+    comment: '労作時失神は予後不良サイン。膠原病・慢性肺疾患・睡眠時無呼吸・PE既往・先天性心疾患がリスク。',
+  },
+  {
+    id: 'cardiac_tamponade',
+    name: '心タンポナーデ',
+    cat: '循環器 / 緊急',
+    freq: '低頻度',
+    prevalenceWeight: 1,
+    severityWeight: 5,
+    resolvedStillDangerous: true,
+    symptoms: ['dyspnea', 'syncope', 'pressure', 'retrosternal', 'fever', 'pulsus_paradoxus_sym', 'at_rest'],
+    findings: ['muffled_heart_sounds', 'jvd', 'hypotension', 'tachycardia', 'pulsus_paradoxus'],
+    redFlags: ['hypotension', 'pulsus_paradoxus'],
+    nextStep: 'Beck三徴（低血圧+JVD+心音減弱）+奇脈→心タンポナーデ。心電図でlow voltage+electrical alternans。即搬送（心嚢穿刺が救命処置）。',
+    link: null,
+    comment: '心膜炎の進展・解離の心嚢内穿破・転移性心嚢液貯留が原因。心エコー（当院不可）が確定→疑ったら即搬送。',
   },
   {
     id: 'pneumonia',
@@ -328,6 +364,11 @@ export const DIFFERENTIALS = [
 ];
 
 export const RED_FLAGS = [
+  {
+    conditions: ['pulsus_paradoxus'],
+    message: '奇脈+JVD+低血圧 (Beck三徴): 心タンポナーデを疑う。即搬送 (心嚢穿刺)。',
+    severity: 'critical',
+  },
   {
     conditions: ['hypotension'],
     message: 'ショック: ACS・大動脈解離・massive PE・緊張性気胸を考慮。即搬送準備。',

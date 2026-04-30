@@ -41,6 +41,10 @@ export const SYMPTOMS = [
   { id: 'joint_pain', label: '関節痛', cat: '全身' },
   { id: 'mucosal', label: '粘膜症状（口腔・眼・陰部）', cat: '全身' },
   { id: 'sexual_risk', label: '性行為歴あり', cat: 'リスク' },
+  // Phase 2 #8: Sweet症候群
+  { id: 'tender_plaque', label: '有痛性の隆起性紅色局面', cat: '原発疹' },
+  { id: 'malignancy_history', label: '血液悪性腫瘍/MDSの既往', cat: 'リスク' },
+  { id: 'recent_uri', label: '先行する上気道感染', cat: '誘因' },
 ];
 
 export const FINDINGS = [
@@ -55,6 +59,9 @@ export const FINDINGS = [
   { id: 'lymphadenopathy', label: '全身リンパ節腫脹', triggers: ['scattered', 'fever', 'sexual_risk'] },
   { id: 'dermoscopy_finding', label: 'ダーモスコピー所見あり', triggers: [] },
   { id: 'fever_high', label: '高熱 ≥38.5℃', triggers: [] },
+  // Phase 2 #8 findings
+  { id: 'pseudovesicular_plaque', label: '浮腫状で偽水疱状の紅色局面（顔面・上肢）', triggers: ['tender_plaque', 'fever', 'erythema'] },
+  { id: 'neutrophilia', label: '好中球増多（外注）', triggers: [] },
 ];
 
 export const DIFFERENTIALS = [
@@ -285,6 +292,21 @@ export const DIFFERENTIALS = [
     link: null,
     comment: '同心円状のtarget lesion。四肢末端・手掌に好発。EM minor: 粘膜病変軽度。EM major: 粘膜病変高度→SJSとの鑑別必要→皮膚科紹介。',
   },
+  // === Phase 2 #8 追加: Sweet症候群 ===
+  {
+    id: 'sweet_syndrome',
+    name: 'Sweet症候群（急性発熱性好中球性皮膚症）',
+    cat: '炎症性皮膚疾患',
+    freq: '低頻度',
+    prevalenceWeight: 1,
+    severityWeight: 3,
+    symptoms: ['erythema', 'tender_plaque', 'fever', 'acute', 'pain', 'recent_uri', 'malignancy_history', 'joint_pain'],
+    findings: ['pseudovesicular_plaque', 'neutrophilia', 'fever_high'],
+    redFlags: ['malignancy_history'],
+    nextStep: '高熱+顔面/上肢の有痛性浮腫状紅色局面+好中球増多→Sweet症候群を疑う。皮膚科紹介（生検: 真皮上層の好中球浸潤）。血液悪性腫瘍/MDS随伴型（10-20%）の検索→CBC+末梢血像+骨髄評価。プレドニゾロン1mg/kg/日で劇的改善（診断的治療）。',
+    link: null,
+    comment: '中年女性に多い「特発性」、悪性腫瘍随伴型 (AML/MDS)、薬剤性 (G-CSF/トレチノイン)、IBD関連の4型。皮疹は偽水疱状で「水疱に見えるが実は浮腫」。',
+  },
   {
     id: 'ctcl',
     name: '皮膚T細胞リンパ腫（CTCL/菌状息肉症）',
@@ -349,6 +371,11 @@ export const RED_FLAGS = [
     conditions: ['nikolsky_positive'],
     message: 'Nikolsky sign陽性: SJS/TEN/天疱瘡を疑う。被疑薬即時中止。即日皮膚科紹介/搬送。',
     severity: 'critical',
+  },
+  {
+    conditions: ['malignancy_history'],
+    message: '血液悪性腫瘍/MDS既往+発熱+有痛性紅色局面: Sweet症候群（傍腫瘍性）を疑う。皮膚科+血液内科紹介。',
+    severity: 'warning',
   },
   {
     conditions: ['mucosal_erosion'],

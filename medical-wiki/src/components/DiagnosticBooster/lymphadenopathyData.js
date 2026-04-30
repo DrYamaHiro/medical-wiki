@@ -34,6 +34,12 @@ export const SYMPTOMS = [
   { id: 'drug_history', label: '薬剤歴（フェニトイン・カルバマゼピン等）', cat: 'リスク' },
   { id: 'cancer_history', label: '悪性腫瘍の既往', cat: 'リスク' },
   { id: 'young_adult', label: '若年者（15-35歳）', cat: 'リスク' },
+  // Phase 2 #8: HSP・リンゴ病
+  { id: 'palpable_purpura', label: '触知可能紫斑（下肢優位）', cat: '随伴' },
+  { id: 'abdominal_pain', label: '腹痛', cat: '随伴' },
+  { id: 'cheek_erythema', label: '頬の紅斑（蝶形/平手打ち様）', cat: '随伴' },
+  { id: 'lacy_rash', label: 'レース状・網目状の皮疹（四肢）', cat: '随伴' },
+  { id: 'pediatric', label: '小児・学童', cat: 'リスク' },
 ];
 
 export const FINDINGS = [
@@ -47,6 +53,8 @@ export const FINDINGS = [
   { id: 'palm_sole_rash', label: '手掌・足底の紅斑', triggers: ['sexual_risk', 'rash', 'generalized'] },
   // 常時表示
   { id: 'pallor', label: '眼瞼結膜蒼白', triggers: [] },
+  { id: 'lower_limb_purpura', label: '下肢優位の触知可能紫斑', triggers: ['palpable_purpura', 'joint_pain', 'abdominal_pain'], weight: 4 },
+  { id: 'slapped_cheek', label: '平手打ち様頬紅斑+四肢のレース状皮疹', triggers: ['cheek_erythema', 'lacy_rash', 'pediatric'] },
 ];
 
 export const DIFFERENTIALS = [
@@ -207,6 +215,35 @@ export const DIFFERENTIALS = [
     nextStep: '若年女性+頸部リンパ節腫脹+発熱が典型。自然軽快（1-4ヶ月）が多い。SLEとの鑑別（ANA提出）。持続する場合は生検で確定（血液内科紹介）。再受診基準: 4ヶ月以上遷延・新症状出現・ANA陽性→SLE精査。',
     link: null,
     comment: '20-30代女性に好発。頸部後三角のリンパ節腫脹+発熱+白血球減少が典型。悪性リンパ腫やSLEとの鑑別に生検が有用。自然軽快するが再発あり。',
+  },
+  // === Phase 2 #8 追加: HSP・リンゴ病 ===
+  {
+    id: 'henoch_schonlein',
+    name: 'IgA血管炎 (Henoch-Schönlein紫斑病/HSP)',
+    cat: '血管炎',
+    freq: '低〜中頻度',
+    prevalenceWeight: 3,
+    severityWeight: 3,
+    symptoms: ['cervical', 'inguinal', 'painful', 'palpable_purpura', 'joint_pain', 'abdominal_pain', 'pediatric', 'fever'],
+    findings: ['lower_limb_purpura', 'tender_soft'],
+    redFlags: ['lower_limb_purpura'],
+    nextStep: '下肢優位の触知可能紫斑+関節痛+腹痛+血尿/蛋白尿の四徴。尿検査（腎症スクリーニング必須）+CBC+凝固（血小板正常）。腎症あり or 腹部緊急（腸重積/穿孔）→紹介。リンパ節腫脹は反応性に随伴。',
+    link: null,
+    comment: '小児に多いが成人発症も予後不良傾向（IgA腎症）。先行感染（A群連鎖球菌等）後1-3週で発症。腹痛は腸重積/腸壁血腫。腎症の長期follow必須。',
+  },
+  {
+    id: 'erythema_infectiosum',
+    name: '伝染性紅斑 (リンゴ病/パルボB19)',
+    cat: '感染症（ウイルス）',
+    freq: '中頻度',
+    prevalenceWeight: 3,
+    severityWeight: 1,
+    symptoms: ['cervical', 'painful', 'cheek_erythema', 'lacy_rash', 'joint_pain', 'fever', 'pediatric', 'rash'],
+    findings: ['slapped_cheek', 'tender_soft'],
+    redFlags: [],
+    nextStep: '小児: 平手打ち様頬紅斑→四肢レース状皮疹で臨床診断。対症療法。妊婦曝露→胎児水腫リスク（産婦人科紹介+IgM/IgG検査）。溶血性貧血合併者→aplastic crisisリスク。',
+    link: null,
+    comment: 'パルボウイルスB19。皮疹出現時はすでに感染力低下。成人女性は皮疹乏しく対称性多関節痛が前面に出る (RA様)。妊婦・溶血性貧血・免疫不全者には致命的。',
   },
   {
     id: 'drug_induced',

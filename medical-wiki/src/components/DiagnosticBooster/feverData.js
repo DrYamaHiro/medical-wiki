@@ -25,6 +25,10 @@ export const SYMPTOMS = [
   { id: 'chest_pain', label: '胸痛', cat: '循環器' },
   { id: 'palpitations', label: '動悸', cat: '循環器' },
   { id: 'trismus', label: '開口障害', cat: '耳鼻' },
+  // Phase 2 #8: 二次梅毒・CDI
+  { id: 'sexual_risk', label: '性行為歴 (リスク高)', cat: 'リスク' },
+  { id: 'recent_antibiotic', label: '直近の抗菌薬使用 (≤8週間)', cat: 'リスク' },
+  { id: 'chronic_diarrhea', label: '持続する水様性下痢', cat: '消化器' },
 ];
 
 export const FINDINGS = [
@@ -50,6 +54,9 @@ export const FINDINGS = [
   { id: 'osler_janeway', label: 'Osler結節/Janeway病変', triggers: ['chest_pain', 'rash'], weight: 4 },
   { id: 'normal_o2sat', label: '【陰性】SpO2 正常 (≥96% 室内気)', triggers: [], cat: '陰性所見' },
   { id: 'normal_lung_sound', label: '【陰性】両肺呼吸音 清明', triggers: [], cat: '陰性所見' },
+  { id: 'palm_sole_rash', label: '手掌・足底の紅斑（バラ疹）', triggers: ['rash', 'sexual_risk'], weight: 4 },
+  { id: 'mucous_patch', label: '粘膜斑・扁平コンジローマ', triggers: ['rash', 'sexual_risk'] },
+  { id: 'severe_diarrhea', label: '1日3回以上の水様便/血便', triggers: ['chronic_diarrhea', 'recent_antibiotic'] },
   { id: 'strawberry_tongue', label: '苺舌', triggers: ['sore_throat', 'rash'] },
   { id: 'thyroid_enlargement', label: '甲状腺腫大・圧痛', triggers: ['palpitations'] },
 ];
@@ -364,6 +371,35 @@ export const DIFFERENTIALS = [
     nextStep: '胸部X線。結核疑いの時点で保健所相談＋専門医療機関紹介。喀痰抗酸菌検査は専門施設で。喀血時は止血処置+紹介。',
     link: null,
     comment: '2週間以上の咳嗽+盗汗+体重減少で疑う。日本は結核中蔓延国。高齢者・免疫低下者に注意。院内感染リスクあり→マスク着用+隔離。',
+  },
+  // === Phase 2 #8 追加: 二次梅毒・CDI ===
+  {
+    id: 'secondary_syphilis',
+    name: '第2期梅毒',
+    cat: '感染症（性感染症）',
+    freq: '低〜中頻度',
+    prevalenceWeight: 2,
+    severityWeight: 2,
+    symptoms: ['fever', 'rash', 'lymphadenopathy', 'sore_throat', 'sexual_risk', 'weight_loss'],
+    findings: ['palm_sole_rash', 'mucous_patch', 'maculopapular_rash'],
+    redFlags: ['palm_sole_rash'],
+    nextStep: 'RPR/TPHA即日提出。全身性無痛性リンパ節腫脹+手掌・足底の紅斑+発熱→梅毒を強く疑う。性行為歴聴取が困難でも検査閾値を下げる。ベンジルペニシリンベンザチン筋注 or アモキシシリン内服。HIV同時検査。',
+    link: '/docs/255-Sexual-Infect/a513-secondary-syphilis',
+    comment: '「The Great Imitator」。あらゆる発熱+皮疹を模倣する。手掌・足底の紅斑（バラ疹）が最も特異的。近年日本で激増中。',
+  },
+  {
+    id: 'cdi',
+    name: 'Clostridioides difficile感染症 (CDI)',
+    cat: '感染症（細菌）',
+    freq: '低〜中頻度',
+    prevalenceWeight: 3,
+    severityWeight: 3,
+    symptoms: ['fever', 'abdominal_pain', 'diarrhea', 'recent_antibiotic', 'chronic_diarrhea'],
+    findings: ['severe_diarrhea'],
+    redFlags: ['severe_diarrhea'],
+    nextStep: '抗菌薬使用後（特にFQ・第3世代セフェム・クリンダマイシン）の発熱+水様性下痢→CDトキシン抗原検査（GDH+toxin）。被疑薬中止+メトロニダゾール経口 or バンコマイシン経口。重症（WBC≥15000/腎障害/中毒性巨大結腸）→消化器/感染症科紹介。',
+    link: null,
+    comment: '高齢者・PPI使用・入院歴・直近の抗菌薬がリスク。「下痢=胃腸炎」で片付けず、抗菌薬歴を必ず聴取。中毒性巨大結腸は致死的。',
   },
   {
     id: 'secondary_bacterial',

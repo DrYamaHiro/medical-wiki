@@ -27,6 +27,13 @@ export const SYMPTOMS = [
   { id: 'dysuria', label: '排尿障害・血尿', cat: '泌尿器' },
   { id: 'vaginal_bleeding', label: '不正出血', cat: '婦人科' },
   { id: 'missed_period', label: '月経遅延・妊娠可能', cat: '婦人科' },
+  // Phase 2 #8: 腸結核・肛門直腸膿瘍・腎梗塞
+  { id: 'perianal_pain', label: '肛門・直腸周囲の痛み', cat: '消化器' },
+  { id: 'chronic_diarrhea', label: '慢性下痢 (>4週間)', cat: '消化器' },
+  { id: 'weight_loss', label: '体重減少', cat: '全身' },
+  { id: 'night_sweats', label: '盗汗', cat: '全身' },
+  { id: 'af_risk', label: '心房細動・血管リスク (高齢/動脈硬化)', cat: 'リスク' },
+  { id: 'hematuria', label: '肉眼的血尿', cat: '泌尿器' },
 ];
 
 export const FINDINGS = [
@@ -47,6 +54,9 @@ export const FINDINGS = [
   { id: 'pain_out_of_proportion', label: '痛みの割に腹部所見が乏しい（Pain out of proportion）', triggers: ['sudden_onset', 'periumbilical', 'diffuse'], weight: 4 },
   { id: 'tachycardia', label: '頻脈 HR>100', triggers: [] },
   { id: 'hypotension', label: '収縮期血圧<90', triggers: [] },
+  // Phase 2 #8 findings
+  { id: 'perianal_swelling', label: '肛門周囲の発赤・腫脹・波動・圧痛', triggers: ['perianal_pain', 'fever'], weight: 4 },
+  { id: 'rovsing_negative_imaging', label: '腹部CTで回盲部肥厚/腸間膜リンパ節腫大', triggers: [] },
 ];
 
 export const DIFFERENTIALS = [
@@ -310,6 +320,50 @@ export const DIFFERENTIALS = [
     link: null,
     comment: '心窩部痛として発症するACSは見逃しやすい。糖尿病・高齢者は非典型的。「腹痛の12誘導心電図」を忘れるな。',
     showWhen: { anyOf: ['epigastric', 'cold_sweat', 'tachycardia', 'hypotension', 'shock_signs'] },
+  },
+  // === Phase 2 #8 追加: 腸結核・肛門直腸膿瘍・腎梗塞 ===
+  {
+    id: 'intestinal_tb',
+    name: '腸結核',
+    cat: '感染症（細菌）',
+    freq: '低頻度',
+    prevalenceWeight: 1,
+    severityWeight: 3,
+    symptoms: ['rlq', 'chronic_diarrhea', 'fever', 'night_sweats', 'weight_loss', 'abdominal_pain'],
+    findings: ['rovsing_negative_imaging'],
+    redFlags: [],
+    nextStep: '回盲部に好発する慢性下痢+体重減少+微熱+盗汗。胸部X線（肺結核合併）+IGRA。CT施設+消化器内科紹介（大腸内視鏡で輪状潰瘍/瘢痕）。日本は結核中蔓延国。',
+    link: null,
+    comment: '若年者の右下腹部痛+慢性下痢ではCrohn病と鑑別必要（治療が真逆）。アジア・高齢者・免疫低下者で要警戒。',
+  },
+  {
+    id: 'perirectal_abscess',
+    name: '肛門直腸膿瘍',
+    cat: '外科 / 感染症',
+    freq: '中頻度',
+    prevalenceWeight: 5,
+    severityWeight: 3,
+    symptoms: ['perianal_pain', 'lower_abd', 'fever', 'constant'],
+    findings: ['perianal_swelling'],
+    redFlags: ['perianal_swelling'],
+    nextStep: '肛門周囲の発赤・腫脹・波動触知+発熱→外科紹介（切開排膿が確定治療）。糖尿病・免疫低下者ではFournier壊疽に進展リスク→即搬送。経口抗菌薬単独で様子を見ない。',
+    link: null,
+    comment: '「腹痛」を主訴に来院しても直腸診/肛門周囲の視診を必ず行う。坐位困難+夜間痛増悪が手がかり。',
+  },
+  {
+    id: 'renal_infarction',
+    name: '腎梗塞',
+    cat: '血管 / 緊急',
+    freq: '低頻度',
+    prevalenceWeight: 1,
+    severityWeight: 4,
+    resolvedStillDangerous: true,
+    symptoms: ['sudden_onset', 'flank_pain', 'back_pain', 'nausea_vomiting', 'af_risk', 'hematuria'],
+    findings: ['cva_tenderness', 'tachycardia'],
+    redFlags: [],
+    nextStep: '尿管結石様の側腹部痛だがLDH著増+肉眼血尿陰性〜微量+Af既往→腎梗塞を疑う。造影CT施設へ即紹介。早期再灌流（抗凝固/血栓溶解）が腎機能温存の鍵。',
+    link: null,
+    comment: '尿管結石として誤診されやすい。Af・心内膜炎・大動脈解離・血管炎が塞栓源。LDH急増+腎機能低下+CTで楔状造影欠損が診断。',
   },
   {
     id: 'constipation_functional',
