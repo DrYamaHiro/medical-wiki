@@ -130,6 +130,26 @@
   color: var(--ifm-color-emphasis-600);
 }
 
+/* 患者ヘッダー (Phase 3 #10/#11) */
+.patientHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.6rem 1.2rem;
+  background: #f0f4c3;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+.patientField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.patientLabel {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #5d4037;
+}
+
 .redFlagCritical {
   padding: 0.7rem 1.2rem;
   background: #b71c1c;

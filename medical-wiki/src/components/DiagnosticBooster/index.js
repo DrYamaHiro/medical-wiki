@@ -39,6 +39,14 @@ function calcScore(
   for (const nId of neg) if (selF.has(nId)) negHits += 1;
   matchCount = Math.max(0, matchCount - 1.5 * negHits);
 
+  // Phase 3 #13 patternBonus: 典型 cluster の同時マッチに bonus 加点
+  // diff.patternBonus = { all: ['ruq','murphy_sign','fever'], bonus: 4 }
+  const pattern = diff.patternBonus;
+  if (pattern && Array.isArray(pattern.all) && pattern.all.length > 0) {
+    const allMatched = pattern.all.every((id) => selS.has(id) || selF.has(id));
+    if (allMatched) matchCount += pattern.bonus ?? 4;
+  }
+
   const prev = diff.prevalenceWeight ?? 5;
   const sev = diff.severityWeight ?? 3;
 
@@ -78,6 +86,9 @@ export default function DiagnosticBooster({
   const [phase, setPhase] = useState(1);
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [selectedFindings, setSelectedFindings] = useState([]);
+  // Phase 3: 患者ヘッダー (年齢層 + 妊娠状態)
+  const [patientAge, setPatientAge] = useState(''); // '' | 'pediatric' | 'adult' | 'elderly'
+  const [patientPregnancy, setPatientPregnancy] = useState(''); // '' | 'no' | 'possible' | 'known'
 
   const toggleSymptom = useCallback((id) => {
     setSelectedSymptoms((prev) =>
@@ -95,6 +106,8 @@ export default function DiagnosticBooster({
     setPhase(1);
     setSelectedSymptoms([]);
     setSelectedFindings([]);
+    setPatientAge('');
+    setPatientPregnancy('');
   }, []);
 
   const visibleFindings = useMemo(() => {
@@ -133,14 +146,30 @@ export default function DiagnosticBooster({
     return d.showWhen.anyOf.some((c) => selected.has(c));
   }, [selectedSymptoms, selectedFindings]);
 
+  // 患者ヘッダーで除外/必須判定 (小児限定/妊娠限定 等)
+  const matchesPatientHeader = useCallback((d) => {
+    // requiresPatient: { ageGroup?: 'pediatric'|'adult'|'elderly', pregnancy?: 'possible'|'known' }
+    // excludePatient: 同形式 (該当時に除外)
+    const req = d.requiresPatient;
+    if (req) {
+      if (req.ageGroup && patientAge && req.ageGroup !== patientAge) return false;
+      if (req.pregnancy && patientPregnancy !== 'possible' && patientPregnancy !== 'known') return false;
+    }
+    const excl = d.excludePatient;
+    if (excl) {
+      if (excl.ageGroup && patientAge === excl.ageGroup) return false;
+    }
+    return true;
+  }, [patientAge, patientPregnancy]);
+
   const rankedDiffs = useMemo(() => {
     return DIFFERENTIALS.map((d) => ({
       ...d,
       _score: calcScore(d, selectedSymptoms, selectedFindings, hasRedFlags, firedRedFlagConditions, SYMPTOMS, FINDINGS),
     }))
-      .filter((d) => d._score > 0 || matchesShowWhen(d) || d.alwaysShow)
+      .filter((d) => (d._score > 0 || matchesShowWhen(d) || d.alwaysShow) && matchesPatientHeader(d))
       .sort((a, b) => b._score - a._score);
-  }, [selectedSymptoms, selectedFindings, DIFFERENTIALS, hasRedFlags, firedRedFlagConditions, matchesShowWhen, SYMPTOMS, FINDINGS]);
+  }, [selectedSymptoms, selectedFindings, DIFFERENTIALS, hasRedFlags, firedRedFlagConditions, matchesShowWhen, matchesPatientHeader, SYMPTOMS, FINDINGS]);
 
   // Phase 3 開閉モード: null=auto (top-5 + sev≥4), true=全展開, false=全折畳み
   const [expandAll, setExpandAll] = useState(null);
@@ -174,6 +203,42 @@ export default function DiagnosticBooster({
           <button className={styles.resetBtn} onClick={reset}>
             リセット
           </button>
+        </div>
+      </div>
+
+      {/* 患者ヘッダー (Phase 3 #10/#11) */}
+      <div className={styles.patientHeader}>
+        <div className={styles.patientField}>
+          <span className={styles.patientLabel}>年齢層:</span>
+          <div className={styles.chipGrid}>
+            {[
+              { id: 'pediatric', label: '小児 (≤15)' },
+              { id: 'adult', label: '成人 (16-64)' },
+              { id: 'elderly', label: '高齢者 (≥65)' },
+            ].map((o) => (
+              <button key={o.id} type="button"
+                className={`${styles.chip} ${patientAge === o.id ? styles.chipActive : ''}`}
+                onClick={() => setPatientAge(patientAge === o.id ? '' : o.id)}>
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className={styles.patientField}>
+          <span className={styles.patientLabel}>妊娠状態 (女性のみ):</span>
+          <div className={styles.chipGrid}>
+            {[
+              { id: 'no', label: '可能性なし' },
+              { id: 'possible', label: '可能性あり' },
+              { id: 'known', label: '妊娠中' },
+            ].map((o) => (
+              <button key={o.id} type="button"
+                className={`${styles.chip} ${patientPregnancy === o.id ? styles.chipActive : ''}`}
+                onClick={() => setPatientPregnancy(patientPregnancy === o.id ? '' : o.id)}>
+                {o.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

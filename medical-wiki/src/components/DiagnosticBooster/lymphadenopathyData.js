@@ -238,6 +238,7 @@ export const DIFFERENTIALS = [
     freq: '中頻度',
     prevalenceWeight: 3,
     severityWeight: 1,
+    requiresPatient: { ageGroup: 'pediatric' },
     symptoms: ['cervical', 'painful', 'cheek_erythema', 'lacy_rash', 'joint_pain', 'fever', 'pediatric', 'rash'],
     findings: ['slapped_cheek', 'tender_soft'],
     redFlags: [],
