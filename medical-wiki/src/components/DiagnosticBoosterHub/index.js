@@ -1,0 +1,286 @@
+import React, { useState, useMemo, useCallback } from 'react';
+import { calcScore } from '../DiagnosticBooster';
+import { unionSymptoms, unionFindings, unionRedFlags, mergeDifferentials } from '../DiagnosticBooster/hubMerge';
+import styles from '../DiagnosticBooster/styles.module.css';
+
+import * as abdominalPain   from '../DiagnosticBooster/abdominalPainData';
+import * as chestPain       from '../DiagnosticBooster/chestPainData';
+import * as dizziness       from '../DiagnosticBooster/dizzinessData';
+import * as fatigue         from '../DiagnosticBooster/fatigueData';
+import * as fever           from '../DiagnosticBooster/feverData';
+import * as headache        from '../DiagnosticBooster/headacheData';
+import * as lymphadenopathy from '../DiagnosticBooster/lymphadenopathyData';
+import * as palpitations    from '../DiagnosticBooster/palpitationsData';
+import * as polyarthralgia  from '../DiagnosticBooster/polyarthralgiaData';
+import * as rash            from '../DiagnosticBooster/rashData';
+import * as syncope         from '../DiagnosticBooster/syncopeData';
+import * as weightLoss      from '../DiagnosticBooster/weightLossData';
+
+const BOOSTERS = {
+  fever:           { label: '発熱',         data: fever },
+  abdominalPain:   { label: '腹痛',         data: abdominalPain },
+  chestPain:       { label: '胸痛',         data: chestPain },
+  headache:        { label: '頭痛',         data: headache },
+  dizziness:       { label: 'めまい',       data: dizziness },
+  syncope:         { label: '失神',         data: syncope },
+  palpitations:    { label: '動悸',         data: palpitations },
+  fatigue:         { label: '倦怠感',       data: fatigue },
+  weightLoss:      { label: '体重減少',     data: weightLoss },
+  rash:            { label: '皮疹',         data: rash },
+  polyarthralgia:  { label: '多関節痛',     data: polyarthralgia },
+  lymphadenopathy: { label: 'リンパ節腫脹', data: lymphadenopathy },
+};
+const MAX_CC = 3;
+
+export default function DiagnosticBoosterHub() {
+  const [selectedBoosters, setSelectedBoosters] = useState(() => new Set());
+  const [selectedSymptoms, setSelectedSymptoms] = useState(() => new Set());
+  const [selectedFindings, setSelectedFindings] = useState(() => new Set());
+  const [activeCat, setActiveCat] = useState(null);
+
+  const toggleBooster = useCallback((key) => {
+    setSelectedBoosters((prev) => {
+      const n = new Set(prev);
+      if (n.has(key)) n.delete(key);
+      else if (n.size < MAX_CC) n.add(key);
+      return n;
+    });
+  }, []);
+
+  const toggleSym = useCallback((id) => {
+    setSelectedSymptoms((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id); else n.add(id);
+      return n;
+    });
+  }, []);
+
+  const toggleFind = useCallback((id) => {
+    setSelectedFindings((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id); else n.add(id);
+      return n;
+    });
+  }, []);
+
+  const selectedKeys = useMemo(() => [...selectedBoosters], [selectedBoosters]);
+
+  const selectedModules = useMemo(() => selectedKeys.map((k) => BOOSTERS[k].data), [selectedKeys]);
+
+  // Phase 1: union SYMPTOMS by id, max-weight merge
+  const unionedSymptoms = useMemo(() => unionSymptoms(selectedModules), [selectedModules]);
+
+  const symptomGroups = useMemo(() => {
+    const g = {};
+    unionedSymptoms.forEach((s) => { (g[s.cat || 'その他'] ||= []).push(s); });
+    return g;
+  }, [unionedSymptoms]);
+
+  // Phase 2: union FINDINGS by id, merge triggers + max weight
+  const unionedFindings = useMemo(() => unionFindings(selectedModules), [selectedModules]);
+
+  const visibleFindings = useMemo(() => {
+    if (selectedSymptoms.size === 0) return [];
+    return unionedFindings.filter(
+      (f) => (f.triggers || []).length === 0 || (f.triggers || []).some((t) => selectedSymptoms.has(t))
+    );
+  }, [unionedFindings, selectedSymptoms]);
+
+  // Red Flags: dedupe by message+sorted(conditions)
+  const allRedFlags = useMemo(() => unionRedFlags(selectedModules), [selectedModules]);
+  const activeRedFlags = useMemo(() => {
+    const sel = new Set([...selectedSymptoms, ...selectedFindings]);
+    const seen = new Set();
+    return allRedFlags.filter((rf) => {
+      if (!rf.conditions.some((c) => sel.has(c))) return false;
+      if (seen.has(rf.message)) return false;
+      seen.add(rf.message);
+      return true;
+    });
+  }, [allRedFlags, selectedSymptoms, selectedFindings]);
+
+  const firedConditions = useMemo(() => {
+    const sel = new Set([...selectedSymptoms, ...selectedFindings]);
+    const fired = new Set();
+    activeRedFlags.forEach((rf) => rf.conditions.forEach((c) => sel.has(c) && fired.add(c)));
+    return fired;
+  }, [activeRedFlags, selectedSymptoms, selectedFindings]);
+
+  // Phase 3: per-booster scoring (native SYMPTOMS/FINDINGS for weight) → mergeDifferentials
+  const rankedDiffs = useMemo(() => {
+    const selS = [...selectedSymptoms];
+    const selF = [...selectedFindings];
+    const hasRF = activeRedFlags.length > 0;
+    const rankedByBooster = {};
+    selectedKeys.forEach((k) => {
+      const { SYMPTOMS, FINDINGS, DIFFERENTIALS } = BOOSTERS[k].data;
+      rankedByBooster[k] = (DIFFERENTIALS || []).map((d) => ({
+        ...d,
+        _score: calcScore(d, selS, selF, hasRF, firedConditions, SYMPTOMS, FINDINGS),
+      })).filter((d) => d._score > 0 || d.alwaysShow);
+    });
+    return mergeDifferentials(rankedByBooster);
+  }, [selectedKeys, selectedSymptoms, selectedFindings, activeRedFlags, firedConditions]);
+
+  const reset = () => {
+    setSelectedBoosters(new Set());
+    setSelectedSymptoms(new Set());
+    setSelectedFindings(new Set());
+    setActiveCat(null);
+  };
+
+  return (
+    <div className={styles.booster}>
+      <div className={styles.header}>
+        <div>
+          <p className={styles.title}>統合診断ハブ (MVP)</p>
+          <p className={styles.subtitle}>複数主訴の統合鑑別 (最大3主訴)</p>
+        </div>
+        <div className={styles.headerRight}>
+          <button className={styles.resetBtn} onClick={reset}>リセット</button>
+        </div>
+      </div>
+
+      {/* Active red flag banner (top) */}
+      {activeRedFlags.length > 0 && (
+        <div className={styles.redFlagBox}>
+          {activeRedFlags.map((rf, i) => (
+            <div key={i} className={rf.severity === 'critical' ? styles.redFlagCritical : styles.redFlagWarning}>
+              {rf.severity === 'critical' ? '⚠️ ' : '⚠ '}
+              {rf.message}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Phase 0: Chief complaint chips (max 3) */}
+      <div className={styles.section}>
+        <h4 className={styles.sectionTitle}>
+          Phase 0: 主訴を選択（最大3つ）
+          <span className={styles.sectionHint}>　現在 {selectedBoosters.size}/{MAX_CC}</span>
+        </h4>
+        <div className={styles.chipGrid}>
+          {Object.entries(BOOSTERS).map(([k, { label }]) => {
+            const on = selectedBoosters.has(k);
+            const disabled = !on && selectedBoosters.size >= MAX_CC;
+            return (
+              <button key={k} type="button" disabled={disabled}
+                className={`${styles.chip} ${on ? styles.chipActive : ''}`}
+                onClick={() => toggleBooster(k)}>
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Phase 1: category-tab + symptoms */}
+      {selectedBoosters.size > 0 && (
+        <div className={styles.section}>
+          <h4 className={styles.sectionTitle}>Phase 1: 随伴症状を選択</h4>
+          <div className={styles.chipGrid} style={{ marginBottom: '0.6rem' }}>
+            {Object.keys(symptomGroups).map((cat) => (
+              <button key={cat} type="button"
+                className={`${styles.chip} ${activeCat === cat ? styles.chipActive : ''}`}
+                onClick={() => setActiveCat(activeCat === cat ? null : cat)}>
+                {cat} ({symptomGroups[cat].length})
+              </button>
+            ))}
+          </div>
+          {activeCat && symptomGroups[activeCat] && (
+            <div className={styles.chipGrid}>
+              {symptomGroups[activeCat].map((s) => (
+                <button key={s.id} type="button"
+                  className={`${styles.chip} ${selectedSymptoms.has(s.id) ? styles.chipActive : ''}`}
+                  onClick={() => toggleSym(s.id)}>
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          )}
+          {!activeCat && (
+            <p style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)' }}>
+              ↑ カテゴリをクリックすると症状一覧が表示されます
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Phase 2: findings */}
+      {selectedSymptoms.size > 0 && (
+        <div className={styles.section}>
+          <h4 className={styles.sectionTitle}>Phase 2: 身体所見を選択</h4>
+          <div className={styles.chipGrid}>
+            {visibleFindings.map((f) => (
+              <button key={f.id} type="button"
+                className={`${styles.chip} ${selectedFindings.has(f.id) ? styles.chipActive : ''}`}
+                onClick={() => toggleFind(f.id)}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Phase 3: ranked diffs */}
+      {selectedSymptoms.size > 0 && (
+        <div className={styles.section}>
+          <h4 className={styles.sectionTitle}>
+            Phase 3: 統合鑑別 ({rankedDiffs.length}件)
+          </h4>
+          {rankedDiffs.length === 0 ? (
+            <p className={styles.noResult}>該当する鑑別候補がありません。症状・所見を追加してください。</p>
+          ) : (
+            <div className={styles.diffList}>
+              {rankedDiffs.map((d, i) => (
+                <details key={d.id} className={styles.diffCard}
+                  open={i < 5 || (d.severityWeight ?? 0) >= 4}>
+                  <summary className={styles.diffSummary}>
+                    <span className={styles.diffRank}>#{i + 1}</span>
+                    <span className={styles.diffName}>{d.name}</span>
+                    <span className={styles.diffCat}>{d.cat}</span>
+                    <span className={styles.diffFreq}>
+                      [{(d._sourceBoosters || []).map((b) => BOOSTERS[b]?.label || b).join('+')}]
+                    </span>
+                  </summary>
+                  <div className={styles.diffBody}>
+                    {d.resolvedStillDangerous && (
+                      <div className={styles.resolvedWarning}>
+                        ⚠ 症状が消失していても危険な疾患です。来院時に無症状でも精査を検討してください。
+                      </div>
+                    )}
+                    {(d.severityWeight ?? 0) >= 4 && (
+                      <div className={styles.severityContext}>
+                        🔸 重篤な疾患の可能性があります。クリニックでの除外が困難な場合に紹介を検討してください。
+                      </div>
+                    )}
+                    <p className={styles.diffComment}>{d.comment}</p>
+                    <div className={styles.diffAction}><strong>Next Step:</strong> {d.nextStep}</div>
+                    {d.link && <a className={styles.diffLink} href={d.link}>Wiki詳細ページへ</a>}
+                  </div>
+                </details>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Active red flag banner (bottom — 画面切れ対策) */}
+      {activeRedFlags.length > 0 && (
+        <div className={styles.redFlagBox}>
+          <div className={styles.redFlagFooterLabel}>⚠ Red Flag (画面上部にも表示):</div>
+          {activeRedFlags.map((rf, i) => (
+            <div key={'b-' + i} className={rf.severity === 'critical' ? styles.redFlagCritical : styles.redFlagWarning}>
+              {rf.severity === 'critical' ? '⚠️ ' : '⚠ '}
+              {rf.message}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className={styles.footer}>
+        本ツールは診断思考の補助であり、臨床判断を代替するものではありません。
+      </div>
+    </div>
+  );
+}

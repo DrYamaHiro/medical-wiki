@@ -10,7 +10,7 @@ import * as feverData from './feverData';
 /*           無差別適用が無関係な重症疾患を top-3 に強制     */
 /*           浮上させていた問題を解消                       */
 /* -------------------------------------------------------- */
-function calcScore(
+export function calcScore(
   diff,
   selectedSymptoms,
   selectedFindings,

@@ -1,0 +1,27 @@
+---
+sidebar_position: 0
+sidebar_label: 統合診断ハブ
+title: 統合診断ハブ (MVP)
+description: 複数主訴を1ページで統合鑑別。最大3主訴まで組み合わせ、重複疾患は max スコアで自動マージ
+---
+
+import DiagnosticBoosterHub from '@site/src/components/DiagnosticBoosterHub';
+
+# 統合診断ハブ
+
+複数の主訴を組み合わせて鑑別を絞り込みます。**最大3主訴**まで選択でき、重複する疾患は自動的にまとめられます。
+
+<DiagnosticBoosterHub />
+
+## 使い方
+
+1. **Phase 0**: 主訴を最大3つ選択（例: 発熱+腹痛+黄疸）
+2. **Phase 1**: 関連症状をカテゴリ別タブから選択
+3. **Phase 2**: 身体所見を選択
+4. **Phase 3**: 統合鑑別ランキングを確認
+
+複数主訴のうちどの booster で検出されたかは各鑑別カードに `[発熱+胸痛]` のように表示されます。
+
+## 個別 booster へのリンク
+
+単一主訴で詳細に絞り込みたい場合は、各専用 booster ページをご利用ください。
