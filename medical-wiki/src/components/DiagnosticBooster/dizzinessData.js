@@ -68,6 +68,7 @@ export const DIFFERENTIALS = [
     freq: '低頻度',
     prevalenceWeight: 2,
     severityWeight: 5,
+    resolvedStillDangerous: true,
     symptoms: ['vertigo', 'sudden_onset', 'days', 'diplopia', 'dysarthria', 'dysphagia', 'limb_weakness', 'cv_risk'],
     findings: ['hit_negative', 'focal_deficit', 'skew_deviation'],
     redFlags: ['focal_deficit', 'dysarthria'],

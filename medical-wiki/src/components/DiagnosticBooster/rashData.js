@@ -66,6 +66,7 @@ export const DIFFERENTIALS = [
     freq: '低頻度',
     prevalenceWeight: 2,
     severityWeight: 5,
+    resolvedStillDangerous: true,
     symptoms: ['erythema', 'erosion', 'scattered', 'new_drug', 'fever', 'mucosal', 'acute', 'pain', 'burning'],
     findings: ['nikolsky_positive', 'mucosal_erosion', 'fever_high'],
     redFlags: ['nikolsky_positive', 'mucosal_erosion'],

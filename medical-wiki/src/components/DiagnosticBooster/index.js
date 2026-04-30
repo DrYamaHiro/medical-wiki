@@ -5,39 +5,44 @@ import styles from './styles.module.css';
 import * as feverData from './feverData';
 
 /* -------------------------------------------------------- */
-/*  Scoring: 選択された症状・所見と各鑑別の一致度を算出     */
-/*  v2: プライマリケア頻度 + Red Flag連動の重み付け         */
+/*  Scoring v2.1: floor は「自疾患の redFlags が発火」時のみ */
+/*  Bug fix: ANY Red Flag で sev>=4 全疾患 floor=20 する     */
+/*           無差別適用が無関係な重症疾患を top-3 に強制     */
+/*           浮上させていた問題を解消                       */
 /* -------------------------------------------------------- */
-function calcScore(diff, selectedSymptoms, selectedFindings, hasActiveRedFlags) {
+function calcScore(
+  diff,
+  selectedSymptoms,
+  selectedFindings,
+  hasActiveRedFlags,
+  firedRedFlagConditions /* Set<string> — 発火した RED_FLAGS の conditions 和集合 */
+) {
   let matchCount = 0;
   const selS = new Set(selectedSymptoms);
   const selF = new Set(selectedFindings);
-  for (const sym of diff.symptoms) {
-    if (selS.has(sym)) matchCount += 2;
-  }
-  for (const f of diff.findings) {
-    if (selF.has(f)) matchCount += 3;
-  }
+  for (const sym of diff.symptoms) if (selS.has(sym)) matchCount += 2;
+  for (const f of diff.findings) if (selF.has(f)) matchCount += 3;
 
-  // プライマリケア頻度重み付け（デフォルト5=中頻度）
   const prev = diff.prevalenceWeight ?? 5;
-  // 重症度重み付け（デフォルト3=保守的安全側）
   const sev = diff.severityWeight ?? 3;
 
-  let s;
-  if (hasActiveRedFlags) {
-    // Red Flagがある場合:
-    // 1) 重症度でベーススコアを乗算（sev>=4の緊急疾患はマッチ数の差を覆せる）
-    // 2) 頻度はわずかに加味（同重症度内での順位付け）
-    // 3) sev>=4の疾患にはフロアスコア20を保証（top-3に入りやすくする）
-    const floor = sev >= 4 ? 20 : 0;
-    s = Math.max(matchCount * (1 + sev * 0.4) + prev * 0.3, floor + matchCount);
-  } else {
-    // Red Flagがない場合:
-    // 頻度を強く反映し、稀な疾患は症状一致が多くないと浮上しない
-    s = matchCount * (1 + prev * 0.15) + prev * 1.5;
+  // 自疾患関連の Red Flag が選択された条件と交差するか
+  // diff.redFlags 未定義の旧データでも安全 (relevant=false で graceful path)
+  const fired = firedRedFlagConditions || new Set();
+  const ownRF = diff.redFlags || [];
+  const hasRelevantRedFlag = ownRF.some((c) => fired.has(c));
+
+  if (hasActiveRedFlags && hasRelevantRedFlag) {
+    // 自疾患の Red Flag 発火 → 階段化 floor でブースト
+    // sev=5 → floor25, sev=4 → floor18, sev≤3 → floor0
+    const floor = sev >= 5 ? 25 : sev >= 4 ? 18 : 0;
+    const boosted = matchCount * (1 + sev * 0.4) + prev * 0.5;
+    return Math.max(boosted, floor + matchCount);
   }
-  return s;
+
+  // Red Flag 無し / または他疾患由来の Red Flag → 頻度ベース
+  // sev も軽く加味し重症疾患の暗黙ペナルティを解消
+  return matchCount * (1 + prev * 0.15) + prev * 1.5 + sev * 0.3;
 }
 
 /* -------------------------------------------------------- */
@@ -96,14 +101,34 @@ export default function DiagnosticBooster({
 
   const hasRedFlags = activeRedFlags.length > 0;
 
+  // 発火している RED_FLAGS の conditions の和集合 (calcScore 関連性判定用)
+  const firedRedFlagConditions = useMemo(() => {
+    const allSelected = new Set([...selectedSymptoms, ...selectedFindings]);
+    const fired = new Set();
+    for (const rf of activeRedFlags) {
+      for (const c of rf.conditions) {
+        if (allSelected.has(c)) fired.add(c);
+      }
+    }
+    return fired;
+  }, [activeRedFlags, selectedSymptoms, selectedFindings]);
+
   const rankedDiffs = useMemo(() => {
     return DIFFERENTIALS.map((d) => ({
       ...d,
-      _score: calcScore(d, selectedSymptoms, selectedFindings, hasRedFlags),
+      _score: calcScore(d, selectedSymptoms, selectedFindings, hasRedFlags, firedRedFlagConditions),
     }))
       .filter((d) => d._score > 0 || d.alwaysShow)
       .sort((a, b) => b._score - a._score);
-  }, [selectedSymptoms, selectedFindings, DIFFERENTIALS, hasRedFlags]);
+  }, [selectedSymptoms, selectedFindings, DIFFERENTIALS, hasRedFlags, firedRedFlagConditions]);
+
+  // Phase 3 開閉モード: null=auto (top-5 + sev≥4), true=全展開, false=全折畳み
+  const [expandAll, setExpandAll] = useState(null);
+  const isOpen = useCallback((diff, idx) => {
+    if (expandAll === true) return true;
+    if (expandAll === false) return false;
+    return idx < 5 || (diff.severityWeight ?? 0) >= 4;
+  }, [expandAll]);
 
   const symptomGroups = useMemo(() => {
     const groups = {};
@@ -176,6 +201,11 @@ export default function DiagnosticBooster({
               </div>
             </div>
           ))}
+          {phase === 1 && selectedSymptoms.length === 0 && (
+            <div className={styles.phaseHint} role="status" aria-live="polite">
+              ⓘ Phase 2 へ進むには <strong>少なくとも1つの随伴症状</strong>を選択してください。該当がなくても主訴に近い症状を1つ選択してください。
+            </div>
+          )}
           {selectedSymptoms.length > 0 && phase === 1 && (
             <button
               className={styles.nextBtn}
@@ -227,14 +257,34 @@ export default function DiagnosticBooster({
               （一致度順に表示 / {rankedDiffs.length}件）
             </span>
           </h4>
-          {rankedDiffs.length === 0 ? (
+          {selectedSymptoms.length === 0 ? (
+            <div className={styles.phaseBlocker} role="alert">
+              ⚠ 症状未選択のままでは鑑別は表示できません。Phase 1 に戻って症状を選択してください。
+              <button className={styles.resetBtn} onClick={() => setPhase(1)} style={{ marginLeft: '0.5rem' }}>Phase 1 へ戻る</button>
+            </div>
+          ) : rankedDiffs.length === 0 ? (
             <p className={styles.noResult}>
               該当する鑑別候補がありません。症状・所見を追加してください。
             </p>
           ) : (
             <div className={styles.diffList}>
+              <div className={styles.expandToggle}>
+                <button
+                  className={styles.toggleBtn}
+                  onClick={() => setExpandAll(expandAll === true ? false : true)}
+                  aria-pressed={expandAll === true}
+                >
+                  {expandAll === true ? '▼ 全件折畳み' : '▶ 全件展開'}
+                </button>
+                {expandAll !== null && (
+                  <button className={styles.toggleBtn} onClick={() => setExpandAll(null)}>
+                    自動 (top-5 + 重症)
+                  </button>
+                )}
+                <span className={styles.toggleHint}>自動: 上位5件 + 重症度≥4 を常時展開</span>
+              </div>
               {rankedDiffs.map((d, idx) => (
-                <details key={d.id} className={styles.diffCard} open={idx < 3}>
+                <details key={d.id} className={styles.diffCard} open={isOpen(d, idx)}>
                   <summary className={styles.diffSummary}>
                     <span className={styles.diffRank}>#{idx + 1}</span>
                     <span className={styles.diffName}>{d.name}</span>
@@ -247,7 +297,7 @@ export default function DiagnosticBooster({
                         &#9888; 症状が消失していても危険な疾患です。来院時に無症状でも精査を検討してください。
                       </div>
                     )}
-                    {(d.severityWeight ?? 0) >= 4 && idx < 3 && (
+                    {(d.severityWeight ?? 0) >= 4 && (
                       <div className={styles.severityContext}>
                         &#128312; 重篤な疾患の可能性があります。クリニックでの除外が困難な場合に紹介を検討してください。
                       </div>

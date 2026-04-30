@@ -169,6 +169,7 @@ export const DIFFERENTIALS = [
     freq: '低頻度',
     prevalenceWeight: 2,
     severityWeight: 5,
+    resolvedStillDangerous: true,
     symptoms: ['syncope', 'family_sudden_death'],
     findings: ['ecg_qtc_prolonged'],
     redFlags: ['ecg_qtc_prolonged', 'family_sudden_death'],
