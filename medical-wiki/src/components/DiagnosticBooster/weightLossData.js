@@ -255,7 +255,7 @@ export const DIFFERENTIALS = [
     nextStep: '器質的疾患を除外した上で社会的要因を評価。義歯調整（歯科紹介）。配食サービス・介護保険申請・地域包括支援センター連携。栄養補助食品（ONS）の導入。再受診基準: 体重減少が進行→月1回の体重モニタリング。',
     link: null,
     comment: '高齢者の体重減少では社会的要因が最大原因のことが少なくない。独居・買い物困難・調理困難・義歯不適合・経済的問題。検査の前に生活状況を確認せよ。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['elderly', 'living_alone', 'cooking_difficulty', 'denture_problem', 'economic'] },
   },
   // === 薬剤性 ===
   {
@@ -271,7 +271,7 @@ export const DIFFERENTIALS = [
     nextStep: '被疑薬の同定。メトホルミン（消化器症状）・GLP-1受容体作動薬（食欲抑制）・SGLT2阻害薬（尿糖排泄）・トピラマート・SSRI/SNRI・抗癌剤が代表。用量調整or代替薬。再受診基準: 減量/中止後も体重減少持続→器質的疾患精査。',
     link: null,
     comment: 'メトホルミンやGLP-1RAは意図的に使用されることもあるが、非意図的な過度の体重減少は用量調整が必要。SGLT2iは尿糖排泄で体重減少。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['appetite_decreased', 'nausea'] },
   },
 ];
 

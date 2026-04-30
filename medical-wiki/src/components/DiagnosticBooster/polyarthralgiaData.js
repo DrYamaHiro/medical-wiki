@@ -38,7 +38,7 @@ export const SYMPTOMS = [
 ];
 
 export const FINDINGS = [
-  { id: 'joint_swelling', label: '関節腫脹・熱感・発赤', triggers: ['monoarticular', 'acute_onset', 'fever', 'stiffness_long'] },
+  { id: 'joint_swelling', label: '関節腫脹・熱感・発赤', triggers: ['monoarticular', 'acute_onset', 'fever', 'stiffness_long'], weight: 4 },
   { id: 'squeeze_test', label: 'Squeeze test陽性（MCP/MTP圧迫で疼痛）', triggers: ['small_joints', 'symmetric', 'stiffness_long'] },
   { id: 'rheumatoid_nodule', label: 'リウマトイド結節', triggers: ['small_joints', 'symmetric', 'chronic'] },
   { id: 'butterfly_rash', label: '蝶形紅斑', triggers: ['rash', 'young_female'] },
@@ -209,7 +209,7 @@ export const DIFFERENTIALS = [
     nextStep: 'DIP関節（Heberden結節）/膝/股が典型。朝のこわばり30分未満。CRP/ESR正常。X線（関節裂隙狭小化・骨棘）。NSAIDs+運動療法+体重管理。再受診基準: 急性腫脹+発熱→化膿性/結晶性の除外。',
     link: '/docs/230-orthopedics',
     comment: '最も頻度が高い関節疾患。加齢+肥満+関節負荷が危険因子。DIP（Heberden結節）・PIP（Bouchard結節）・膝・股が好発。炎症マーカーは正常。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['dip', 'large_joints', 'age_over50', 'stiffness_short'] },
   },
   // === ウイルス性 ===
   {

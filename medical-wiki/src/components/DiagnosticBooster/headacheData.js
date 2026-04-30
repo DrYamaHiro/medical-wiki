@@ -4,7 +4,7 @@
 
 export const SYMPTOMS = [
   // 発症様式
-  { id: 'thunderclap', label: '雷鳴頭痛（数秒でピーク）', cat: '発症様式' },
+  { id: 'thunderclap', label: '雷鳴頭痛（数秒でピーク）', cat: '発症様式', weight: 4 },
   { id: 'acute_onset', label: '急性発症（分〜時間）', cat: '発症様式' },
   { id: 'subacute', label: '亜急性（日〜週で増悪）', cat: '発症様式' },
   { id: 'chronic', label: '慢性（月以上）', cat: '発症様式' },
@@ -45,16 +45,16 @@ export const SYMPTOMS = [
 
 export const FINDINGS = [
   // 髄膜刺激
-  { id: 'meningeal_signs', label: '髄膜刺激徴候（Kernig/Brudzinski陽性）', triggers: ['fever', 'neck_stiffness', 'altered_mental'] },
+  { id: 'meningeal_signs', label: '髄膜刺激徴候（Kernig/Brudzinski陽性）', triggers: ['fever', 'neck_stiffness', 'altered_mental'], weight: 4 },
   { id: 'jolt_positive', label: 'Jolt accentuation陽性', triggers: ['fever', 'neck_stiffness'] },
   // 側頭動脈
   { id: 'temporal_artery_tenderness', label: '側頭動脈圧痛・索状硬化・拍動減弱', triggers: ['age_over50', 'first_ever', 'visual_loss'] },
   // 神経所見
-  { id: 'focal_deficit', label: '神経巣症状（片麻痺・感覚障害・失語）', triggers: ['focal_neuro', 'altered_mental', 'thunderclap'] },
+  { id: 'focal_deficit', label: '神経巣症状（片麻痺・感覚障害・失語）', triggers: ['focal_neuro', 'altered_mental', 'thunderclap'], weight: 4 },
   { id: 'pupil_asymmetry', label: '瞳孔不同', triggers: ['altered_mental', 'focal_neuro', 'thunderclap'] },
-  { id: 'papilledema', label: '乳頭浮腫', triggers: ['subacute', 'visual_loss', 'worse_valsalva', 'nausea_vomiting'] },
+  { id: 'papilledema', label: '乳頭浮腫', triggers: ['subacute', 'visual_loss', 'worse_valsalva', 'nausea_vomiting'], weight: 4 },
   { id: 'ptosis_miosis', label: '眼瞼下垂+縮瞳（Horner症候群）', triggers: ['unilateral', 'periorbital', 'neck_stiffness'] },
-  { id: 'cn3_palsy', label: '動眼神経麻痺（散瞳+眼瞼下垂+眼球運動障害）', triggers: ['diplopia', 'periorbital', 'thunderclap'] },
+  { id: 'cn3_palsy', label: '動眼神経麻痺（散瞳+眼瞼下垂+眼球運動障害）', triggers: ['diplopia', 'periorbital', 'thunderclap'], weight: 4 },
   // バイタル（常時表示）
   { id: 'hypertensive_crisis', label: '血圧 ≥180/120', triggers: [] },
   { id: 'fever_high', label: '高熱 ≥38.5℃', triggers: [] },
@@ -265,7 +265,7 @@ export const DIFFERENTIALS = [
     nextStep: '原因薬剤の段階的中止。予防薬導入。頭痛ダイアリー。',
     link: '/docs/140-headache',
     comment: '鎮痛薬を月10日以上使用（トリプタン・エルゴタミンは月10日、NSAIDs・アセトアミノフェンは月15日が基準）。薬を飲むほど頭痛が増える悪循環。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['analgesic_overuse', 'chronic', 'pattern_change'] },
   },
   {
     id: 'sinusitis',

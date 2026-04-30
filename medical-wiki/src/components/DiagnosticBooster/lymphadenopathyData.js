@@ -221,7 +221,7 @@ export const DIFFERENTIALS = [
     nextStep: '被疑薬の同定と中止。フェニトイン・カルバマゼピン・アロプリノール・抗菌薬（ST合剤等）が代表。中止後4-8週で改善が典型。',
     link: null,
     comment: '薬剤開始後に全身性リンパ節腫脹+発疹+発熱を来すことがある（DIHS/DRESSの一部）。中止で改善→確認的診断。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['drug_history', 'rash', 'generalized'] },
   },
 ];
 

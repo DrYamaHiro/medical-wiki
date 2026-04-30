@@ -258,7 +258,7 @@ export const DIFFERENTIALS = [
     nextStep: '全ての器質的疾患を除外してからの診断。診断基準: 6ヶ月以上の疲労+労作後の極端な消耗+睡眠で回復しない+認知障害 or 起立不耐。「異常なし=気のせい」ではない。専門外来紹介。',
     link: null,
     comment: '器質的疾患を全て除外した後の診断。労作後の極端な消耗（PEM: post-exertional malaise）が特徴。「怠けている」のではなく病態が存在する。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['chronic', 'post_exertional', 'unrefreshing_sleep', 'rest_persistent'] },
   },
   // === 薬剤性 ===
   {
@@ -274,7 +274,7 @@ export const DIFFERENTIALS = [
     nextStep: '被疑薬の同定。β遮断薬・抗ヒスタミン薬（第一世代）・抗てんかん薬・抗うつ薬・スタチン・降圧薬が代表。用量調整or代替薬。',
     link: null,
     comment: 'ポリファーマシーの高齢者で特に見逃されやすい。β遮断薬（疲労感+徐脈）、スタチン（筋痛+CK上昇）、第一世代抗ヒスタミン薬（鎮静）が代表的。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['easy_fatigability', 'chronic'] },
   },
 ];
 

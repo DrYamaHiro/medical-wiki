@@ -8,7 +8,7 @@ export const SYMPTOMS = [
   { id: 'exertional', label: '労作時に出現', cat: '発症様式' },
   { id: 'at_rest', label: '安静時に出現', cat: '発症様式' },
   { id: 'pressure', label: '圧迫感・締め付け', cat: '性状' },
-  { id: 'tearing', label: '裂けるような痛み', cat: '性状' },
+  { id: 'tearing', label: '裂けるような痛み', cat: '性状', weight: 4 },
   { id: 'pleuritic', label: '深呼吸・咳で悪化（胸膜痛）', cat: '性状' },
   { id: 'burning', label: '灼熱感・焼けるような', cat: '性状' },
   { id: 'positional', label: '体位で変化（前屈で軽減等）', cat: '性状' },
@@ -16,7 +16,7 @@ export const SYMPTOMS = [
   // 部位・放散
   { id: 'retrosternal', label: '胸骨後部', cat: '部位' },
   { id: 'left_chest', label: '左胸部', cat: '部位' },
-  { id: 'back_radiation', label: '背部への放散', cat: '部位' },
+  { id: 'back_radiation', label: '背部への放散', cat: '部位', weight: 4 },
   { id: 'arm_jaw_radiation', label: '左肩・左腕・顎への放散', cat: '部位' },
   { id: 'epigastric', label: '心窩部', cat: '部位' },
   // 随伴
@@ -38,16 +38,18 @@ export const SYMPTOMS = [
 export const FINDINGS = [
   // 心血管
   { id: 'st_change', label: 'ST変化（上昇/低下）・新規陰性T波', triggers: ['pressure', 'retrosternal', 'arm_jaw_radiation', 'cold_sweat', 'cv_risk'] },
-  { id: 'bp_asymmetry', label: '血圧左右差 >20mmHg', triggers: ['tearing', 'back_radiation', 'sudden_onset'] },
-  { id: 'new_murmur', label: '新規心雑音', triggers: ['pressure', 'dyspnea'] },
+  { id: 'bp_asymmetry', label: '血圧左右差 >20mmHg', triggers: ['tearing', 'back_radiation', 'sudden_onset'], weight: 4 },
+  { id: 'new_murmur', label: '新規心雑音', triggers: ['pressure', 'dyspnea'], weight: 4 },
   { id: 'pericardial_rub', label: '心膜摩擦音', triggers: ['positional', 'pleuritic', 'fever'] },
   { id: 'gallop', label: '奔馬調律（S3/S4）', triggers: ['dyspnea', 'pressure'] },
   { id: 'jvd', label: '頸静脈怒張', triggers: ['dyspnea', 'syncope'] },
   // 呼吸器
-  { id: 'absent_breath', label: '呼吸音消失（片側）', triggers: ['pleuritic', 'dyspnea', 'sudden_onset'] },
-  { id: 'tracheal_deviation', label: '気管偏位', triggers: ['dyspnea', 'sudden_onset'] },
+  { id: 'absent_breath', label: '呼吸音消失（片側）', triggers: ['pleuritic', 'dyspnea', 'sudden_onset'], weight: 4 },
+  { id: 'tracheal_deviation', label: '気管偏位', triggers: ['dyspnea', 'sudden_onset'], weight: 4 },
   { id: 'crackles', label: '肺crackles（湿性ラ音）', triggers: ['dyspnea', 'cough'] },
-  { id: 'subcutaneous_emphysema', label: '皮下気腫', triggers: ['post_vomiting', 'sudden_onset'] },
+  { id: 'subcutaneous_emphysema', label: '皮下気腫', triggers: ['post_vomiting', 'sudden_onset'], weight: 4 },
+  { id: 'normal_o2sat', label: '【陰性】SpO2 正常 (≥96% 室内気)', triggers: [], cat: '陰性所見' },
+  { id: 'normal_lung_sound', label: '【陰性】両肺呼吸音 清明', triggers: [], cat: '陰性所見' },
   // その他
   { id: 'chest_wall_tenderness', label: '胸壁圧痛（再現性あり）', triggers: ['reproducible', 'pleuritic'] },
   { id: 'unilateral_rash', label: '片側性水疱性皮疹（帯状疱疹）', triggers: ['pleuritic', 'burning'] },
@@ -100,6 +102,7 @@ export const DIFFERENTIALS = [
     resolvedStillDangerous: true,
     symptoms: ['sudden_onset', 'pleuritic', 'dyspnea', 'syncope', 'hemoptysis', 'dvt_risk', 'leg_swelling', 'palpitations'],
     findings: ['tachycardia', 'hypoxia', 'hypotension', 'jvd', 'leg_edema_asymmetry'],
+    negativeFindings: ['normal_o2sat'],
     redFlags: ['hypotension', 'hypoxia'],
     nextStep: 'Wells Score評価。D-dimer・造影CTは当院測定不可のため、Wells高リスクなら臨床判断で即搬送。',
     link: null,
@@ -188,6 +191,7 @@ export const DIFFERENTIALS = [
     severityWeight: 3,
     symptoms: ['pleuritic', 'cough', 'fever', 'dyspnea'],
     findings: ['crackles', 'tachycardia', 'hypoxia'],
+    negativeFindings: ['normal_o2sat', 'normal_lung_sound'],
     redFlags: [],
     nextStep: '胸部X線。A-DROP評価。',
     link: '/docs/020-Pneumonia',
@@ -276,7 +280,7 @@ export const DIFFERENTIALS = [
     nextStep: 'Killer疾患を除外した上での診断。過換気があれば紙袋呼吸は推奨されない。精神科/心療内科紹介。',
     link: '/docs/170-psychiatry',
     comment: '若年者の反復性胸痛+動悸+過換気+四肢しびれ。除外診断であり、初発時はKiller疾患を必ず除外。「パニックだろう」は最後の診断。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['palpitations', 'left_chest', 'at_rest', 'dyspnea'] },
   },
   {
     id: 'costochondritis',

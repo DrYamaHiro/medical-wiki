@@ -306,7 +306,7 @@ export const DIFFERENTIALS = [
     nextStep: '被疑薬の同定。降圧薬→起立性低血圧。QT延長誘発薬→不整脈。β遮断薬→徐脈。用量調整or代替薬。',
     link: null,
     comment: '降圧薬過量（起立性低血圧）、QT延長誘発薬（TdP: マクロライド・フルオロキノロン・三環系・ドンペリドン等）、β遮断薬（徐脈）、α遮断薬（血管拡張）、硝酸薬（血管拡張）、PDE5阻害薬（硝酸薬併用で重篤低血圧）、抗パーキンソン薬（起立性低血圧）が主な原因。ポリファーマシーの高齢者で特に注意。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['antihypertensive', 'qt_prolonging_drug', 'orthostatic_drop', 'ecg_qtc_prolonged', 'bradycardia'] },
   },
 ];
 

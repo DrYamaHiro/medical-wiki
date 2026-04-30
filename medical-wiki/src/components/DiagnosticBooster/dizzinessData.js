@@ -38,7 +38,7 @@ export const FINDINGS = [
   { id: 'dix_hallpike_positive', label: 'Dix-Hallpike陽性（上眼瞼向き回旋性眼振+潜時）', triggers: ['positional', 'seconds', 'vertigo', 'recurrent'] },
   { id: 'cerebellar_ataxia', label: '小脳失調（指鼻試験異常・失調性歩行）', triggers: ['disequilibrium', 'vertigo', 'sudden_onset'] },
   { id: 'truncal_ataxia', label: '体幹失調（座位保持困難）', triggers: ['disequilibrium', 'nausea_vomiting'] },
-  { id: 'focal_deficit', label: '神経巣症状（片麻痺・感覚障害・Horner）', triggers: ['limb_weakness', 'diplopia', 'dysarthria', 'dysphagia'] },
+  { id: 'focal_deficit', label: '神経巣症状（片麻痺・感覚障害・Horner）', triggers: ['limb_weakness', 'diplopia', 'dysarthria', 'dysphagia'], weight: 4 },
   { id: 'orthostatic_drop', label: '起立性血圧低下（収縮期≥20 or 拡張期≥10mmHg低下）', triggers: ['presyncope', 'on_standing', 'antihypertensive'] },
   { id: 'irregular_pulse', label: '脈不整', triggers: [] },
   { id: 'bradycardia', label: '徐脈 HR<50', triggers: [] },
@@ -204,7 +204,7 @@ export const DIFFERENTIALS = [
     nextStep: '被疑薬の同定。用量調整or代替薬への変更。アミノグリコシド→聴力・前庭機能モニタリング。',
     link: null,
     comment: '降圧薬過量→起立性低血圧。アミノグリコシド→前庭毒性（bilateral vestibulopathy）。三環系抗うつ薬・抗てんかん薬・ベンゾジアゼピン系→中枢性めまい。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['antihypertensive', 'ototoxic_drug', 'orthostatic_drop'] },
   },
   {
     id: 'anxiety_ppv',
@@ -219,7 +219,7 @@ export const DIFFERENTIALS = [
     nextStep: '器質的疾患を十分に除外してからの診断。PPPDはBarany Society基準で3ヶ月以上の持続が前提。SSRI・前庭リハビリ。心療内科/耳鼻科紹介。安易に診断を閉じないこと。',
     link: null,
     comment: '慢性のふわふわ感。動く視覚刺激（スーパー・電車内）で悪化。身体所見は正常。BPPV・前庭神経炎後に遷延することが多い。除外診断であり、器質的疾患（特に中枢性）の十分な除外が前提。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['floating', 'disequilibrium', 'days', 'recurrent'] },
   },
   {
     id: 'vestibular_migraine',

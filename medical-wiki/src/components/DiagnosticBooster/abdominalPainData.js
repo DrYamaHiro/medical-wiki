@@ -30,11 +30,11 @@ export const SYMPTOMS = [
 ];
 
 export const FINDINGS = [
-  { id: 'peritoneal_signs', label: '腹膜刺激徴候（筋性防御・反跳痛）', triggers: ['sudden_onset', 'constant', 'diffuse', 'epigastric', 'rlq', 'llq'] },
+  { id: 'peritoneal_signs', label: '腹膜刺激徴候（筋性防御・反跳痛）', triggers: ['sudden_onset', 'constant', 'diffuse', 'epigastric', 'rlq', 'llq'], weight: 4 },
   { id: 'board_like', label: '板状硬', triggers: ['sudden_onset', 'diffuse', 'epigastric'] },
   { id: 'murphy_sign', label: 'Murphy徴候陽性', triggers: ['ruq', 'fever'] },
   { id: 'mcburney', label: 'McBurney圧痛・Rovsing徴候', triggers: ['rlq', 'periumbilical'] },
-  { id: 'pulsatile_mass', label: '拍動性腫瘤', triggers: ['back_pain', 'shock_signs', 'sudden_onset'] },
+  { id: 'pulsatile_mass', label: '拍動性腫瘤', triggers: ['back_pain', 'shock_signs', 'sudden_onset'], weight: 4 },
   { id: 'cva_tenderness', label: 'CVA叩打痛', triggers: ['back_pain', 'dysuria', 'flank_pain'] },
   { id: 'bowel_sounds_absent', label: '腸蠕動音消失', triggers: ['constipation', 'no_flatus', 'diffuse', 'nausea_vomiting'] },
   { id: 'metallic_sounds', label: '腸蠕動音亢進・金属音', triggers: ['colicky', 'constipation', 'no_flatus', 'nausea_vomiting'] },
@@ -44,7 +44,7 @@ export const FINDINGS = [
   { id: 'rectal_blood', label: '直腸診: 血液付着', triggers: ['bloody_stool'] },
   { id: 'epigastric_tenderness', label: '心窩部圧痛', triggers: ['epigastric'] },
   { id: 'jaundice_sign', label: '眼球結膜黄染', triggers: ['jaundice', 'ruq'] },
-  { id: 'pain_out_of_proportion', label: '痛みの割に腹部所見が乏しい（Pain out of proportion）', triggers: ['sudden_onset', 'periumbilical', 'diffuse'] },
+  { id: 'pain_out_of_proportion', label: '痛みの割に腹部所見が乏しい（Pain out of proportion）', triggers: ['sudden_onset', 'periumbilical', 'diffuse'], weight: 4 },
   { id: 'tachycardia', label: '頻脈 HR>100', triggers: [] },
   { id: 'hypotension', label: '収縮期血圧<90', triggers: [] },
 ];
@@ -309,7 +309,7 @@ export const DIFFERENTIALS = [
     nextStep: '12誘導心電図（必須）。トロポニン。ACS確定/疑いなら即循環器施設へ搬送。',
     link: null,
     comment: '心窩部痛として発症するACSは見逃しやすい。糖尿病・高齢者は非典型的。「腹痛の12誘導心電図」を忘れるな。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['epigastric', 'cold_sweat', 'tachycardia', 'hypotension', 'shock_signs'] },
   },
   {
     id: 'constipation_functional',
@@ -352,7 +352,7 @@ export const DIFFERENTIALS = [
     nextStep: 'Rome IV基準で評価。器質的疾患を除外してからの診断。',
     link: '/docs/060-Bowel-Disorder',
     comment: 'ストレスで悪化する腹痛+便通異常。体重減少・血便・発熱・50歳以上の新規発症はIBSでは説明できない→除外診断必須。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['periumbilical', 'lower_abd', 'diarrhea', 'constipation'] },
   },
 ];
 

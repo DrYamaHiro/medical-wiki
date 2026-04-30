@@ -44,7 +44,7 @@ export const SYMPTOMS = [
 ];
 
 export const FINDINGS = [
-  { id: 'nikolsky_positive', label: 'Nikolsky sign陽性（正常皮膚が擦ると剥離）', triggers: ['vesicle', 'erosion', 'scattered', 'new_drug', 'mucosal'] },
+  { id: 'nikolsky_positive', label: 'Nikolsky sign陽性（正常皮膚が擦ると剥離）', triggers: ['vesicle', 'erosion', 'scattered', 'new_drug', 'mucosal'], weight: 4 },
   { id: 'auspitz_sign', label: 'Auspitz sign陽性（鱗屑剥離後の点状出血）', triggers: ['scale', 'erythema', 'extensor'] },
   { id: 'koebner', label: 'Koebner現象（外傷部に新生皮疹）', triggers: ['scale', 'erythema'] },
   { id: 'central_clearing', label: '辺縁隆起+中心治癒（環状）', triggers: ['annular', 'erythema', 'scale'] },
@@ -326,7 +326,7 @@ export const DIFFERENTIALS = [
     nextStep: 'ステロイド外用+抗ヒスタミン薬。蜂刺傷: アナフィラキシー徴候（数時間以内の呼吸困難・全身蕁麻疹・血圧低下）→アドレナリン0.3mg筋注+搬送。過去の蜂刺傷反応歴を聴取。',
     link: null,
     comment: '露出部の掻痒性丘疹。蚊・ダニ・ノミ・蜂が原因。紅斑中心に刺し口がヒント。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['papule', 'pruritus', 'scattered'] },
   },
   {
     id: 'pityriasis_rosea',

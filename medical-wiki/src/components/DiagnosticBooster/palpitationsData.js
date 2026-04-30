@@ -219,7 +219,7 @@ export const DIFFERENTIALS = [
     nextStep: '器質的疾患を除外した上での診断。ECG正常+TSH/CBC正常+典型的な過換気+不安発作→パニック障害。精神科/心療内科紹介。再受診基準: 失神・胸痛が新たに出現→再評価（Killer除外）。',
     link: '/docs/170-psychiatry',
     comment: '動悸+過換気+四肢しびれ+恐怖感+「死ぬかもしれない」。除外診断。初発時は心原性を必ず除外。「パニックだろう」は最後の診断。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['hyperventilation', 'sudden_onset_offset', 'stress', 'cold_sweat'] },
   },
   {
     id: 'dehydration_fever',
@@ -276,7 +276,7 @@ export const DIFFERENTIALS = [
     nextStep: '被疑薬の同定。気管支拡張薬（β2刺激薬）・甲状腺ホルモン過量・テオフィリン・交感神経刺激薬が代表。用量調整or代替薬。再受診基準: 変更後2-4週で効果判定。失神→即受診。',
     link: null,
     comment: 'β2刺激薬（SABA/LABA）、甲状腺ホルモン（レボチロキシン過量）、テオフィリン、エフェドリン含有総合感冒薬、漢方（麻黄含有）が原因。',
-    alwaysShow: true,
+    showWhen: { anyOf: ['rapid_regular', 'pounding'] },
   },
 ];
 

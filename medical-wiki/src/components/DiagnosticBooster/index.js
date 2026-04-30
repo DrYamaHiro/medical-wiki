@@ -15,33 +15,46 @@ function calcScore(
   selectedSymptoms,
   selectedFindings,
   hasActiveRedFlags,
-  firedRedFlagConditions /* Set<string> — 発火した RED_FLAGS の conditions 和集合 */
+  firedRedFlagConditions /* Set<string> — 発火した RED_FLAGS の conditions 和集合 */,
+  SYMPTOMS /* v2.2: weight 個別化のための lookup */,
+  FINDINGS
 ) {
   let matchCount = 0;
   const selS = new Set(selectedSymptoms);
   const selF = new Set(selectedFindings);
-  for (const sym of diff.symptoms) if (selS.has(sym)) matchCount += 2;
-  for (const f of diff.findings) if (selF.has(f)) matchCount += 3;
+
+  // weight 個別化 (default sym=+2, fin=+3、特異度高い項目は +4)
+  const symMap = new Map((SYMPTOMS || []).map((s) => [s.id, s]));
+  const findMap = new Map((FINDINGS || []).map((f) => [f.id, f]));
+  for (const symId of diff.symptoms) {
+    if (selS.has(symId)) matchCount += symMap.get(symId)?.weight ?? 2;
+  }
+  for (const fId of diff.findings) {
+    if (selF.has(fId)) matchCount += findMap.get(fId)?.weight ?? 3;
+  }
+
+  // negativeFindings: 「この所見が無い」ことが選択されると本疾患の確度が下がる
+  const neg = diff.negativeFindings || [];
+  let negHits = 0;
+  for (const nId of neg) if (selF.has(nId)) negHits += 1;
+  matchCount = Math.max(0, matchCount - 1.5 * negHits);
 
   const prev = diff.prevalenceWeight ?? 5;
   const sev = diff.severityWeight ?? 3;
 
   // 自疾患関連の Red Flag が選択された条件と交差するか
-  // diff.redFlags 未定義の旧データでも安全 (relevant=false で graceful path)
   const fired = firedRedFlagConditions || new Set();
   const ownRF = diff.redFlags || [];
   const hasRelevantRedFlag = ownRF.some((c) => fired.has(c));
 
   if (hasActiveRedFlags && hasRelevantRedFlag) {
     // 自疾患の Red Flag 発火 → 階段化 floor でブースト
-    // sev=5 → floor25, sev=4 → floor18, sev≤3 → floor0
     const floor = sev >= 5 ? 25 : sev >= 4 ? 18 : 0;
     const boosted = matchCount * (1 + sev * 0.4) + prev * 0.5;
     return Math.max(boosted, floor + matchCount);
   }
 
   // Red Flag 無し / または他疾患由来の Red Flag → 頻度ベース
-  // sev も軽く加味し重症疾患の暗黙ペナルティを解消
   return matchCount * (1 + prev * 0.15) + prev * 1.5 + sev * 0.3;
 }
 
@@ -113,14 +126,21 @@ export default function DiagnosticBooster({
     return fired;
   }, [activeRedFlags, selectedSymptoms, selectedFindings]);
 
+  // Phase 2 #9: showWhen 条件付き表示判定
+  const matchesShowWhen = useCallback((d) => {
+    if (!d.showWhen || !Array.isArray(d.showWhen.anyOf)) return false;
+    const selected = new Set([...selectedSymptoms, ...selectedFindings]);
+    return d.showWhen.anyOf.some((c) => selected.has(c));
+  }, [selectedSymptoms, selectedFindings]);
+
   const rankedDiffs = useMemo(() => {
     return DIFFERENTIALS.map((d) => ({
       ...d,
-      _score: calcScore(d, selectedSymptoms, selectedFindings, hasRedFlags, firedRedFlagConditions),
+      _score: calcScore(d, selectedSymptoms, selectedFindings, hasRedFlags, firedRedFlagConditions, SYMPTOMS, FINDINGS),
     }))
-      .filter((d) => d._score > 0 || d.alwaysShow)
+      .filter((d) => d._score > 0 || matchesShowWhen(d) || d.alwaysShow)
       .sort((a, b) => b._score - a._score);
-  }, [selectedSymptoms, selectedFindings, DIFFERENTIALS, hasRedFlags, firedRedFlagConditions]);
+  }, [selectedSymptoms, selectedFindings, DIFFERENTIALS, hasRedFlags, firedRedFlagConditions, matchesShowWhen, SYMPTOMS, FINDINGS]);
 
   // Phase 3 開閉モード: null=auto (top-5 + sev≥4), true=全展開, false=全折畳み
   const [expandAll, setExpandAll] = useState(null);
