@@ -106,6 +106,13 @@ export default function DiagnosticBoosterHub() {
     return fired;
   }, [activeRedFlags, selectedSymptoms, selectedFindings]);
 
+  // showWhen 条件付き表示判定 (Hub 版)
+  const matchesShowWhen = useCallback((d) => {
+    if (!d.showWhen || !Array.isArray(d.showWhen.anyOf)) return false;
+    const sel = new Set([...selectedSymptoms, ...selectedFindings]);
+    return d.showWhen.anyOf.some((c) => sel.has(c));
+  }, [selectedSymptoms, selectedFindings]);
+
   // Phase 3: per-booster scoring (native SYMPTOMS/FINDINGS for weight) → mergeDifferentials
   const rankedDiffs = useMemo(() => {
     const selS = [...selectedSymptoms];
@@ -117,10 +124,10 @@ export default function DiagnosticBoosterHub() {
       rankedByBooster[k] = (DIFFERENTIALS || []).map((d) => ({
         ...d,
         _score: calcScore(d, selS, selF, hasRF, firedConditions, SYMPTOMS, FINDINGS),
-      })).filter((d) => d._score > 0 || d.alwaysShow);
+      })).filter((d) => d._score > 0 || matchesShowWhen(d));
     });
     return mergeDifferentials(rankedByBooster);
-  }, [selectedKeys, selectedSymptoms, selectedFindings, activeRedFlags, firedConditions]);
+  }, [selectedKeys, selectedSymptoms, selectedFindings, activeRedFlags, firedConditions, matchesShowWhen]);
 
   const reset = () => {
     setSelectedBoosters(new Set());
