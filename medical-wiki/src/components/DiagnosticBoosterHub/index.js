@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { calcScore } from '../DiagnosticBooster';
 import { unionSymptoms, unionFindings, unionRedFlags, mergeDifferentials } from '../DiagnosticBooster/hubMerge';
 import styles from '../DiagnosticBooster/styles.module.css';
@@ -78,6 +78,24 @@ export default function DiagnosticBoosterHub() {
 
   // Phase 2: union FINDINGS by id, merge triggers + max weight
   const unionedFindings = useMemo(() => unionFindings(selectedModules), [selectedModules]);
+
+  // Cleanup orphaned selections when boosters change
+  useEffect(() => {
+    const validSym = new Set(unionedSymptoms.map((s) => s.id));
+    setSelectedSymptoms((prev) => {
+      const next = new Set([...prev].filter((id) => validSym.has(id)));
+      return next.size === prev.size ? prev : next;
+    });
+    if (activeCat && !symptomGroups[activeCat]) setActiveCat(null);
+  }, [unionedSymptoms, symptomGroups, activeCat]);
+
+  useEffect(() => {
+    const validFind = new Set(unionedFindings.map((f) => f.id));
+    setSelectedFindings((prev) => {
+      const next = new Set([...prev].filter((id) => validFind.has(id)));
+      return next.size === prev.size ? prev : next;
+    });
+  }, [unionedFindings]);
 
   const visibleFindings = useMemo(() => {
     if (selectedSymptoms.size === 0) return [];
@@ -282,7 +300,7 @@ export default function DiagnosticBoosterHub() {
             </div>
           )}
 
-          <div className={styles.itemPanel} style={{ borderTop: '2px solid #43a047', borderRadius: '8px' }}>
+          <div className={styles.itemPanelStandalone}>
             <div className={styles.itemPanelHint}>選択した症状に関連する所見が表示されています</div>
             <div className={styles.chipGrid}>
               {visibleFindings.map((f) => (
@@ -301,7 +319,8 @@ export default function DiagnosticBoosterHub() {
       {selectedSymptoms.size > 0 && (
         <div className={styles.section}>
           <h4 className={styles.sectionTitle}>
-            Phase 3: 統合鑑別 ({rankedDiffs.length}件)
+            <span className={styles.phaseBadge}>3</span>
+            統合鑑別 ({rankedDiffs.length}件)
           </h4>
           {rankedDiffs.length === 0 ? (
             <p className={styles.noResult}>該当する鑑別候補がありません。症状・所見を追加してください。</p>

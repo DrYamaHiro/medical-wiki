@@ -202,6 +202,24 @@
   font-style: italic;
 }
 
+/* タブを伴わない独立パネル (Phase 2 所見など) — 緑枠 */
+.itemPanelStandalone {
+  padding: 0.9rem 1rem;
+  background: #fafafa;
+  border: 2px solid #43a047;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+/* キーボード操作時のフォーカス可視化 (active state の border styling に隠れる問題対策) */
+.ccChip:focus-visible,
+.catTab:focus-visible,
+.symptomChip:focus-visible,
+.selectedChip:focus-visible {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}
+
 /* 選択中サマリー (常時表示パネル) */
 .selectedSummary {
   padding: 0.6rem 0.9rem;
