@@ -33,11 +33,15 @@ export function calcScore(
     if (selF.has(fId)) matchCount += findMap.get(fId)?.weight ?? 3;
   }
 
-  // negativeFindings: 「この所見が無い」ことが選択されると本疾患の確度が下がる
+  // negativeFindings: 「この所見/症状があると確度が下がる」マーカーが選択された場合に減点
+  // 選択された SYMPTOMS / FINDINGS どちらでもヒットさせる (duration_chronic 等の症状型マーカーも対応)
   const neg = diff.negativeFindings || [];
   let negHits = 0;
-  for (const nId of neg) if (selF.has(nId)) negHits += 1;
+  for (const nId of neg) if (selF.has(nId) || selS.has(nId)) negHits += 1;
   matchCount = Math.max(0, matchCount - 1.5 * negHits);
+  // 強い rule-out: negHits>0 のとき prevalence ベースラインを大幅減衰 (10%)
+  // 例: 「3週以上の発熱」が選択されたら common_cold の prev*1.5 が effectively 消える
+  const prevDamper = negHits > 0 ? 0.1 : 1.0;
 
   // Phase 3 #13 patternBonus: 典型 cluster の同時マッチに bonus 加点
   // diff.patternBonus = { all: ['ruq','murphy_sign','fever'], bonus: 4 }
@@ -58,12 +62,12 @@ export function calcScore(
   if (hasActiveRedFlags && hasRelevantRedFlag) {
     // 自疾患の Red Flag 発火 → 階段化 floor でブースト
     const floor = sev >= 5 ? 25 : sev >= 4 ? 18 : 0;
-    const boosted = matchCount * (1 + sev * 0.4) + prev * 0.5;
+    const boosted = matchCount * (1 + sev * 0.4) + prev * 0.5 * prevDamper;
     return Math.max(boosted, floor + matchCount);
   }
 
   // Red Flag 無し / または他疾患由来の Red Flag → 頻度ベース
-  return matchCount * (1 + prev * 0.15) + prev * 1.5 + sev * 0.3;
+  return matchCount * (1 + prev * 0.15) + prev * 1.5 * prevDamper + sev * 0.3;
 }
 
 /* -------------------------------------------------------- */

@@ -185,6 +185,36 @@ export default function DiagnosticBoosterHub() {
       {selectedBoosters.size > 0 && (
         <div className={styles.section}>
           <h4 className={styles.sectionTitle}>Phase 1: 随伴症状を選択</h4>
+
+          {/* 選択中の症状サマリー (常時表示、カテゴリ切替に影響されず) */}
+          {selectedSymptoms.size > 0 && (
+            <div style={{
+              padding: '0.5rem 0.7rem',
+              background: '#e3f2fd',
+              border: '1px solid #1976d2',
+              borderRadius: '6px',
+              marginBottom: '0.6rem',
+            }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#01579b', marginBottom: '0.3rem' }}>
+                選択中の症状 ({selectedSymptoms.size}件):
+              </div>
+              <div className={styles.chipGrid}>
+                {[...selectedSymptoms].map((id) => {
+                  const s = unionedSymptoms.find((x) => x.id === id);
+                  if (!s) return null;
+                  return (
+                    <button key={id} type="button"
+                      className={`${styles.chip} ${styles.chipActive}`}
+                      onClick={() => toggleSym(id)}
+                      title="クリックで解除">
+                      {s.label} ✕
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <div className={styles.chipGrid} style={{ marginBottom: '0.6rem' }}>
             {Object.keys(symptomGroups).map((cat) => (
               <button key={cat} type="button"
@@ -217,6 +247,36 @@ export default function DiagnosticBoosterHub() {
       {selectedSymptoms.size > 0 && (
         <div className={styles.section}>
           <h4 className={styles.sectionTitle}>Phase 2: 身体所見を選択</h4>
+
+          {/* 選択中の所見サマリー */}
+          {selectedFindings.size > 0 && (
+            <div style={{
+              padding: '0.5rem 0.7rem',
+              background: '#e8f5e9',
+              border: '1px solid #43a047',
+              borderRadius: '6px',
+              marginBottom: '0.6rem',
+            }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#1b5e20', marginBottom: '0.3rem' }}>
+                選択中の所見 ({selectedFindings.size}件):
+              </div>
+              <div className={styles.chipGrid}>
+                {[...selectedFindings].map((id) => {
+                  const f = unionedFindings.find((x) => x.id === id);
+                  if (!f) return null;
+                  return (
+                    <button key={id} type="button"
+                      className={`${styles.chip} ${styles.chipActive}`}
+                      onClick={() => toggleFind(id)}
+                      title="クリックで解除">
+                      {f.label} ✕
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <div className={styles.chipGrid}>
             {visibleFindings.map((f) => (
               <button key={f.id} type="button"
