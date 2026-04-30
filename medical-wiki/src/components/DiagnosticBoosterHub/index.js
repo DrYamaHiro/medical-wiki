@@ -142,7 +142,12 @@ export default function DiagnosticBoosterHub() {
       rankedByBooster[k] = (DIFFERENTIALS || []).map((d) => ({
         ...d,
         _score: calcScore(d, selS, selF, hasRF, firedConditions, SYMPTOMS, FINDINGS),
-      })).filter((d) => d._score > 0 || matchesShowWhen(d));
+      })).filter((d) => {
+        // showWhen acts as a REQUIRE gate (suppression): if defined, only show when condition matches.
+        if (d.alwaysShow) return true;
+        if (d.showWhen && !matchesShowWhen(d)) return false;
+        return d._score > 0;
+      });
     });
     return mergeDifferentials(rankedByBooster);
   }, [selectedKeys, selectedSymptoms, selectedFindings, activeRedFlags, firedConditions, matchesShowWhen]);

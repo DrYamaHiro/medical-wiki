@@ -171,7 +171,14 @@ export default function DiagnosticBooster({
       ...d,
       _score: calcScore(d, selectedSymptoms, selectedFindings, hasRedFlags, firedRedFlagConditions, SYMPTOMS, FINDINGS),
     }))
-      .filter((d) => (d._score > 0 || matchesShowWhen(d) || d.alwaysShow) && matchesPatientHeader(d))
+      // showWhen now acts as a REQUIRE gate (suppression): if defined, the disease only appears when condition matches.
+      // alwaysShow still forces inclusion.
+      .filter((d) => {
+        if (!matchesPatientHeader(d)) return false;
+        if (d.alwaysShow) return true;
+        if (d.showWhen && !matchesShowWhen(d)) return false;
+        return d._score > 0;
+      })
       .sort((a, b) => b._score - a._score);
   }, [selectedSymptoms, selectedFindings, DIFFERENTIALS, hasRedFlags, firedRedFlagConditions, matchesShowWhen, matchesPatientHeader, SYMPTOMS, FINDINGS]);
 

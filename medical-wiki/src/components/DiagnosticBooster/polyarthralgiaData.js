@@ -76,6 +76,7 @@ export const DIFFERENTIALS = [
     severityWeight: 2,
     symptoms: ['monoarticular', 'acute_onset', 'large_joints', 'hyperuricemia'],
     findings: ['joint_swelling', 'tophi'],
+    negativeFindings: ['rash', 'fever', 'symmetric'],
     redFlags: [],
     nextStep: '第1MTP関節（足の親指付け根）の急性発赤・腫脹が典型。尿酸値（発作中は低下することあり）。NSAIDs or コルヒチン。痛風結節あり=慢性痛風→尿酸降下薬。再受診基準: 発熱+複数関節→化膿性との鑑別で紹介。',
     link: '/docs/120-dyslipidemia',
