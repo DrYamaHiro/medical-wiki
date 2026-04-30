@@ -67,6 +67,11 @@ export function calcScore(
   }
 
   // Red Flag 無し / または他疾患由来の Red Flag → 頻度ベース
+  // v3.4: ぼんやり所見 (matchCount=0) のとき severity を逆転ペナルティに
+  //       — 「重症だが証拠ゼロ」の疾患を上位に上げない (突飛な候補抑制)
+  if (matchCount === 0) {
+    return Math.max(0, prev * 1.5 * prevDamper - sev * 0.5);
+  }
   return matchCount * (1 + prev * 0.15) + prev * 1.5 * prevDamper + sev * 0.3;
 }
 
