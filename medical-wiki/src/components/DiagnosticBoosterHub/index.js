@@ -163,8 +163,9 @@ export default function DiagnosticBoosterHub() {
       {/* Phase 0: Chief complaint chips (max 3) */}
       <div className={styles.section}>
         <h4 className={styles.sectionTitle}>
-          Phase 0: 主訴を選択（最大3つ）
-          <span className={styles.sectionHint}>　現在 {selectedBoosters.size}/{MAX_CC}</span>
+          <span className={styles.phaseBadge}>0</span>
+          主訴を選択（最大3つ）
+          <span className={styles.sectionHint}>　{selectedBoosters.size}/{MAX_CC} 選択中</span>
         </h4>
         <div className={styles.chipGrid}>
           {Object.entries(BOOSTERS).map(([k, { label }]) => {
@@ -172,7 +173,7 @@ export default function DiagnosticBoosterHub() {
             const disabled = !on && selectedBoosters.size >= MAX_CC;
             return (
               <button key={k} type="button" disabled={disabled}
-                className={`${styles.chip} ${on ? styles.chipActive : ''}`}
+                className={`${styles.ccChip} ${on ? styles.ccChipActive : ''}`}
                 onClick={() => toggleBooster(k)}>
                 {label}
               </button>
@@ -184,19 +185,16 @@ export default function DiagnosticBoosterHub() {
       {/* Phase 1: category-tab + symptoms */}
       {selectedBoosters.size > 0 && (
         <div className={styles.section}>
-          <h4 className={styles.sectionTitle}>Phase 1: 随伴症状を選択</h4>
+          <h4 className={styles.sectionTitle}>
+            <span className={styles.phaseBadge}>1</span>
+            随伴症状を選択
+          </h4>
 
-          {/* 選択中の症状サマリー (常時表示、カテゴリ切替に影響されず) */}
+          {/* 選択中サマリー (常時表示、カテゴリ切替で消えない) */}
           {selectedSymptoms.size > 0 && (
-            <div style={{
-              padding: '0.5rem 0.7rem',
-              background: '#e3f2fd',
-              border: '1px solid #1976d2',
-              borderRadius: '6px',
-              marginBottom: '0.6rem',
-            }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#01579b', marginBottom: '0.3rem' }}>
-                選択中の症状 ({selectedSymptoms.size}件):
+            <div className={styles.selectedSummary}>
+              <div className={styles.selectedSummaryLabel}>
+                選択中の症状（{selectedSymptoms.size}件） — クリックで解除
               </div>
               <div className={styles.chipGrid}>
                 {[...selectedSymptoms].map((id) => {
@@ -204,10 +202,10 @@ export default function DiagnosticBoosterHub() {
                   if (!s) return null;
                   return (
                     <button key={id} type="button"
-                      className={`${styles.chip} ${styles.chipActive}`}
+                      className={styles.selectedChip}
                       onClick={() => toggleSym(id)}
                       title="クリックで解除">
-                      {s.label} ✕
+                      {s.label}
                     </button>
                   );
                 })}
@@ -215,30 +213,40 @@ export default function DiagnosticBoosterHub() {
             </div>
           )}
 
-          <div className={styles.chipGrid} style={{ marginBottom: '0.6rem' }}>
+          {/* カテゴリタブ */}
+          <div className={styles.catTabBar}>
             {Object.keys(symptomGroups).map((cat) => (
               <button key={cat} type="button"
-                className={`${styles.chip} ${activeCat === cat ? styles.chipActive : ''}`}
+                className={`${styles.catTab} ${activeCat === cat ? styles.catTabActive : ''}`}
                 onClick={() => setActiveCat(activeCat === cat ? null : cat)}>
-                {cat} ({symptomGroups[cat].length})
+                {cat}
+                <span className={styles.catTabCount}>{symptomGroups[cat].length}</span>
               </button>
             ))}
           </div>
-          {activeCat && symptomGroups[activeCat] && (
-            <div className={styles.chipGrid}>
-              {symptomGroups[activeCat].map((s) => (
-                <button key={s.id} type="button"
-                  className={`${styles.chip} ${selectedSymptoms.has(s.id) ? styles.chipActive : ''}`}
-                  onClick={() => toggleSym(s.id)}>
-                  {s.label}
-                </button>
-              ))}
+
+          {/* アクティブカテゴリの症状パネル */}
+          {activeCat && symptomGroups[activeCat] ? (
+            <div className={styles.itemPanel}>
+              <div className={styles.itemPanelHint}>
+                {activeCat} カテゴリの症状（複数選択可）
+              </div>
+              <div className={styles.chipGrid}>
+                {symptomGroups[activeCat].map((s) => (
+                  <button key={s.id} type="button"
+                    className={`${styles.symptomChip} ${selectedSymptoms.has(s.id) ? styles.symptomChipActive : ''}`}
+                    onClick={() => toggleSym(s.id)}>
+                    {s.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          )}
-          {!activeCat && (
-            <p style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)' }}>
-              ↑ カテゴリをクリックすると症状一覧が表示されます
-            </p>
+          ) : (
+            <div className={styles.itemPanel}>
+              <p className={styles.itemPanelHint}>
+                ↑ 上のタブからカテゴリを選択して症状を追加してください
+              </p>
+            </div>
           )}
         </div>
       )}
@@ -246,19 +254,16 @@ export default function DiagnosticBoosterHub() {
       {/* Phase 2: findings */}
       {selectedSymptoms.size > 0 && (
         <div className={styles.section}>
-          <h4 className={styles.sectionTitle}>Phase 2: 身体所見を選択</h4>
+          <h4 className={styles.sectionTitle}>
+            <span className={styles.phaseBadge}>2</span>
+            身体所見を選択
+          </h4>
 
           {/* 選択中の所見サマリー */}
           {selectedFindings.size > 0 && (
-            <div style={{
-              padding: '0.5rem 0.7rem',
-              background: '#e8f5e9',
-              border: '1px solid #43a047',
-              borderRadius: '6px',
-              marginBottom: '0.6rem',
-            }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#1b5e20', marginBottom: '0.3rem' }}>
-                選択中の所見 ({selectedFindings.size}件):
+            <div className={styles.selectedSummary}>
+              <div className={styles.selectedSummaryLabel}>
+                選択中の所見（{selectedFindings.size}件） — クリックで解除
               </div>
               <div className={styles.chipGrid}>
                 {[...selectedFindings].map((id) => {
@@ -266,10 +271,10 @@ export default function DiagnosticBoosterHub() {
                   if (!f) return null;
                   return (
                     <button key={id} type="button"
-                      className={`${styles.chip} ${styles.chipActive}`}
+                      className={styles.selectedChip}
                       onClick={() => toggleFind(id)}
                       title="クリックで解除">
-                      {f.label} ✕
+                      {f.label}
                     </button>
                   );
                 })}
@@ -277,14 +282,17 @@ export default function DiagnosticBoosterHub() {
             </div>
           )}
 
-          <div className={styles.chipGrid}>
-            {visibleFindings.map((f) => (
-              <button key={f.id} type="button"
-                className={`${styles.chip} ${selectedFindings.has(f.id) ? styles.chipActive : ''}`}
-                onClick={() => toggleFind(f.id)}>
-                {f.label}
-              </button>
-            ))}
+          <div className={styles.itemPanel} style={{ borderTop: '2px solid #43a047', borderRadius: '8px' }}>
+            <div className={styles.itemPanelHint}>選択した症状に関連する所見が表示されています</div>
+            <div className={styles.chipGrid}>
+              {visibleFindings.map((f) => (
+                <button key={f.id} type="button"
+                  className={`${styles.symptomChip} ${selectedFindings.has(f.id) ? styles.symptomChipActive : ''}`}
+                  onClick={() => toggleFind(f.id)}>
+                  {f.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}

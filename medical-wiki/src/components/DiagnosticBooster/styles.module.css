@@ -130,6 +130,213 @@
   color: var(--ifm-color-emphasis-600);
 }
 
+/* ============================================
+   v3.2 視覚階層改善 - カテゴリタブ vs 症状チップ
+   ============================================ */
+
+/* カテゴリタブ: 補長方形・下線アクセント (chip と区別) */
+.catTabBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  padding-bottom: 0;
+  border-bottom: 2px solid #cfd8dc;
+  margin-bottom: 0;
+}
+.catTab {
+  padding: 0.55rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: #f5f5f5;
+  color: #546e7a;
+  border: 2px solid #cfd8dc;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  position: relative;
+  top: 2px;
+  transition: all 0.15s ease;
+}
+.catTab:hover {
+  background: #eceff1;
+  color: #37474f;
+}
+.catTabActive {
+  background: #fff;
+  color: #1565c0;
+  border-color: #1976d2;
+  border-bottom: 2px solid #fff;
+  z-index: 2;
+}
+.catTabCount {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  font-size: 0.72rem;
+  background: #cfd8dc;
+  color: #455a64;
+  border-radius: 10px;
+  font-weight: 700;
+}
+.catTabActive .catTabCount {
+  background: #1976d2;
+  color: #fff;
+}
+
+/* 症状/所見パネル (アクティブカテゴリの内容を視覚的に包む) */
+.itemPanel {
+  padding: 0.9rem 1rem;
+  background: #fafafa;
+  border: 2px solid #1976d2;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  position: relative;
+  top: -2px;
+}
+.itemPanelHint {
+  font-size: 0.78rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
+/* 選択中サマリー (常時表示パネル) */
+.selectedSummary {
+  padding: 0.6rem 0.9rem;
+  background: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 100%);
+  border: 2px solid #43a047;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+.selectedSummaryLabel {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1b5e20;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.selectedSummaryLabel::before {
+  content: '✓';
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  background: #2e7d32;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.selectedChip {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #2e7d32;
+  color: #fff;
+  border: 2px solid #1b5e20;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+.selectedChip:hover {
+  background: #c62828;
+  border-color: #b71c1c;
+}
+.selectedChip::after {
+  content: ' ✕';
+  margin-left: 0.3rem;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+/* Phase 番号バッジ */
+.phaseBadge {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  background: #1976d2;
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-right: 0.6rem;
+  vertical-align: middle;
+}
+
+/* 主訴 (Phase 0) chip 強化 — 通常 chip より大きく、選択時は強調 */
+.ccChip {
+  padding: 0.7rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: #fff;
+  color: #1565c0;
+  border: 2px solid #90caf9;
+  border-radius: 999px;
+  cursor: pointer;
+  min-height: 48px;
+  transition: all 0.12s ease;
+}
+.ccChip:hover:not(:disabled) {
+  background: #e3f2fd;
+  border-color: #1976d2;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+}
+.ccChipActive {
+  background: #1976d2;
+  color: #fff;
+  border-color: #0d47a1;
+  font-weight: 700;
+  box-shadow: 0 3px 8px rgba(25, 118, 210, 0.4);
+}
+.ccChipActive::after {
+  content: ' ✓';
+  font-weight: 700;
+}
+.ccChip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 症状チップ (パネル内、catTab とは別概念) */
+.symptomChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: #fff;
+  color: #455a64;
+  border: 1.5px solid #b0bec5;
+  border-radius: 999px;
+  cursor: pointer;
+  min-height: 40px;
+  white-space: nowrap;
+  transition: all 0.12s ease;
+}
+.symptomChip:hover {
+  background: #eceff1;
+  border-color: #78909c;
+}
+.symptomChipActive {
+  background: #1976d2;
+  color: #fff;
+  border-color: #0d47a1;
+  font-weight: 600;
+}
+.symptomChipActive::before {
+  content: '✓ ';
+  font-weight: 700;
+}
+
 /* 患者ヘッダー (Phase 3 #10/#11) */
 .patientHeader {
   display: flex;
