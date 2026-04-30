@@ -105,7 +105,7 @@ export const DIFFERENTIALS = [
     redFlags: ['temporal_artery_tenderness'],
     nextStep: 'ESR+CRP（即日）。ESR正常でもGCA否定不可（生検陽性例の4-22%はESR正常）。GCA疑い→失明予防のためプレドニゾロン40-60mg/日先行投与（視力障害ありならメチルプレドニゾロンパルスを検討）+即日眼科+リウマチ科紹介。',
     link: null,
-    comment: '50歳以上の新規頭痛+側頭動脈圧痛・索状硬化・拍動減弱。顎跛行（咀嚼時の顎痛）は特異度高い。失明は非可逆的→疑ったら生検結果を待たずにステロイド。PMRの合併多い。',
+    comment: '50歳以上の新規頭痛+側頭動脈圧痛・索状硬化・拍動減弱。顎跛行（咀嚼時の顎痛）は特異度高い。失明は非可逆的→疑ったら生検結果を待たずにステロイド。GCAの40-50%にPMRを併発（両肩・腰帯のこわばり/朝の起床困難があれば polyarthralgia booster + fatigue/weightLoss booster も参照）。',
   },
   {
     id: 'stroke',

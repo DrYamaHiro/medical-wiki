@@ -135,7 +135,7 @@ export const DIFFERENTIALS = [
     severityWeight: 4,
     symptoms: ['rlq', 'periumbilical', 'nausea_vomiting', 'fever'],
     findings: ['mcburney', 'peritoneal_signs'],
-    redFlags: [],
+    redFlags: ['peritoneal_signs', 'mcburney'],
     nextStep: 'Alvarado Score評価。採血（WBC/CRP）。外科紹介（CT評価が必要）。',
     link: null,
     comment: '心窩部/臍周囲痛→右下腹部への移動（migrating pain）が典型。McBurney圧痛+Rovsing徴候。穿孔で汎発性腹膜炎。',
