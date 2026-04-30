@@ -716,6 +716,22 @@
   font-size: 0.85rem;
 }
 
+/* 警告再掲 (画面下部) */
+.bottomAlertBox {
+  margin: 0.6rem 1.2rem 0;
+  padding: 0.6rem 0.9rem;
+  background: #fff8e1;
+  border: 2px solid #b71c1c;
+  border-radius: 6px;
+}
+.bottomAlertLabel {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #b71c1c;
+  margin-bottom: 0.4rem;
+}
+
 /* フッター */
 .footer {
   padding: 0.5rem 1.2rem;

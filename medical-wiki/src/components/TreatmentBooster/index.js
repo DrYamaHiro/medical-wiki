@@ -1346,6 +1346,28 @@ export default function TreatmentBooster({
         </div>
       )}
 
+      {/* 警告再掲 (画面下部、画面切れ対策) */}
+      {(urgentRecs.length > 0 || activeDoNot.length > 0 || connectedAlerts.some((a) => a.severity === 'critical')) && (
+        <div className={styles.bottomAlertBox}>
+          <div className={styles.bottomAlertLabel}>⚠ 警告再掲 (上部にも表示):</div>
+          {urgentRecs.map((r) => (
+            <div key={`btm-u-${r.id}`} className={styles.urgentItem}>
+              🚨 <strong>緊急 / {actionLabel(r.action)}:</strong> {r.drug}
+            </div>
+          ))}
+          {activeDoNot.map((r, i) => (
+            <div key={`btm-dn-${i}`} className={styles.doNotItem}>
+              ❌ <strong>{r.drug}</strong>: {r.reason}
+            </div>
+          ))}
+          {connectedAlerts.filter((a) => a.severity === 'critical').map((a, i) => (
+            <div key={`btm-c-${i}`} className={styles.connectedCritical}>
+              <strong>{a.label}</strong>: {a.detail}
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className={styles.footer}>
         本ツールは治療思考の補助であり、臨床判断を代替するものではありません。薬剤選択・用量・中止の最終判断は主治医が行ってください。
       </div>

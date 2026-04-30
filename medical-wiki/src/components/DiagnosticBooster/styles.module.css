@@ -64,6 +64,14 @@
 .redFlagBox {
   margin: 0;
 }
+.redFlagFooterLabel {
+  padding: 0.4rem 1.2rem;
+  background: #4a148c;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
 
 .redFlagCritical {
   padding: 0.7rem 1.2rem;

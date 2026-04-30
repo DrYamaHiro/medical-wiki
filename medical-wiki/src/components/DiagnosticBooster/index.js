@@ -294,6 +294,26 @@ export default function DiagnosticBooster({
         </div>
       )}
 
+      {/* Red Flag 警告 (画面下部にも再掲、画面切れ対策) */}
+      {activeRedFlags.length > 0 && (
+        <div className={styles.redFlagBox} aria-label="Red Flag 再掲">
+          <div className={styles.redFlagFooterLabel}>⚠ Red Flag (画面上部にも表示):</div>
+          {activeRedFlags.map((rf, i) => (
+            <div
+              key={`bottom-${i}`}
+              className={
+                rf.severity === 'critical'
+                  ? styles.redFlagCritical
+                  : styles.redFlagWarning
+              }
+            >
+              {rf.severity === 'critical' ? '⚠️ ' : '⚠ '}
+              {rf.message}
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* フッター */}
       <div className={styles.footer}>
         本ツールは診断思考の補助であり、臨床判断を代替するものではありません。
