@@ -99,14 +99,15 @@
 → 04-MASTER-THERAPEUTIC-ITEMS.txt 参照
 → 03-DOCTOR-ADVICE-COLLECTION.txt 参照（[届出] [AMS] [予防] [接触者対応]）
 
-【マスタ追加要 (運用課題)】
-※ 本テンプレで導入した以下の新規IDは現時点でマスタ未登録。
-   04-MASTER-THERAPEUTIC-ITEMS.txt および 05-MASTER-CATEGORY1-MEDICATIONS.txt への追加が必要:
+【マスタ登録済 (本テンプレ導入の新規ID)】
+※ 04-MASTER-THERAPEUTIC-ITEMS.txt に登録済:
   - Rx-Resp-Pert-CAM (CAM 200mg×2 7日)
+  - Rx-Resp-Pert-AZM (AZM 成人非妊婦 250mg×2 3日)
   - Rx-Resp-Pert-AZM-Preg (AZM 妊婦・授乳婦・1ヶ月未満児用)
   - Rx-Resp-Pert-EM (EM 200mg×4 14日 = 800mg/日)
   - Rx-Resp-Pert-ST (バクタ 2錠×2 14日、適応外参考処方)
-  - Rx-Ped-Pert-AZM / Rx-Ped-Pert-CAM (小児体重別)
+  - Rx-Ped-Pert-AZM (小児AZM Day1 10mg/kg, Day2-5 5mg/kg)
+  - Rx-Ped-Pert-CAM (小児CAM 15mg/kg/日 分2 7日)
   - Lab-Resp-Pert-PCR (百日咳 PCR 外注)
   - Lab-Resp-Pert-IgG (抗百日咳毒素IgG 外注)
-  - Doc-Gen-Notification (5類感染症発生届、他テンプレでも流用想定)
+  - Doc-Gen-Notification (5類感染症発生届、他テンプレ流用可)
