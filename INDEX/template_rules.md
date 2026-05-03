@@ -48,6 +48,11 @@
 3. 変更後は `ver.X.X.X.X-changelog.txt` に記録
 4. `SOAP_ISSUES_MEMO.md` に記載の既知課題は優先的に対応
 5. 処方用量はガイドライン準拠（SOAP_ISSUES_MEMO.md の過去指摘を参照）
+6. **同一マスタID で異なる用量・期間を採用する場合は、処方行末尾に「；rationale」ラベル必須**
+   - 例: `・タケキャブ錠20mg 1回1錠 1日1回 朝食後 8週間分 ；胃潰瘍8週／十二指腸潰瘍6週（添付文書）`
+   - 検証コマンド: `node scripts/validate_dose_labels.js [対象ディレクトリ]`
+   - 既定対象: `ver.3.0.3.0/output/`。Exit 1 で issue あり、CI fail にも対応可
+   - これにより「複数テンプレで同じ薬・違う用量・使い分け不明」の構造的バグを防ぐ
 
 ---
 
