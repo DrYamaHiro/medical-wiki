@@ -33,8 +33,24 @@
 1. 対象のMDX/JS/CSSファイルを**直接Write/Editで書き込む**（ローカルコピー不要）
 2. `git add 対象ファイル名` で**個別に**ステージ
 3. `git commit -m "メッセージ"` → `git push origin master`
-4. GitHub Actionsが自動でビルド&デプロイ（`medical-wiki/`配下に変更がある場合）
+4. GitHub Actionsが自動でビルド&デプロイ（`medical-wiki/`配下に変更がある場合）。ワークフローはリポジトリルートの `.github/workflows/deploy.yml` にある（`medical-wiki/` 内ではない）
 5. デプロイ結果は https://dryamahiro.github.io/medical-wiki/ で確認
+
+### Git ステージ漏れ予防（Windows case-insensitive 問題）
+
+Windows のファイルシステムは case-insensitive だが、git index は case-sensitive で path を保持する。
+ローカルに見えるフォルダ名と git 管理上のフォルダ名のケースが違うと、`git add` が**サイレントに失敗**してステージ漏れが発生する。
+
+**過去の事例**: `medical-wiki/docs/280-Sensory-Organs/...` (capital S/O) で `git add` したが、git index は `280-sensory-organs/` (lowercase) で管理 → ステージ漏れ → push 後も Wiki に反映されない事故が発生（2026-05-04 commit 3e81484 で復旧）。
+
+**予防ルール**:
+1. **`git add` 前に必ず実際の管理パスを確認**:
+   ```bash
+   git ls-files medical-wiki/docs/ | grep <キーワード>
+   ```
+2. **`git ls-files` の出力どおりのケースで `git add`**（lowercase 確定なら lowercase で指定）
+3. **commit 後に `git status --short` を確認**してステージ漏れがないか検証
+4. **push 後は GitHub Actions の workflow run が緑になるまで確認**（https://github.com/DrYamaHiro/medical-wiki/actions）
 
 ### ローカルスクリプト実行について
 - Docusaurusビルドは原則禁止
