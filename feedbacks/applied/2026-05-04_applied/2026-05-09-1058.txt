@@ -1,0 +1,191 @@
+監査報告（内容の書き換えなし）
+結論
+リポジトリ内容は変更していません。コミット・PR作成も行っていません。
+
+Docusaurus の本番ビルド自体は 終了コード 0 で成功しましたが、リンク切れ 117件 / 影響ページ 44件 / アンカー切れ 1件 / webpack warning 1件 が出ています。
+
+最優先で直すべきものは、カテゴリ名・ルート名の大文字小文字・旧パス混在によるリンク切れです。onBrokenLinks と onBrokenMarkdownLinks が warn のため、現状はビルドが通ってしまいます。設定上、リンク切れは警告扱いです。 
+
+医学内容の真正性・最新性までは、今回は外部ガイドライン照合を伴う全文医学監査ではなく、構造・ビルド・リンク・依存関係・公開面の安全性を中心に監査しました。リポジトリ側にも、Wiki・SOAP・薬剤リファレンスの変更時は複数AI監査が必要と明記されています。 
+
+監査範囲
+対象構成
+ルートの INDEX.md では、最新版テンプレートは ver.3.0.2.2/output/、Wiki本体は medical-wiki/、薬剤リファレンスは aeon_ph/drugs/ と整理されています。 
+
+medical-wiki/ は Docusaurus v3.7 系の Node.js プロジェクトとして定義されています。 
+
+package.json 上は、Docusaurus 3.7.0、React 18、ローカル検索プラグイン、Mermaid テーマなどを利用しています。 
+
+docs は自動生成サイドバーで、medical-wiki/docs 配下全体を対象にしています。 
+
+監査で確認した主な件数
+medical-wiki/docs の MDX: 375件
+
+React コンポーネント JS/JSX: 75件
+
+_category_.json: 55件
+
+WIKI_EDIT_START / WIKI_EDIT_END: 各297件
+
+id: front matter: 374件
+
+WIKI_EDIT_START がない MDX: 78件
+ただし、Booster、Drug Reference、Calculator など、SOAPテンプレートではないページが多く含まれるため、全てが異常とは限りません。
+
+重要指摘
+1. リンク切れが多数あります（優先度: 高）
+npm run build は成功しましたが、Docusaurus がリンク切れを警告しています。設定上、リンク切れは warn なのでビルド失敗にはなっていません。 
+
+代表例:
+
+intro.md のカテゴリ一覧は、./Acute-URI、./Cardiovascular、./Dyslipidemia、./Dermatitis など、大文字混在の旧パスを参照しています。実ディレクトリは 010-acute-uri、090-cardiovascular、120-dyslipidemia、200-dermatitis などの番号付き・小文字系です。 
+
+intro.md のツールリンクも /medical-wiki/drug-reference、./Calculators/adrop を参照しており、現在の 800-Drug-Reference / 810-Calculators 系ルーティングと整合していない可能性があります。 
+
+chads.mdx では ../../Cardiovascular/...、../../Stroke/... を参照しており、ビルドではこれらがリンク切れとして検出されています。 
+
+vaccine-billing.mdx でも ../../Acute-URI/...、../../Health-Check/... のような旧大文字パスが残っています。 
+
+changelog.md の臨床計算ツール表は /medical-wiki/docs/Calculators/... を参照していますが、現行ファイルは 810-Calculators 配下に分かれています。 
+
+影響:
+ユーザーがトップページ・変更履歴・関連ページから主要疾患や計算ツールへ移動できない箇所が多く、Wikiとしての導線品質に直接影響します。
+
+推奨対応:
+まずリンク切れ一覧を機械的に抽出し、以下の順で修正するのが安全です。
+
+intro.md のカテゴリ一覧
+
+changelog.md の /docs/Calculators/...
+
+810-Calculators/** の関連ページリンク
+
+Drug Reference への /medical-wiki/drug-reference 系リンク
+
+onBrokenLinks: 'throw' への変更検討。ただし既存リンクを直してからが安全です。
+
+2. アンカー切れが1件あります（優先度: 中）
+j11-influenza-b.mdx から j10-influenza-a#ワクチン へのアンカー参照があり、ビルドでアンカー切れとして検出されています。該当箇所では「インフルエンザA型のワクチンセクション」を参照しています。 
+
+影響:
+ページ自体には行けても、目的のセクションにジャンプできません。
+
+推奨対応:
+j10-influenza-a.mdx 側の実際の見出しから生成される slug を確認し、リンク先アンカーを合わせるのがよいです。
+
+3. ルート・カテゴリ命名が二重化している可能性があります（優先度: 高）
+docs 配下の実ディレクトリは 010-acute-uri、090-cardiovascular、810-Calculators のような番号付きパスですが、リンク本文では Acute-URI、Cardiovascular、Calculators のような旧カテゴリ名が多く使われています。 sidebars.js は docs 全体の自動生成なので、実ファイル配置とリンク表記の不一致がリンク切れとして表面化しています。 
+
+影響:
+特に Docusaurus / GitHub Pages / Windows case-insensitive 環境の組み合わせでは、ケース違い・管理パス違いがデプロイ漏れやリンク切れの原因になります。リポジトリ内の作業ルールにも、過去にケース違いでステージ漏れが起きた旨が記録されています。 
+
+推奨対応:
+「表示名」と「実ルート」を分け、リンクは Docusaurus が生成する実URLに統一する方針を決めるのがよいです。
+
+4. 001-Undifferentiated/00-diagnostic-hub.mdx だけ id: がありません（優先度: 低〜中）
+ほとんどの MDX は front matter に id: を持ちますが、00-diagnostic-hub.mdx には id: がありません。 
+
+影響:
+Docusaurus はファイルパス由来で動作できるため即時エラーではありません。ただし、他ページとルーティング・リンク・検索結果表示の一貫性が落ちる可能性があります。
+
+推奨対応:
+今後修正する場合は、既存リンク影響を確認したうえで id を追加するか、あえてパス由来運用に統一するかを決めるのがよいです。
+
+5. 画像アップロード機能は公開面の安全性確認が必要です（優先度: 中）
+ImageUploader は Cloudinary の CLOUD_NAME と unsigned upload preset 名をフロント側に持ち、ブラウザから直接アップロードします。 
+
+また、非表示・並び順・featured 画像は localStorage に保存されており、サーバー側削除・全ユーザー共通の状態変更ではありません。 
+
+影響:
+
+upload preset が公開アップロード可能な設定だと、第三者による不要画像アップロード・容量消費のリスクがあります。
+
+「非表示」はユーザー端末ローカルの状態であり、全体から消えるわけではありません。
+
+推奨対応:
+
+Cloudinary 側で upload preset の制限を確認してください。
+
+allowed formats
+
+max file size
+
+folder 制限
+
+moderation
+
+unsigned preset の有効/無効
+
+rate limit / abuse 対策
+
+公開Wikiで誰でもアップロード可能にする意図がないなら、管理者限定の署名付きアップロードへ移行するのが安全です。
+
+6. MDXComponents.js のグローバル登録は限定的です（優先度: 低）
+グローバル MDX コンポーネントとして登録されているのは、ImageUploader、DiagnosticBooster、TreatmentBooster、MermaidChart、DupixentCalculator などに限られています。 
+
+一方、各 Calculator ページは個別にコンポーネントを import しているため、現時点でビルドは成立しています。例として EASI は MDX 内で EasiCalculator を直接 import しています。 
+
+影響:
+大きな問題ではありませんが、計算ツール群をグローバル登録する方針なのか、各MDXで明示 import する方針なのかが混在して見えます。
+
+推奨対応:
+明示 import 方針に統一するなら DupixentCalculator のみグローバル登録されている理由を整理すると保守しやすくなります。
+
+良い点
+Docusaurus v3.7 / React 18 ベースで構成が明確です。 
+
+日本語ロケール ja、Mermaid、有効なローカル検索プラグインが設定されています。 
+
+docs サイドバーは自動生成なので、ファイル追加時のサイドバー漏れは起きにくい構成です。 
+
+Wiki更新時の他者変更確認、WIKI_EDIT_START/END 保護、複数AI監査義務など、運用ルールはかなり明文化されています。 
+
+医療情報に関して「本データは診療支援を目的としたバックアップ情報」と明記されており、利用者への注意書きがあります。 
+
+推奨対応ロードマップ
+Phase 1: 導線修復
+npm run build のリンク切れ一覧をもとに、117件のリンクを分類。
+
+intro.md、changelog.md、810-Calculators の関連リンクから優先修正。
+
+修正後に onBrokenLinks: 'throw' を検討。
+
+Phase 2: ルート命名の統一
+010-acute-uri のような実ディレクトリベースでリンクするのか、slug を使って番号を外したURLでリンクするのかを統一。
+
+大文字カテゴリ名リンクを廃止。
+
+Windows/GitHub Pages のケース違い事故を防ぐため、リンク生成・検証スクリプト化を推奨。
+
+Phase 3: 公開機能の安全性確認
+Cloudinary upload preset の公開範囲・制限を確認。
+
+必要なら署名付きアップロード、管理者限定、またはアップロード機能の非公開化を検討。
+
+localStorage による非表示・順序変更が「個人端末のみ」であることをUI上も明示。
+
+Phase 4: 医学内容監査
+今回は全文医学的妥当性監査までは行っていません。
+
+リポジトリルール通り、変更を伴う医学監査では最低2、推奨3エージェントで、臨床妥当性 / 薬理・AMS / 医療安全・フォーマットを分担してください。 
+
+実行したチェック
+✅ find .. -name AGENTS.md -print
+
+✅ git status --short
+
+✅ find medical-wiki/docs -type f -name '*.mdx' | wc -l
+
+✅ find medical-wiki/src/components -type f \( -name '*.js' -o -name '*.jsx' \) | wc -l
+
+✅ find medical-wiki/docs -type f -name '_category_.json' | wc -l
+
+✅ rg -n "TODO|FIXME|XXX|HACK" --glob '!node_modules/**' --glob '!build/**' --glob '!package-lock.json' .
+
+✅ rg -n "(api[_-]?key|secret|password|token|BEGIN RSA|PRIVATE KEY|Bearer )" --glob '!node_modules/**' --glob '!build/**' --glob '!package-lock.json' .
+
+✅ npm ls --depth=0
+
+⚠️ npm run build — 終了コード 0 で静的生成は成功。ただし Docusaurus がリンク切れ 117件、影響ページ 44件、アンカー切れ 1件、webpack warning 1件を報告。
+
+⚠️ npm audit --omit=dev — npm registry audit endpoint が 403 Forbidden を返したため脆弱性監査は完了不可。
