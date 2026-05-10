@@ -789,15 +789,15 @@ PHQ-2/9, GAD-7, ESS, STOP-BANG, EPDS, GDS-15, TDS, HDS-R, IPSS, OABSS, AUDIT-C, 
 
 | ツール | 用途 | リンク先Wiki |
 |--------|------|-------------|
-| [CPI](/medical-wiki/docs/Calculators/cpi) | インスリン分泌能評価 | DKD |
-| [久山町スコア](/medical-wiki/docs/Calculators/hisayama) | 心血管リスク | 脂質異常症 |
-| [eGFR](/medical-wiki/docs/Calculators/egfr) | 腎機能評価 | CKD |
-| [BMI](/medical-wiki/docs/Calculators/bmi) | 肥満度判定 | 肥満症 |
-| [Ccr](/medical-wiki/docs/Calculators/ccr) | 薬剤量調整 | CKD |
-| [FIB-4](/medical-wiki/docs/Calculators/fib4) | 肝線維化評価 | 脂肪肝 |
-| [Friedewald式](/medical-wiki/docs/Calculators/friedewald) | LDL-C推算 | 脂質異常症 |
-| [CHA₂DS₂-VASc](/medical-wiki/docs/Calculators/chads) | AF脳卒中リスク | 心房細動 |
-| [A-DROP](/medical-wiki/docs/Calculators/adrop) | 肺炎重症度 | 細菌性肺炎 |
+| [CPI](/medical-wiki/docs/810-Calculators/physical-renal/cpi) | インスリン分泌能評価 | DKD |
+| [久山町スコア](/medical-wiki/docs/810-Calculators/cardiovascular/hisayama) | 心血管リスク | 脂質異常症 |
+| [eGFR](/medical-wiki/docs/810-Calculators/physical-renal/egfr) | 腎機能評価 | CKD |
+| [BMI](/medical-wiki/docs/810-Calculators/physical-renal/bmi) | 肥満度判定 | 肥満症 |
+| [Ccr](/medical-wiki/docs/810-Calculators/physical-renal/ccr) | 薬剤量調整 | CKD |
+| [FIB-4](/medical-wiki/docs/810-Calculators/hepato-gi/fib4) | 肝線維化評価 | 脂肪肝 |
+| [Friedewald式](/medical-wiki/docs/810-Calculators/cardiovascular/friedewald) | LDL-C推算 | 脂質異常症 |
+| [CHA₂DS₂-VASc](/medical-wiki/docs/810-Calculators/cardiovascular/chads) | AF脳卒中リスク | 心房細動 |
+| [A-DROP](/medical-wiki/docs/810-Calculators/respiratory/adrop) | 肺炎重症度 | 細菌性肺炎 |
 
 ### 画像アップロード機能
 

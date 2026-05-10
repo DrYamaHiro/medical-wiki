@@ -1,0 +1,40 @@
+[未処理メモ] Cloudinary upload preset セキュリティ確認
+
+由来: 2026-05-09 Codex 監査報告 (feedbacks/applied/2026-05-04_applied/2026-05-09-1058.txt) Phase 3 指摘
+
+## 背景
+
+medical-wiki/src/components/ImageUploader は Cloudinary の CLOUD_NAME と unsigned upload preset 名をフロント側に持ち、ブラウザから直接アップロードする実装。
+非表示・並び順・featured 画像は localStorage に保存。サーバー側削除・全ユーザー共通の状態変更ではない。
+
+## リスク
+
+- upload preset が公開アップロード可能な設定だと、第三者による不要画像アップロード・容量消費のリスク
+- 「非表示」はユーザー端末ローカルの状態のみ → 全体から消えるわけではないことが UI 上不明確
+
+## 確認すべき項目 (Cloudinary 管理画面)
+
+- allowed formats
+- max file size
+- folder 制限
+- moderation
+- unsigned preset の有効/無効
+- rate limit / abuse 対策
+
+## 対応オプション
+
+A. 現状の unsigned preset で運用続行 (Cloudinary 側で制限を強化)
+B. 署名付きアップロード (signed upload) へ移行 → サーバー側 API key 必須、運用負担増
+C. 管理者限定アップロード (フロント側で認証)
+D. アップロード機能の非公開化 (院内専用 wiki なら不要)
+
+## 判断必要事項
+
+- 公開 Wiki で誰でもアップロード可能にする意図はあるか?
+- 院内専用なら認証導入 or 機能廃止を検討
+- 残すなら Cloudinary preset 制限強化 + UI で「非表示はあなたの端末のみ」明記
+
+## 担当・期限
+
+- やまひろ先生 (本部判断 + Cloudinary アカウント保持者) 確認待ち
+- 緊急度: 中 (現時点で実害報告なし、ただし放置は abuse リスク蓄積)
