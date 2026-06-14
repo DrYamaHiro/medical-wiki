@@ -87,13 +87,7 @@ const config = {
           alt: 'CureStation Logo',
           src: 'img/logo-cs.png',
         },
-        items: [
-          {
-            href: 'https://github.com/dryamahiro/medical-wiki',
-            label: 'GitHub',
-            position: 'right',
-          },
-        ],
+        items: [],
       },
       footer: {
         style: 'dark',
