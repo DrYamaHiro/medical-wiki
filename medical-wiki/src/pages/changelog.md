@@ -9,6 +9,34 @@ title: "変更履歴"
 ---
 
 <details open>
+<summary><strong>ver.3.1.0.1</strong>（2026-06-17）— Echo Booster 追加</summary>
+
+エコー所見入力ツール `Echo Booster` を新設。
+
+### 対応部位（5領域）
+
+- **腹部エコー**: 肝・胆・膵・脾・腎・腹部大動脈・膀胱
+- **頸動脈エコー**: max IMT、NASCET 狭窄度、PSV、プラーク性状、椎骨動脈血流
+- **甲状腺エコー**: 全体・両葉・結節 TI-RADS・頸部リンパ節
+- **心エコー（基本）**: LVEF・LVDd・壁運動・拡張機能・弁膜（AV/MV/TV）・TRPG・LAD・右心・IVC・心嚢液
+- **下肢静脈エコー（DVT）**: 両側 CFV/SFV/Pop V/下腿の圧迫所見、皮下浮腫、Wells スコア
+
+### 機能
+
+- 部位選択 → 臓器別チェックリストで所見を入力 → コピペ用テキストと簡易アセスメントを自動生成
+- 選択肢は正常／異常で色分け（青／赤）
+- 異常所見に対する次のアクション候補を自動提示（脂肪肝・水腎症・腹部大動脈瘤・HFrEF・近位 DVT 等）
+- 検査日入力、全文クリップボードコピー対応
+
+### 配置
+
+- ページ: `docs/810-Calculators/echo/echo-booster.mdx`
+- コンポーネント: `src/components/EchoBooster/`（index.jsx, styles.module.css, echoData.js）
+- グローバル MDX 登録: `<EchoBooster />` を任意の MDX 内で使用可
+
+</details>
+
+<details>
 <summary><strong>ver.3.1.0.0</strong>（2026-06-11）— GitHub原本のDrive保全と運用整備</summary>
 
 GitHub原本のスナップショット保全と、ver.3.0.5.0 以降に蓄積した医学コンテンツ修正・ガバナンス整備を一括反映。
