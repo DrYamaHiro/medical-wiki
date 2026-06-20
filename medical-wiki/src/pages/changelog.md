@@ -9,9 +9,20 @@ title: "変更履歴"
 ---
 
 <details open>
-<summary><strong>ver.3.1.0.1</strong>（2026-06-17）— Echo Booster 追加</summary>
+<summary><strong>ver.3.1.0.1</strong>（2026-06-17〜20）— Echo Booster + ASRS-v1.1 追加</summary>
 
-エコー所見入力ツール `Echo Booster` を新設。
+エコー所見入力ツール `Echo Booster` と成人 ADHD スクリーニングツール `ASRS-v1.1` を新設。
+
+### ASRS-v1.1（成人 ADHD 自己記入式症状チェックリスト）
+
+- WHO 開発の成人 ADHD スクリーニングツール
+- Part A 6問でスクリーニング、4問以上の該当（Q1-4 時々以上 / Q5-6 頻繁以上）で陽性
+- 陽性の場合、Part B 12問が自動展開（補助情報、診断は臨床面接で確定）
+- 配置: `docs/810-Calculators/psychiatry/asrs.mdx`
+
+---
+
+### Echo Booster（エコー所見入力ツール）
 
 ### 対応部位（5領域）
 
