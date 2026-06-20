@@ -14,36 +14,45 @@ const OPTIONS = [
   { value: 4, label: '4:非常に頻繁' },
 ];
 
+const OPTION_SHORT = ['全くない', 'めったにない', '時々', '頻繁', '非常に頻繁'];
+
 // Part A の各問における「該当」となる閾値
 // Q1-3, Q4: 時々 (2) 以上で該当
 // Q5-6: 頻繁 (3) 以上で該当
 const PART_A_QUESTIONS = [
-  { text: '物事を行う際に詰めの部分でうまくいかず、難しく感じることが、どのくらいの頻度でありますか', threshold: 2 },
-  { text: '計画性を要する作業を行う際に、作業を順序立てて行うことが困難なことが、どのくらいの頻度でありますか', threshold: 2 },
-  { text: '約束や、しなければならない用事を忘れがちなことが、どのくらいの頻度でありますか', threshold: 2 },
-  { text: 'じっくりと考える必要のある課題に取り掛かるのを避けたり、遅らせたりすることが、どのくらいの頻度でありますか', threshold: 2 },
-  { text: '長時間座っていなければならない時に、手足をそわそわ動かしたり、もじもじすることが、どのくらいの頻度でありますか', threshold: 3 },
-  { text: '自分が活動しすぎていて、何かに駆り立てられるかのように行動せずにいられないことが、どのくらいの頻度でありますか', threshold: 3 },
+  { text: '物事を行う際に詰めの部分でうまくいかず、難しく感じることが、どのくらいの頻度でありますか', short: '詰めの部分で失敗', threshold: 2 },
+  { text: '計画性を要する作業を行う際に、作業を順序立てて行うことが困難なことが、どのくらいの頻度でありますか', short: '計画的作業が困難', threshold: 2 },
+  { text: '約束や、しなければならない用事を忘れがちなことが、どのくらいの頻度でありますか', short: '約束・用事を忘れる', threshold: 2 },
+  { text: 'じっくりと考える必要のある課題に取り掛かるのを避けたり、遅らせたりすることが、どのくらいの頻度でありますか', short: '思考課題の回避・先延ばし', threshold: 2 },
+  { text: '長時間座っていなければならない時に、手足をそわそわ動かしたり、もじもじすることが、どのくらいの頻度でありますか', short: '長時間座位でそわそわ', threshold: 3 },
+  { text: '自分が活動しすぎていて、何かに駆り立てられるかのように行動せずにいられないことが、どのくらいの頻度でありますか', short: '駆り立てられるような活動', threshold: 3 },
 ];
 
 const PART_B_QUESTIONS = [
-  '直接話しかけられているのに、注意を集中して聞くことが難しいと感じることが、どのくらいの頻度でありますか',
-  '家や職場で物を置き忘れたり、見つけられないことが、どのくらいの頻度でありますか',
-  '騒音や周囲の活動に気が散ることが、どのくらいの頻度でありますか',
-  '会議など長時間座っていなければならない状況で、席を離れることが、どのくらいの頻度でありますか',
-  '落ち着かない感じや、そわそわした感じがすることが、どのくらいの頻度でありますか',
-  '一人でくつろいだ時間を過ごすことが難しいと感じることが、どのくらいの頻度でありますか',
-  '社交的な場面で、自分が喋りすぎてしまうことが、どのくらいの頻度でありますか',
-  '会話中に、相手が話し終わる前にその文を終わらせてしまうことが、どのくらいの頻度でありますか',
-  '順番待ちしなければならない時に、順番を待つのが難しいと感じることが、どのくらいの頻度でありますか',
-  '他の人が忙しくしている時に邪魔をしてしまうことが、どのくらいの頻度でありますか',
-  '退屈な、または難しい計画を完了させるのが難しいと感じることが、どのくらいの頻度でありますか',
-  '何かを正確に思い出すために、最後の段階で集中することが難しいことが、どのくらいの頻度でありますか',
+  { text: '直接話しかけられているのに、注意を集中して聞くことが難しいと感じることが、どのくらいの頻度でありますか', short: '直接の話に集中困難' },
+  { text: '家や職場で物を置き忘れたり、見つけられないことが、どのくらいの頻度でありますか', short: '物の置き忘れ' },
+  { text: '騒音や周囲の活動に気が散ることが、どのくらいの頻度でありますか', short: '周囲で気が散る' },
+  { text: '会議など長時間座っていなければならない状況で、席を離れることが、どのくらいの頻度でありますか', short: '長時間の会議で離席' },
+  { text: '落ち着かない感じや、そわそわした感じがすることが、どのくらいの頻度でありますか', short: '落ち着かない感じ' },
+  { text: '一人でくつろいだ時間を過ごすことが難しいと感じることが、どのくらいの頻度でありますか', short: '一人でくつろぐのが困難' },
+  { text: '社交的な場面で、自分が喋りすぎてしまうことが、どのくらいの頻度でありますか', short: '社交場面で喋りすぎ' },
+  { text: '会話中に、相手が話し終わる前にその文を終わらせてしまうことが、どのくらいの頻度でありますか', short: '相手の話の先取り' },
+  { text: '順番待ちしなければならない時に、順番を待つのが難しいと感じることが、どのくらいの頻度でありますか', short: '順番待ちが困難' },
+  { text: '他の人が忙しくしている時に邪魔をしてしまうことが、どのくらいの頻度でありますか', short: '他者作業を邪魔' },
+  { text: '退屈な、または難しい計画を完了させるのが難しいと感じることが、どのくらいの頻度でありますか', short: '退屈・難計画の完了困難' },
+  { text: '何かを正確に思い出すために、最後の段階で集中することが難しいことが、どのくらいの頻度でありますか', short: '最終段階の集中困難' },
 ];
+
+function formatToday() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
 
 export default function ASRSCalculator() {
   // Part A 6問 + Part B 12問 = 18問
   const [answers, setAnswers] = useState(Array(18).fill(null));
+  const [examDate, setExamDate] = useState(formatToday);
+  const [copied, setCopied] = useState(false);
 
   const setAnswer = useCallback((index, value) => {
     setAnswers((prev) => {
@@ -85,6 +94,61 @@ export default function ASRSCalculator() {
     }
     return { text: `陰性（Part A 該当 ${partA.hits}/6 < 4）— ADHD の可能性は低い`, color: '#2E7D32' };
   }, [partA]);
+
+  // コピペ用テキスト生成
+  const outputText = useMemo(() => {
+    if (!partA.complete) return '';
+    const lines = [];
+    lines.push(`【ASRS-v1.1 (成人ADHD症状チェックリスト) ${examDate}】`);
+    lines.push('');
+    lines.push('■ Part A (スクリーニング)');
+    lines.push(`該当: ${partA.hits}/6 → ${partA.positive ? '陽性' : '陰性'}`);
+    lines.push(`合計: ${partA.sum}/24点`);
+    lines.push('');
+    PART_A_QUESTIONS.forEach((q, i) => {
+      const v = answers[i];
+      const hit = v >= q.threshold ? ' ★' : '';
+      lines.push(`Q${i + 1}. ${q.short} → ${OPTION_SHORT[v]}(${v})${hit}`);
+    });
+
+    if (showPartB && partB.complete) {
+      lines.push('');
+      lines.push('■ Part B (補助情報)');
+      lines.push(`Part B 合計: ${partB.sumB}/48点`);
+      lines.push(`総合 (A+B): ${partB.total}/72点`);
+      lines.push('');
+      PART_B_QUESTIONS.forEach((q, i) => {
+        const idx = i + 6;
+        const v = answers[idx];
+        lines.push(`Q${idx + 1}. ${q.short} → ${OPTION_SHORT[v]}(${v})`);
+      });
+    }
+
+    lines.push('');
+    lines.push('■ 判定');
+    if (partA.positive) {
+      lines.push('Part A 陽性。成人 ADHD の可能性あり。');
+      lines.push('診断は DSM-5/ICD-11 に基づく臨床面接で確定すること。');
+      lines.push('鑑別: 不安症・うつ・睡眠障害・甲状腺機能異常・物質使用障害等を考慮。');
+      lines.push('児童期 (12歳以前) からの症状の存在を確認すること。');
+    } else {
+      lines.push('Part A 陰性。ADHD の可能性は低い。');
+      lines.push('ただし臨床的疑いが強ければ専門医評価を考慮。');
+    }
+    lines.push('');
+    lines.push('※ ASRS-v1.1 はスクリーニングツールであり、確定診断ではない。');
+    return lines.join('\n');
+  }, [partA, partB, showPartB, answers, examDate]);
+
+  const copyOutput = async () => {
+    try {
+      await navigator.clipboard.writeText(outputText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      alert('クリップボードへのコピーに失敗しました。テキストを手動で選択してコピーしてください。');
+    }
+  };
 
   return (
     <div className={styles.calc}>
@@ -153,7 +217,7 @@ export default function ASRSCalculator() {
               const idx = i + 6;
               return (
                 <div className={styles.inputGroup} key={idx}>
-                  <label className={styles.inputLabel}>Q{idx + 1}. {q}</label>
+                  <label className={styles.inputLabel}>Q{idx + 1}. {q.text}</label>
                   <div className={styles.toggleGroup}>
                     {OPTIONS.map((opt) => (
                       <button
@@ -186,6 +250,78 @@ export default function ASRSCalculator() {
               </div>
             )}
           </>
+        )}
+
+        {/* コピペ用 出力 */}
+        {partA.complete && (
+          <div style={{
+            marginTop: '1.2rem',
+            padding: '0.9rem 1rem',
+            background: 'linear-gradient(180deg, #e8f5e9 0%, #fff 100%)',
+            border: '2px solid #66bb6a',
+            borderRadius: '8px',
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '0.6rem',
+              gap: '0.5rem',
+              flexWrap: 'wrap',
+            }}>
+              <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#1b5e20' }}>
+                📋 カルテ・紹介状貼付用テキスト
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <label style={{ fontSize: '0.78rem', fontWeight: 600 }}>検査日:</label>
+                <input
+                  type="date"
+                  value={examDate}
+                  onChange={(e) => setExamDate(e.target.value)}
+                  style={{
+                    padding: '0.25rem 0.45rem',
+                    fontSize: '0.8rem',
+                    border: '1.5px solid #b0bec5',
+                    borderRadius: '4px',
+                    fontFamily: 'inherit',
+                  }}
+                />
+                <button
+                  onClick={copyOutput}
+                  style={{
+                    padding: '0.4rem 0.9rem',
+                    fontSize: '0.85rem',
+                    background: copied ? '#00897b' : '#2e7d32',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                  }}
+                >
+                  {copied ? '✓ コピー済み' : '全文コピー'}
+                </button>
+              </div>
+            </div>
+            <pre style={{
+              background: '#fff',
+              border: '1px solid #c8e6c9',
+              borderRadius: '6px',
+              padding: '0.7rem 0.85rem',
+              fontFamily: '"Consolas", "Menlo", "Courier New", monospace',
+              fontSize: '0.82rem',
+              lineHeight: 1.55,
+              color: '#263238',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+              margin: 0,
+              maxHeight: '320px',
+              overflowY: 'auto',
+            }}>{outputText}</pre>
+            <div style={{ fontSize: '0.72rem', color: '#558b2f', marginTop: '0.4rem' }}>
+              ★ マークは Part A 該当項目 (Q1-4 は時々以上、Q5-6 は頻繁以上)
+            </div>
+          </div>
         )}
       </div>
 
