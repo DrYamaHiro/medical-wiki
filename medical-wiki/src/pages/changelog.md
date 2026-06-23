@@ -9,15 +9,23 @@ title: "変更履歴"
 ---
 
 <details open>
-<summary><strong>ver.3.1.0.1</strong>（2026-06-17〜20）— Echo Booster + ASRS-v1.1 追加</summary>
+<summary><strong>ver.3.1.0.1</strong>（2026-06-17〜23）— Echo Booster + ASRS-v1.1 + COPD-PS 追加</summary>
 
-エコー所見入力ツール `Echo Booster` と成人 ADHD スクリーニングツール `ASRS-v1.1` を新設。
+エコー所見入力ツール `Echo Booster`、成人 ADHD スクリーニングツール `ASRS-v1.1`、COPD スクリーニングツール `COPD-PS` を新設。
+
+### COPD-PS（COPD Population Screener）
+
+- Martinez らが開発した 5 項目の COPD スクリーニング質問票（Martinez FJ, et al. COPD 2008）
+- 合計 0-10 点、≥5 点で COPD の可能性あり → スパイロメトリーによる気流制限の評価を推奨
+- 採点結果のカルテ・紹介状貼付用テキスト自動生成、検査日入力、クリップボードコピー対応
+- 配置: `docs/810-Calculators/respiratory/copd-ps.mdx`
 
 ### ASRS-v1.1（成人 ADHD 自己記入式症状チェックリスト）
 
 - WHO 開発の成人 ADHD スクリーニングツール
 - Part A 6問でスクリーニング、4問以上の該当（Q1-4 時々以上 / Q5-6 頻繁以上）で陽性
 - 陽性の場合、Part B 12問が自動展開（補助情報、診断は臨床面接で確定）
+- カルテ・紹介状貼付用テキスト自動生成、検査日入力、クリップボードコピー対応
 - 配置: `docs/810-Calculators/psychiatry/asrs.mdx`
 
 ---
