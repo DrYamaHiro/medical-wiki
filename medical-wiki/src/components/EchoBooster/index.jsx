@@ -100,7 +100,7 @@ export default function EchoBooster() {
         </div>
         <div className={styles.headerRight}>
           {(region || Object.keys(findings).length > 0) && (
-            <button className={styles.resetBtn} onClick={reset} type="button">⟳ クリア</button>
+            <button className={styles.resetBtn} onClick={reset} type="button">クリア</button>
           )}
         </div>
       </div>
@@ -119,7 +119,6 @@ export default function EchoBooster() {
               className={`${styles.regionChip} ${region === key ? styles.regionChipActive : ''}`}
               onClick={() => selectRegion(key)}
             >
-              <span className={styles.regionIcon}>{data.icon}</span>
               {data.label}
             </button>
           ))}
@@ -213,7 +212,7 @@ export default function EchoBooster() {
               onClick={copyOutput}
               disabled={!fullOutput}
             >
-              {copied ? '✓ コピー済み' : '📋 全文コピー'}
+              {copied ? 'コピーしました' : '全文コピー'}
             </button>
           </div>
           <div className={styles.outputBox}>
@@ -221,7 +220,7 @@ export default function EchoBooster() {
           </div>
           {assessments.length > 0 && (
             <div className={styles.assessmentList}>
-              <p className={styles.assessmentTitle}>💡 自動アセスメント候補</p>
+              <p className={styles.assessmentTitle}>自動アセスメント候補</p>
               {assessments.map((a, i) => (
                 <p key={i} className={styles.assessmentItem}>{a}</p>
               ))}

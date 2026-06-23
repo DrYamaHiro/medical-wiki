@@ -5,7 +5,6 @@
 export const ECHO_REGIONS = {
   abdominal: {
     label: '腹部エコー',
-    icon: '🫀',
     sections: [
       {
         organ: '肝臓',
@@ -89,7 +88,6 @@ export const ECHO_REGIONS = {
 
   carotid: {
     label: '頸動脈エコー',
-    icon: '🩺',
     sections: [
       {
         organ: '右総頸動脈',
@@ -144,7 +142,6 @@ export const ECHO_REGIONS = {
 
   thyroid: {
     label: '甲状腺エコー',
-    icon: '🦋',
     sections: [
       {
         organ: '甲状腺 全体',
@@ -197,7 +194,6 @@ export const ECHO_REGIONS = {
 
   cardiac: {
     label: '心エコー (基本)',
-    icon: '❤️',
     sections: [
       {
         organ: '左室',
@@ -255,7 +251,6 @@ export const ECHO_REGIONS = {
 
   dvt: {
     label: '下肢静脈エコー (DVT)',
-    icon: '🦵',
     sections: [
       {
         organ: '右下肢',

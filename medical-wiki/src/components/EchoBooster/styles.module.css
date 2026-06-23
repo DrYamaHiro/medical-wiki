@@ -239,10 +239,11 @@
   position: relative;
 }
 .assessmentItem::before {
-  content: '▸';
+  content: '→';
   position: absolute;
   left: 0;
   color: #e65100;
+  font-weight: 700;
 }
 
 /* レスポンシブ */

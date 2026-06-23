@@ -107,7 +107,7 @@ export default function ASRSCalculator() {
     lines.push('');
     PART_A_QUESTIONS.forEach((q, i) => {
       const v = answers[i];
-      const hit = v >= q.threshold ? ' ★' : '';
+      const hit = v >= q.threshold ? ' [該当]' : '';
       lines.push(`Q${i + 1}. ${q.short} → ${OPTION_SHORT[v]}(${v})${hit}`);
     });
 
@@ -270,7 +270,7 @@ export default function ASRSCalculator() {
               flexWrap: 'wrap',
             }}>
               <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#1b5e20' }}>
-                📋 カルテ・紹介状貼付用テキスト
+                カルテ・紹介状貼付用テキスト
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <label style={{ fontSize: '0.78rem', fontWeight: 600 }}>検査日:</label>
@@ -299,7 +299,7 @@ export default function ASRSCalculator() {
                     fontWeight: 600,
                   }}
                 >
-                  {copied ? '✓ コピー済み' : '全文コピー'}
+                  {copied ? 'コピーしました' : '全文コピー'}
                 </button>
               </div>
             </div>
@@ -319,7 +319,7 @@ export default function ASRSCalculator() {
               overflowY: 'auto',
             }}>{outputText}</pre>
             <div style={{ fontSize: '0.72rem', color: '#558b2f', marginTop: '0.4rem' }}>
-              ★ マークは Part A 該当項目 (Q1-4 は時々以上、Q5-6 は頻繁以上)
+              [該当] は Part A 該当項目 (Q1-4 は時々以上、Q5-6 は頻繁以上)
             </div>
           </div>
         )}
