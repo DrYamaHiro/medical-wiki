@@ -12,6 +12,7 @@ function isAbnormal(value) {
 export default function EchoBooster() {
   const [region, setRegion] = useState(null);
   const [findings, setFindings] = useState({});
+  const [comments, setComments] = useState({});
   const [examDate, setExamDate] = useState(() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -24,18 +25,24 @@ export default function EchoBooster() {
     setFindings((prev) => ({ ...prev, [id]: value }));
   }, []);
 
+  const setComment = useCallback((id, value) => {
+    setComments((prev) => ({ ...prev, [id]: value }));
+  }, []);
+
   const reset = () => {
     if (!window.confirm('入力内容をすべてクリアしますか？')) return;
     setFindings({});
+    setComments({});
     setRegion(null);
   };
 
   const selectRegion = (key) => {
-    if (region && region !== key && Object.keys(findings).length > 0) {
+    if (region && region !== key && (Object.keys(findings).length > 0 || Object.keys(comments).length > 0)) {
       if (!window.confirm('部位を変更すると入力内容がクリアされます。よろしいですか？')) return;
     }
     setRegion(key);
     setFindings({});
+    setComments({});
   };
 
   // 出力テキスト生成
@@ -44,26 +51,33 @@ export default function EchoBooster() {
     const lines = [`【${regionData.label}所見】 ${examDate}`];
     regionData.sections.forEach((section) => {
       const entries = section.items
-        .filter((it) => {
-          const v = findings[it.id];
-          return v !== undefined && v !== '' && v !== null;
-        })
         .map((it) => {
           const v = findings[it.id];
+          const c = (comments[it.id] || '').trim();
+          const hasValue = v !== undefined && v !== '' && v !== null;
+          if (!hasValue && !c) return null;
+          let core;
+          if (!hasValue) {
+            core = `${it.label}: ${c}`;
+            return core;
+          }
           if (it.type === 'numeric') {
-            return `${it.label} ${v}${it.unit || ''}`;
+            core = `${it.label} ${v}${it.unit || ''}`;
+          } else {
+            core = `${it.label}: ${v}`;
           }
-          if (it.type === 'text') {
-            return `${it.label}: ${v}`;
+          if (c && it.type !== 'text') {
+            core += `（${c}）`;
           }
-          return `${it.label}: ${v}`;
-        });
+          return core;
+        })
+        .filter(Boolean);
       if (entries.length > 0) {
         lines.push(`${section.organ}: ${entries.join('、')}`);
       }
     });
     return lines.join('\n');
-  }, [regionData, findings, examDate]);
+  }, [regionData, findings, comments, examDate]);
 
   // アセスメント自動生成
   const assessments = useMemo(() => {
@@ -142,44 +156,55 @@ export default function EchoBooster() {
                       <span>{item.label}</span>
                       {item.hint && <span className={styles.itemHint}>{item.hint}</span>}
                     </div>
-                    <div className={styles.itemValue}>
-                      {item.type === 'choice' && item.options.map((opt) => {
-                        const active = findings[item.id] === opt;
-                        const abnormal = isAbnormal(opt);
-                        const cls = abnormal
-                          ? (active ? styles.choiceChipAbnormalActive : `${styles.choiceChip} ${styles.choiceChipAbnormal}`)
-                          : (active ? `${styles.choiceChip} ${styles.choiceChipActive}` : styles.choiceChip);
-                        return (
-                          <button
-                            key={opt}
-                            type="button"
-                            className={abnormal && !active ? `${styles.choiceChip} ${styles.choiceChipAbnormal}` : (active ? (abnormal ? styles.choiceChipAbnormalActive : `${styles.choiceChip} ${styles.choiceChipActive}`) : styles.choiceChip)}
-                            onClick={() => setField(item.id, active ? '' : opt)}
-                          >
-                            {opt}
-                          </button>
-                        );
-                      })}
-                      {item.type === 'numeric' && (
-                        <>
+                    <div className={styles.itemValueWrap}>
+                      <div className={styles.itemValue}>
+                        {item.type === 'choice' && item.options.map((opt) => {
+                          const active = findings[item.id] === opt;
+                          const abnormal = isAbnormal(opt);
+                          const cls = [styles.choiceChip];
+                          if (abnormal) cls.push(styles.choiceChipAbnormal);
+                          if (active) cls.push(abnormal ? styles.choiceChipAbnormalActive : styles.choiceChipActive);
+                          return (
+                            <button
+                              key={opt}
+                              type="button"
+                              className={cls.join(' ')}
+                              onClick={() => setField(item.id, active ? '' : opt)}
+                            >
+                              {opt}
+                            </button>
+                          );
+                        })}
+                        {item.type === 'numeric' && (
+                          <>
+                            <input
+                              type="number"
+                              step="any"
+                              className={styles.numInput}
+                              value={findings[item.id] || ''}
+                              onChange={(e) => setField(item.id, e.target.value)}
+                              placeholder={item.placeholder}
+                            />
+                            {item.unit && <span className={styles.unit}>{item.unit}</span>}
+                          </>
+                        )}
+                        {item.type === 'text' && (
                           <input
-                            type="number"
-                            step="any"
-                            className={styles.numInput}
+                            type="text"
+                            className={styles.textInput}
                             value={findings[item.id] || ''}
                             onChange={(e) => setField(item.id, e.target.value)}
                             placeholder={item.placeholder}
                           />
-                          {item.unit && <span className={styles.unit}>{item.unit}</span>}
-                        </>
-                      )}
-                      {item.type === 'text' && (
+                        )}
+                      </div>
+                      {item.type !== 'text' && (
                         <input
                           type="text"
-                          className={styles.textInput}
-                          value={findings[item.id] || ''}
-                          onChange={(e) => setField(item.id, e.target.value)}
-                          placeholder={item.placeholder}
+                          className={styles.commentInput}
+                          value={comments[item.id] || ''}
+                          onChange={(e) => setComment(item.id, e.target.value)}
+                          placeholder="自由コメント（任意）"
                         />
                       )}
                     </div>
