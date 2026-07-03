@@ -89,12 +89,6 @@ export const ECHO_REGIONS = {
     label: '頸動脈エコー',
     sections: [
       {
-        organ: '評価方法',
-        items: [
-          { id: 'stenosis_method', label: '狭窄度評価法', type: 'choice', options: ['NASCET', 'ECST', 'エコー径狭窄率', '面積狭窄率'], hint: '施設・機器の運用に応じて選択' },
-        ],
-      },
-      {
         organ: '右総頸動脈',
         items: [
           { id: 'r_cca_imt', label: 'max IMT', type: 'numeric', unit: 'mm', placeholder: '0.8', normalRange: { min: 0, max: 1.1, note: '正常 <1.1mm' } },
@@ -104,6 +98,7 @@ export const ECHO_REGIONS = {
       {
         organ: '右頸動脈洞・内頸動脈',
         items: [
+          { id: 'r_ica_method', label: '測定方法', type: 'choice', options: ['NASCET', 'ECST', 'エリア法'], hint: '任意、無記載可' },
           { id: 'r_ica_stenosis', label: '狭窄度', type: 'choice', options: ['なし', '軽度 (<50%)', '中等度 (50-69%)', '高度 (≥70%)', '閉塞'] },
           { id: 'r_ica_psv', label: 'PSV', type: 'numeric', unit: 'cm/s', placeholder: '70', normalRange: { min: 0, max: 125, note: '<125 正常、≥230 高度狭窄示唆' } },
         ],
@@ -118,6 +113,7 @@ export const ECHO_REGIONS = {
       {
         organ: '左頸動脈洞・内頸動脈',
         items: [
+          { id: 'l_ica_method', label: '測定方法', type: 'choice', options: ['NASCET', 'ECST', 'エリア法'], hint: '任意、無記載可' },
           { id: 'l_ica_stenosis', label: '狭窄度', type: 'choice', options: ['なし', '軽度 (<50%)', '中等度 (50-69%)', '高度 (≥70%)', '閉塞'] },
           { id: 'l_ica_psv', label: 'PSV', type: 'numeric', unit: 'cm/s', placeholder: '70', normalRange: { min: 0, max: 125, note: '<125 正常、≥230 高度狭窄示唆' } },
         ],
