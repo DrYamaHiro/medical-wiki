@@ -17,7 +17,6 @@ export const ECHO_REGIONS = {
           { id: 'liver_surface', label: '表面', type: 'choice', options: ['平滑', '凹凸 (慢性肝障害示唆)'] },
           { id: 'liver_mass', label: '腫瘤性病変', type: 'choice', options: ['なし', '嚢胞', '充実性病変 (要精査)', '血管腫様'] },
           { id: 'liver_pv', label: '門脈', type: 'choice', options: ['正常', '拡張 (>13mm)'] },
-          { id: 'liver_note', label: '特記事項', type: 'text', placeholder: '例: 嚢胞径 15mm 右葉 S6 等' },
         ],
       },
       {
@@ -27,7 +26,6 @@ export const ECHO_REGIONS = {
           { id: 'gb_stone', label: '結石', type: 'choice', options: ['なし', 'あり (単発)', 'あり (多発)', 'デブリ・スラッジ'] },
           { id: 'gb_wall', label: '壁厚', type: 'choice', options: ['正常 (≤3mm)', '肥厚 (>3mm)'] },
           { id: 'gb_polyp', label: 'ポリープ', type: 'choice', options: ['なし', 'あり (≤10mm)', 'あり (>10mm、要精査)'] },
-          { id: 'gb_note', label: '特記事項', type: 'text', placeholder: '例: 結石径 8mm 等' },
         ],
       },
       {
@@ -37,7 +35,6 @@ export const ECHO_REGIONS = {
           { id: 'pan_size', label: '腫大', type: 'choice', options: ['なし', '局所性', 'びまん性'] },
           { id: 'pan_duct', label: '主膵管', type: 'choice', options: ['正常 (≤3mm)', '拡張 (>3mm、要精査)'] },
           { id: 'pan_mass', label: '腫瘤・嚢胞', type: 'choice', options: ['なし', '嚢胞性病変', '充実性病変 (要精査)'] },
-          { id: 'pan_note', label: '特記事項', type: 'text', placeholder: '' },
         ],
       },
       {
@@ -57,7 +54,6 @@ export const ECHO_REGIONS = {
           { id: 'kid_hydro', label: '水腎症', type: 'choice', options: ['なし', '軽度', '中等度', '高度'] },
           { id: 'kid_cyst', label: '嚢胞', type: 'choice', options: ['なし', '単純性嚢胞 (Bosniak I)', '複雑性 (要精査)'] },
           { id: 'kid_mass', label: '腫瘤', type: 'choice', options: ['なし', 'あり (要精査)'] },
-          { id: 'kid_note', label: '特記事項', type: 'text', placeholder: '' },
         ],
       },
       {
@@ -397,7 +393,6 @@ export const ECHO_REGIONS = {
         items: [
           { id: 'edema', label: '皮下浮腫', type: 'choice', options: ['なし', '右', '左', '両側'] },
           { id: 'wells', label: 'Wells スコア', type: 'numeric', unit: '点', placeholder: '0', hint: '0-1 低、2-6 中、≥3 高確率' },
-          { id: 'note', label: '特記事項', type: 'text', placeholder: '例: 中枢進展なし、急性血栓像 等' },
         ],
       },
     ],
