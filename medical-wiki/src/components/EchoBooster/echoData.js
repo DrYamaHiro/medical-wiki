@@ -1,6 +1,9 @@
 // Echo Booster データ定義
 // 各部位の臓器・チェック項目を定義
 // type: choice (排他選択), multichoice (複数選択), numeric (数値+単位), text (自由入力)
+// normalRange: { min, max, note } — 数値項目の正常範囲。範囲外は入力欄が赤枠になる
+// normalRange.byGender: { male: {min,max}, female: {min,max} } — 性差ある項目用
+// askGender: region に付与すると性別選択 UI が出る
 
 export const ECHO_REGIONS = {
   abdominal: {
@@ -90,31 +93,37 @@ export const ECHO_REGIONS = {
     label: '頸動脈エコー',
     sections: [
       {
+        organ: '評価方法',
+        items: [
+          { id: 'stenosis_method', label: '狭窄度評価法', type: 'choice', options: ['NASCET', 'ECST', 'エコー径狭窄率', '面積狭窄率'], hint: '施設・機器の運用に応じて選択' },
+        ],
+      },
+      {
         organ: '右総頸動脈',
         items: [
-          { id: 'r_cca_imt', label: 'max IMT', type: 'numeric', unit: 'mm', placeholder: '0.8', hint: '正常 <1.1mm' },
+          { id: 'r_cca_imt', label: 'max IMT', type: 'numeric', unit: 'mm', placeholder: '0.8', normalRange: { min: 0, max: 1.1, note: '正常 <1.1mm' } },
           { id: 'r_cca_plaque', label: 'プラーク', type: 'choice', options: ['なし', 'あり (低エコー)', 'あり (高エコー)', 'あり (混合)'] },
         ],
       },
       {
         organ: '右頸動脈洞・内頸動脈',
         items: [
-          { id: 'r_ica_stenosis', label: '狭窄度 (NASCET)', type: 'choice', options: ['なし', '軽度 (<50%)', '中等度 (50-69%)', '高度 (≥70%)', '閉塞'] },
-          { id: 'r_ica_psv', label: 'PSV', type: 'numeric', unit: 'cm/s', placeholder: '70', hint: '<125 正常、≥230 高度狭窄示唆' },
+          { id: 'r_ica_stenosis', label: '狭窄度', type: 'choice', options: ['なし', '軽度 (<50%)', '中等度 (50-69%)', '高度 (≥70%)', '閉塞'] },
+          { id: 'r_ica_psv', label: 'PSV', type: 'numeric', unit: 'cm/s', placeholder: '70', normalRange: { min: 0, max: 125, note: '<125 正常、≥230 高度狭窄示唆' } },
         ],
       },
       {
         organ: '左総頸動脈',
         items: [
-          { id: 'l_cca_imt', label: 'max IMT', type: 'numeric', unit: 'mm', placeholder: '0.8', hint: '正常 <1.1mm' },
+          { id: 'l_cca_imt', label: 'max IMT', type: 'numeric', unit: 'mm', placeholder: '0.8', normalRange: { min: 0, max: 1.1, note: '正常 <1.1mm' } },
           { id: 'l_cca_plaque', label: 'プラーク', type: 'choice', options: ['なし', 'あり (低エコー)', 'あり (高エコー)', 'あり (混合)'] },
         ],
       },
       {
         organ: '左頸動脈洞・内頸動脈',
         items: [
-          { id: 'l_ica_stenosis', label: '狭窄度 (NASCET)', type: 'choice', options: ['なし', '軽度 (<50%)', '中等度 (50-69%)', '高度 (≥70%)', '閉塞'] },
-          { id: 'l_ica_psv', label: 'PSV', type: 'numeric', unit: 'cm/s', placeholder: '70', hint: '<125 正常、≥230 高度狭窄示唆' },
+          { id: 'l_ica_stenosis', label: '狭窄度', type: 'choice', options: ['なし', '軽度 (<50%)', '中等度 (50-69%)', '高度 (≥70%)', '閉塞'] },
+          { id: 'l_ica_psv', label: 'PSV', type: 'numeric', unit: 'cm/s', placeholder: '70', normalRange: { min: 0, max: 125, note: '<125 正常、≥230 高度狭窄示唆' } },
         ],
       },
       {
@@ -193,59 +202,147 @@ export const ECHO_REGIONS = {
   },
 
   cardiac: {
-    label: '心エコー (基本)',
+    label: '心エコー',
+    askGender: true,
     sections: [
       {
-        organ: '左室',
+        organ: '左室形態 (M モード計測)',
         items: [
-          { id: 'lv_ef', label: 'LVEF', type: 'numeric', unit: '%', placeholder: '60', hint: '正常 ≥50%' },
-          { id: 'lv_size', label: 'LVDd', type: 'numeric', unit: 'mm', placeholder: '45', hint: '正常 ≤55mm' },
-          { id: 'lv_wall', label: '壁厚 (IVS/PW)', type: 'text', placeholder: '例: 11/11mm', hint: '正常 ≤11mm' },
+          { id: 'ivs', label: 'IVS (心室中隔厚)', type: 'numeric', unit: 'mm', placeholder: '9', normalRange: { byGender: { male: { min: 6, max: 10 }, female: { min: 6, max: 9 } }, note: '男 6-10mm、女 6-9mm' } },
+          { id: 'pw', label: 'PW (後壁厚)', type: 'numeric', unit: 'mm', placeholder: '9', normalRange: { byGender: { male: { min: 6, max: 10 }, female: { min: 6, max: 9 } }, note: '男 6-10mm、女 6-9mm' } },
+          { id: 'lvdd', label: 'LVDd (拡張末期径)', type: 'numeric', unit: 'mm', placeholder: '48', normalRange: { byGender: { male: { min: 42, max: 58 }, female: { min: 38, max: 52 } }, note: '男 42-58mm、女 38-52mm' } },
+          { id: 'lvds', label: 'LVDs (収縮末期径)', type: 'numeric', unit: 'mm', placeholder: '30', normalRange: { byGender: { male: { min: 25, max: 40 }, female: { min: 22, max: 35 } }, note: '男 25-40mm、女 22-35mm' } },
+          { id: 'ao_d', label: '上行大動脈径 (AoD)', type: 'numeric', unit: 'mm', placeholder: '30', normalRange: { min: 20, max: 37, note: '正常 <37mm' } },
+          { id: 'lad', label: 'LAD (左房前後径)', type: 'numeric', unit: 'mm', placeholder: '35', normalRange: { byGender: { male: { min: 30, max: 40 }, female: { min: 27, max: 38 } }, note: '男 ≤40mm、女 ≤38mm' } },
+        ],
+      },
+      {
+        organ: '左室収縮能',
+        items: [
+          { id: 'lvef_teich', label: 'LVEF (Teichholz)', type: 'numeric', unit: '%', placeholder: '60', normalRange: { min: 55, max: 80, note: 'Teich 法 ≥55% 正常' } },
+          { id: 'lvfs', label: 'LV%FS', type: 'numeric', unit: '%', placeholder: '35', normalRange: { min: 25, max: 45, note: '正常 25-45%' } },
+          { id: 'lvef_simpson', label: 'LVEF (Simpson biplane)', type: 'numeric', unit: '%', placeholder: '60', normalRange: { min: 52, max: 74, note: '男 ≥52%、女 ≥54% (Simpson)' } },
+          { id: 'lvedv', label: 'LVEDV', type: 'numeric', unit: 'mL', placeholder: '100', normalRange: { byGender: { male: { min: 60, max: 150 }, female: { min: 50, max: 106 } }, note: '男 62-150mL、女 46-106mL' } },
+          { id: 'lvesv', label: 'LVESV', type: 'numeric', unit: 'mL', placeholder: '40', normalRange: { byGender: { male: { min: 20, max: 60 }, female: { min: 14, max: 42 } }, note: '男 21-61mL、女 14-42mL' } },
           { id: 'lv_motion', label: '局所壁運動', type: 'choice', options: ['正常', '低下あり (虚血示唆)', 'びまん性低下'] },
-          { id: 'lv_diastolic', label: '拡張機能', type: 'choice', options: ['正常', 'グレードI (緩徐弛緩)', 'グレードII (偽正常)', 'グレードIII (拘束型)'] },
+        ],
+      },
+      {
+        organ: '左室拡張機能',
+        items: [
+          { id: 'mv_e', label: 'E 波高', type: 'numeric', unit: 'cm/s', placeholder: '70', normalRange: { min: 50, max: 100, note: '参考 50-100cm/s' } },
+          { id: 'mv_a', label: 'A 波高', type: 'numeric', unit: 'cm/s', placeholder: '60', normalRange: { min: 40, max: 90, note: '参考 40-90cm/s' } },
+          { id: 'e_a_ratio', label: 'E/A 比', type: 'numeric', placeholder: '1.2', normalRange: { min: 0.8, max: 2.0, note: '正常 0.8-2.0、<0.8 弛緩障害、>2.0 拘束型示唆' } },
+          { id: 'dct', label: 'DcT', type: 'numeric', unit: 'ms', placeholder: '180', normalRange: { min: 160, max: 240, note: '正常 160-240ms' } },
+          { id: 'e_prime', label: "e' (septal)", type: 'numeric', unit: 'cm/s', placeholder: '9', normalRange: { min: 8, max: 20, note: 'septal e\' ≥8cm/s 正常、<8 拡張障害示唆' } },
+          { id: 'e_over_e_prime', label: "E/e' 比", type: 'numeric', placeholder: '8', normalRange: { min: 0, max: 8, note: '≤8 正常、9-14 灰色域、≥15 LVEDP 上昇示唆' } },
+          { id: 'lv_diastolic', label: '拡張機能グレード', type: 'choice', options: ['正常', 'グレードI (緩徐弛緩)', 'グレードII (偽正常)', 'グレードIII (拘束型)', '判定困難'] },
         ],
       },
       {
         organ: '弁膜',
         items: [
-          { id: 'av', label: '大動脈弁', type: 'choice', options: ['正常', 'AR 軽度', 'AR 中等度〜高度', 'AS 軽度', 'AS 中等度〜高度', 'AR+AS'] },
+          { id: 'av', label: '大動脈弁', type: 'choice', options: ['正常', 'AR 軽度', 'AR 中等度〜高度', 'AS 軽度', 'AS 中等度〜高度', 'AR+AS', '二尖弁'] },
+          { id: 'av_vmax', label: 'AV Vmax', type: 'numeric', unit: 'm/s', placeholder: '1.2', normalRange: { min: 0, max: 2.5, note: '<2.5 正常、≥4.0 高度 AS 示唆' } },
           { id: 'mv', label: '僧帽弁', type: 'choice', options: ['正常', 'MR 軽度', 'MR 中等度〜高度', 'MS', '逸脱 (MVP)'] },
           { id: 'tv', label: '三尖弁', type: 'choice', options: ['正常', 'TR 軽度', 'TR 中等度〜高度'] },
-          { id: 'pa_pressure', label: '推定肺動脈圧 (TRPG)', type: 'numeric', unit: 'mmHg', placeholder: '20', hint: '正常 <30mmHg' },
+          { id: 'pv', label: '肺動脈弁', type: 'choice', options: ['正常', 'PR 軽度', 'PR 中等度〜高度', 'PS'] },
+          { id: 'trpg', label: '推定肺動脈圧 (TRPG)', type: 'numeric', unit: 'mmHg', placeholder: '20', normalRange: { min: 0, max: 30, note: '<30mmHg 正常、≥40 中等度以上 PH 示唆' } },
         ],
       },
       {
-        organ: '左房・右心',
+        organ: '右心系',
         items: [
-          { id: 'la_size', label: 'LAD', type: 'numeric', unit: 'mm', placeholder: '35', hint: '正常 ≤40mm' },
-          { id: 'rv_size', label: '右室', type: 'choice', options: ['正常', '拡大'] },
+          { id: 'rv_basal', label: 'RV 基部径 (RVD1)', type: 'numeric', unit: 'mm', placeholder: '35', normalRange: { min: 25, max: 41, note: '正常 25-41mm、>42 拡大' } },
+          { id: 'rv_wall', label: 'RV 壁厚', type: 'numeric', unit: 'mm', placeholder: '4', normalRange: { min: 0, max: 5, note: '正常 ≤5mm' } },
+          { id: 'tapse', label: 'TAPSE', type: 'numeric', unit: 'mm', placeholder: '20', normalRange: { min: 17, max: 30, note: '≥17mm 正常、<17 RV 収縮低下' } },
+          { id: 's_prime_rv', label: "S' (RV free wall)", type: 'numeric', unit: 'cm/s', placeholder: '12', normalRange: { min: 10, max: 20, note: '≥10cm/s 正常' } },
           { id: 'ra_size', label: '右房', type: 'choice', options: ['正常', '拡大'] },
         ],
       },
       {
         organ: '下大静脈・心嚢液',
         items: [
-          { id: 'ivc_size', label: 'IVC 径', type: 'numeric', unit: 'mm', placeholder: '15', hint: '正常 ≤21mm' },
+          { id: 'ivc_size', label: 'IVC 径', type: 'numeric', unit: 'mm', placeholder: '15', normalRange: { min: 0, max: 21, note: '正常 ≤21mm、>21 かつ変動<50% → RAP上昇' } },
           { id: 'ivc_resp', label: 'IVC 呼吸性変動', type: 'choice', options: ['>50% (正常)', '<50% (右房圧上昇)'] },
           { id: 'pericardium', label: '心嚢液', type: 'choice', options: ['なし', '少量', '中等量〜多量'] },
         ],
       },
     ],
     assessmentRules: [
-      { when: (f) => { const ef = parseFloat(f.lv_ef || 0); return ef > 0 && ef < 40; },
-        text: 'LVEF 40%未満 (HFrEF)。ACEi/ARB/ARNI・β遮断薬・MRA・SGLT2i の標準治療検討。循環器紹介推奨。' },
-      { when: (f) => { const ef = parseFloat(f.lv_ef || 0); return ef >= 40 && ef < 50; },
-        text: 'LVEF 40-49% (HFmrEF)。HFrEF に準じた治療を検討、SGLT2i 推奨。' },
+      // 収縮能
+      { when: (f) => {
+          const ef = parseFloat(f.lvef_simpson || f.lvef_teich || 0);
+          return ef > 0 && ef < 40;
+        }, text: 'LVEF <40% (HFrEF)。ACEi/ARB/ARNI・β遮断薬・MRA・SGLT2i の標準治療、循環器紹介推奨。' },
+      { when: (f) => {
+          const ef = parseFloat(f.lvef_simpson || f.lvef_teich || 0);
+          return ef >= 40 && ef < 50;
+        }, text: 'LVEF 40-49% (HFmrEF)。HFrEF に準じた治療、SGLT2i 推奨。' },
       { when: (f) => f.lv_motion === '低下あり (虚血示唆)',
-        text: '局所壁運動低下あり。虚血性心疾患の精査推奨 (CAG or CTA)。' },
-      { when: (f) => f.av === 'AS 中等度〜高度' || f.mv === 'MS' || f.mv === 'MR 中等度〜高度' || f.av === 'AR 中等度〜高度',
-        text: '中等度以上の弁膜症あり。循環器専門医紹介、定期フォロー。' },
-      { when: (f) => { const trpg = parseFloat(f.pa_pressure || 0); return trpg >= 30; },
-        text: '推定肺動脈圧上昇。肺高血圧症の精査推奨。' },
+        text: '局所壁運動低下あり。虚血性心疾患の精査 (CAG or 冠動脈 CT) 推奨。' },
+
+      // 肥大 (性差反映)
+      { when: (f) => {
+          const ivs = parseFloat(f.ivs || 0); const pw = parseFloat(f.pw || 0);
+          const cutoff = f.__gender === 'female' ? 9 : 10;
+          return (ivs > 0 && ivs > cutoff) || (pw > 0 && pw > cutoff);
+        }, text: '心室壁肥厚あり。高血圧性心疾患・肥大型心筋症・浸潤性心筋症等の鑑別。' },
+
+      // 左房拡大
+      { when: (f) => {
+          const lad = parseFloat(f.lad || 0);
+          const cutoff = f.__gender === 'female' ? 38 : 40;
+          return lad > cutoff;
+        }, text: '左房拡大あり。慢性的な圧・容量負荷示唆、心房細動リスク上昇。' },
+
+      // 拡張機能
+      { when: (f) => {
+          const ratio = parseFloat(f.e_over_e_prime || 0);
+          return ratio >= 15;
+        }, text: "E/e' ≥15、左室充満圧上昇 (LVEDP 上昇) 示唆。うっ血・拡張機能障害を疑う。" },
+      { when: (f) => {
+          const ratio = parseFloat(f.e_over_e_prime || 0);
+          return ratio >= 9 && ratio < 15;
+        }, text: "E/e' 灰色域 (9-14)。他のパラメータ (LAVI・TR 速度) と合わせて総合判断。" },
+      { when: (f) => {
+          const ep = parseFloat(f.e_prime || 0);
+          return ep > 0 && ep < 8;
+        }, text: "septal e' <8cm/s、左室弛緩障害を示唆。" },
+      { when: (f) => {
+          const ea = parseFloat(f.e_a_ratio || 0);
+          return ea > 0 && ea < 0.8;
+        }, text: 'E/A <0.8、緩徐弛緩パターン (グレード I 拡張機能障害) の可能性。' },
+      { when: (f) => {
+          const ea = parseFloat(f.e_a_ratio || 0);
+          return ea >= 2.0;
+        }, text: 'E/A ≥2.0、拘束型充満パターン (グレード III) の可能性。' },
+
+      // 弁膜症
+      { when: (f) => f.av === 'AS 中等度〜高度' || f.mv === 'MS' || f.mv === 'MR 中等度〜高度' || f.av === 'AR 中等度〜高度' || f.pv === 'PS',
+        text: '中等度以上の弁膜症あり。循環器紹介、定期フォロー。' },
+      { when: (f) => {
+          const v = parseFloat(f.av_vmax || 0);
+          return v >= 4.0;
+        }, text: 'AV Vmax ≥4.0m/s、高度 AS の可能性。TAVI 適応評価含め循環器紹介。' },
+
+      // 肺高血圧
+      { when: (f) => { const trpg = parseFloat(f.trpg || 0); return trpg >= 30 && trpg < 40; },
+        text: 'TRPG 30-40mmHg、軽度肺高血圧の可能性。原因検索 (左心疾患・肺疾患・肺塞栓等)。' },
+      { when: (f) => { const trpg = parseFloat(f.trpg || 0); return trpg >= 40; },
+        text: 'TRPG ≥40mmHg、中等度以上の肺高血圧疑い。専門医紹介。' },
+
+      // 右心系
+      { when: (f) => { const t = parseFloat(f.tapse || 0); return t > 0 && t < 17; },
+        text: 'TAPSE <17mm、右室収縮能低下を示唆。' },
+      { when: (f) => { const rv = parseFloat(f.rv_basal || 0); return rv > 42; },
+        text: 'RV 基部径拡大 (>42mm)、右室拡大あり。原因精査。' },
+
+      // うっ血
       { when: (f) => f.pericardium && f.pericardium !== 'なし',
-        text: '心嚢液貯留あり。原因精査と心タンポナーデ徴候の確認。' },
+        text: '心嚢液貯留あり。原因精査と心タンポナーデ徴候確認。' },
       { when: (f) => f.ivc_resp === '<50% (右房圧上昇)',
-        text: 'IVC 呼吸性変動低下。右心系うっ血を示唆、容量評価と利尿薬調整検討。' },
+        text: 'IVC 呼吸性変動低下、右房圧上昇示唆。容量評価と利尿調整検討。' },
     ],
   },
 

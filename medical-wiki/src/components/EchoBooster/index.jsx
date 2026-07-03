@@ -9,10 +9,30 @@ function isAbnormal(value) {
   return ABNORMAL_KEYWORDS.some((k) => value.includes(k));
 }
 
+// 数値異常値検出
+// item.normalRange: { min, max } または { byGender: { male:{min,max}, female:{min,max} } }
+function isNumericOutOfRange(item, value, gender) {
+  if (value === undefined || value === '' || value === null) return false;
+  const n = parseFloat(value);
+  if (!isFinite(n)) return false;
+  const nr = item.normalRange;
+  if (!nr) return false;
+  let range = nr;
+  if (nr.byGender) {
+    const g = gender === 'female' ? 'female' : 'male';
+    range = nr.byGender[g];
+    if (!range) return false;
+  }
+  if (typeof range.min === 'number' && n < range.min) return true;
+  if (typeof range.max === 'number' && n > range.max) return true;
+  return false;
+}
+
 export default function EchoBooster() {
   const [region, setRegion] = useState(null);
   const [findings, setFindings] = useState({});
   const [comments, setComments] = useState({});
+  const [gender, setGender] = useState('male');
   const [examDate, setExamDate] = useState(() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -66,7 +86,7 @@ export default function EchoBooster() {
           } else {
             core = `${it.label}: ${v}`;
           }
-          if (c && it.type !== 'text') {
+          if (c) {
             core += `（${c}）`;
           }
           return core;
@@ -79,15 +99,16 @@ export default function EchoBooster() {
     return lines.join('\n');
   }, [regionData, findings, comments, examDate]);
 
-  // アセスメント自動生成
+  // アセスメント自動生成 (findings に __gender を注入して rule に渡す)
   const assessments = useMemo(() => {
     if (!regionData?.assessmentRules) return [];
+    const ctx = { ...findings, __gender: gender };
     return regionData.assessmentRules
       .filter((rule) => {
-        try { return rule.when(findings); } catch { return false; }
+        try { return rule.when(ctx); } catch { return false; }
       })
       .map((r) => r.text);
-  }, [regionData, findings]);
+  }, [regionData, findings, gender]);
 
   const fullOutput = useMemo(() => {
     if (!output) return '';
@@ -146,6 +167,23 @@ export default function EchoBooster() {
             <span className={styles.phaseBadge}>1</span>
             所見入力 — {regionData.label}
           </h4>
+          {regionData.askGender && (
+            <div className={styles.genderRow}>
+              <span className={styles.genderLabel}>性別（正常値の性差に反映）:</span>
+              <div className={styles.genderChips}>
+                <button
+                  type="button"
+                  className={`${styles.choiceChip} ${gender === 'male' ? styles.choiceChipActive : ''}`}
+                  onClick={() => setGender('male')}
+                >男性</button>
+                <button
+                  type="button"
+                  className={`${styles.choiceChip} ${gender === 'female' ? styles.choiceChipActive : ''}`}
+                  onClick={() => setGender('female')}
+                >女性</button>
+              </div>
+            </div>
+          )}
           {regionData.sections.map((section) => (
             <div key={section.organ} className={styles.organCard}>
               <div className={styles.organHeader}>{section.organ}</div>
@@ -154,7 +192,9 @@ export default function EchoBooster() {
                   <div key={item.id} className={styles.itemRow}>
                     <div className={styles.itemLabel}>
                       <span>{item.label}</span>
-                      {item.hint && <span className={styles.itemHint}>{item.hint}</span>}
+                      {(item.hint || item.normalRange?.note) && (
+                        <span className={styles.itemHint}>{item.hint || item.normalRange.note}</span>
+                      )}
                     </div>
                     <div className={styles.itemValueWrap}>
                       <div className={styles.itemValue}>
@@ -180,10 +220,11 @@ export default function EchoBooster() {
                             <input
                               type="number"
                               step="any"
-                              className={styles.numInput}
+                              className={`${styles.numInput} ${isNumericOutOfRange(item, findings[item.id], gender) ? styles.numInputAbnormal : ''}`}
                               value={findings[item.id] || ''}
                               onChange={(e) => setField(item.id, e.target.value)}
                               placeholder={item.placeholder}
+                              title={item.normalRange?.note || ''}
                             />
                             {item.unit && <span className={styles.unit}>{item.unit}</span>}
                           </>
@@ -198,15 +239,13 @@ export default function EchoBooster() {
                           />
                         )}
                       </div>
-                      {item.type !== 'text' && (
-                        <input
-                          type="text"
-                          className={styles.commentInput}
-                          value={comments[item.id] || ''}
-                          onChange={(e) => setComment(item.id, e.target.value)}
-                          placeholder="自由コメント（任意）"
-                        />
-                      )}
+                      <input
+                        type="text"
+                        className={styles.commentInput}
+                        value={comments[item.id] || ''}
+                        onChange={(e) => setComment(item.id, e.target.value)}
+                        placeholder="自由コメント（任意）"
+                      />
                     </div>
                   </div>
                 ))}
