@@ -103,13 +103,56 @@
   overflow: hidden;
 }
 .organHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.55rem 0.9rem;
   background: #e3f2fd;
+  border: none;
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
   font-size: 0.95rem;
   font-weight: 700;
   color: #0d47a1;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s ease;
 }
+.organHeader:hover { background: #bbdefb; }
+.organToggle {
+  display: inline-block;
+  width: 1em;
+  color: #1565c0;
+  font-weight: 700;
+}
+.organName { flex: 1; }
+.organBadge {
+  padding: 0.15rem 0.55rem;
+  background: #1565c0;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.sectionToolbar {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+  justify-content: flex-end;
+}
+.toolbarBtn {
+  padding: 0.28rem 0.7rem;
+  font-size: 0.75rem;
+  background: #fff;
+  color: #1565c0;
+  border: 1.5px solid #90caf9;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+}
+.toolbarBtn:hover { background: #e3f2fd; }
 .organBody { padding: 0.7rem 0.9rem; }
 .itemRow {
   display: grid;

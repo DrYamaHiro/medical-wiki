@@ -33,6 +33,7 @@ export default function EchoBooster() {
   const [findings, setFindings] = useState({});
   const [comments, setComments] = useState({});
   const [gender, setGender] = useState('male');
+  const [collapsed, setCollapsed] = useState({});
   const [examDate, setExamDate] = useState(() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -49,10 +50,26 @@ export default function EchoBooster() {
     setComments((prev) => ({ ...prev, [id]: value }));
   }, []);
 
+  const toggleSection = useCallback((organ) => {
+    setCollapsed((prev) => ({ ...prev, [organ]: !prev[organ] }));
+  }, []);
+
+  const collapseAll = useCallback(() => {
+    if (!regionData) return;
+    const next = {};
+    regionData.sections.forEach((s) => { next[s.organ] = true; });
+    setCollapsed(next);
+  }, [regionData]);
+
+  const expandAll = useCallback(() => {
+    setCollapsed({});
+  }, []);
+
   const reset = () => {
     if (!window.confirm('入力内容をすべてクリアしますか？')) return;
     setFindings({});
     setComments({});
+    setCollapsed({});
     setRegion(null);
   };
 
@@ -63,6 +80,7 @@ export default function EchoBooster() {
     setRegion(key);
     setFindings({});
     setComments({});
+    setCollapsed({});
   };
 
   // 出力テキスト生成
@@ -184,9 +202,32 @@ export default function EchoBooster() {
               </div>
             </div>
           )}
-          {regionData.sections.map((section) => (
+          <div className={styles.sectionToolbar}>
+            <button type="button" className={styles.toolbarBtn} onClick={expandAll}>全て開く</button>
+            <button type="button" className={styles.toolbarBtn} onClick={collapseAll}>全て閉じる</button>
+          </div>
+          {regionData.sections.map((section) => {
+            const isCollapsed = !!collapsed[section.organ];
+            const inputCount = section.items.filter((it) => {
+              const v = findings[it.id];
+              const c = comments[it.id];
+              return (v !== undefined && v !== '' && v !== null) || (c && c.trim() !== '');
+            }).length;
+            return (
             <div key={section.organ} className={styles.organCard}>
-              <div className={styles.organHeader}>{section.organ}</div>
+              <button
+                type="button"
+                className={styles.organHeader}
+                onClick={() => toggleSection(section.organ)}
+                aria-expanded={!isCollapsed}
+              >
+                <span className={styles.organToggle}>{isCollapsed ? '▸' : '▾'}</span>
+                <span className={styles.organName}>{section.organ}</span>
+                {inputCount > 0 && (
+                  <span className={styles.organBadge}>{inputCount} 件入力済</span>
+                )}
+              </button>
+              {!isCollapsed && (
               <div className={styles.organBody}>
                 {section.items.map((item) => (
                   <div key={item.id} className={styles.itemRow}>
@@ -250,8 +291,10 @@ export default function EchoBooster() {
                   </div>
                 ))}
               </div>
+              )}
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

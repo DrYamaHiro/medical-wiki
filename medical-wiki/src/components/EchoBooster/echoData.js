@@ -296,7 +296,7 @@ export const ECHO_REGIONS = {
           return lad > cutoff;
         }, text: '左房拡大あり。慢性的な圧・容量負荷示唆、心房細動リスク上昇。' },
 
-      // 拡張機能
+      // 拡張機能 (単指標)
       { when: (f) => {
           const ratio = parseFloat(f.e_over_e_prime || 0);
           return ratio >= 15;
@@ -309,14 +309,39 @@ export const ECHO_REGIONS = {
           const ep = parseFloat(f.e_prime || 0);
           return ep > 0 && ep < 8;
         }, text: "septal e' <8cm/s、左室弛緩障害を示唆。" },
+
+      // 拡張機能グレード自動候補 (E/A + DcT + E/e' の複合判定、ASE/EACVI 2016 準拠)
+      // ユーザーがグレード欄未入力の場合のみ候補として提示
       { when: (f) => {
+          if (f.lv_diastolic) return false;
+          const ea = parseFloat(f.e_a_ratio || 0);
+          const dct = parseFloat(f.dct || 0);
+          const ratio = parseFloat(f.e_over_e_prime || 0);
+          return ea > 0 && ea < 0.8 && (dct === 0 || dct > 200) && (ratio === 0 || ratio < 15);
+        }, text: '【グレード候補】E/A <0.8 かつ DcT 延長傾向、E/e\' 正常 → グレード I (緩徐弛緩) を示唆。' },
+      { when: (f) => {
+          if (f.lv_diastolic) return false;
+          const ea = parseFloat(f.e_a_ratio || 0);
+          const ratio = parseFloat(f.e_over_e_prime || 0);
+          return ea >= 0.8 && ea < 2.0 && ratio >= 15;
+        }, text: "【グレード候補】E/A 0.8-2.0 かつ E/e' ≥15 → グレード II (偽正常化) を示唆。左房拡大・TR速度も併せて確認。" },
+      { when: (f) => {
+          if (f.lv_diastolic) return false;
+          const ea = parseFloat(f.e_a_ratio || 0);
+          const dct = parseFloat(f.dct || 0);
+          const ratio = parseFloat(f.e_over_e_prime || 0);
+          return ea >= 2.0 && (dct > 0 && dct < 160) && (ratio === 0 || ratio >= 15);
+        }, text: '【グレード候補】E/A ≥2.0 かつ DcT 短縮 → グレード III (拘束型) を示唆。心不全兆候の評価を推奨。' },
+      { when: (f) => {
+          if (f.lv_diastolic) return false;
           const ea = parseFloat(f.e_a_ratio || 0);
           return ea > 0 && ea < 0.8;
-        }, text: 'E/A <0.8、緩徐弛緩パターン (グレード I 拡張機能障害) の可能性。' },
+        }, text: '【グレード候補】E/A <0.8 → グレード I 寄りの可能性。DcT・E/e\' で総合判断。' },
       { when: (f) => {
+          if (f.lv_diastolic) return false;
           const ea = parseFloat(f.e_a_ratio || 0);
           return ea >= 2.0;
-        }, text: 'E/A ≥2.0、拘束型充満パターン (グレード III) の可能性。' },
+        }, text: '【グレード候補】E/A ≥2.0 → グレード III 寄りの可能性。DcT で確認。' },
 
       // 弁膜症
       { when: (f) => f.av === 'AS 中等度〜高度' || f.mv === 'MS' || f.mv === 'MR 中等度〜高度' || f.av === 'AR 中等度〜高度' || f.pv === 'PS',
