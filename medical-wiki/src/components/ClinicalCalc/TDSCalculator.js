@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const QUESTIONS = [
   { id: 1,  text: '自分が吸うつもりよりも、ずっと多くタバコを吸ってしまうことがありましたか' },
@@ -32,6 +33,27 @@ export default function TDSCalculator() {
 
   const score = QUESTIONS.reduce((sum, q) => sum + (checks[q.id] ? 1 : 0), 0);
   const judgment = getJudgment(score);
+
+  const outputText = useMemo(() => {
+    const lines = [];
+    lines.push('【TDS（ニコチン依存度スクリーニング） __DATE__】');
+    lines.push('（過去 1 か月間の喫煙関連経験について評価）');
+    lines.push('');
+    lines.push(`合計: ${score}/10 点 → ${judgment.text}`);
+    lines.push('');
+    QUESTIONS.forEach((q) => {
+      lines.push(`Q${q.id}. ${q.text}`);
+      lines.push(`  → ${checks[q.id] ? 'はい (1点)' : 'いいえ (0点)'}`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judgment.text);
+    if (score >= 5) {
+      lines.push('※ 5点以上: ニコチン依存あり。禁煙治療の保険適用要件の1つを満たす (別途ブリンクマン指数200以上・禁煙意思・同意も必要)。');
+    }
+    lines.push('');
+    return lines.join('\n');
+  }, [checks, score, judgment]);
 
   return (
     <div className={styles.calc}>
@@ -86,6 +108,8 @@ export default function TDSCalculator() {
           禁煙治療の保険適用要件の1つを満たします
         </div>
       )}
+
+      <PsychCopyBox text={outputText} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-4点: ニコチン依存なし / 5-10点: ニコチン依存あり<br />

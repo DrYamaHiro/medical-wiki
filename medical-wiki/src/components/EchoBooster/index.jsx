@@ -28,10 +28,23 @@ function isNumericOutOfRange(item, value, gender) {
   return false;
 }
 
+// 一括「正常」で選ぶ選択肢のキーワード（先頭一致）
+const NORMAL_OPTION_KEYWORDS = ['正常', 'なし', '平滑', '良好', '異常なし', '順方向', '圧迫可', '>50%'];
+
+function pickNormalOption(options) {
+  if (!Array.isArray(options)) return null;
+  for (const opt of options) {
+    if (typeof opt !== 'string') continue;
+    if (NORMAL_OPTION_KEYWORDS.some((k) => opt.startsWith(k))) return opt;
+  }
+  return null;
+}
+
 export default function EchoBooster() {
   const [region, setRegion] = useState(null);
   const [findings, setFindings] = useState({});
   const [comments, setComments] = useState({});
+  const [overallComment, setOverallComment] = useState('');
   const [gender, setGender] = useState('male');
   const [collapsed, setCollapsed] = useState({});
   const [examDate, setExamDate] = useState(() => {
@@ -65,21 +78,42 @@ export default function EchoBooster() {
     setCollapsed({});
   }, []);
 
+  const applyAllNormal = useCallback(() => {
+    if (!regionData) return;
+    const applied = {};
+    let count = 0;
+    regionData.sections.forEach((section) => {
+      section.items.forEach((item) => {
+        if (item.type !== 'choice') return;
+        const normal = pickNormalOption(item.options);
+        if (normal) {
+          applied[item.id] = normal;
+          count++;
+        }
+      });
+    });
+    if (count === 0) return;
+    if (!window.confirm(`${count} 個の選択項目を「正常」相当に一括設定します。既存の選択も上書きしますが、よろしいですか？`)) return;
+    setFindings((prev) => ({ ...prev, ...applied }));
+  }, [regionData]);
+
   const reset = () => {
     if (!window.confirm('入力内容をすべてクリアしますか？')) return;
     setFindings({});
     setComments({});
+    setOverallComment('');
     setCollapsed({});
     setRegion(null);
   };
 
   const selectRegion = (key) => {
-    if (region && region !== key && (Object.keys(findings).length > 0 || Object.keys(comments).length > 0)) {
+    if (region && region !== key && (Object.keys(findings).length > 0 || Object.keys(comments).length > 0 || overallComment)) {
       if (!window.confirm('部位を変更すると入力内容がクリアされます。よろしいですか？')) return;
     }
     setRegion(key);
     setFindings({});
     setComments({});
+    setOverallComment('');
     setCollapsed({});
   };
 
@@ -114,8 +148,12 @@ export default function EchoBooster() {
         lines.push(`${section.organ}: ${entries.join('、')}`);
       }
     });
+    const trimmed = overallComment.trim();
+    if (trimmed) {
+      lines.push(`【全般所見】 ${trimmed}`);
+    }
     return lines.join('\n');
-  }, [regionData, findings, comments, examDate]);
+  }, [regionData, findings, comments, overallComment, examDate]);
 
   // アセスメント自動生成 (findings に __gender を注入して rule に渡す)
   const assessments = useMemo(() => {
@@ -203,6 +241,7 @@ export default function EchoBooster() {
             </div>
           )}
           <div className={styles.sectionToolbar}>
+            <button type="button" className={`${styles.toolbarBtn} ${styles.toolbarBtnPrimary}`} onClick={applyAllNormal} title="全ての選択項目を『正常』相当（正常/なし/平滑/良好 等）に一括設定">全て正常を選択</button>
             <button type="button" className={styles.toolbarBtn} onClick={expandAll}>全て開く</button>
             <button type="button" className={styles.toolbarBtn} onClick={collapseAll}>全て閉じる</button>
           </div>
@@ -295,6 +334,16 @@ export default function EchoBooster() {
             </div>
             );
           })}
+          <div className={styles.overallCommentBlock}>
+            <label className={styles.overallCommentLabel}>【全般所見・特記事項】（部位全体に対する自由コメント）</label>
+            <textarea
+              className={styles.overallCommentArea}
+              value={overallComment}
+              onChange={(e) => setOverallComment(e.target.value)}
+              placeholder="例: 前回検査 (2025年10月) と比較して大きな変化なし。次回 6ヶ月後フォロー予定。"
+              rows={3}
+            />
+          </div>
         </div>
       )}
 

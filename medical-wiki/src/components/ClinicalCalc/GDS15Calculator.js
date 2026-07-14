@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * GDS-15（老年期うつ病評価尺度 短縮版）
@@ -55,6 +56,32 @@ export default function GDS15Calculator() {
 
   const judgment = allAnswered ? getJudgment(score) : null;
 
+  const outputText = useMemo(() => {
+    if (!allAnswered) return '';
+    const lines = [];
+    lines.push('【GDS-15（老年期うつ病評価尺度） __DATE__】');
+    lines.push('（過去 1 週間の気分について評価）');
+    lines.push('');
+    lines.push(`合計: ${score}/15 点 → ${judgment.text}`);
+    lines.push('');
+    QUESTIONS.forEach((q) => {
+      const ans = answers[q.id];
+      const ansText = ans ? 'はい' : 'いいえ';
+      const scored = (q.scoreIfYes && ans === true) || (!q.scoreIfYes && ans === false);
+      lines.push(`Q${q.id}. ${q.text}${q.scoreIfYes ? '' : '（逆転項目）'}`);
+      lines.push(`  → ${ansText} (${scored ? '1' : '0'}点)`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judgment.text);
+    if (score >= 5) {
+      lines.push('※ 5点以上: うつ状態を疑い、精査を検討。');
+    }
+    lines.push('');
+    lines.push('※ GDS-15 は自記式スクリーニング。認知機能低下例では信頼性が低下することがある。');
+    return lines.join('\n');
+  }, [allAnswered, score, judgment, answers]);
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -66,6 +93,10 @@ export default function GDS15Calculator() {
       </div>
 
       <div className={styles.calcBody}>
+        <div style={{ marginBottom: '0.7rem', padding: '0.5rem 0.7rem', background: '#e3f2fd', border: '1.5px solid #90caf9', borderRadius: '6px', fontSize: '0.85rem', color: '#0d47a1' }}>
+          <strong>評価期間:</strong> 過去 1 週間の気分・生活について評価してください（原著 Sheikh &amp; Yesavage 1986 の指示）。
+        </div>
+
         {QUESTIONS.map((q) => (
           <div key={q.id} className={styles.inputGroup}>
             <label className={styles.inputLabel}>
@@ -107,6 +138,8 @@ export default function GDS15Calculator() {
           </div>
         )}
       </div>
+
+      <PsychCopyBox text={outputText} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-4点: 正常 / 5-9点: 軽度うつ傾向 / 10-15点: うつ状態<br />

@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const OPTIONS = [
-  { value: 0, label: '0:全くない' },
-  { value: 1, label: '1:数日' },
-  { value: 2, label: '2:半分以上' },
-  { value: 3, label: '3:ほぼ毎日' },
+  { value: 0, label: '0:全くない (0日)' },
+  { value: 1, label: '1:数日 (1-7日程度)' },
+  { value: 2, label: '2:半分以上 (8-11日程度)' },
+  { value: 3, label: '3:ほぼ毎日 (12-14日)' },
 ];
 
 const QUESTIONS = [
@@ -47,6 +48,30 @@ export default function GAD7Calculator() {
 
   const judge = score !== null ? getJudgment(score) : null;
 
+  const outputText = useMemo(() => {
+    if (score === null) return '';
+    const lines = [];
+    lines.push('【GAD-7（全般性不安障害 重症度） __DATE__】');
+    lines.push('（過去2週間、以下の症状にどのくらい頻繁に悩まされていますか）');
+    lines.push('');
+    lines.push(`合計: ${score}/21 点 → ${judge.text}`);
+    lines.push('');
+    QUESTIONS.forEach((q, i) => {
+      const opt = OPTIONS.find((o) => o.value === answers[i]);
+      lines.push(`Q${i + 1}. ${q}`);
+      lines.push(`  → ${opt.label}`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judge.text);
+    if (score >= 10) {
+      lines.push('※ GAD-7 ≥10 は不安障害の可能性を示唆。詳細な評価を推奨。');
+    }
+    lines.push('');
+    lines.push('※ GAD-7 は自記式スクリーニング。確定診断は面接評価による。');
+    return lines.join('\n');
+  }, [score, judge, answers]);
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -58,6 +83,10 @@ export default function GAD7Calculator() {
       </div>
 
       <div className={styles.calcBody}>
+        <div style={{ marginBottom: '0.7rem', padding: '0.5rem 0.7rem', background: '#e3f2fd', border: '1.5px solid #90caf9', borderRadius: '6px', fontSize: '0.85rem', color: '#0d47a1' }}>
+          <strong>評価期間:</strong> 過去 2 週間（14 日間）の症状について評価してください。
+        </div>
+
         {QUESTIONS.map((q, i) => (
           <div className={styles.inputGroup} key={i}>
             <label className={styles.inputLabel}>Q{i + 1}. {q}</label>
@@ -87,6 +116,8 @@ export default function GAD7Calculator() {
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-4:最小限 / 5-9:軽度 / 10-14:中等度 / 15-21:重度。<br />

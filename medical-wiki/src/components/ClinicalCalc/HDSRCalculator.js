@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const SERIES_A = ['桜', '猫', '電車'];
 const SERIES_B = ['梅', '犬', '自動車'];
@@ -64,6 +65,34 @@ export default function HDSRCalculator() {
     : null;
 
   const words = series === 'A' ? SERIES_A : SERIES_B;
+
+  const outputText = useMemo(() => {
+    if (!allAnswered) return '';
+    const lines = [];
+    lines.push('【HDS-R（長谷川式簡易知能評価スケール改訂版） __DATE__】');
+    lines.push(`使用系列: ${series} (${words.join('・')})`);
+    lines.push('');
+    lines.push(`合計: ${score}/30 点 → ${judge.text}`);
+    lines.push('');
+    lines.push(`Q1 年齢: ${q1}/1`);
+    lines.push(`Q2 日時見当識: 年${q2.year}+月${q2.month}+日${q2.day}+曜日${q2.dow} = ${q2.year + q2.month + q2.day + q2.dow}/4`);
+    lines.push(`Q3 場所見当識: ${q3}/2`);
+    lines.push(`Q4 3語記銘: ${q4.join('+')} = ${q4.reduce((a, b) => a + b, 0)}/3`);
+    lines.push(`Q5 計算 (100-7・-7): ${q5.a}+${q5.b} = ${q5.a + q5.b}/2`);
+    lines.push(`Q6 数字逆唱 (3桁・4桁): ${q6.a}+${q6.b} = ${q6.a + q6.b}/2`);
+    lines.push(`Q7 3語遅延再生: ${q7.join('+')} = ${q7.reduce((a, b) => a + b, 0)}/6`);
+    lines.push(`Q8 5品物記銘: ${q8.join('+')} = ${q8.reduce((a, b) => a + b, 0)}/5`);
+    lines.push(`Q9 野菜想起: ${q9}/5`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judge.text);
+    if (score <= 20) {
+      lines.push('※ カットオフ 20/21 点。20点以下は認知症疑い、専門的精査 (神経心理検査・画像・血液評価等) を推奨。');
+    }
+    lines.push('');
+    lines.push('※ HDS-R は認知機能スクリーニング。確定診断は総合的評価による。');
+    return lines.join('\n');
+  }, [allAnswered, series, words, score, judge, q1, q2, q3, q4, q5, q6, q7, q8, q9]);
 
   const BtnRow = ({ label, value, setter, options }) => (
     <div className={styles.inputGroup}>
@@ -257,6 +286,8 @@ export default function HDSRCalculator() {
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 21-30点: 正常範囲 / 20点以下: 認知症の疑い<br />

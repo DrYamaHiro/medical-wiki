@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const OPTIONS = [
-  { value: 0, label: '0:全くない' },
-  { value: 1, label: '1:数日' },
-  { value: 2, label: '2:半分以上' },
-  { value: 3, label: '3:ほぼ毎日' },
+  { value: 0, label: '0:全くない (0日)' },
+  { value: 1, label: '1:数日 (1-7日程度)' },
+  { value: 2, label: '2:半分以上 (8-11日程度)' },
+  { value: 3, label: '3:ほぼ毎日 (12-14日)' },
 ];
 
 const PHQ2_QUESTIONS = [
@@ -71,6 +72,38 @@ export default function PHQ2PHQ9Calculator() {
 
   const suicideRisk = showPHQ9 && answers[8] !== null && answers[8] >= 1;
 
+  const outputText = useMemo(() => {
+    if (phq2Score === null) return '';
+    const allQ = [...PHQ2_QUESTIONS, ...PHQ9_EXTRA_QUESTIONS];
+    const lines = [];
+    lines.push('【PHQ-9（うつ病スクリーニング・重症度） __DATE__】');
+    lines.push('（過去2週間、以下の問題にどのくらい頻繁に悩まされていますか）');
+    lines.push('');
+    lines.push(`PHQ-2 スコア: ${phq2Score}/6 点 → ${phq2Score >= 3 ? '陽性' : '陰性'}`);
+    if (phq9Score !== null) {
+      lines.push(`PHQ-9 合計: ${phq9Score}/27 点 → ${phq9Judge.text}`);
+    }
+    lines.push('');
+    allQ.forEach((q, i) => {
+      const v = answers[i];
+      if (v === null) return;
+      const opt = OPTIONS.find((o) => o.value === v);
+      lines.push(`Q${i + 1}. ${q}`);
+      lines.push(`  → ${opt.label}`);
+    });
+    if (phq9Score !== null) {
+      lines.push('');
+      lines.push('■ 判定');
+      lines.push(phq9Judge.text);
+      if (suicideRisk) {
+        lines.push('※ Q9 (希死念慮) が1点以上 — 自殺リスクの詳細評価を要する。');
+      }
+    }
+    lines.push('');
+    lines.push('※ PHQ-9 は自記式スクリーニング。確定診断は面接評価による。');
+    return lines.join('\n');
+  }, [phq2Score, phq9Score, phq9Judge, answers, suicideRisk]);
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -82,6 +115,10 @@ export default function PHQ2PHQ9Calculator() {
       </div>
 
       <div className={styles.calcBody}>
+        <div style={{ marginBottom: '0.7rem', padding: '0.5rem 0.7rem', background: '#e3f2fd', border: '1.5px solid #90caf9', borderRadius: '6px', fontSize: '0.85rem', color: '#0d47a1' }}>
+          <strong>評価期間:</strong> 過去 2 週間（14 日間）の症状について評価してください。
+        </div>
+
         {/* PHQ-2 */}
         <div style={{ marginBottom: '0.5rem', fontWeight: 700, fontSize: '0.95rem' }}>
           PHQ-2（スクリーニング）
@@ -173,6 +210,8 @@ export default function PHQ2PHQ9Calculator() {
           </>
         )}
       </div>
+
+      <PsychCopyBox text={outputText} />
 
       <div className={styles.note}>
         <strong>PHQ-2:</strong> 2問でスクリーニング。3点以上でPHQ-9へ進みます。<br />

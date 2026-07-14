@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const ITEMS = [
   { key: 'S', label: 'S (Snoring): 大きないびきをかきますか？' },
@@ -34,6 +35,30 @@ export default function STOPBANGCalculator() {
 
   const score = ITEMS.reduce((sum, item) => sum + (checks[item.key] ? 1 : 0), 0);
   const judgment = getJudgment(score);
+
+  const outputText = useMemo(() => {
+    const lines = [];
+    lines.push('【STOP-BANG（閉塞性睡眠時無呼吸リスク） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${score}/8 点 → ${judgment.text}`);
+    lines.push('');
+    ITEMS.forEach((item) => {
+      lines.push(`${item.label}`);
+      lines.push(`  → ${checks[item.key] ? 'はい (1点)' : 'いいえ (0点)'}`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judgment.text);
+    if (score >= 3) {
+      lines.push('※ 3点以上: OSAS 疑い、簡易 PSG 等のスクリーニング検査を検討。');
+    }
+    if (score >= 5) {
+      lines.push('※ 5点以上: 中等症〜重症 OSAS のリスク高。睡眠専門医への紹介を推奨。');
+    }
+    lines.push('');
+    lines.push('※ STOP-BANG はスクリーニング。確定診断は PSG (終夜睡眠ポリグラフ) による。');
+    return lines.join('\n');
+  }, [checks, score, judgment]);
 
   return (
     <div className={styles.calc}>
@@ -74,6 +99,8 @@ export default function STOPBANGCalculator() {
           {judgment.text}
         </div>
       </div>
+
+      <PsychCopyBox text={outputText} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-2点: 低リスク / 3-4点: 中リスク / 5-8点: 高リスク<br />

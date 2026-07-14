@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const QUESTIONS = [
   {
@@ -128,6 +129,34 @@ export default function EPDSCalculator() {
   const q10Score = answers[10] ?? 0;
   const selfHarmRisk = q10Score >= 1;
 
+  const outputText = useMemo(() => {
+    if (!allAnswered) return '';
+    const lines = [];
+    lines.push('【EPDS（エジンバラ産後うつ質問票） __DATE__】');
+    lines.push('（過去 7 日間（1 週間）の気持ちについて評価）');
+    lines.push('');
+    lines.push(`合計: ${totalScore}/30 点 → ${judgment.text}`);
+    lines.push('');
+    QUESTIONS.forEach((q) => {
+      const s = answers[q.id];
+      const opt = q.options.find((o) => o.score === s);
+      lines.push(`Q${q.id}. ${q.text}`);
+      lines.push(`  → ${opt.label} (${opt.score}点)`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judgment.text);
+    if (selfHarmRisk) {
+      lines.push('※ Q10 (自傷念慮) が1点以上 — 自殺・自傷の危険性を直接確認する必要あり。');
+    }
+    if (totalScore >= 9) {
+      lines.push('※ 9点以上: 精神科・心療内科への専門医紹介を推奨。');
+    }
+    lines.push('');
+    lines.push('※ EPDS は自記式スクリーニング。確定診断は面接評価による。');
+    return lines.join('\n');
+  }, [allAnswered, totalScore, judgment, selfHarmRisk, answers]);
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -139,6 +168,10 @@ export default function EPDSCalculator() {
       </div>
 
       <div className={styles.calcBody}>
+        <div style={{ marginBottom: '0.7rem', padding: '0.5rem 0.7rem', background: '#e3f2fd', border: '1.5px solid #90caf9', borderRadius: '6px', fontSize: '0.85rem', color: '#0d47a1' }}>
+          <strong>評価期間:</strong> 過去 7 日間（1 週間）の気持ちについて評価してください。
+        </div>
+
         {QUESTIONS.map((q) => (
           <div key={q.id} className={styles.inputGroup}>
             <label className={styles.inputLabel}>
@@ -186,7 +219,7 @@ export default function EPDSCalculator() {
           fontWeight: 700,
           fontSize: '0.9rem',
         }}>
-          ⚠ 自傷リスク警告: 質問10で1点以上 — 自殺・自傷の危険性について直接確認してください
+          自傷リスク警告: 質問10で1点以上 — 自殺・自傷の危険性について直接確認してください
         </div>
       )}
 
@@ -203,6 +236,8 @@ export default function EPDSCalculator() {
           9点以上: 精神科・心療内科への専門医紹介を推奨します
         </div>
       )}
+
+      <PsychCopyBox text={outputText} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-8点: 正常範囲 / 9-12点: 産後うつの可能性 / 13-30点: 産後うつの可能性高い<br />
