@@ -59,6 +59,64 @@
   font-weight: 600;
 }
 .toolbarBtn:hover { background: #f3e5f5; }
+.presetBtn {
+  background: #388e3c;
+  color: #fff;
+  border-color: #1b5e20;
+}
+.presetBtn:hover { background: #1b5e20; color: #fff; }
+
+/* 緊急ボックス (上部に表示) */
+.emergencyBox {
+  background: linear-gradient(180deg, #ffebee 0%, #fff 100%);
+  border: 2.5px solid #c62828;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(198, 40, 40, 0.25);
+}
+.emergencyHeader {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #b71c1c;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1.5px solid #ef9a9a;
+}
+.emergencyItem {
+  font-size: 0.85rem;
+  color: #4e342e;
+  margin: 0.3rem 0;
+  padding-left: 1.2rem;
+  position: relative;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.emergencyItem::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #c62828;
+  font-weight: 700;
+}
+
+/* item.emergency 用の視覚強調 */
+.itemRowEmergency {
+  background: linear-gradient(90deg, rgba(255, 235, 238, 0.6) 0%, transparent 60%);
+  padding-left: 0.4rem;
+  border-left: 3px solid #ef9a9a;
+}
+.emergencyTag {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #c62828;
+  color: #fff;
+  border-radius: 3px;
+  vertical-align: middle;
+}
 
 .organCard {
   background: #fff;
@@ -271,23 +329,42 @@
   margin: 0;
 }
 
-.assessmentList {
+.assessmentPanels {
   margin-top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.assessmentPanel {
   padding: 0.8rem 0.95rem;
-  background: #fff8e1;
-  border: 1.5px solid #ffd54f;
   border-radius: 8px;
+  border-width: 1.5px;
+  border-style: solid;
+}
+.panelEmergency {
+  background: linear-gradient(180deg, #ffebee 0%, #fff 100%);
+  border-color: #ef5350;
+}
+.panelWorkup {
+  background: linear-gradient(180deg, #fff3e0 0%, #fff 100%);
+  border-color: #ff9800;
+}
+.panelReference {
+  background: linear-gradient(180deg, #f1f8e9 0%, #fff 100%);
+  border-color: #9ccc65;
 }
 .assessmentTitle {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #e65100;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.4rem 0;
 }
+.panelEmergency .assessmentTitle { color: #b71c1c; }
+.panelWorkup .assessmentTitle { color: #e65100; }
+.panelReference .assessmentTitle { color: #33691e; }
 .assessmentItem {
   font-size: 0.85rem;
-  color: #4e342e;
-  margin: 0.25rem 0;
+  color: #263238;
+  margin: 0.22rem 0;
   padding-left: 1.1rem;
   position: relative;
   line-height: 1.5;
@@ -296,9 +373,30 @@
   content: '→';
   position: absolute;
   left: 0;
-  color: #e65100;
   font-weight: 700;
 }
+.panelEmergency .assessmentItem::before { color: #c62828; }
+.panelWorkup .assessmentItem::before { color: #ef6c00; }
+.panelReference .assessmentItem::before { color: #558b2f; }
+
+/* 出力欄脇のバッジ */
+.assessBadgeGroup {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+.assessBadge {
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 999px;
+  color: #fff;
+}
+.badgeEmergency { background: #c62828; }
+.badgeWorkup { background: #ef6c00; }
+.badgeReference { background: #558b2f; }
 
 .note {
   padding: 0.9rem 1.2rem;
