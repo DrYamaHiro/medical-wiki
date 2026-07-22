@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import styles from './styles.module.css';
-import { HOLTER_SECTIONS, HOLTER_ASSESSMENT_RULES, buildNormalPreset, PRESET_NOTE } from './holterData.js';
+import { HOLTER_SECTIONS, HOLTER_ASSESSMENT_RULES, buildNormalPreset, PRESET_NOTE, SCENARIO_PRESETS } from './holterData.js';
 
 const ABNORMAL_KEYWORDS = ['あり', '相関あり', '発作性', '持続性', 'ショック', '不適切', 'モビッツ', 'Mobitz II', '完全', '高度', '2:1', 'SSS', '疑い', 'torsades', '多形性'];
 
@@ -83,6 +83,16 @@ export default function HolterBooster() {
     setOverallComment((prev) => {
       if (prev.includes(PRESET_NOTE)) return prev;
       return prev ? `${prev}\n${PRESET_NOTE}` : PRESET_NOTE;
+    });
+  }, []);
+
+  const applyScenarioPreset = useCallback((scenario) => {
+    if (!window.confirm(`「${scenario.label}」プリセットを適用します。\n${scenario.description}\n\n全ての選択項目を上書きし、全般所見に注記が追記されます。よろしいですか？`)) return;
+    const preset = scenario.apply();
+    setFindings((prev) => ({ ...prev, ...preset }));
+    setOverallComment((prev) => {
+      if (prev.includes(scenario.note)) return prev;
+      return prev ? `${prev}\n${scenario.note}` : scenario.note;
     });
   }, []);
 
@@ -200,16 +210,32 @@ export default function HolterBooster() {
 
       <div className={styles.formSection}>
         <div className={styles.sectionToolbar}>
-          <button
-            type="button"
-            className={`${styles.toolbarBtn} ${styles.presetBtn}`}
-            onClick={applyNormalPreset}
-            title="ePatch 陽性所見リストと ST/AF/AVB/心室調律 を全て「なし」に一括設定します。数値項目は変更されません。個別項目の実測値は手動で入力してください。"
-          >
-            洞調律・有意所見なし（要確認）
-          </button>
-          <button type="button" className={styles.toolbarBtn} onClick={expandAll}>全て開く</button>
-          <button type="button" className={styles.toolbarBtn} onClick={collapseAll}>全て閉じる</button>
+          <div className={styles.presetGroup}>
+            <span className={styles.presetGroupLabel}>プリセット:</span>
+            <button
+              type="button"
+              className={`${styles.toolbarBtn} ${styles.presetBtn}`}
+              onClick={applyNormalPreset}
+              title="ePatch 陽性所見リストと ST/AF/AVB/心室調律 を全て「なし」に一括設定します。数値項目は変更されません。個別項目の実測値は手動で入力してください。"
+            >
+              洞調律・有意所見なし（要確認）
+            </button>
+            {SCENARIO_PRESETS.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className={`${styles.toolbarBtn} ${styles.scenarioBtn}`}
+                onClick={() => applyScenarioPreset(s)}
+                title={s.description}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+          <div className={styles.expandGroup}>
+            <button type="button" className={styles.toolbarBtn} onClick={expandAll}>全て開く</button>
+            <button type="button" className={styles.toolbarBtn} onClick={collapseAll}>全て閉じる</button>
+          </div>
         </div>
 
         {/* 緊急ボックス (assessment に emergency あれば上部に表示) */}

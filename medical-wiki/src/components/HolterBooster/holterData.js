@@ -28,6 +28,8 @@ export const HOLTER_SECTIONS = [
       { id: 'hr_min_time', label: '最小心拍数の時刻', type: 'text', placeholder: '例: 03:29 (日2)' },
       { id: 'brady_episodes', label: '徐脈エピソード数', type: 'numeric', unit: '回', placeholder: '0', hint: 'ePatch: 50bpm未満が10拍連続' },
       { id: 'tachy_episodes', label: '頻脈エピソード数', type: 'numeric', unit: '回', placeholder: '0', hint: 'ePatch: 100bpm超が10拍連続' },
+      { id: 'hr_day_mean', label: '昼間平均HR (6-22時)', type: 'numeric', unit: 'bpm', placeholder: '80', hint: '入力任意、昼夜較差評価に使用' },
+      { id: 'hr_night_mean', label: '夜間平均HR (22-6時)', type: 'numeric', unit: 'bpm', placeholder: '60', hint: '入力任意、昼夜較差評価に使用' },
     ],
   },
   {
@@ -71,6 +73,20 @@ export const HOLTER_SECTIONS = [
       { id: 'aivr_episodes', label: '　内 AIVR (平均HR<100)', type: 'numeric', unit: '回', placeholder: '6' },
       { id: 'aivr_longest_beats', label: '　AIVR 最長連発数', type: 'numeric', unit: '拍', placeholder: '6' },
       { id: 'aivr_fastest_hr', label: '　AIVR 最速レート', type: 'numeric', unit: 'bpm', placeholder: '98' },
+    ],
+  },
+  {
+    id: 'pvc_morphology',
+    title: '心室形態解析 (主要3形態)',
+    defaultCollapsed: true,
+    items: [
+      { id: 'pvc_morph1_beats', label: '形態1 拍動数', type: 'numeric', unit: '個', placeholder: '12796' },
+      { id: 'pvc_morph1_percent', label: '形態1 割合', type: 'numeric', unit: '%', placeholder: '57.63', hint: '≥80% で単一起源優位、アブレーション適応検討材料' },
+      { id: 'pvc_morph2_beats', label: '形態2 拍動数', type: 'numeric', unit: '個', placeholder: '4551' },
+      { id: 'pvc_morph2_percent', label: '形態2 割合', type: 'numeric', unit: '%', placeholder: '20.50' },
+      { id: 'pvc_morph3_beats', label: '形態3 拍動数', type: 'numeric', unit: '個', placeholder: '1487' },
+      { id: 'pvc_morph3_percent', label: '形態3 割合', type: 'numeric', unit: '%', placeholder: '6.70' },
+      { id: 'pvc_morph_ecg_channel', label: '記載チャンネル・その他所見', type: 'text', placeholder: '例: ECG1/2 で右室流出路型示唆' },
     ],
   },
   {
@@ -264,6 +280,68 @@ export const HOLTER_ASSESSMENT_RULES = [
     text: 'T波陰転化あり。虚血・心筋炎・心尖部肥大型心筋症・脳血管障害等の鑑別、12誘導心電図・心エコー確認。' },
   { level: 'reference', when: (f) => f.find_ivcd === 'あり',
     text: '心室内伝導遅延あり。基礎心疾患 (心筋症・虚血・電解質) の評価、CRT 適応関連の指標。' },
+
+  // ==================== Phase 2 追加ルール ====================
+
+  // 【緊急】症状連動・シナリオ強化
+  { level: 'emergency', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('失神・前失神') && (f.find_pause === 'あり' || f.find_avb3 === 'あり' || f.find_avb2_mobitz2 === 'あり' || f.find_avb_high === 'あり' || parseFloat(f.pause_max_sec || 0) >= 2.0),
+    text: '失神主訴 + 徐脈系不整脈 (ポーズ/高度AVB) あり。症候性徐脈として即時 PM 適応評価、緊急循環器コンサルト。' },
+  { level: 'emergency', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('失神・前失神') && (f.find_vt === 'あり' || f.find_ront === 'あり' || parseFloat(f.vt_longest_beats || 0) >= 4),
+    text: '失神主訴 + 心室性不整脈 (VT/RonT) あり。症候性 VT として ICD 適応評価、緊急循環器コンサルト。' },
+  { level: 'emergency', when: (f) => f.diary_correlation === '症状時に不整脈あり (相関)' && Array.isArray(f.correlated_arrhythmias) && (f.correlated_arrhythmias.includes('VT') || f.correlated_arrhythmias.includes('ポーズ') || f.correlated_arrhythmias.includes('AF/AFL')),
+    text: '症状と重篤不整脈 (VT/ポーズ/AF) の直接相関あり。原因治療を優先的に検討 (抗不整脈薬・アブレーション・PM/ICD)。' },
+
+  // 【要精査】追加
+  { level: 'workup', when: (f) => { const v = parseFloat(f.cvhri_mean || 0); return v >= 10 && v < 15; },
+    text: 'CVHRI 平均 10-14 (境界域)。OSA 疑い症状 (いびき・日中眠気・肥満) あれば STOP-BANG / 簡易 PSG 併用検討。' },
+  { level: 'workup', when: (f) => { const v = parseFloat(f.spvc_total || 0); return v >= 300 && v < 1000; },
+    text: 'SVPC ≥300個/日。AF 発症予測因子、定期フォロー (年 1-2回) と生活習慣・血圧・甲状腺評価。' },
+  { level: 'workup', when: (f) => { const v = parseFloat(f.spvc_total || 0); return v >= 1000; },
+    text: 'SVPC ≥1000個/日 (frequent SVPC)。AF 発症高リスク、抗凝固の必要性は CHA2DS2-VASc と個別判断。' },
+  { level: 'workup', when: (f) => { const v = parseFloat(f.spvc_couplet || 0); return v >= 10; },
+    text: 'SVPC 二連発 ≥10 回。AF 発症予測因子、経過フォロー強化。' },
+  { level: 'workup', when: (f) => { const v = parseFloat(f.vent_rhythm_episodes || 0); return v >= 10; },
+    text: '心室調律 (VT+AIVR) 総エピソード ≥10 回。頻回 NSVT、器質的心疾患精査 (心エコー・冠動脈評価) を積極検討。' },
+  { level: 'workup', when: (f) => { const bg = parseFloat(f.pvc_bigeminy || 0); const tg = parseFloat(f.pvc_trigeminy || 0); return (bg + tg) >= 500; },
+    text: 'PVC 二段脈+三段脈 合計 ≥500。PVC 負荷高値、LV 機能フォロー (心エコー) 推奨。' },
+  { level: 'workup', when: (f) => { const p1 = parseFloat(f.pvc_morph1_percent || 0); const total = parseFloat(f.pvc_total || 0); return p1 >= 80 && total >= 5000; },
+    text: 'PVC 主要形態1 が ≥80% を占める + PVC 総数多い。単一起源 PVC の可能性、アブレーション適応検討材料。' },
+  { level: 'workup', when: (f) => { const forms = parseFloat(f.pvc_forms || 0); return forms >= 5; },
+    text: 'PVC 形態数 ≥5 種。多形性顕著、器質的心疾患・電解質異常・虚血の除外精査を強化。' },
+  { level: 'workup', when: (f) => { const dur = parseFloat(f.st_depression_duration || 0); return dur >= 60; },
+    text: 'ST 低下 総持続時間 ≥60分。慢性心筋虚血・多発発作の可能性、冠動脈評価と抗虚血薬強化検討。' },
+  { level: 'workup', when: (f) => {
+      const day = parseFloat(f.hr_day_mean || 0); const night = parseFloat(f.hr_night_mean || 0);
+      return day > 0 && night > 0 && (day - night) < 10;
+    },
+    text: '昼夜 HR 較差 <10 bpm (自律神経障害示唆)。DM 心血管神経障害・重症心不全・薬剤性 (β遮断薬過剰) 評価。' },
+  { level: 'workup', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('AF検出目的') && f.find_af !== 'あり' && (!f.af_present || f.af_present === 'なし'),
+    text: 'AF 検出目的の依頼で今回 AF 未検出。症状時記録の欠落・発作性 AF の可能性、長期モニタリング (ILR / 再ホルター) 検討。' },
+  { level: 'workup', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('動悸') && f.diary_correlation === '症状時に不整脈あり (相関)' && Array.isArray(f.correlated_arrhythmias) && f.correlated_arrhythmias.length > 0,
+    text: '動悸と不整脈の相関あり (相関した不整脈欄参照)。頻回・持続例では治療介入 (β遮断薬・アブレーション等) 検討。' },
+
+  // 【参考】追加
+  { level: 'reference', when: (f) => { const v = parseFloat(f.spvc_total || 0); return v >= 100 && v < 300; },
+    text: 'SVPC 100-299個/日。加齢・ストレス・カフェイン等でも見られる範囲、症状なければ経過観察でよい。' },
+  { level: 'reference', when: (f) => {
+      const day = parseFloat(f.hr_day_mean || 0); const night = parseFloat(f.hr_night_mean || 0);
+      return day > 0 && night > 0 && (day - night) >= 10 && (day - night) < 20;
+    },
+    text: '昼夜 HR 較差 10-19 bpm。若干低め、加齢や薬剤の影響を意識して評価。' },
+  { level: 'reference', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('動悸') && (f.find_pvc === 'あり' || f.find_pvc_couplet === 'あり') && f.find_af !== 'あり' && f.find_vt !== 'あり',
+    text: '動悸主訴で PVC/PVC二連発のみ (VT/AF なし)。PVC 由来の動悸の可能性、頻回なら生活指導・β遮断薬検討。' },
+  { level: 'reference', when: (f) => { const lf = parseFloat(f.lf || 0); const hf = parseFloat(f.hf || 0); return lf > 0 && hf > 0 && (lf / hf) > 3; },
+    text: 'LF/HF > 3。交感神経優位、ストレス・不安・心不全・DM 神経障害等の背景を意識。' },
+  { level: 'reference', when: (f) => f.find_junctional === 'あり' || f.find_junctional_escape_rhythm === 'あり',
+    text: '接合部調律あり。徐脈時の補充調律として現れることが多い、洞機能不全 (SSS) 評価も検討。' },
+  { level: 'reference', when: (f) => f.find_wandering_pm === 'あり',
+    text: '移動性ペースメーカーあり。健康な人でも見られる、若年者・高迷走神経緊張・徐脈時に多い、通常経過観察。' },
+  { level: 'reference', when: (f) => {
+      if (f.avb_type !== '2度 Mobitz I (Wenckebach)') return false;
+      const hasSyncope = Array.isArray(f.symptom) && f.symptom.includes('失神・前失神');
+      return !hasSyncope;
+    },
+    text: 'Wenckebach 型 2度AVブロックあり (失神主訴なし)。夜間・迷走神経性なら通常経過観察、日中出現・症状伴えば精査。' },
 ];
 
 // 「洞調律・有意所見なし」プリセット - find_* を全て「なし」、AF/AVB/心室調律を「なし」に設定
@@ -282,3 +360,49 @@ export function buildNormalPreset() {
 }
 
 export const PRESET_NOTE = '※プリセット「洞調律・有意所見なし」適用済み — 個別項目 (数値・ST・CVHRI・QTc等) を実レポートと照合してから最終判断してください。';
+
+// シナリオ別プリセット定義
+export const SCENARIO_PRESETS = [
+  {
+    id: 'af_screening_negative',
+    label: 'AF検出目的で今回未検出',
+    description: '症状/リスク因子で AF 検出を依頼、今回のホルターでは AF 未検出のパターン',
+    apply: () => {
+      const preset = buildNormalPreset();
+      preset.symptom = ['AF検出目的'];
+      preset.diary_correlation = '症状時に不整脈なし';
+      preset.find_pm_failure = '該当なし (デバイスなし)';
+      return preset;
+    },
+    note: '※AF検出目的プリセット適用済み — 今回未検出でも発作性 AF は否定できないため、症状時心電図・ILR・再ホルター検討。',
+  },
+  {
+    id: 'palpitation_pvc_only',
+    label: '動悸精査で PVC/SVPC のみ',
+    description: '動悸主訴、有意な VT/AF/AVブロックなく PVC・SVPC のみ検出パターン',
+    apply: () => {
+      const preset = buildNormalPreset();
+      preset.symptom = ['動悸'];
+      preset.find_pvc = 'あり';
+      preset.find_pvc_couplet = 'なし';
+      preset.find_af = 'なし';
+      preset.find_vt = 'なし';
+      preset.find_pm_failure = '該当なし (デバイスなし)';
+      return preset;
+    },
+    note: '※動悸+PVC のみプリセット適用済み — PVC 総数・出現率・形態数を実レポート値で入力し、心筋症リスク評価してください。',
+  },
+  {
+    id: 'pm_routine_normal',
+    label: 'PM 定期評価で機能正常',
+    description: 'PM 植込例、定期評価でセンシング/キャプチャー異常なし',
+    apply: () => {
+      const preset = buildNormalPreset();
+      preset.symptom = ['ペースメーカー機能評価'];
+      preset.device_type = 'PPM';
+      preset.find_pm_failure = 'なし';
+      return preset;
+    },
+    note: '※PM 定期評価プリセット適用済み — A/V ペーシング率と ICD 作動 (該当時) を実レポート値で入力してください。',
+  },
+];
