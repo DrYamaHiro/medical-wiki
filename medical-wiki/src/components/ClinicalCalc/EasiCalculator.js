@@ -1,11 +1,12 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const REGIONS = [
-  { key: 'head', label: '頭頸部', multiplier: 0.1 },
-  { key: 'upper', label: '上肢', multiplier: 0.2 },
-  { key: 'trunk', label: '体幹', multiplier: 0.3 },
-  { key: 'lower', label: '下肢', multiplier: 0.4 },
+  { key: 'head', label: '頭頸部', multiplier: 0.1, bodyPercent: 10 },
+  { key: 'upper', label: '上肢', multiplier: 0.2, bodyPercent: 20 },
+  { key: 'trunk', label: '体幹', multiplier: 0.3, bodyPercent: 30 },
+  { key: 'lower', label: '下肢', multiplier: 0.4, bodyPercent: 40 },
 ];
 
 const SIGNS = [
@@ -16,6 +17,8 @@ const SIGNS = [
 ];
 
 const AREA_LABELS = ['0%', '1-9%', '10-29%', '30-49%', '50-69%', '70-89%', '90-100%'];
+// 各面積スコアの中央値 (%) - BSA 概算に使用
+const AREA_MEDIANS = [0, 5, 19.5, 39.5, 59.5, 79.5, 95];
 
 function initScores() {
   const s = {};
@@ -62,6 +65,15 @@ export default function EasiCalculator() {
     }, 0);
   }, [scores]);
 
+  // BSA 概算 (%): 各部位の面積スコア中央値 × その部位の全身面積比
+  const bsa = useMemo(() => {
+    return REGIONS.reduce((total, r) => {
+      const areaScore = scores[r.key].area;
+      const areaMedian = AREA_MEDIANS[areaScore] || 0;
+      return total + (r.bodyPercent * areaMedian / 100);
+    }, 0);
+  }, [scores]);
+
   const severity = getSeverity(total);
 
   const updateScore = useCallback((rk, sk, v) => {
@@ -73,12 +85,38 @@ export default function EasiCalculator() {
     setExpanded('head');
   }, []);
 
+  const outputText = useMemo(() => {
+    if (total === 0 && bsa === 0) return '';
+    const lines = [];
+    lines.push('【EASI（Eczema Area and Severity Index） __DATE__】');
+    lines.push('');
+    lines.push(`EASI スコア: ${total.toFixed(1)} / 72 → ${severity.label}`);
+    lines.push(`BSA 概算: ${bsa.toFixed(1)}% (面積スコア中央値法)`);
+    lines.push('');
+    REGIONS.forEach((r) => {
+      const s = scores[r.key];
+      const rs = s.area * (s.erythema + s.edema + s.excoriation + s.lichenification) * r.multiplier;
+      lines.push(`■ ${r.label} (×${r.multiplier}、全身${r.bodyPercent}%)`);
+      lines.push(`  面積: ${s.area} (${AREA_LABELS[s.area]})、紅斑: ${s.erythema}、浮腫/丘疹: ${s.edema}、掻破痕: ${s.excoriation}、苔癬化: ${s.lichenification}`);
+      lines.push(`  部位別スコア: ${rs.toFixed(1)}`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(`${severity.label} (EASI ${total.toFixed(1)} 点)`);
+    if (total >= 16) {
+      lines.push('※ EASI ≥16: 生物学的製剤 (デュピルマブ等)・JAK 阻害薬の適応基準の一つ (最適使用推進ガイドライン)。');
+    }
+    lines.push('');
+    lines.push('※ BSA 概算は EASI 面積スコアの中央値 (1-9%→5, 10-29%→19.5, 30-49%→39.5, 50-69%→59.5, 70-89%→79.5, 90-100%→95) × 各部位の全身面積比 (頭頸部10/上肢20/体幹30/下肢40)。');
+    return lines.join('\n');
+  }, [scores, total, bsa, severity]);
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
         <div>
           <p className={styles.calcTitle}>EASI（Eczema Area and Severity Index）</p>
-          <p className={styles.calcSub}>湿疹の面積と重症度指数（0〜72点）</p>
+          <p className={styles.calcSub}>湿疹の面積と重症度指数（0〜72点）+ BSA 概算</p>
         </div>
         <button className={styles.resetBtn} onClick={reset}>リセット</button>
       </div>
@@ -95,7 +133,7 @@ export default function EasiCalculator() {
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0.8rem', cursor: 'pointer', background: isExp ? 'var(--ifm-color-emphasis-100)' : 'transparent' }}>
                 <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>
                   {isExp ? '▼' : '▶'} {region.label}
-                  <span style={{ fontSize: '0.75rem', fontWeight: 400, color: 'var(--ifm-color-emphasis-500)', marginLeft: '6px' }}>(×{region.multiplier})</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 400, color: 'var(--ifm-color-emphasis-500)', marginLeft: '6px' }}>(×{region.multiplier}、全身{region.bodyPercent}%)</span>
                 </span>
                 <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--ifm-color-primary)' }}>{rs.toFixed(1)}</span>
               </div>
@@ -125,17 +163,27 @@ export default function EasiCalculator() {
           <span className={styles.resultLabel}>EASI スコア</span>
           <span className={styles.resultValue}>{total.toFixed(1)} / 72</span>
         </div>
+        <div className={styles.resultRow}>
+          <span className={styles.resultLabel}>BSA 概算</span>
+          <span className={styles.resultValue}>{bsa.toFixed(1)} %</span>
+        </div>
         <div className={styles.resultJudge} style={{ background: severity.color }}>
           {severity.label}
         </div>
       </div>
+
+      <PsychCopyBox text={outputText} />
 
       <div className={styles.note}>
         <strong>EASI について:</strong><br />
         ・4部位（頭頸部・上肢・体幹・下肢）の面積と4つの所見（紅斑・浮腫/丘疹・掻破痕・苔癬化）から算出<br />
         ・{'軽症 <6 / 中等症 6-22 / 重症 23-50 / 最重症 >50'}<br />
         ・最適使用推進ガイドライン: EASI≧16が生物学的製剤の適応基準の一つ<br />
-        ・EASI-50（50%改善）、EASI-75（75%改善）が治療効果の指標として使用される
+        ・EASI-50（50%改善）、EASI-75（75%改善）が治療効果の指標として使用される<br />
+        <br />
+        <strong>BSA 概算について:</strong><br />
+        ・各部位の EASI 面積スコアの中央値 (1-9%→5、10-29%→19.5、30-49%→39.5、50-69%→59.5、70-89%→79.5、90-100%→95) と各部位の全身面積比 (頭頸部10%・上肢20%・体幹30%・下肢40%) の積の合計。<br />
+        ・生物学的製剤・JAK 阻害薬の適応判断 (BSA ≥10% 等) の目安として参考にできますが、実際の判定では手掌法 (患者手掌+指=1%) 等での再確認を推奨。
       </div>
     </div>
   );
