@@ -1,6 +1,9 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import styles from './styles.module.css';
-import { HOLTER_SECTIONS, HOLTER_ASSESSMENT_RULES, buildNormalPreset, PRESET_NOTE, SCENARIO_PRESETS } from './holterData.js';
+import {
+  HOLTER_SECTIONS, HOLTER_ASSESSMENT_RULES, buildNormalPreset, PRESET_NOTE, SCENARIO_PRESETS,
+  SYMPTOM_MATRIX_SYMPTOMS, SYMPTOM_MATRIX_ARRHYTHMIAS, DAILY_BURDEN_COLUMNS,
+} from './holterData.js';
 
 const ABNORMAL_KEYWORDS = ['あり', '相関あり', '発作性', '持続性', 'ショック', '不適切', 'モビッツ', 'Mobitz II', '完全', '高度', '2:1', 'SSS', '疑い', 'torsades', '多形性'];
 
@@ -47,6 +50,46 @@ export default function HolterBooster() {
   const [collapsed, setCollapsed] = useState(buildInitialCollapsed);
   const [examDate, setExamDate] = useState(formatToday);
   const [copied, setCopied] = useState(false);
+
+  // Phase 3: 症状マトリクス state
+  const [symptomMatrix, setSymptomMatrix] = useState({});
+  // Phase 3: 日次負荷 state (array of row objects)
+  const [dailyBurden, setDailyBurden] = useState([]);
+  // Phase 3: セクション DOM への ref (スクロール用)
+  const sectionRefs = useRef({});
+  // Phase 3: 症状マトリクス・日次負荷用の特殊 sectionId (assessment rule 側と一致)
+  sectionRefs.current.symptom_matrix = sectionRefs.current.symptom_matrix || { current: null };
+  sectionRefs.current.daily_burden = sectionRefs.current.daily_burden || { current: null };
+
+  const toggleMatrixCell = useCallback((symptom, arr) => {
+    const key = `${symptom}→${arr}`;
+    setSymptomMatrix((prev) => ({ ...prev, [key]: !prev[key] }));
+  }, []);
+
+  const addDailyRow = useCallback(() => {
+    setDailyBurden((prev) => [...prev, {}]);
+  }, []);
+
+  const updateDailyRow = useCallback((idx, key, value) => {
+    setDailyBurden((prev) => prev.map((r, i) => (i === idx ? { ...r, [key]: value } : r)));
+  }, []);
+
+  const removeDailyRow = useCallback((idx) => {
+    setDailyBurden((prev) => prev.filter((_, i) => i !== idx));
+  }, []);
+
+  const scrollToSection = useCallback((sectionId) => {
+    if (!sectionId) return;
+    // 対応セクションを展開
+    setCollapsed((prev) => ({ ...prev, [sectionId]: false }));
+    // 次フレームでスクロール
+    setTimeout(() => {
+      const el = document.getElementById(`holter-section-${sectionId}`);
+      if (el && typeof el.scrollIntoView === 'function') {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
+  }, []);
 
   const setField = useCallback((id, value) => {
     setFindings((prev) => ({ ...prev, [id]: value }));
@@ -102,9 +145,18 @@ export default function HolterBooster() {
     setComments({});
     setOverallComment('');
     setCollapsed(buildInitialCollapsed());
+    setSymptomMatrix({});
+    setDailyBurden([]);
   };
 
   const gender = findings.sex === '女性' ? 'female' : 'male';
+
+  // assessment rule に渡す拡張 findings (matrix と daily_burden を含む)
+  const enrichedFindings = useMemo(() => ({
+    ...findings,
+    symptom_matrix: symptomMatrix,
+    daily_burden: dailyBurden,
+  }), [findings, symptomMatrix, dailyBurden]);
 
   // 出力テキスト生成
   const output = useMemo(() => {
@@ -139,6 +191,25 @@ export default function HolterBooster() {
         entries.forEach((e) => lines.push(`  ・${e}`));
       }
     });
+    // 症状 × 不整脈 マトリクス出力
+    const matrixEntries = Object.entries(symptomMatrix).filter(([, v]) => v).map(([k]) => k);
+    if (matrixEntries.length > 0) {
+      lines.push('');
+      lines.push('■ 症状 × 不整脈 クロス集計');
+      matrixEntries.forEach((k) => lines.push(`  ・${k}`));
+    }
+    // 日次負荷サマリー出力
+    const validDaily = dailyBurden.filter((r) => Object.values(r).some((v) => v !== undefined && v !== '' && v !== null));
+    if (validDaily.length > 0) {
+      lines.push('');
+      lines.push('■ 日次負荷サマリー');
+      validDaily.forEach((r) => {
+        const parts = DAILY_BURDEN_COLUMNS
+          .filter((c) => r[c.key] !== undefined && r[c.key] !== '' && r[c.key] !== null)
+          .map((c) => `${c.label} ${r[c.key]}`);
+        if (parts.length > 0) lines.push(`  ・${parts.join(' / ')}`);
+      });
+    }
     const trimmed = overallComment.trim();
     if (trimmed) {
       lines.push('');
@@ -146,21 +217,21 @@ export default function HolterBooster() {
       lines.push(`  ${trimmed}`);
     }
     return lines.join('\n');
-  }, [findings, comments, overallComment, examDate]);
+  }, [findings, comments, overallComment, examDate, symptomMatrix, dailyBurden]);
 
-  // アセスメント自動生成 (level 別にグルーピング)
+  // アセスメント自動生成 (level 別にグルーピング、sectionId 付き)
   const assessmentGroups = useMemo(() => {
     const groups = { emergency: [], workup: [], reference: [] };
     HOLTER_ASSESSMENT_RULES.forEach((rule) => {
       try {
-        if (rule.when(findings)) {
+        if (rule.when(enrichedFindings)) {
           const lv = rule.level || 'reference';
-          if (groups[lv]) groups[lv].push(rule.text);
+          if (groups[lv]) groups[lv].push({ text: rule.text, sectionId: rule.sectionId });
         }
       } catch { /* skip */ }
     });
     return groups;
-  }, [findings]);
+  }, [enrichedFindings]);
 
   const totalAssessCount = assessmentGroups.emergency.length + assessmentGroups.workup.length + assessmentGroups.reference.length;
 
@@ -169,17 +240,17 @@ export default function HolterBooster() {
     const parts = [output, ''];
     if (assessmentGroups.emergency.length > 0) {
       parts.push('■ 【緊急】診断補助');
-      assessmentGroups.emergency.forEach((t) => parts.push(`  ・${t}`));
+      assessmentGroups.emergency.forEach((a) => parts.push(`  ・${a.text}`));
     }
     if (assessmentGroups.workup.length > 0) {
       if (assessmentGroups.emergency.length > 0) parts.push('');
       parts.push('■ 【要精査】診断補助');
-      assessmentGroups.workup.forEach((t) => parts.push(`  ・${t}`));
+      assessmentGroups.workup.forEach((a) => parts.push(`  ・${a.text}`));
     }
     if (assessmentGroups.reference.length > 0) {
       if (assessmentGroups.emergency.length > 0 || assessmentGroups.workup.length > 0) parts.push('');
       parts.push('■ 【参考】診断補助');
-      assessmentGroups.reference.forEach((t) => parts.push(`  ・${t}`));
+      assessmentGroups.reference.forEach((a) => parts.push(`  ・${a.text}`));
     }
     return parts.join('\n');
   }, [output, assessmentGroups, totalAssessCount]);
@@ -242,8 +313,18 @@ export default function HolterBooster() {
         {assessmentGroups.emergency.length > 0 && (
           <div className={styles.emergencyBox}>
             <div className={styles.emergencyHeader}>【緊急】 診断補助 ({assessmentGroups.emergency.length} 件) — ePatch メール連絡項目相当</div>
-            {assessmentGroups.emergency.map((t, i) => (
-              <p key={i} className={styles.emergencyItem}>{t}</p>
+            {assessmentGroups.emergency.map((a, i) => (
+              <p key={i} className={styles.emergencyItem}>
+                {a.text}
+                {a.sectionId && (
+                  <button
+                    type="button"
+                    className={styles.scrollBtn}
+                    onClick={() => scrollToSection(a.sectionId)}
+                    title="対応セクションへ移動"
+                  >対応欄へ ▸</button>
+                )}
+              </p>
             ))}
           </div>
         )}
@@ -257,7 +338,7 @@ export default function HolterBooster() {
             return has || (c && c.trim() !== '');
           }).length;
           return (
-            <div key={section.id} className={styles.organCard}>
+            <div key={section.id} id={`holter-section-${section.id}`} className={styles.organCard}>
               <button
                 type="button"
                 className={styles.organHeader}
@@ -360,6 +441,129 @@ export default function HolterBooster() {
           );
         })}
 
+        {/* Phase 3: 症状 × 不整脈 クロス集計マトリクス */}
+        <div id="holter-section-symptom_matrix" className={styles.organCard}>
+          <button
+            type="button"
+            className={styles.organHeader}
+            onClick={() => toggleSection('symptom_matrix')}
+            aria-expanded={!collapsed.symptom_matrix}
+          >
+            <span className={styles.organToggle}>{collapsed.symptom_matrix ? '▸' : '▾'}</span>
+            <span className={styles.organName}>症状 × 不整脈 クロス集計 (Phase 3)</span>
+            {Object.values(symptomMatrix).filter(Boolean).length > 0 && (
+              <span className={styles.organBadge}>{Object.values(symptomMatrix).filter(Boolean).length} 件対応</span>
+            )}
+          </button>
+          {!collapsed.symptom_matrix && (
+            <div className={styles.organBody}>
+              <p className={styles.matrixHint}>ePatch page 12 「患者症状 vs 不整脈相関」の要旨。症状ごとに紐付いた不整脈をクリックしてください。</p>
+              <div className={styles.matrixWrapper}>
+                <table className={styles.matrix}>
+                  <thead>
+                    <tr>
+                      <th className={styles.matrixCorner}>症状 \ 不整脈</th>
+                      {SYMPTOM_MATRIX_ARRHYTHMIAS.map((a) => (
+                        <th key={a} className={styles.matrixColHead}>{a}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {SYMPTOM_MATRIX_SYMPTOMS.map((s) => (
+                      <tr key={s}>
+                        <th className={styles.matrixRowHead}>{s}</th>
+                        {SYMPTOM_MATRIX_ARRHYTHMIAS.map((a) => {
+                          const key = `${s}→${a}`;
+                          const active = !!symptomMatrix[key];
+                          return (
+                            <td key={a} className={styles.matrixCell}>
+                              <button
+                                type="button"
+                                className={`${styles.matrixBtn} ${active ? styles.matrixBtnActive : ''}`}
+                                onClick={() => toggleMatrixCell(s, a)}
+                                aria-pressed={active}
+                              >
+                                {active ? '●' : ''}
+                              </button>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Phase 3: 日次負荷サマリー */}
+        <div id="holter-section-daily_burden" className={styles.organCard}>
+          <button
+            type="button"
+            className={styles.organHeader}
+            onClick={() => toggleSection('daily_burden')}
+            aria-expanded={!collapsed.daily_burden}
+          >
+            <span className={styles.organToggle}>{collapsed.daily_burden ? '▸' : '▾'}</span>
+            <span className={styles.organName}>日次負荷サマリー (Phase 3)</span>
+            {dailyBurden.length > 0 && (
+              <span className={styles.organBadge}>{dailyBurden.length} 日入力済</span>
+            )}
+          </button>
+          {!collapsed.daily_burden && (
+            <div className={styles.organBody}>
+              <p className={styles.matrixHint}>ePatch page 9 「日次負荷サマリー」の要旨。日ごとの負荷変動から発作性パターンを評価します。</p>
+              <div className={styles.dailyTableWrapper}>
+                <table className={styles.dailyTable}>
+                  <thead>
+                    <tr>
+                      {DAILY_BURDEN_COLUMNS.map((c) => (
+                        <th key={c.key} style={{ minWidth: c.width }}>{c.label}</th>
+                      ))}
+                      <th style={{ width: '40px' }}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dailyBurden.length === 0 && (
+                      <tr>
+                        <td colSpan={DAILY_BURDEN_COLUMNS.length + 1} className={styles.dailyEmpty}>
+                          「+ 日を追加」で日次データを入力できます (任意入力)。
+                        </td>
+                      </tr>
+                    )}
+                    {dailyBurden.map((row, idx) => (
+                      <tr key={idx}>
+                        {DAILY_BURDEN_COLUMNS.map((c) => (
+                          <td key={c.key}>
+                            <input
+                              type={c.type === 'numeric' ? 'number' : 'text'}
+                              step="any"
+                              className={styles.dailyInput}
+                              value={row[c.key] || ''}
+                              onChange={(e) => updateDailyRow(idx, c.key, e.target.value)}
+                              placeholder={c.placeholder}
+                            />
+                          </td>
+                        ))}
+                        <td>
+                          <button
+                            type="button"
+                            className={styles.dailyRemoveBtn}
+                            onClick={() => removeDailyRow(idx)}
+                            title="この行を削除"
+                          >×</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" className={styles.dailyAddBtn} onClick={addDailyRow}>+ 日を追加</button>
+            </div>
+          )}
+        </div>
+
         <div className={styles.overallCommentBlock}>
           <label className={styles.overallCommentLabel}>【全般所見・総合コメント】（記録全体・年齢・基礎疾患・薬剤・今後の方針など自由記載）</label>
           <textarea
@@ -404,19 +608,34 @@ export default function HolterBooster() {
             {assessmentGroups.emergency.length > 0 && (
               <div className={`${styles.assessmentPanel} ${styles.panelEmergency}`}>
                 <p className={styles.assessmentTitle}>【緊急】 ({assessmentGroups.emergency.length})</p>
-                {assessmentGroups.emergency.map((a, i) => (<p key={i} className={styles.assessmentItem}>{a}</p>))}
+                {assessmentGroups.emergency.map((a, i) => (
+                  <p key={i} className={styles.assessmentItem}>
+                    {a.text}
+                    {a.sectionId && (<button type="button" className={styles.scrollBtn} onClick={() => scrollToSection(a.sectionId)}>対応欄へ ▸</button>)}
+                  </p>
+                ))}
               </div>
             )}
             {assessmentGroups.workup.length > 0 && (
               <div className={`${styles.assessmentPanel} ${styles.panelWorkup}`}>
                 <p className={styles.assessmentTitle}>【要精査】 ({assessmentGroups.workup.length})</p>
-                {assessmentGroups.workup.map((a, i) => (<p key={i} className={styles.assessmentItem}>{a}</p>))}
+                {assessmentGroups.workup.map((a, i) => (
+                  <p key={i} className={styles.assessmentItem}>
+                    {a.text}
+                    {a.sectionId && (<button type="button" className={styles.scrollBtn} onClick={() => scrollToSection(a.sectionId)}>対応欄へ ▸</button>)}
+                  </p>
+                ))}
               </div>
             )}
             {assessmentGroups.reference.length > 0 && (
               <div className={`${styles.assessmentPanel} ${styles.panelReference}`}>
                 <p className={styles.assessmentTitle}>【参考】 ({assessmentGroups.reference.length})</p>
-                {assessmentGroups.reference.map((a, i) => (<p key={i} className={styles.assessmentItem}>{a}</p>))}
+                {assessmentGroups.reference.map((a, i) => (
+                  <p key={i} className={styles.assessmentItem}>
+                    {a.text}
+                    {a.sectionId && (<button type="button" className={styles.scrollBtn} onClick={() => scrollToSection(a.sectionId)}>対応欄へ ▸</button>)}
+                  </p>
+                ))}
               </div>
             )}
           </div>

@@ -418,6 +418,153 @@
 .badgeWorkup { background: #ef6c00; }
 .badgeReference { background: #558b2f; }
 
+/* Phase 3: スクロールボタン */
+.scrollBtn {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #fff;
+  color: #6a1b9a;
+  border: 1.5px solid #ba68c8;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  vertical-align: middle;
+  transition: background 0.15s ease;
+}
+.scrollBtn:hover { background: #6a1b9a; color: #fff; }
+
+/* Phase 3: 症状×不整脈マトリクス */
+.matrixHint {
+  font-size: 0.78rem;
+  color: var(--ifm-color-emphasis-700);
+  margin: 0 0 0.6rem 0;
+  padding: 0.4rem 0.6rem;
+  background: #f3e5f5;
+  border-left: 3px solid #ba68c8;
+  border-radius: 3px;
+}
+.matrixWrapper {
+  overflow-x: auto;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+}
+.matrix {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 640px;
+  font-size: 0.78rem;
+}
+.matrix th, .matrix td { border: 1px solid var(--ifm-color-emphasis-200); padding: 0; }
+.matrixCorner {
+  background: #f3e5f5;
+  color: #4a148c;
+  font-weight: 700;
+  padding: 0.4rem 0.6rem !important;
+  text-align: left;
+  white-space: nowrap;
+}
+.matrixColHead {
+  background: #f3e5f5;
+  color: #4a148c;
+  font-weight: 700;
+  padding: 0.4rem 0.5rem !important;
+  text-align: center;
+  white-space: nowrap;
+}
+.matrixRowHead {
+  background: #fafafa;
+  color: #333;
+  font-weight: 600;
+  padding: 0.4rem 0.6rem !important;
+  text-align: left;
+  white-space: nowrap;
+}
+.matrixCell { padding: 2px !important; text-align: center; }
+.matrixBtn {
+  width: 100%;
+  min-height: 32px;
+  background: #fff;
+  border: none;
+  color: #b71c1c;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  font-family: inherit;
+}
+.matrixBtn:hover { background: #f3e5f5; }
+.matrixBtnActive { background: #c62828; color: #fff; }
+.matrixBtnActive:hover { background: #b71c1c; }
+
+/* Phase 3: 日次負荷テーブル */
+.dailyTableWrapper {
+  overflow-x: auto;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+.dailyTable {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 1050px;
+  font-size: 0.78rem;
+}
+.dailyTable th, .dailyTable td {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  padding: 0.25rem 0.35rem;
+  vertical-align: middle;
+}
+.dailyTable th {
+  background: #f3e5f5;
+  color: #4a148c;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+.dailyEmpty {
+  text-align: center;
+  padding: 0.8rem !important;
+  color: var(--ifm-color-emphasis-500);
+  font-style: italic;
+}
+.dailyInput {
+  width: 100%;
+  padding: 0.2rem 0.35rem;
+  font-size: 0.78rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 3px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.dailyInput:focus { outline: none; border-color: #6a1b9a; }
+.dailyRemoveBtn {
+  padding: 0.15rem 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: #fff;
+  color: #c62828;
+  border: 1.5px solid #ef9a9a;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.dailyRemoveBtn:hover { background: #ffebee; }
+.dailyAddBtn {
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
+  background: #388e3c;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+}
+.dailyAddBtn:hover { background: #1b5e20; }
+
 .note {
   padding: 0.9rem 1.2rem;
   background: #eceff1;
