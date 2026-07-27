@@ -1,0 +1,43 @@
+---
+id: mentzer
+title: "Mentzer index"
+sidebar_label: "Mentzer index"
+sidebar_position: 1
+hide_table_of_contents: true
+description: "MCV/RBC から Mentzer index を算出し、小球性貧血 (サラセミア vs 鉄欠乏性貧血) を鑑別します。"
+keywords: ["Mentzer", "貧血", "サラセミア", "thalassemia", "鉄欠乏性貧血", "IDA", "MCV", "RBC", "小球性貧血"]
+---
+import MentzerCalculator from '@site/src/components/ClinicalCalc/MentzerCalculator';
+
+# Mentzer index 計算ツール
+
+MCV (平均赤血球容積) と RBC (赤血球数) の比から Mentzer index を算出し、小球性貧血 (MCV &lt;80 fL) の鑑別 — 特に **β-thalassemia trait (サラセミア)** と **鉄欠乏性貧血 (IDA)** の一次スクリーニング — に使用します。
+
+<MentzerCalculator />
+
+## 使い方
+
+1. 血算 (CBC) から **MCV (fL)** と **RBC (×10⁶/μL、million/μL)** を入力
+2. Mentzer index (= MCV ÷ RBC) が自動計算されます
+3. **&lt;13**: サラセミア示唆 / **&gt;13**: 鉄欠乏性貧血示唆 / **=13**: 判定困難
+
+## 臨床的解釈
+
+- **サラセミア**: 遺伝的に赤血球産生は保たれる (RBC 正常〜高値) が個々の赤血球が小さい (MCV 低下) → 比が小さい
+- **鉄欠乏性貧血 (IDA)**: 赤血球の産生自体が低下し赤血球が小さい → 比が大きい
+
+## 注意点
+
+- **感度・特異度は概ね 70-80%**、あくまで一次スクリーニング
+- 確定診断には **血清フェリチン・血清鉄・TIBC・トランスフェリン飽和度** (IDA)、**Hb 電気泳動 (HbA2, HbF)** (サラセミア) 等の追加検査が必須
+- **IDA + サラセミア併存例**、**慢性炎症性貧血 (ACD)** では判定が困難
+- MCV ≥80 fL の正球性・大球性貧血では別の鑑別体系 (網赤血球指数・葉酸/B12・骨髄評価等) を参照
+
+## 関連ページ
+
+- [Friedewald 式 (LDL-C 推算)](../cardiovascular/friedewald)
+- [FIB-4 index (肝線維化評価)](../hepato-gi/fib4)
+
+## 参考
+
+- Mentzer WC. Differentiation of iron deficiency from thalassaemia trait. *Lancet* 1973;1(7808):882.

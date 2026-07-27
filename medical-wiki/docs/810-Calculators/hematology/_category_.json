@@ -1,0 +1,9 @@
+{
+  "label": "血液・貧血",
+  "position": 6,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Mentzer index など血液・貧血系の計算ツール"
+  }
+}
