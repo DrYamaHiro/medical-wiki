@@ -1,0 +1,65 @@
+---
+id: tsat
+title: "TSAT (トランスフェリン飽和度)"
+sidebar_label: "TSAT"
+sidebar_position: 2
+hide_table_of_contents: true
+description: "血清鉄・TIBC (または UIBC) から TSAT を算出し、鉄代謝 (鉄欠乏・鉄過剰) を評価します。フェリチン併用で総合判定も表示。"
+keywords: ["TSAT", "トランスフェリン飽和度", "transferrin saturation", "血清鉄", "TIBC", "UIBC", "フェリチン", "鉄欠乏性貧血", "鉄過剰", "ヘモクロマトーシス", "IDA", "CKD", "心不全", "HFrEF"]
+---
+import TSATCalculator from '@site/src/components/ClinicalCalc/TSATCalculator';
+
+# TSAT (トランスフェリン飽和度) 計算ツール
+
+血清鉄と TIBC (または UIBC) から **TSAT (Transferrin Saturation)** を算出し、鉄欠乏・鉄過剰の評価を行います。血清フェリチンを併用入力すると、**絶対的鉄欠乏 / 機能的鉄欠乏 / 鉄貯蔵低下 / 鉄過剰** の総合判定も表示されます。
+
+<TSATCalculator />
+
+## 使い方
+
+1. **血清鉄 (Fe)** を入力（必須、μg/dL）
+2. **TIBC** を直接入力（推奨）、または **UIBC** を入力すると `TIBC = Fe + UIBC` で自動算出
+3. **血清フェリチン** を入力（任意）すると総合判定も表示
+4. 性別ボタンで正常範囲の目安を切替（男性 20-45% / 女性 15-50%）
+
+## 判定基準
+
+| TSAT | 解釈 |
+|---|---|
+| **≥45%** | 鉄過剰疑い（遺伝性ヘモクロマトーシス等の精査） |
+| **20-44%** | 正常域 |
+| **16-19%** | 境界域 / 鉄欠乏傾向 |
+| **&lt;16%** | 鉄欠乏の可能性高い |
+
+### フェリチン併用時の総合判定
+
+| TSAT | フェリチン | 判定 |
+|---|---|---|
+| &lt;20% | &lt;30 ng/mL | 絶対的鉄欠乏 (IDA) — 鉄補充適応 |
+| &lt;20% | 30-100 ng/mL | 機能的鉄欠乏の可能性 — 炎症・CKD・心不全で偽正常化 |
+| &lt;20% | &gt;100 ng/mL | 機能的鉄欠乏 (炎症性) — 慢性炎症・悪性腫瘍等 |
+| ≥20% | &lt;30 ng/mL | 鉄貯蔵低下 (前 IDA) — 経過フォロー・食事指導 |
+| ≥45% | &gt;300 ng/mL | 鉄過剰 (要精査) — 遺伝性ヘモクロマトーシス/二次性鉄過剰 |
+
+## 疾患別カットオフ
+
+- **CKD（KDIGO 2012）**: TSAT ≤20% + フェリチン ≤100 ng/mL で鉄補充を検討
+- **心不全 HFrEF（ESC 2021）**: TSAT &lt;20% または フェリチン &lt;100 ng/mL で鉄欠乏、症候性なら **静注鉄（フェルモキシトール・鉄カルボキシマルトース等）** の投与検討
+- **妊娠中**: TSAT &lt;20% + フェリチン &lt;30 ng/mL は鉄欠乏
+
+## 解釈上の注意
+
+- **フェリチンは急性期反応物質**: 炎症・感染・悪性腫瘍・肝疾患で偽性上昇。TSAT 低値 + フェリチン正常〜高値でも「機能的鉄欠乏」を考慮
+- **輸血歴・出血歴・食事内容・服薬（PPI 等）** を必ず問診
+- 男性・閉経後女性の鉄欠乏は **消化管精査（消化管出血の除外）** を積極検討
+
+## 関連ページ
+
+- [Mentzer index — 小球性貧血 (サラセミア vs IDA) の鑑別](mentzer)
+- [Friedewald 式 (LDL-C 推算)](../cardiovascular/friedewald)
+
+## 参考
+
+- KDIGO Clinical Practice Guideline for Anemia in CKD 2012.
+- McDonagh TA, et al. 2021 ESC Guidelines for the diagnosis and treatment of acute and chronic heart failure.
+- 日本鉄バイオサイエンス学会 鉄剤の適正使用による貧血治療指針 (改訂第3版) 2015.
