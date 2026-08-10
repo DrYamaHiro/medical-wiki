@@ -415,6 +415,25 @@ export const HOLTER_SECTIONS = [
   },
 ];
 
+// ============================================================
+// 症状マトリクス判定ヘルパー (Phase 11)
+// mx(f, 症状, 不整脈) — 該当セルに相関記号 (● ◎ ○ △) が付いているか
+//   '−' (明示的に相関なし) と '' (未評価) は false
+// mxAny(f, 不整脈) — いずれかの症状でその不整脈に相関記号が付いているか
+// ============================================================
+function mx(f, symptom, arrhythmia) {
+  if (!f || !f.symptom_matrix || typeof f.symptom_matrix !== 'object') return false;
+  const v = f.symptom_matrix[`${symptom}→${arrhythmia}`];
+  return typeof v === 'string' && v !== '' && v !== '−';
+}
+function mxAny(f, arrhythmia) {
+  if (!f || !f.symptom_matrix || typeof f.symptom_matrix !== 'object') return false;
+  return Object.entries(f.symptom_matrix).some(([k, v]) => {
+    if (!k.endsWith(`→${arrhythmia}`)) return false;
+    return typeof v === 'string' && v !== '' && v !== '−';
+  });
+}
+
 // アセスメント自動生成ルール (3段階分類: emergency / workup / reference)
 // sectionId: クリック時にスクロール/展開する対象セクション (Phase 4 新セクションIDに更新)
 export const HOLTER_ASSESSMENT_RULES = [
@@ -522,16 +541,119 @@ export const HOLTER_ASSESSMENT_RULES = [
     text: 'AF 検出目的の依頼で今回 AF 未検出。症状時記録の欠落・発作性 AF の可能性、長期モニタリング (ILR / 再ホルター) 検討。' },
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('動悸') && f.diary_correlation === '症状時に不整脈あり (相関)' && Array.isArray(f.correlated_arrhythmias) && f.correlated_arrhythmias.length > 0,
     text: '動悸と不整脈の相関あり (相関した不整脈欄参照)。頻回・持続例では治療介入 (β遮断薬・アブレーション等) 検討。' },
-  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => {
-      if (!f.symptom_matrix || typeof f.symptom_matrix !== 'object') return false;
-      const criticalCorrelations = ['失神・前失神→ポーズ', '失神・前失神→AVブロック', '失神・前失神→VT'];
-      // 相関記号 (●/◑/◐/△) が付いていれば hit、'−' や '' はスキップ
-      return criticalCorrelations.some((k) => {
-        const v = f.symptom_matrix[k];
-        return typeof v === 'string' && v !== '' && v !== '−';
-      });
+  // ==================== 症状 × 不整脈 相関ルール群 (Phase 11) ====================
+  // 一次資料: JCS/JHRS 2019 非薬物治療GL / 2021 Focused Update / JCS/JHRS 2020 薬物治療GL /
+  //          2021 ESC Pacing / 2018 ESC Syncope / 2022 ESC VA / 2019 ESC SVT /
+  //          2023 ACC/AHA/ACCP/HRS AF / 2017 AHA/ACC/HRS VA
+  // 注: 相関頻度 (●◎○△) による解釈差はガイドライン外の運用解釈。出力に明示する。
+
+  // ---------- 【緊急】E1-E7 ----------
+  { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', 'VT'),
+    text: '[E1] 失神 × VT の相関あり。心臓突然死のニアミスに相当。血行動態不安定な持続性 VT 生存例は ICD 二次予防 Class I (2017 AHA/ACC/HRS VA GL / JCS-JHRS 2019)。即日〜数日以内の循環器専門医紹介、器質的心疾患検索 (心エコー・CMR・冠動脈評価)・LVEF 評価・EPS を検討。' },
+  { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', 'ポーズ'),
+    text: '[E2] 失神 × ポーズ の相関あり。症候性心停止として恒久ペースメーカ Class I 相当 (JCS/JHRS 2019 Table 9 LOE C / ESC 2021 Class I LOE B)。可逆的原因 (β遮断薬・Ca拮抗薬・ジギタリス・抗不整脈薬、甲状腺機能低下、電解質異常、睡眠時無呼吸、迷走神経性) を除外のうえ循環器紹介。' },
+  { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', 'AVブロック'),
+    text: '[E3] 失神 × AVブロック の相関あり。徐脈による症状を伴う 2度・高度・3度 AVB は PM Class I (JCS/JHRS 2019 Table 7)。Mobitz II 型以上は可逆的原因がなければ症状の有無を問わず Class I (ESC 2021 §5.2.1.3)。循環器紹介。' },
+  { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => {
+      const pause = parseFloat(f.pause_max_sec || 0);
+      return pause >= 6 && !mxAny(f, 'ポーズ');
     },
-    text: '症状マトリクスで失神と重篤不整脈 (ポーズ/AVB/VT) の直接対応あり。原因不整脈と失神が結び付いており、即時介入 (PM/ICD/アブレーション) を検討。' },
+    text: '[E4] 無症候性ポーズ >6秒。ESC 2021 Pacing ではペーシング適応の閾値。症状相関がなくても評価対象。睡眠中・アスリートの生理的徐脈との鑑別、睡眠時無呼吸スクリーニングを併せて実施。' },
+  { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => {
+      const isAsymptomatic = mx(f, '症状なし (無症候性)', 'VT');
+      return isAsymptomatic && (f.find_vt === 'あり' || parseFloat(f.vt_longest_beats || 0) >= 4);
+    },
+    text: '[E5] 無症候性 VT。症状相関を問わず緊急評価対象。器質的心疾患検索と LVEF 評価、SCD リスク層別化を実施 (2022 ESC VA GL)。' },
+  { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', '洞徐脈') && (f.find_sa_block === 'あり' || f.sss === 'あり (洞停止・徐脈頻脈症候群)'),
+    text: '[E6] 失神 × 洞徐脈/洞停止 の相関あり。症候性洞不全症候群 (SSS) として PM Class I (JCS/JHRS 2019 Table 9)。薬剤性の除外後、循環器紹介。' },
+  { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => {
+      const stElev = parseFloat(f.st_elevation_max || 0);
+      const stDep = parseFloat(f.st_depression_max || 0);
+      const dur = parseFloat(f.st_depression_duration || 0);
+      return mx(f, '胸痛・胸部不快', 'ST変化') && (stElev >= 2 || (stDep >= 2 && dur >= 30));
+    },
+    text: '[E7] 胸痛 × 有意 ST 変化 (ST上昇 ≥2mm または ST低下 ≥2mm が遷延) の相関あり。急性冠症候群・多枝病変の可能性。緊急で冠動脈評価 (CAG / 冠動脈 CT) を検討。' },
+
+  // ---------- 【要精査】U1-U12 ----------
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, 'めまい・ふらつき', '洞徐脈') || mx(f, 'めまい・ふらつき', 'ポーズ'),
+    text: '[U1] めまい・ふらつき × 洞徐脈/ポーズ の相関あり。JCS/JHRS 2019 Table 9 は Class I の症状リストに「めまい」「眼前暗黒感」を明記。相関が確認されれば失神と同格の PM Class I 適応。薬剤性除外のうえ循環器紹介。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '息切れ・倦怠感', 'AF/AFL') || mx(f, '息切れ・倦怠感', '洞頻脈'),
+    text: '[U2] 息切れ・倦怠感 × AF/持続性頻脈 の相関あり。頻脈誘発性心筋症 (TIC) の可能性 — 可逆性があり見逃しの損失大。心エコーで LVEF 評価は必須、BNP/NT-proBNP 測定。LVEF 低下例では HFrEF + AF としてアブレーション Class 1 (2023 ACC/AHA/ACCP/HRS) / Class IIa (JCS/JHRS 2021)。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '動悸', 'SVT'),
+    text: '[U3] 動悸 × SVT の相関あり。根治可能な疾患の確定診断に相当。症候性 SVT で根治希望または薬物無効ならカテーテルアブレーション Class I (2019 ESC SVT GL)。不整脈専門医紹介、可能なら発作時 12 誘導記録。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', 'SVT'),
+    text: '[U4] 失神 × SVT の相関あり。血行動態破綻性 SVT として 2018 ESC Syncope では診断的所見。速い SVT は失神の原因となりうる。循環器紹介、アブレーション適応評価。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => {
+      const stDep = parseFloat(f.st_depression_max || 0);
+      return mx(f, '胸痛・胸部不快', 'ST変化') && stDep >= 1 && stDep < 2;
+    },
+    text: '[U5] 胸痛 × ST低下 (1-2mm) の相関あり。ホルター ST 解析は特異度 92%・陽性的中率 80% と高いが感度 37% と低い。陽性は虚血の強い示唆 (特に多枝病変)。負荷試験・冠動脈 CT・CAG による虚血評価へ。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '症状なし (無症候性)', 'ST変化'),
+    text: '[U6] 無症候性 ST 変化。無症候性心筋虚血 (silent ischemia) は虚血性心疾患患者の日常生活中 30-50% に出現 (JACC 2011;58:1281)。虚血性心疾患既知例では特に評価を。体位変化・過換気・LVH・脚ブロックによる偽陽性の除外も併せて。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '動悸', 'NSVT') || mx(f, '症状なし (無症候性)', 'VT') || (mxAny(f, 'VT') && parseFloat(f.vent_rhythm_episodes || 0) > 0),
+    text: '[U7] NSVT の相関記録あり。器質的心疾患の検索が必要 (心エコー、疑わしければ CMR)。2022 ESC VA GL は「偶発的 NSVT 発見例では 24 時間以上のホルターを考慮」。器質的正常心の無症候性高 burden 心室性不整脈の管理はエビデンスギャップとされる。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', 'AF/AFL'),
+    text: '[U8] 失神 × AF/AFL の相関あり。徐脈頻脈症候群 (AF 停止後のポーズ) の可能性を評価 — JCS/JHRS 2019 では症状ありなら Class I。同時に AF 自体の抗凝固判断を CHADS₂/CHA₂DS₂-VASc で独立して実施。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '息切れ・倦怠感', '洞徐脈') || mx(f, '息切れ・倦怠感', 'ポーズ') || mx(f, '息切れ・倦怠感', 'AVブロック'),
+    text: '[U9] 息切れ・倦怠感 × 徐脈系 の相関あり。JCS/JHRS 2019 Table 9 は Class I 症状リストに「息切れ」「易疲労感」「心不全」を明記。徐脈が症状の原因と確認されれば PM Class I 適応。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, 'めまい・ふらつき', 'AVブロック'),
+    text: '[U10] めまい × AVブロック の相関あり。症候性 AVB として PM 適応評価 (JCS/JHRS 2019 Table 7 Class I)。ブロックの型 (Wenckebach / Mobitz II / 高度) と時間帯 (夜間迷走神経性か日中か) を確認。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '動悸', 'AF/AFL'),
+    text: '[U11] 動悸 × AF/AFL の相関あり。症候性発作性 AF では選択された患者 (若年・併存症少) で一次治療としてのカテーテルアブレーション Class 1 (2023 ACC/AHA/ACCP/HRS、2024 ESC でも第一選択に格上げ)。※ 抗凝固の判断は症状と無関係に CHADS₂/CHA₂DS₂-VASc で独立して行う。' },
+  { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '胸痛・胸部不快', 'VT') || mx(f, '胸痛・胸部不快', 'SVT'),
+    text: '[U12] 胸痛 × 頻拍性不整脈 の相関あり。頻拍による相対的心筋虚血 (需要増大) の可能性と、虚血が不整脈を惹起している可能性の双方を評価。冠動脈評価と不整脈治療の両面から検討。' },
+
+  // ---------- 【参考】R1-R7 ----------
+  { level: 'reference', sectionId: 'symptom_matrix', when: (f) => mx(f, '動悸', '洞頻脈'),
+    text: '[R1] 動悸 × 洞頻脈 の相関あり。実は最多パターン — 動悸患者の症状イベントの約 88% が洞頻脈と相関 (J Clin Med 2026;15:3285)。器質的不整脈の否定として意義があり、二次性頻脈の検索へ誘導: 貧血・甲状腺機能亢進・脱水・発熱・薬剤・不安障害・IST/POTS。安静時 HR >100 または 24 時間平均 HR >90-95bpm + 動悸なら不適切洞頻脈 (IST) も鑑別 (除外診断)。' },
+  { level: 'reference', sectionId: 'symptom_matrix', when: (f) => {
+      const pvcPct = parseFloat(f.pvc_percent || 0);
+      return (mx(f, '動悸', 'PVC') || mx(f, '動悸', 'SVPC')) && pvcPct < 10;
+    },
+    text: '[R2] 動悸 × PVC/SVPC (低 burden) の相関あり。単独では原則良性で、安心供与が主目的。カフェイン・アルコール・睡眠不足・ストレスの生活指導。症状が強ければ burden が低くても QOL 適応で β遮断薬を検討可。' },
+  { level: 'reference', sectionId: 'symptom_matrix', when: (f) => {
+      // 症状あり × いずれの不整脈とも「−」= 明示的に相関なし
+      if (!f.symptom_matrix || typeof f.symptom_matrix !== 'object') return false;
+      const entries = Object.entries(f.symptom_matrix);
+      if (entries.length === 0) return false;
+      const hasDenied = entries.some(([, v]) => v === '−');
+      const hasCorrelated = entries.some(([, v]) => typeof v === 'string' && v !== '' && v !== '−');
+      return hasDenied && !hasCorrelated;
+    },
+    text: '[R3] 症状あり × 不整脈なし (negative symptom-rhythm correlation)。これは陰性所見ではなく価値ある陽性情報 — 症状発現時に有意な不整脈がなかったことの証明であり、不整脈性の原因を相当程度除外できる。ただし記録期間の限界に注意 (24時間ホルターの診断収率は約 20%、症状が毎日ないと 35% 程度)。症状頻度に応じたモニタ再設計を検討。' },
+  { level: 'reference', sectionId: 'symptom_matrix', when: (f) => mx(f, '症状なし (無症候性)', '洞徐脈'),
+    text: '[R4] 無症候性 洞徐脈。2018 ACC/AHA/HRS Bradycardia GL は「無症候性洞徐脈は有害転帰と関連しない」と明記。治療不要、経過観察でよい。アスリート・睡眠中の生理的徐脈も鑑別に。' },
+  { level: 'reference', sectionId: 'symptom_matrix', when: (f) => {
+      const pause = parseFloat(f.pause_max_sec || 0);
+      return mx(f, '症状なし (無症候性)', 'ポーズ') && pause > 0 && pause < 3;
+    },
+    text: '[R5] 無症候性ポーズ <3秒。睡眠中・アスリートでは生理的迷走神経緊張でありうる (競技アスリートの 25% に ≥2秒、3% に ≥3秒: Europace 2016;18:1873)。運動で消失するかが良性判定の鍵。ただし ESC 2021 は睡眠中の高度徐脈例で睡眠時無呼吸スクリーニングを推奨。' },
+  { level: 'reference', sectionId: 'symptom_matrix', when: (f) => mx(f, '症状なし (無症候性)', 'SVPC') || mx(f, '症状なし (無症候性)', 'PVC'),
+    text: '[R6] 無症候性 期外収縮。SVPC は単独では原則良性 (ただし >500-1000/日は AF 発症予測因子として AF スクリーニングの動機付けになる)。PVC は burden ≥10% で心機能フォロー対象 (2022 ESC VA GL)。' },
+  { level: 'reference', sectionId: 'symptom_matrix', when: (f) => {
+      // 症状マトリクス未入力 かつ 患者イベント数 0 or 未入力
+      const noMatrix = !f.symptom_matrix || Object.keys(f.symptom_matrix).length === 0;
+      const evCount = parseFloat(f.patient_events_count || 0);
+      const noEvents = f.patient_events_present === 'なし (タップ・症状記録なし)' || evCount === 0;
+      return noMatrix && noEvents;
+    },
+    text: '[R7] 症状記録なし (患者イベント 0 / マトリクス未入力)。「症状-リズム相関は評価不能」と明示すべき状態 —「異常なし」とは区別する。記録期間中に症状が出現しなかったため、不整脈性の原因の除外はできていない。症状頻度に応じ再検査 or モニタ期間延長 (延長ホルター 48-96h / パッチ 7-14日 / イベントレコーダー 2-4週 / ILR) を検討。' },
+
+  // ---------- メタルール: 相関の分母を意識させる ----------
+  { level: 'reference', sectionId: 'symptom_matrix', when: (f) => {
+      if (!f.symptom_matrix || typeof f.symptom_matrix !== 'object') return false;
+      const hasHighCorr = Object.values(f.symptom_matrix).some((v) => v === '●' || v === '◎');
+      const evCount = parseFloat(f.patient_events_count || 0);
+      return hasHighCorr && evCount > 0 && evCount <= 2;
+    },
+    text: '[メタ] 高頻度相関 (●/◎) が記録されているが、患者イベント数が 2 回以下。イベント数が少ない場合の「100%相関」は統計的に脆弱。相関の分母 (症状イベント総数) を報告書に必ず併記し、少数例に基づく判断であることを明示すること。' },
+  { level: 'reference', sectionId: 'symptom_matrix', when: (f) => {
+      if (!f.symptom_matrix || typeof f.symptom_matrix !== 'object') return false;
+      // 低頻度相関 (△) が高頻度・高有病率の不整脈に付いている
+      const lowCorrCommon = ['動悸→PVC', '動悸→SVPC', '動悸→洞頻脈', 'めまい・ふらつき→PVC', 'めまい・ふらつき→SVPC'];
+      return lowCorrCommon.some((k) => f.symptom_matrix[k] === '△');
+    },
+    text: '[メタ] 低頻度相関 (△ たまに 10-30%) が高頻度・高有病率の不整脈 (PVC/SVPC/洞頻脈) に記録されている。これらは偶然の時間的一致が容易に起こるため、因果推論としては弱い。原則その不整脈を治療標的とせず、症状の別原因を主軸に検索すること。' },
   { level: 'workup', sectionId: 'daily_burden', when: (f) => {
       const rows = Array.isArray(f.daily_burden) ? f.daily_burden : [];
       if (rows.length < 2) return false;
