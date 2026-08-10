@@ -46,7 +46,6 @@ function buildInitialCollapsed() {
 
 export default function HolterBooster() {
   const [findings, setFindings] = useState({});
-  const [comments, setComments] = useState({});
   const [overallComment, setOverallComment] = useState('');
   const [collapsed, setCollapsed] = useState(buildInitialCollapsed);
   const [examDate, setExamDate] = useState(formatToday);
@@ -96,10 +95,6 @@ export default function HolterBooster() {
     setFindings((prev) => ({ ...prev, [id]: value }));
   }, []);
 
-  const setComment = useCallback((id, value) => {
-    setComments((prev) => ({ ...prev, [id]: value }));
-  }, []);
-
   const toggleMultiChoice = useCallback((id, opt) => {
     setFindings((prev) => {
       const cur = Array.isArray(prev[id]) ? prev[id] : [];
@@ -143,7 +138,6 @@ export default function HolterBooster() {
   const reset = () => {
     if (!window.confirm('入力内容をすべてクリアしますか？')) return;
     setFindings({});
-    setComments({});
     setOverallComment('');
     setCollapsed(buildInitialCollapsed());
     setSymptomMatrix({});
@@ -166,24 +160,11 @@ export default function HolterBooster() {
       const entries = section.items
         .map((it) => {
           const v = findings[it.id];
-          const c = (comments[it.id] || '').trim();
           const hasValue = Array.isArray(v) ? v.length > 0 : (v !== undefined && v !== '' && v !== null);
-          if (!hasValue && !c) return null;
-          let core;
-          if (!hasValue) {
-            return `${it.label}: ${c}`;
-          }
-          if (it.type === 'numeric') {
-            core = `${it.label} ${v}${it.unit || ''}`;
-          } else if (it.type === 'multichoice') {
-            core = `${it.label}: ${v.join(' / ')}`;
-          } else {
-            core = `${it.label}: ${v}`;
-          }
-          if (c && it.type !== 'text') {
-            core += `（${c}）`;
-          }
-          return core;
+          if (!hasValue) return null;
+          if (it.type === 'numeric') return `${it.label} ${v}${it.unit || ''}`;
+          if (it.type === 'multichoice') return `${it.label}: ${v.join(' / ')}`;
+          return `${it.label}: ${v}`;
         })
         .filter(Boolean);
       if (entries.length > 0) {
@@ -218,7 +199,7 @@ export default function HolterBooster() {
       lines.push(`  ${trimmed}`);
     }
     return lines.join('\n');
-  }, [findings, comments, overallComment, examDate, symptomMatrix, dailyBurden]);
+  }, [findings, overallComment, examDate, symptomMatrix, dailyBurden]);
 
   // アセスメント自動生成 (level 別にグルーピング、sectionId 付き)
   const assessmentGroups = useMemo(() => {
@@ -341,9 +322,7 @@ export default function HolterBooster() {
           } else {
             inputCount = section.items.filter((it) => {
               const v = findings[it.id];
-              const c = comments[it.id];
-              const has = Array.isArray(v) ? v.length > 0 : (v !== undefined && v !== '' && v !== null);
-              return has || (c && c.trim() !== '');
+              return Array.isArray(v) ? v.length > 0 : (v !== undefined && v !== '' && v !== null);
             }).length;
           }
           const badgeLabel = section.id === 'symptom_matrix' ? `${inputCount} 件対応`
@@ -528,13 +507,6 @@ export default function HolterBooster() {
                             />
                           )}
                         </div>
-                        <input
-                          type="text"
-                          className={styles.commentInput}
-                          value={comments[item.id] || ''}
-                          onChange={(e) => setComment(item.id, e.target.value)}
-                          placeholder="自由コメント（任意）"
-                        />
                       </div>
                     </div>
                   ))}
