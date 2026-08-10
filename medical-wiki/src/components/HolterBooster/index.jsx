@@ -585,7 +585,11 @@ export default function HolterBooster() {
                   <p className={styles.matrixHint}>
                     ePatch p.12「患者症状 vs 不整脈相関」を相関頻度で表現。<br />
                     <strong>クリック</strong>で相関度が循環: 未選択 → ●(毎回 100%・赤) → ◎(ほぼ 70-90%・橙) → ○(半分 40-60%・黄) → △(たまに 10-30%・青) → −(なし 0%明示・灰) → 未選択<br />
-                    <strong>長押し (0.5秒) または右クリック</strong>で一覧から直接選択できます。
+                    <strong>長押し (0.5秒) または右クリック</strong>で一覧から直接選択できます。<br />
+                    <span className={styles.matrixCaveat}>
+                      ※ 相関の有無から治療適応を判断する原則は各ガイドラインに基づきますが、
+                      <strong>相関頻度 (100% / 70-90% / 40-60% / 10-30%) による解釈の差はガイドラインに明示的記載がなく、本ツール独自の運用解釈です。</strong>
+                    </span>
                   </p>
                   <div className={styles.matrixWrapper}>
                     <table className={styles.matrix}>

@@ -654,6 +654,11 @@ export const HOLTER_ASSESSMENT_RULES = [
       return lowCorrCommon.some((k) => f.symptom_matrix[k] === '△');
     },
     text: '[メタ] 低頻度相関 (△ たまに 10-30%) が高頻度・高有病率の不整脈 (PVC/SVPC/洞頻脈) に記録されている。これらは偶然の時間的一致が容易に起こるため、因果推論としては弱い。原則その不整脈を治療標的とせず、症状の別原因を主軸に検索すること。' },
+  { level: 'reference', sectionId: 'symptom_matrix', when: (f) => {
+      if (!f.symptom_matrix || typeof f.symptom_matrix !== 'object') return false;
+      return Object.values(f.symptom_matrix).some((v) => typeof v === 'string' && v !== '');
+    },
+    text: '[注記] 相関の有無から治療適応を判断する原則は各ガイドラインに基づくが、相関頻度 (100% / 70-90% / 40-60% / 10-30%) による解釈の差はガイドラインに明示的記載がなく、本ツール独自の運用解釈である。頻度区分を根拠に治療方針を確定せず、症状の性状・不整脈自体の危険度・器質的心疾患の有無を含めて総合判断すること。' },
   { level: 'workup', sectionId: 'daily_burden', when: (f) => {
       const rows = Array.isArray(f.daily_burden) ? f.daily_burden : [];
       if (rows.length < 2) return false;

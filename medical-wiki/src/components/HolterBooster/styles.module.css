@@ -592,6 +592,17 @@
   border-left: 3px solid #ba68c8;
   border-radius: 3px;
 }
+.matrixCaveat {
+  display: block;
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px dashed #b39ddb;
+  font-size: 0.75rem;
+  color: #5c6b73;
+  line-height: 1.55;
+}
+.matrixCaveat strong { color: #37474f; }
+
 .matrixWrapper {
   overflow-x: auto;
   border: 1px solid var(--ifm-color-emphasis-200);
