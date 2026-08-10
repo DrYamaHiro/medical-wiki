@@ -541,19 +541,25 @@ export const HOLTER_ASSESSMENT_RULES = [
     text: 'AF 検出目的の依頼で今回 AF 未検出。症状時記録の欠落・発作性 AF の可能性、長期モニタリング (ILR / 再ホルター) 検討。' },
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('動悸') && f.diary_correlation === '症状時に不整脈あり (相関)' && Array.isArray(f.correlated_arrhythmias) && f.correlated_arrhythmias.length > 0,
     text: '動悸と不整脈の相関あり (相関した不整脈欄参照)。頻回・持続例では治療介入 (β遮断薬・アブレーション等) 検討。' },
-  // ==================== 症状 × 不整脈 相関ルール群 (Phase 11) ====================
-  // 一次資料: JCS/JHRS 2019 非薬物治療GL / 2021 Focused Update / JCS/JHRS 2020 薬物治療GL /
-  //          2021 ESC Pacing / 2018 ESC Syncope / 2022 ESC VA / 2019 ESC SVT /
-  //          2023 ACC/AHA/ACCP/HRS AF / 2017 AHA/ACC/HRS VA
+  // ==================== 症状 × 不整脈 相関ルール群 (Phase 11 / Phase 12 で出典更新) ====================
+  // 一次資料 (2026-08 時点で最新版を確認済み):
+  //   JCS/JHRS 2024 不整脈治療ガイドライン フォーカスアップデート版
+  //     (Circ J 2025;89:1012-1073 / J Arrhythm 2025;41:e70033)
+  //     ※ 2020 薬物治療GL と 2021 非薬物治療FU を統合した最新版。
+  //        個別の Class 表 (Table 7/9 等) は 2019 非薬物治療GL の番号を継承して参照。
+  //   2021 ESC Pacing/CRT + 2025 ESC/EHRA CSP Consensus (Europace 2025;27:euaf050)
+  //   2018 ESC Syncope / 2022 ESC VA / 2019 ESC SVT / 2024 ESC AF
+  //   2023 ACC/AHA/ACCP/HRS AF / 2018 ACC/AHA/HRS Bradycardia / 2017 AHA/ACC/HRS VA
+  //   2025 JHRS/JCS ウェアラブル・携帯型心電計コンセンサス (J Arrhythm 2025;41:e70059)
   // 注: 相関頻度 (●◎○△) による解釈差はガイドライン外の運用解釈。出力に明示する。
 
   // ---------- 【緊急】E1-E7 ----------
   { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', 'VT'),
-    text: '[E1] 失神 × VT の相関あり。心臓突然死のニアミスに相当。血行動態不安定な持続性 VT 生存例は ICD 二次予防 Class I (2017 AHA/ACC/HRS VA GL / JCS-JHRS 2019)。即日〜数日以内の循環器専門医紹介、器質的心疾患検索 (心エコー・CMR・冠動脈評価)・LVEF 評価・EPS を検討。' },
+    text: '[E1] 失神 × VT の相関あり。心臓突然死のニアミスに相当。血行動態不安定な持続性 VT 生存例は ICD 二次予防 Class I (2017 AHA/ACC/HRS VA GL / JCS-JHRS 2024 FU)。即日〜数日以内の循環器専門医紹介、器質的心疾患検索 (心エコー・CMR・冠動脈評価)・LVEF 評価・EPS を検討。※ JCS/JHRS 2024 FU では MADIT-ICD Benefit Score / Seattle Proportional Risk Model・心臓MRI LGE によるリスク層別化が新たに組み込まれている。' },
   { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', 'ポーズ'),
-    text: '[E2] 失神 × ポーズ の相関あり。症候性心停止として恒久ペースメーカ Class I 相当 (JCS/JHRS 2019 Table 9 LOE C / ESC 2021 Class I LOE B)。可逆的原因 (β遮断薬・Ca拮抗薬・ジギタリス・抗不整脈薬、甲状腺機能低下、電解質異常、睡眠時無呼吸、迷走神経性) を除外のうえ循環器紹介。' },
+    text: '[E2] 失神 × ポーズ の相関あり。症候性心停止として恒久ペースメーカ Class I 相当 (JCS/JHRS 2024 FU (Table 9 継承) LOE C / ESC 2021 Class I LOE B)。可逆的原因 (β遮断薬・Ca拮抗薬・ジギタリス・抗不整脈薬、甲状腺機能低下、電解質異常、睡眠時無呼吸、迷走神経性) を除外のうえ循環器紹介。' },
   { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', 'AVブロック'),
-    text: '[E3] 失神 × AVブロック の相関あり。徐脈による症状を伴う 2度・高度・3度 AVB は PM Class I (JCS/JHRS 2019 Table 7)。Mobitz II 型以上は可逆的原因がなければ症状の有無を問わず Class I (ESC 2021 §5.2.1.3)。循環器紹介。' },
+    text: '[E3] 失神 × AVブロック の相関あり。徐脈による症状を伴う 2度・高度・3度 AVB は PM Class I (JCS/JHRS 2024 FU (Table 7 継承))。Mobitz II 型以上は可逆的原因がなければ症状の有無を問わず Class I (ESC 2021 §5.2.1.3)。循環器紹介。※ ペーシング様式は刺激伝導系ペーシング (CSP: His束/左脚領域ペーシング) が選択肢 — 心室ペーシング率 >20% が予測される例で推奨 (JCS/JHRS 2024 FU)、房室結節下ブロック例では LBBAP が HBP より優先 (2025 ESC/EHRA CSP Consensus)。' },
   { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => {
       const pause = parseFloat(f.pause_max_sec || 0);
       return pause >= 6 && !mxAny(f, 'ポーズ');
@@ -565,7 +571,7 @@ export const HOLTER_ASSESSMENT_RULES = [
     },
     text: '[E5] 無症候性 VT。症状相関を問わず緊急評価対象。器質的心疾患検索と LVEF 評価、SCD リスク層別化を実施 (2022 ESC VA GL)。' },
   { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', '洞徐脈') && (f.find_sa_block === 'あり' || f.sss === 'あり (洞停止・徐脈頻脈症候群)'),
-    text: '[E6] 失神 × 洞徐脈/洞停止 の相関あり。症候性洞不全症候群 (SSS) として PM Class I (JCS/JHRS 2019 Table 9)。薬剤性の除外後、循環器紹介。' },
+    text: '[E6] 失神 × 洞徐脈/洞停止 の相関あり。症候性洞不全症候群 (SSS) として PM Class I (JCS/JHRS 2024 FU (Table 9 継承))。薬剤性の除外後、循環器紹介。' },
   { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => {
       const stElev = parseFloat(f.st_elevation_max || 0);
       const stDep = parseFloat(f.st_depression_max || 0);
@@ -576,9 +582,9 @@ export const HOLTER_ASSESSMENT_RULES = [
 
   // ---------- 【要精査】U1-U12 ----------
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, 'めまい・ふらつき', '洞徐脈') || mx(f, 'めまい・ふらつき', 'ポーズ'),
-    text: '[U1] めまい・ふらつき × 洞徐脈/ポーズ の相関あり。JCS/JHRS 2019 Table 9 は Class I の症状リストに「めまい」「眼前暗黒感」を明記。相関が確認されれば失神と同格の PM Class I 適応。薬剤性除外のうえ循環器紹介。' },
+    text: '[U1] めまい・ふらつき × 洞徐脈/ポーズ の相関あり。JCS/JHRS 2024 FU (Table 9 継承) は Class I の症状リストに「めまい」「眼前暗黒感」を明記。相関が確認されれば失神と同格の PM Class I 適応。薬剤性除外のうえ循環器紹介。' },
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '息切れ・倦怠感', 'AF/AFL') || mx(f, '息切れ・倦怠感', '洞頻脈'),
-    text: '[U2] 息切れ・倦怠感 × AF/持続性頻脈 の相関あり。頻脈誘発性心筋症 (TIC) の可能性 — 可逆性があり見逃しの損失大。心エコーで LVEF 評価は必須、BNP/NT-proBNP 測定。LVEF 低下例では HFrEF + AF としてアブレーション Class 1 (2023 ACC/AHA/ACCP/HRS) / Class IIa (JCS/JHRS 2021)。' },
+    text: '[U2] 息切れ・倦怠感 × AF/持続性頻脈 の相関あり。頻脈誘発性心筋症 (TIC) の可能性 — 可逆性があり見逃しの損失大。心エコーで LVEF 評価は必須、BNP/NT-proBNP 測定。LVEF 低下例では HFrEF + AF としてアブレーション Class 1 (2023 ACC/AHA/ACCP/HRS) / Class IIa (JCS/JHRS 2024 FU)。' },
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '動悸', 'SVT'),
     text: '[U3] 動悸 × SVT の相関あり。根治可能な疾患の確定診断に相当。症候性 SVT で根治希望または薬物無効ならカテーテルアブレーション Class I (2019 ESC SVT GL)。不整脈専門医紹介、可能なら発作時 12 誘導記録。' },
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', 'SVT'),
@@ -593,11 +599,11 @@ export const HOLTER_ASSESSMENT_RULES = [
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '動悸', 'NSVT') || mx(f, '症状なし (無症候性)', 'VT') || (mxAny(f, 'VT') && parseFloat(f.vent_rhythm_episodes || 0) > 0),
     text: '[U7] NSVT の相関記録あり。器質的心疾患の検索が必要 (心エコー、疑わしければ CMR)。2022 ESC VA GL は「偶発的 NSVT 発見例では 24 時間以上のホルターを考慮」。器質的正常心の無症候性高 burden 心室性不整脈の管理はエビデンスギャップとされる。' },
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '失神・前失神', 'AF/AFL'),
-    text: '[U8] 失神 × AF/AFL の相関あり。徐脈頻脈症候群 (AF 停止後のポーズ) の可能性を評価 — JCS/JHRS 2019 では症状ありなら Class I。同時に AF 自体の抗凝固判断を CHADS₂/CHA₂DS₂-VASc で独立して実施。' },
+    text: '[U8] 失神 × AF/AFL の相関あり。徐脈頻脈症候群 (AF 停止後のポーズ) の可能性を評価 — JCS/JHRS 2024 FU では症状ありなら Class I。同時に AF 自体の抗凝固判断を CHADS₂/CHA₂DS₂-VASc で独立して実施。' },
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '息切れ・倦怠感', '洞徐脈') || mx(f, '息切れ・倦怠感', 'ポーズ') || mx(f, '息切れ・倦怠感', 'AVブロック'),
-    text: '[U9] 息切れ・倦怠感 × 徐脈系 の相関あり。JCS/JHRS 2019 Table 9 は Class I 症状リストに「息切れ」「易疲労感」「心不全」を明記。徐脈が症状の原因と確認されれば PM Class I 適応。' },
+    text: '[U9] 息切れ・倦怠感 × 徐脈系 の相関あり。JCS/JHRS 2024 FU (Table 9 継承) は Class I 症状リストに「息切れ」「易疲労感」「心不全」を明記。徐脈が症状の原因と確認されれば PM Class I 適応。' },
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, 'めまい・ふらつき', 'AVブロック'),
-    text: '[U10] めまい × AVブロック の相関あり。症候性 AVB として PM 適応評価 (JCS/JHRS 2019 Table 7 Class I)。ブロックの型 (Wenckebach / Mobitz II / 高度) と時間帯 (夜間迷走神経性か日中か) を確認。' },
+    text: '[U10] めまい × AVブロック の相関あり。症候性 AVB として PM 適応評価 (JCS/JHRS 2024 FU (Table 7 継承) Class I)。ブロックの型 (Wenckebach / Mobitz II / 高度) と時間帯 (夜間迷走神経性か日中か) を確認。' },
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '動悸', 'AF/AFL'),
     text: '[U11] 動悸 × AF/AFL の相関あり。症候性発作性 AF では選択された患者 (若年・併存症少) で一次治療としてのカテーテルアブレーション Class 1 (2023 ACC/AHA/ACCP/HRS、2024 ESC でも第一選択に格上げ)。※ 抗凝固の判断は症状と無関係に CHADS₂/CHA₂DS₂-VASc で独立して行う。' },
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => mx(f, '胸痛・胸部不快', 'VT') || mx(f, '胸痛・胸部不快', 'SVT'),
@@ -637,7 +643,7 @@ export const HOLTER_ASSESSMENT_RULES = [
       const noEvents = f.patient_events_present === 'なし (タップ・症状記録なし)' || evCount === 0;
       return noMatrix && noEvents;
     },
-    text: '[R7] 症状記録なし (患者イベント 0 / マトリクス未入力)。「症状-リズム相関は評価不能」と明示すべき状態 —「異常なし」とは区別する。記録期間中に症状が出現しなかったため、不整脈性の原因の除外はできていない。症状頻度に応じ再検査 or モニタ期間延長 (延長ホルター 48-96h / パッチ 7-14日 / イベントレコーダー 2-4週 / ILR) を検討。' },
+    text: '[R7] 症状記録なし (患者イベント 0 / マトリクス未入力)。「症状-リズム相関は評価不能」と明示すべき状態 —「異常なし」とは区別する。記録期間中に症状が出現しなかったため、不整脈性の原因の除外はできていない。症状頻度に応じ再検査 or モニタ期間延長を検討 (延長ホルター 48-96h / パッチ・ウェア型 14日間 / 携帯型 (月1回程度の発作) / ILR (非侵襲的検査で診断がつかない心原性失神・潜因性脳梗塞))。※ 機器選択は 2025 JHRS/JCS ウェアラブル・携帯型心電計コンセンサス (J Arrhythm 2025;41:e70059) 参照 — スマートウォッチ/PPG はスクリーニング補助であり単独で不整脈を診断してはならない。' },
 
   // ---------- メタルール: 相関の分母を意識させる ----------
   { level: 'reference', sectionId: 'symptom_matrix', when: (f) => {
