@@ -642,21 +642,22 @@
   font-family: inherit;
   box-sizing: border-box;
 }
-/* Phase 10.2: ホバーは背景色を変えず、枠線+影で示す (記号色と混同しないため) */
+/* Phase 10.3: ホバー/フォーカスは無彩色 (濃グレー) の枠線のみ。
+   記号の色 (赤/橙/黄/青/灰) と混同しないよう、彩色は一切使わない。 */
 .matrixBtn:hover {
-  border-color: #6a1b9a;
-  box-shadow: inset 0 0 0 2px rgba(106, 27, 154, 0.35);
+  border-color: #37474f;
+  box-shadow: inset 0 0 0 1px rgba(55, 71, 79, 0.25);
 }
 .matrixBtn:focus-visible {
-  outline: 3px solid #6a1b9a;
+  outline: 3px solid #37474f;
   outline-offset: -3px;
 }
-/* Phase 10.1: 相関度 5段階カラー (視認性改善) — hover でも背景色は不変 */
-.matrixBtnLvl5 { background: #c62828; color: #fff; }         /* 毎回 100% - 赤 */
-.matrixBtnLvl4 { background: #ef6c00; color: #fff; }         /* ほぼ 70-90% - 橙 */
-.matrixBtnLvl3 { background: #f9a825; color: #263238; }      /* 半分 40-60% - 黄 */
-.matrixBtnLvl2 { background: #1976d2; color: #fff; }         /* たまに 10-30% - 青 */
-.matrixBtnLvl1 { background: #eceff1; color: #546e7a; }      /* なし 0% 明示 - 灰 */
+/* Phase 10.3: 背景は白のまま、記号の文字色のみで相関度を表現 */
+.matrixBtnLvl5 { background: #fff; color: #c62828; }         /* 毎回 100% - 赤 */
+.matrixBtnLvl4 { background: #fff; color: #ef6c00; }         /* ほぼ 70-90% - 橙 */
+.matrixBtnLvl3 { background: #fff; color: #f9a825; }         /* 半分 40-60% - 黄 */
+.matrixBtnLvl2 { background: #fff; color: #1976d2; }         /* たまに 10-30% - 青 */
+.matrixBtnLvl1 { background: #fff; color: #90a4ae; }         /* なし 0% 明示 - 灰 */
 
 /* Phase 10.2: 日次テーブルの gate 済みセル */
 .dailyCellGated {
@@ -712,14 +713,16 @@
   text-align: left;
   color: #263238;
 }
-.matrixPopoverItem:hover { background: #f3e5f5; }
+.matrixPopoverItem:hover { background: #eceff1; }
 .matrixPopoverSym {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 24px;
   height: 24px;
+  border: 1px solid var(--ifm-color-emphasis-300);
   border-radius: 4px;
+  background: #fff;
   font-weight: 700;
   font-size: 1rem;
   flex-shrink: 0;
