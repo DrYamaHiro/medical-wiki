@@ -163,6 +163,21 @@
 }
 .subHeaderBtn:hover { background: #f3e5f5; }
 
+/* Phase 10: linked_display (他セクションから値を参照表示) */
+.linkedDisplay {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  background: #eceff1;
+  border: 1px dashed #90a4ae;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #263238;
+}
+.linkedDisplay strong { color: #0d47a1; font-size: 0.95rem; }
+.linkedDisplayEmpty { color: #90a4ae; font-style: italic; font-size: 0.78rem; }
+
 /* Phase 7: sectionGate — なし選択時に他項目を disable 表示 */
 .itemRowGatedOff {
   opacity: 0.5;

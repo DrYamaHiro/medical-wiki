@@ -239,7 +239,7 @@ export default function HolterBooster() {
       const gateVal = gate ? findings[gate.itemId] : undefined;
       const isGatedAbsent = gate && gate.absentValues.includes(gateVal);
       const entries = section.items
-        .filter((it) => it.type !== 'sub_header')
+        .filter((it) => it.type !== 'sub_header' && it.type !== 'linked_display')
         .map((it) => {
           if (isGatedAbsent && it.id !== gate.itemId) return null; // gate 以外は出力しない
           const v = findings[it.id];
@@ -434,14 +434,17 @@ export default function HolterBooster() {
 
         {HOLTER_GROUPS.map((group) => {
           const isGroupCollapsed = !!groupCollapsed[group.id];
-          const groupSections = HOLTER_SECTIONS.filter((s) => group.sectionIds.includes(s.id));
+          // 表示順は HOLTER_GROUPS.sectionIds の並びを厳守 (ファイル順ではない)
+          const groupSections = group.sectionIds
+            .map((id) => HOLTER_SECTIONS.find((s) => s.id === id))
+            .filter(Boolean);
           // グループ全体の入力済み件数
           let groupInputCount = 0;
           groupSections.forEach((sec) => {
             if (sec.id === 'symptom_matrix') groupInputCount += Object.values(symptomMatrix).filter(Boolean).length;
             else if (sec.id === 'daily_burden') groupInputCount += dailyBurden.length;
             else groupInputCount += sec.items.filter((it) => {
-              if (it.type === 'sub_header') return false;
+              if (it.type === 'sub_header' || it.type === 'linked_display') return false;
               const v = findings[it.id];
               if (Array.isArray(v)) return v.length > 0;
               if (v && typeof v === 'object') return !!(v.d || v.h || v.m || v.s);
@@ -479,7 +482,7 @@ export default function HolterBooster() {
             inputCount = dailyHeartRate.length;
           } else {
             inputCount = section.items.filter((it) => {
-              if (it.type === 'sub_header') return false;
+              if (it.type === 'sub_header' || it.type === 'linked_display') return false;
               const v = findings[it.id];
               if (Array.isArray(v)) return v.length > 0;
               if (v && typeof v === 'object') return !!(v.d || v.h || v.m || v.s); // duration 型
@@ -789,6 +792,27 @@ export default function HolterBooster() {
                               disabled={isGatedOff}
                             />
                           )}
+                          {item.type === 'linked_display' && (() => {
+                            const v = findings[item.sourceId];
+                            const hasV = v !== undefined && v !== '' && v !== null;
+                            return (
+                              <span className={styles.linkedDisplay}>
+                                {hasV ? (
+                                  <strong>{v}{item.unit || ''}</strong>
+                                ) : (
+                                  <span className={styles.linkedDisplayEmpty}>未入力</span>
+                                )}
+                                {item.sourceSectionId && (
+                                  <button
+                                    type="button"
+                                    className={styles.scrollBtn}
+                                    onClick={() => scrollToSection(item.sourceSectionId)}
+                                    title="入力元セクションへ移動"
+                                  >入力欄へ ▸</button>
+                                )}
+                              </span>
+                            );
+                          })()}
                           {item.type === 'duration' && (() => {
                             const d = (findings[item.id] && typeof findings[item.id] === 'object') ? findings[item.id] : { d: '', h: '', m: '', s: '' };
                             const upd = (k, val) => setField(item.id, { ...d, [k]: val });

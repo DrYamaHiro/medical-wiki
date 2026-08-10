@@ -294,8 +294,11 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'heart_rate_trend',
-    title: '14. 心拍数の傾向 (ePatch: 徐脈/頻脈エピソード + 昼夜HR、トレンドチャート要旨)',
+    title: '14. トレンド (ePatch: 心拍数トレンド)',
     items: [
+      { id: 'trend_ref_hr_min', type: 'linked_display', label: '最小心拍数', sourceId: 'hr_min', sourceSectionId: 'heart_rate', unit: 'bpm', hint: '3. 心拍数 セクションと共有' },
+      { id: 'trend_ref_hr_max', type: 'linked_display', label: '最大心拍数', sourceId: 'hr_max', sourceSectionId: 'heart_rate', unit: 'bpm', hint: '3. 心拍数 セクションと共有' },
+      { id: 'trend_ref_hr_mean', type: 'linked_display', label: '平均心拍数', sourceId: 'hr_mean', sourceSectionId: 'heart_rate', unit: 'bpm', hint: '3. 心拍数 セクションと共有' },
       { id: 'brady_episodes', label: '徐脈エピソード数', type: 'numeric', unit: '回', placeholder: '0', hint: 'ePatch: 50bpm未満が10拍連続 (小児は年齢別閾値)' },
       { id: 'tachy_episodes', label: '頻脈エピソード数', type: 'numeric', unit: '回', placeholder: '0', hint: 'ePatch: 100bpm超が10拍連続' },
       { id: 'hr_day_mean', label: '昼間平均HR (6-22時)', type: 'numeric', unit: 'bpm', placeholder: '80', hint: '任意、昼夜較差評価に使用' },
