@@ -42,9 +42,9 @@ export const HOLTER_SECTIONS = [
     title: '3. 心拍数 (ePatch: 最大 / 最小 / 平均 / 総心拍数)',
     items: [
       { id: 'hr_max', label: '最大心拍数', type: 'numeric', unit: 'bpm', placeholder: '157', normalRange: { min: 90, max: 190, note: '≥190bpm は緊急項目 (30秒以上持続で該当)' } },
-      { id: 'hr_max_datetime', label: '　最大心拍数の日時', type: 'datetime', hint: 'カレンダー+時計から選択、記録期間内であれば「日X」も自動表示' },
+      { id: 'hr_max_datetime', label: '　最大心拍数の日時', type: 'datetime', hint: 'ePatch: 代表ストリップは右カラム最上部に添付。カレンダー+時計から選択で「日X」自動表示' },
       { id: 'hr_min', label: '最小心拍数', type: 'numeric', unit: 'bpm', placeholder: '43', normalRange: { min: 35, max: 70, note: '<35bpm は緊急項目 (30秒以上持続で該当)' } },
-      { id: 'hr_min_datetime', label: '　最小心拍数の日時', type: 'datetime' },
+      { id: 'hr_min_datetime', label: '　最小心拍数の日時', type: 'datetime', hint: 'ePatch: 代表ストリップは右カラムに添付' },
       { id: 'hr_mean', label: '平均心拍数', type: 'numeric', unit: 'bpm', placeholder: '73', normalRange: { min: 60, max: 90 } },
       { id: 'total_beats', label: '総心拍数', type: 'numeric', unit: '拍', placeholder: '529697' },
     ],
@@ -121,7 +121,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'episode_af',
-    title: '7. 心房細動/粗動 (ePatch: エピソード枠 1)',
+    title: '7. 心房細動/粗動 (ePatch: 右カラム上部・代表ストリップ付き)',
     items: [
       { id: 'af_present', label: 'AF/AFL', type: 'choice', options: ['なし', 'あり (発作性)', 'あり (持続性)'] },
       { id: 'af_burden_percent', label: 'AF/AFL 割合', type: 'numeric', unit: '%', placeholder: '8.75' },
@@ -137,7 +137,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'episode_svt_other',
-    title: '8. その他の上室性頻拍 (ePatch: エピソード枠 2)',
+    title: '8. その他の上室性頻拍 (ePatch: 右カラム・代表ストリップ付き)',
     items: [
       { id: 'svt_other_episodes', label: 'エピソード数 (3連発以上)', type: 'numeric', unit: '回', placeholder: '38' },
       { id: 'svt_max_beats', label: '最長連発数', type: 'numeric', unit: '拍', placeholder: '16', normalRange: { min: 0, max: 14, note: '15拍以上は臨床的意義あり、QRS 幅で AT/SVT vs Wide QRS 鑑別' } },
@@ -151,7 +151,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'episode_pause',
-    title: '9. ポーズ (ePatch: エピソード枠 3)',
+    title: '9. ポーズ (ePatch: 右カラム・代表ストリップ付き)',
     items: [
       { id: 'pause_count', label: 'ポーズ回数 (2.5秒以上)', type: 'numeric', unit: '回', placeholder: '1' },
       { id: 'pause_max_sec', label: '最長R-R間隔', type: 'numeric', unit: '秒', placeholder: '2.538', normalRange: { min: 0, max: 3.0, note: '≥3秒はメール連絡項目 (覚醒 or 症状伴えば PM 検討)' } },
@@ -164,7 +164,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'episode_avb',
-    title: '10. 房室ブロック (ePatch: エピソード枠 4)',
+    title: '10. 房室ブロック (ePatch: 右カラム・代表ストリップ付き、最重症を1件)',
     items: [
       { id: 'avb_type', label: 'AVブロック 最重症種類', type: 'choice', options: ['なし', '1度', '2度 Mobitz I (Wenckebach)', '2:1', '2度 Mobitz II', '高度', '完全 (3度)'] },
     ],
@@ -175,7 +175,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'episode_vent_rhythm',
-    title: '11. 心室調律 (ePatch: エピソード枠 5、VT + AIVR)',
+    title: '11. 心室調律 (ePatch: 右カラム下部・代表ストリップ付き、VT + AIVR)',
     items: [
       { id: 'vent_rhythm_episodes', label: '総エピソード数 (VT+AIVR)', type: 'numeric', unit: '回', placeholder: '56', hint: '平均HR40以上・3連発以上' },
       { id: 'vt_episodes', label: '　内 VT (平均HR≥100)', type: 'numeric', unit: '回', placeholder: '50' },
@@ -192,7 +192,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'findings_basic_rhythm',
-    title: '12. 所見 — 基本調律 (ePatch: 所見欄) ★新規',
+    title: '12. 所見 — 基本調律 (ePatch: エピソード5枠の下・所見欄)',
     items: [
       { id: 'find_sinus_rhythm', label: '洞調律 (Sinus rhythm)', type: 'choice', options: ['なし', 'あり'], hint: 'ePatch (+) 相当' },
       { id: 'find_sinus_tachycardia', label: '洞頻脈 (Sinus tachycardia)', type: 'choice', options: ['なし', 'あり'], hint: 'ePatch (+) 相当、最大HR + 時刻を要記載' },
@@ -205,7 +205,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'findings_common',
-    title: '13. 所見 — 陽性所見チェック よく使う15 (ePatch: 緊急項目 相当)',
+    title: '13. 所見 — 陽性所見よく使う15 (ePatch: 所見欄 緊急項目/該当項目 (+))',
     items: [
       { id: 'find_af', label: '心房細動/粗動 Paroxysmal AF/AFL', type: 'choice', options: ['なし', 'あり'], emergency: true },
       { id: 'find_svt_other', label: 'その他の上室性頻拍 SVT', type: 'choice', options: ['なし', 'あり'] },
@@ -230,7 +230,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'findings_detail',
-    title: '14. 所見 — 詳細所見17 (ePatch: その他解析項目)',
+    title: '14. 所見 — 詳細所見17 (ePatch: 所見欄 その他解析項目 (+))',
     items: [
       { id: 'find_non_conducted_spvc', label: '非伝導性上室性期外収縮', type: 'choice', options: ['なし', 'あり'] },
       { id: 'find_aberrant', label: '変行伝導', type: 'choice', options: ['なし', 'あり'] },
