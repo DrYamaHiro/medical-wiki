@@ -61,6 +61,78 @@
   margin-right: 0.2rem;
 }
 .expandGroup { display: flex; gap: 0.4rem; }
+
+/* Phase 6: 大区分グループ (入れ子アコーディオン) */
+.groupCard {
+  background: #ede7f6;
+  border: 2.5px solid #7e57c2;
+  border-radius: 10px;
+  margin-bottom: 1.1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(94, 53, 177, 0.1);
+}
+.groupHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  background: linear-gradient(135deg, #7e57c2 0%, #5e35b1 100%);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+.groupHeader:hover { background: linear-gradient(135deg, #6a1b9a 0%, #4527a0 100%); }
+.groupToggle {
+  display: inline-block;
+  width: 1em;
+  font-weight: 700;
+}
+.groupName { flex: 1; }
+.groupBadge {
+  padding: 0.2rem 0.65rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #4a148c;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.groupSubtitle {
+  padding: 0.4rem 1.1rem;
+  background: #f3e5f5;
+  color: #4a148c;
+  font-size: 0.8rem;
+  border-bottom: 1px solid #ce93d8;
+}
+.groupBody { padding: 0.9rem; background: #fafafa; }
+
+/* trace chip (<0.01%) */
+.traceChip {
+  padding: 0.28rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: #fff;
+  color: #6a1b9a;
+  border: 1.5px solid #ce93d8;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  margin-left: 0.4rem;
+  white-space: nowrap;
+}
+.traceChip:hover { background: #f3e5f5; }
+.traceChipActive {
+  background: #6a1b9a;
+  color: #fff;
+  border-color: #4a148c;
+}
+.traceChipActive:hover { background: #4a148c; color: #fff; }
 .scenarioBtn {
   background: #fff;
   color: #6a1b9a;

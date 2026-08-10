@@ -4,6 +4,7 @@ import {
   HOLTER_SECTIONS, HOLTER_ASSESSMENT_RULES, buildNormalPreset, PRESET_NOTE, SCENARIO_PRESETS,
   SYMPTOM_MATRIX_SYMPTOMS, SYMPTOM_MATRIX_ARRHYTHMIAS, DAILY_BURDEN_COLUMNS,
   durationToHours, formatDuration, formatDateTimeWithDay, formatDateWithDay, daysBetweenInclusive,
+  HOLTER_GROUPS, sectionIdToGroupId, isTraceValue,
 } from './holterData.js';
 
 const ABNORMAL_KEYWORDS = ['あり', '相関あり', '発作性', '持続性', 'ショック', '不適切', 'モビッツ', 'Mobitz II', '完全', '高度', '2:1', 'SSS', '疑い', 'torsades', '多形性'];
@@ -35,20 +36,27 @@ function formatToday() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-// section の初期折りたたみ状態: Phase 4 で全セクションデフォルト折りたたみ
+// section の初期折りたたみ状態: 全セクションデフォルト折りたたみ
 function buildInitialCollapsed() {
   const s = {};
   HOLTER_SECTIONS.forEach((sec) => { s[sec.id] = true; });
-  // 動的セクション (symptom_matrix, daily_burden) も閉じる
   s.symptom_matrix = true;
   s.daily_burden = true;
   return s;
+}
+
+// group の初期折りたたみ状態: 全グループデフォルト折りたたみ
+function buildInitialGroupCollapsed() {
+  const g = {};
+  HOLTER_GROUPS.forEach((grp) => { g[grp.id] = true; });
+  return g;
 }
 
 export default function HolterBooster() {
   const [findings, setFindings] = useState(() => ({ report_date: formatToday() }));
   const [overallComment, setOverallComment] = useState('');
   const [collapsed, setCollapsed] = useState(buildInitialCollapsed);
+  const [groupCollapsed, setGroupCollapsed] = useState(buildInitialGroupCollapsed);
   const [copied, setCopied] = useState(false);
 
   // Phase 3: 症状マトリクス state
@@ -80,6 +88,9 @@ export default function HolterBooster() {
 
   const scrollToSection = useCallback((sectionId) => {
     if (!sectionId) return;
+    // 対応する親グループを展開
+    const gId = sectionIdToGroupId(sectionId);
+    if (gId) setGroupCollapsed((prev) => ({ ...prev, [gId]: false }));
     // 対応セクションを展開
     setCollapsed((prev) => ({ ...prev, [sectionId]: false }));
     // 次フレームでスクロール
@@ -88,7 +99,7 @@ export default function HolterBooster() {
       if (el && typeof el.scrollIntoView === 'function') {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 50);
+    }, 80);
   }, []);
 
   const setField = useCallback((id, value) => {
@@ -107,13 +118,19 @@ export default function HolterBooster() {
     setCollapsed((prev) => ({ ...prev, [secId]: !prev[secId] }));
   }, []);
 
-  const collapseAll = useCallback(() => {
-    const next = {};
-    HOLTER_SECTIONS.forEach((s) => { next[s.id] = true; });
-    setCollapsed(next);
+  const toggleGroup = useCallback((gId) => {
+    setGroupCollapsed((prev) => ({ ...prev, [gId]: !prev[gId] }));
   }, []);
 
-  const expandAll = useCallback(() => setCollapsed({}), []);
+  const collapseAll = useCallback(() => {
+    setGroupCollapsed(buildInitialGroupCollapsed());
+    setCollapsed(buildInitialCollapsed());
+  }, []);
+
+  const expandAll = useCallback(() => {
+    setGroupCollapsed({});
+    setCollapsed({});
+  }, []);
 
   const applyNormalPreset = useCallback(() => {
     if (!window.confirm('「洞調律・有意所見なし」プリセットを適用します。\n全ての選択項目 (陽性所見・AF/AVB/心室調律/ST変動 等) を「なし」相当に上書きし、全般所見に注記が追記されます。\nよろしいですか？')) return;
@@ -140,6 +157,7 @@ export default function HolterBooster() {
     setFindings({ report_date: formatToday() });
     setOverallComment('');
     setCollapsed(buildInitialCollapsed());
+    setGroupCollapsed(buildInitialGroupCollapsed());
     setSymptomMatrix({});
     setDailyBurden([]);
   };
@@ -176,7 +194,7 @@ export default function HolterBooster() {
           const hasValueForArr = Array.isArray(v) && v.length > 0;
           const hasValueForPrim = !Array.isArray(v) && (typeof v !== 'object' || v === null) && (v !== undefined && v !== '' && v !== null);
           if (!hasValueForObj && !hasValueForArr && !hasValueForPrim) return null;
-          if (it.type === 'numeric') return `${it.label} ${v}${it.unit || ''}`;
+          if (it.type === 'numeric') return `${it.label} ${v}${it.unit || ''}`; // trace ("<0.01") もそのまま連結
           if (it.type === 'multichoice') return `${it.label}: ${v.join(' / ')}`;
           if (it.type === 'date') return `${it.label}: ${formatDateWithDay(v, startDate)}`;
           if (it.type === 'datetime') return `${it.label}: ${formatDateTimeWithDay(v, startDate)}`;
@@ -333,7 +351,41 @@ export default function HolterBooster() {
           </div>
         )}
 
-        {HOLTER_SECTIONS.map((section) => {
+        {HOLTER_GROUPS.map((group) => {
+          const isGroupCollapsed = !!groupCollapsed[group.id];
+          const groupSections = HOLTER_SECTIONS.filter((s) => group.sectionIds.includes(s.id));
+          // グループ全体の入力済み件数
+          let groupInputCount = 0;
+          groupSections.forEach((sec) => {
+            if (sec.id === 'symptom_matrix') groupInputCount += Object.values(symptomMatrix).filter(Boolean).length;
+            else if (sec.id === 'daily_burden') groupInputCount += dailyBurden.length;
+            else groupInputCount += sec.items.filter((it) => {
+              const v = findings[it.id];
+              if (Array.isArray(v)) return v.length > 0;
+              if (v && typeof v === 'object') return !!(v.h || v.m || v.s);
+              return v !== undefined && v !== '' && v !== null;
+            }).length;
+          });
+          return (
+            <div key={group.id} className={styles.groupCard}>
+              <button
+                type="button"
+                className={styles.groupHeader}
+                onClick={() => toggleGroup(group.id)}
+                aria-expanded={!isGroupCollapsed}
+              >
+                <span className={styles.groupToggle}>{isGroupCollapsed ? '▸' : '▾'}</span>
+                <span className={styles.groupName}>{group.title}</span>
+                {groupInputCount > 0 && (
+                  <span className={styles.groupBadge}>合計 {groupInputCount} 件入力</span>
+                )}
+              </button>
+              {group.subtitle && !isGroupCollapsed && (
+                <div className={styles.groupSubtitle}>{group.subtitle}</div>
+              )}
+              {!isGroupCollapsed && (
+                <div className={styles.groupBody}>
+                  {groupSections.map((section) => {
           const isCollapsed = !!collapsed[section.id];
           // 特殊セクション: 症状マトリクス / 日次負荷 の入力済カウント
           let inputCount;
@@ -507,20 +559,36 @@ export default function HolterBooster() {
                               </button>
                             );
                           })}
-                          {item.type === 'numeric' && (
-                            <>
-                              <input
-                                type="number"
-                                step="any"
-                                className={`${styles.numInput} ${isNumericOutOfRange(item, findings[item.id], gender) ? styles.numInputAbnormal : ''}`}
-                                value={findings[item.id] || ''}
-                                onChange={(e) => setField(item.id, e.target.value)}
-                                placeholder={item.placeholder}
-                                title={item.normalRange?.note || ''}
-                              />
-                              {item.unit && <span className={styles.unit}>{item.unit}</span>}
-                            </>
-                          )}
+                          {item.type === 'numeric' && (() => {
+                            const v = findings[item.id];
+                            const isTrace = isTraceValue(v);
+                            return (
+                              <>
+                                <input
+                                  type="number"
+                                  step="any"
+                                  className={`${styles.numInput} ${isNumericOutOfRange(item, v, gender) ? styles.numInputAbnormal : ''}`}
+                                  value={isTrace ? '' : (v || '')}
+                                  onChange={(e) => setField(item.id, e.target.value)}
+                                  placeholder={item.placeholder}
+                                  title={item.normalRange?.note || ''}
+                                  disabled={isTrace}
+                                  style={isTrace ? { background: '#eceff1', color: '#90a4ae' } : {}}
+                                />
+                                {item.unit && <span className={styles.unit}>{item.unit}</span>}
+                                {item.allowsTrace && (
+                                  <button
+                                    type="button"
+                                    className={`${styles.traceChip} ${isTrace ? styles.traceChipActive : ''}`}
+                                    onClick={() => setField(item.id, isTrace ? '' : '<0.01')}
+                                    title="ePatch レポートで <0.01% と表記されている場合に使用"
+                                  >
+                                    {isTrace ? '<0.01% ✓' : '<0.01%'}
+                                  </button>
+                                )}
+                              </>
+                            );
+                          })()}
                           {item.type === 'text' && (
                             <input
                               type="text"
@@ -574,6 +642,11 @@ export default function HolterBooster() {
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+            </div>
+          );
+                  })}
                 </div>
               )}
             </div>

@@ -29,7 +29,7 @@ export const HOLTER_SECTIONS = [
       { id: 'record_start_date', label: '記録開始日', type: 'date', hint: 'カレンダーから選択、記録期間 (日数) は自動算出' },
       { id: 'record_end_date', label: '記録終了日', type: 'date' },
       { id: 'analyze_duration', label: '解析時間 (時:分:秒)', type: 'duration', hint: 'ePatch: 「解析時間 4日 23時間 53分」等、時分秒で入力' },
-      { id: 'noise_percent', label: 'ノイズ割合', type: 'numeric', unit: '%', placeholder: '0.03', normalRange: { min: 0, max: 30, note: '>30% で解析信頼性低下、微小所見は控えめに解釈' } },
+      { id: 'noise_percent', label: 'ノイズ割合', type: 'numeric', unit: '%', placeholder: '0.03', allowsTrace: true, normalRange: { min: 0, max: 30, note: '>30% で解析信頼性低下、微小所見は控えめに解釈' } },
       { id: 'report_date', label: 'レポート作成日 (解析日)', type: 'date', hint: '出力テキストの日付として使用' },
     ],
   },
@@ -58,7 +58,7 @@ export const HOLTER_SECTIONS = [
     title: '4a. 上室性期外収縮 (ePatch: 異所性)',
     items: [
       { id: 'spvc_total', label: '上室性期外収縮 総数', type: 'numeric', unit: '個', placeholder: '4665' },
-      { id: 'spvc_percent', label: '上室性期外収縮 出現率', type: 'numeric', unit: '%', placeholder: '0.88' },
+      { id: 'spvc_percent', label: '上室性期外収縮 出現率', type: 'numeric', unit: '%', placeholder: '0.88', allowsTrace: true },
       { id: 'spvc_single', label: '　内 単発', type: 'numeric', unit: '個', placeholder: '4321' },
       { id: 'spvc_couplet', label: '　内 二連発', type: 'numeric', unit: '個', placeholder: '79' },
     ],
@@ -72,7 +72,7 @@ export const HOLTER_SECTIONS = [
     title: '4b. 心室性期外収縮 (ePatch: 異所性)',
     items: [
       { id: 'pvc_total', label: '心室性期外収縮 総数', type: 'numeric', unit: '個', placeholder: '22182' },
-      { id: 'pvc_percent', label: '心室性期外収縮 出現率', type: 'numeric', unit: '%', placeholder: '4.19', normalRange: { min: 0, max: 1, note: '<1%正常域、10%以上でPVC心筋症リスク' } },
+      { id: 'pvc_percent', label: '心室性期外収縮 出現率', type: 'numeric', unit: '%', placeholder: '4.19', allowsTrace: true, normalRange: { min: 0, max: 1, note: '<1%正常域、10%以上でPVC心筋症リスク' } },
       { id: 'pvc_single', label: '　内 単発', type: 'numeric', unit: '個', placeholder: '19828' },
       { id: 'pvc_forms', label: '　形態数', type: 'numeric', unit: '種', placeholder: '9', normalRange: { min: 0, max: 1, note: '2以上で多形性 → 器質性疾患精査検討' } },
       { id: 'pvc_couplet', label: '　内 二連発', type: 'numeric', unit: '個', placeholder: '1084' },
@@ -124,7 +124,7 @@ export const HOLTER_SECTIONS = [
     title: '7. 心房細動/粗動 (ePatch: 右カラム上部・代表ストリップ付き)',
     items: [
       { id: 'af_present', label: 'AF/AFL', type: 'choice', options: ['なし', 'あり (発作性)', 'あり (持続性)'] },
-      { id: 'af_burden_percent', label: 'AF/AFL 割合', type: 'numeric', unit: '%', placeholder: '8.75' },
+      { id: 'af_burden_percent', label: 'AF/AFL 割合', type: 'numeric', unit: '%', placeholder: '8.75', allowsTrace: true },
       { id: 'af_longest_duration', label: '最長エピソード持続', type: 'text', placeholder: '例: 10時間29分' },
       { id: 'af_longest_time', label: '最長エピソード発生日時', type: 'datetime' },
       { id: 'af_max_hr', label: '最大心拍数 (AF/AFL中)', type: 'numeric', unit: 'bpm', placeholder: '157' },
@@ -259,6 +259,7 @@ export const HOLTER_SECTIONS = [
     id: 'st',
     title: '15. ST 変動詳細 (ePatch: 所見 - ST variation)',
     items: [
+      { id: 'st_present', label: 'ST 変動の有無', type: 'choice', options: ['なし', 'あり (下記に詳細)', '未評価'], hint: '「なし」を選ぶと下記詳細は入力不要' },
       { id: 'st_depression_max', label: 'ST 低下 最大値', type: 'numeric', unit: 'mm', placeholder: '0', normalRange: { min: 0, max: 1.0, note: 'ePatch: ≥1mm 30秒以上 (upslope 型は2mm以上) で有意' } },
       { id: 'st_depression_duration', label: 'ST 低下 総持続時間', type: 'numeric', unit: '分', placeholder: '0' },
       { id: 'st_elevation_max', label: 'ST 上昇 最大値', type: 'numeric', unit: 'mm', placeholder: '0', normalRange: { min: 0, max: 2.0, note: 'ePatch: ≥2mm 30秒以上で有意 (冠攣縮・心外膜炎鑑別)' } },
@@ -735,5 +736,43 @@ export function daysBetweenInclusive(startStr, endStr) {
   const e = new Date(endStr + 'T00:00:00');
   if (isNaN(s.getTime()) || isNaN(e.getTime())) return null;
   return Math.floor((e - s) / (24 * 3600 * 1000)) + 1;
+}
+
+// numeric 値が「<0.01」等の trace 特殊値かチェック
+export function isTraceValue(v) {
+  return typeof v === 'string' && v.startsWith('<');
+}
+
+// ============================================================
+// 大区分グループ (Phase 6: セクションを 3 グループにまとめた入れ子アコーディオン)
+// ePatch レポート紙面の 2 カラム構造 + 下部所見・詳細解析に対応
+// ============================================================
+export const HOLTER_GROUPS = [
+  {
+    id: 'group_basic',
+    title: 'A. レポート基本情報 (ePatch 左カラム相当)',
+    subtitle: '患者情報 → サマリー → 心拍数 → 異所性 → イベント/ペーシング → CVHRI',
+    sectionIds: ['patient_info', 'report_summary', 'heart_rate', 'ectopic_spvc', 'ectopic_pvc', 'patient_events', 'pacing_events', 'cvhri'],
+  },
+  {
+    id: 'group_episodes_findings',
+    title: 'B. エピソード5枠と所見 (ePatch 右カラム + 所見欄)',
+    subtitle: 'AF → 上室頻拍 → ポーズ → AVブロック → 心室調律 → 基本調律 → 陽性所見',
+    sectionIds: ['episode_af', 'episode_svt_other', 'episode_pause', 'episode_avb', 'episode_vent_rhythm', 'findings_basic_rhythm', 'findings_common', 'findings_detail'],
+  },
+  {
+    id: 'group_detailed_analysis',
+    title: 'C. 詳細解析・追加項目',
+    subtitle: 'ST → 日次負荷 → 心拍数の傾向 → HRV → QT → 心室形態 → 症状マトリクス → PM機能',
+    sectionIds: ['st', 'daily_burden', 'heart_rate_trend', 'hrv', 'qt', 'pvc_morphology', 'symptom_matrix', 'pacemaker_func'],
+  },
+];
+
+// section id → group id の逆引きマップ (スクロール時に親グループを開くため)
+export function sectionIdToGroupId(sectionId) {
+  for (const g of HOLTER_GROUPS) {
+    if (g.sectionIds.includes(sectionId)) return g.id;
+  }
+  return null;
 }
 
