@@ -5,7 +5,7 @@ import {
   SYMPTOM_MATRIX_SYMPTOMS, SYMPTOM_MATRIX_ARRHYTHMIAS, DAILY_BURDEN_COLUMNS, DAILY_HR_COLUMNS,
   durationToHours, formatDuration, formatDateTimeWithDay, formatDateWithDay, daysBetweenInclusive,
   HOLTER_GROUPS, sectionIdToGroupId, isTraceValue,
-  MATRIX_SYMBOLS, MATRIX_SYMBOL_LABELS, isMatrixCorrelated, nextMatrixSymbol,
+  MATRIX_SYMBOLS, MATRIX_SYMBOL_LABELS, MATRIX_SYMBOL_LEVEL, isMatrixCorrelated, nextMatrixSymbol,
 } from './holterData.js';
 
 const ABNORMAL_KEYWORDS = ['あり', '相関あり', '発作性', '持続性', 'ショック', '不適切', 'モビッツ', 'Mobitz II', '完全', '高度', '2:1', 'SSS', '疑い', 'torsades', '多形性'];
@@ -524,7 +524,7 @@ export default function HolterBooster() {
                 <div className={styles.organBody}>
                   <p className={styles.matrixHint}>
                     ePatch p.12「患者症状 vs 不整脈相関」を相関頻度で表現。<br />
-                    セルをクリックすると記号が循環: <strong>未選択 → ●(毎回 100%) → ◑(ほぼ 70-90%) → ◐(半分 40-60%) → △(たまに 10-30%) → −(なし 0% 明示) → 未選択</strong>
+                    セルをクリックすると相関度が循環: <strong>未選択 → ●(毎回 100%・赤) → ◎(ほぼ 70-90%・橙) → ○(半分 40-60%・黄) → △(たまに 10-30%・青) → −(なし 0%明示・灰) → 未選択</strong>
                   </p>
                   <div className={styles.matrixWrapper}>
                     <table className={styles.matrix}>
@@ -543,9 +543,9 @@ export default function HolterBooster() {
                             {SYMPTOM_MATRIX_ARRHYTHMIAS.map((a) => {
                               const key = `${s}→${a}`;
                               const sym = symptomMatrix[key] || '';
+                              const lvl = MATRIX_SYMBOL_LEVEL[sym];
                               const cls = [styles.matrixBtn];
-                              if (isMatrixCorrelated(sym)) cls.push(styles.matrixBtnActive);
-                              if (sym === '−') cls.push(styles.matrixBtnDenied);
+                              if (lvl) cls.push(styles[`matrixBtnLvl${lvl}`]);
                               return (
                                 <td key={a} className={styles.matrixCell}>
                                   <button

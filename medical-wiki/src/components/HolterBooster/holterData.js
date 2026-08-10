@@ -642,15 +642,24 @@ export const PRESET_NOTE = '※プリセット「洞調律・有意所見なし�
 export const SYMPTOM_MATRIX_SYMPTOMS = ['症状なし (無症候性)', '動悸', '失神・前失神', 'めまい・ふらつき', '胸痛・胸部不快', '息切れ・倦怠感'];
 export const SYMPTOM_MATRIX_ARRHYTHMIAS = ['PVC', 'SVPC', '洞頻脈', '洞徐脈', 'AF/AFL', 'SVT', 'VT', 'ポーズ', 'AVブロック', 'ST変化'];
 
-// 相関度シンボル (クリックで循環)
+// 相関度シンボル (クリックで循環) — Phase 10.1: 視認性改善で ◑/◐ を ◎/○ に差し替え
 // 未選択 → 毎回 → ほぼ → 半分 → たまに → なし → 未選択
-export const MATRIX_SYMBOLS = ['●', '◑', '◐', '△', '−'];
+// 記号はシェイプで区別、UI 側で色も付与 (赤→橙→黄→青→灰)
+export const MATRIX_SYMBOLS = ['●', '◎', '○', '△', '−'];
 export const MATRIX_SYMBOL_LABELS = {
   '●': '毎回 (100%)',
-  '◑': 'ほぼ (70-90%)',
-  '◐': '半分 (40-60%)',
+  '◎': 'ほぼ (70-90%)',
+  '○': '半分 (40-60%)',
   '△': 'たまに (10-30%)',
   '−': 'なし (0% 明示)',
+};
+// UI 用: 記号 → CSS カラーレベル (1-5)
+export const MATRIX_SYMBOL_LEVEL = {
+  '●': 5,
+  '◎': 4,
+  '○': 3,
+  '△': 2,
+  '−': 1,
 };
 // 「相関あり」と判定する記号 (診断補助ルール用): '−' 除く
 export function isMatrixCorrelated(v) {

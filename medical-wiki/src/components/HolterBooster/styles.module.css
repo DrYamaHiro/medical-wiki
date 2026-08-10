@@ -642,10 +642,17 @@
   font-family: inherit;
 }
 .matrixBtn:hover { background: #f3e5f5; }
-.matrixBtnActive { background: #c62828; color: #fff; }
-.matrixBtnActive:hover { background: #b71c1c; }
-.matrixBtnDenied { background: #eceff1; color: #546e7a; }
-.matrixBtnDenied:hover { background: #cfd8dc; }
+/* Phase 10.1: 相関度 5段階カラー (視認性改善) */
+.matrixBtnLvl5 { background: #c62828; color: #fff; }         /* 毎回 100% - 赤 */
+.matrixBtnLvl5:hover { background: #b71c1c; }
+.matrixBtnLvl4 { background: #ef6c00; color: #fff; }         /* ほぼ 70-90% - 橙 */
+.matrixBtnLvl4:hover { background: #e65100; }
+.matrixBtnLvl3 { background: #f9a825; color: #263238; }      /* 半分 40-60% - 黄 */
+.matrixBtnLvl3:hover { background: #f57f17; color: #fff; }
+.matrixBtnLvl2 { background: #1976d2; color: #fff; }         /* たまに 10-30% - 青 */
+.matrixBtnLvl2:hover { background: #0d47a1; }
+.matrixBtnLvl1 { background: #eceff1; color: #546e7a; }      /* なし 0% 明示 - 灰 */
+.matrixBtnLvl1:hover { background: #cfd8dc; }
 
 /* Phase 3: 日次負荷テーブル */
 .dailyTableWrapper {
