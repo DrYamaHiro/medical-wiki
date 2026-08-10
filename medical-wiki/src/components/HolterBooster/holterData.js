@@ -272,17 +272,21 @@ export const HOLTER_SECTIONS = [
   },
 
   // ============================================================
-  // 16. 日次負荷サマリー (ePatch: 日次心拍数 + 日次負荷サマリー)
+  // 15. 日次心拍数 (ePatch: 日次心拍数) — Phase 9 新設
   // ============================================================
-  // ※ 動的行数のため、UI 側の dailyBurden state を使用。
-  //   ここでは placeholder として空の items 配列を持つカードとして扱う。
+  {
+    id: 'daily_heart_rate',
+    title: '15. 日次心拍数 (ePatch: 日次心拍数)',
+    items: [],
+  },
+
+  // ============================================================
+  // 16. 日次負荷サマリー (ePatch: 日次負荷サマリー、全ての不整脈)
+  // ============================================================
   {
     id: 'daily_burden',
-    title: '15. 日次負荷サマリー (ePatch: 日次心拍数 + 日次負荷)',
-    items: [
-      // 動的テーブルは index.jsx 側で描画。この配列は空でよいが、
-      // renderer が items.map するので何か少なくとも 1 個ダミーは不要 (0件でOK)。
-    ],
+    title: '16. 日次負荷サマリー (ePatch: 日次負荷サマリー — 全ての不整脈)',
+    items: [],
   },
 
   // ============================================================
@@ -304,7 +308,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'hrv',
-    title: '18. 心拍数変動 HRV (ePatch: 心拍数変動 時間/周波数領域解析)',
+    title: '19. 心拍数変動 HRV (ePatch: 心拍数変動 時間/周波数領域解析)',
     items: [
       { id: 'sdnn', label: 'SDNN', type: 'numeric', unit: 'ms', placeholder: '204', normalRange: { min: 100, max: 300, note: '<50ms 予後不良指標' } },
       { id: 'sdann', label: 'SDANN', type: 'numeric', unit: 'ms', placeholder: '184' },
@@ -323,7 +327,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'qt',
-    title: '19. QT / QTc (ePatch: QT間隔解析 Bazett 男450 / 女460ms)',
+    title: '20. QT / QTc (ePatch: QT間隔解析 Bazett 男450 / 女460ms)',
     items: [
       { id: 'qt_min', label: '最小 QT間隔', type: 'numeric', unit: 'ms', placeholder: '330' },
       { id: 'qt_mean', label: '平均 QT間隔', type: 'numeric', unit: 'ms', placeholder: '388' },
@@ -344,7 +348,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'pvc_morphology',
-    title: '16. 心室形態解析 (ePatch: PVC 形態解析、主要形態1-9)',
+    title: '17. 心室形態解析 (ePatch: PVC 形態解析、主要形態1-9)',
     items: [
       { id: 'pvc_morph1_beats', label: '形態1 拍動数', type: 'numeric', unit: '個', placeholder: '12796' },
       { id: 'pvc_morph1_percent', label: '形態1 割合', type: 'numeric', unit: '%', placeholder: '57.63', hint: '≥80% で単一起源優位、アブレーション適応検討材料' },
@@ -374,7 +378,7 @@ export const HOLTER_SECTIONS = [
   // ※ 特殊 UI (マトリクス)、items は空、UI 側 symptomMatrix state で管理
   {
     id: 'symptom_matrix',
-    title: '17. 症状 × 不整脈 クロス集計 (ePatch: 患者の症状)',
+    title: '18. 症状 × 不整脈 クロス集計 (ePatch: 患者の症状)',
     items: [],
   },
 
@@ -383,7 +387,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'pacemaker_func',
-    title: '20. ペースメーカー機能評価 (植込例のみ)',
+    title: '21. ペースメーカー機能評価 (植込例のみ)',
     items: [
       { id: 'device_type', label: 'デバイス種別', type: 'choice', options: ['なし', 'PPM', 'ICD', 'CRT-P/D'] },
       { id: 'pacing_percent_a', label: '心房 (A) ペーシング率', type: 'numeric', unit: '%', placeholder: '30' },
@@ -615,21 +619,33 @@ export const PRESET_NOTE = '※プリセット「洞調律・有意所見なし�
 export const SYMPTOM_MATRIX_SYMPTOMS = ['動悸', '失神・前失神', 'めまい・ふらつき', '胸痛・胸部不快', '息切れ・倦怠感'];
 export const SYMPTOM_MATRIX_ARRHYTHMIAS = ['PVC', 'SVPC', '洞頻脈', '洞徐脈', 'AF/AFL', 'SVT', 'VT', 'ポーズ', 'AVブロック', 'ST変化'];
 
-// 日次負荷サマリーの列定義 (Phase 8: date/datetime/duration picker 対応)
+// 日次負荷サマリーの列定義 (Phase 9: ePatch 日次負荷サマリー準拠、全て割合対応)
+// 順序: 日付 / AF(継続+割合) / SVPC(割合+拍動数) / PVC(割合+拍動数) / SVT(割合+数) / AVB(割合+数) / 心室調律(割合+数)
 export const DAILY_BURDEN_COLUMNS = [
   { key: 'date', label: '日付', type: 'date', width: '140px' },
-  { key: 'analyze_hours', label: '解析可能時間', type: 'duration', width: '260px' },
-  { key: 'af_percent', label: 'AF %', type: 'numeric', placeholder: '0', width: '70px' },
   { key: 'af_duration', label: 'AF 継続時間', type: 'duration', width: '260px' },
-  { key: 'spvc_beats', label: 'SVPC 数', type: 'numeric', placeholder: '325', width: '75px' },
-  { key: 'spvc_percent', label: 'SVPC %', type: 'numeric', placeholder: '0.52', width: '65px' },
-  { key: 'pvc_beats', label: 'PVC 数', type: 'numeric', placeholder: '2335', width: '75px' },
-  { key: 'pvc_percent', label: 'PVC %', type: 'numeric', placeholder: '3.73', width: '65px' },
-  { key: 'svt_episodes', label: 'SVT 回', type: 'numeric', placeholder: '5', width: '55px' },
-  { key: 'avb_episodes', label: 'AVB 回', type: 'numeric', placeholder: '0', width: '55px' },
-  { key: 'vent_episodes', label: '心室調律 回', type: 'numeric', placeholder: '3', width: '80px' },
-  { key: 'peak_event_datetime', label: 'イベント日時', type: 'datetime', width: '210px' },
-  { key: 'note', label: 'メモ (症状等)', type: 'text', placeholder: '', width: '150px' },
+  { key: 'af_percent', label: 'AF %', type: 'numeric', placeholder: '0', width: '90px', allowsTrace: true },
+  { key: 'spvc_percent', label: 'SVPC %', type: 'numeric', placeholder: '0.52', width: '90px', allowsTrace: true },
+  { key: 'spvc_beats', label: 'SVPC 拍動数', type: 'numeric', placeholder: '325', width: '90px' },
+  { key: 'pvc_percent', label: 'PVC %', type: 'numeric', placeholder: '3.73', width: '90px', allowsTrace: true },
+  { key: 'pvc_beats', label: 'PVC 拍動数', type: 'numeric', placeholder: '2335', width: '90px' },
+  { key: 'svt_percent', label: 'SVT %', type: 'numeric', placeholder: '0.02', width: '90px', allowsTrace: true },
+  { key: 'svt_episodes', label: 'SVT 数', type: 'numeric', placeholder: '5', width: '75px' },
+  { key: 'avb_percent', label: 'AVB %', type: 'numeric', placeholder: '0', width: '90px', allowsTrace: true },
+  { key: 'avb_episodes', label: 'AVB 数', type: 'numeric', placeholder: '0', width: '75px' },
+  { key: 'vent_percent', label: '心室調律 %', type: 'numeric', placeholder: '0.01', width: '95px', allowsTrace: true },
+  { key: 'vent_episodes', label: '心室調律 数', type: 'numeric', placeholder: '3', width: '90px' },
+];
+
+// 日次心拍数の列定義 (Phase 9 新設: ePatch 日次心拍数準拠)
+// 順序: 年月日 / 日次総心拍数 / 最大心拍数 / 最小心拍数 / 平均心拍数 / 解析可能時間
+export const DAILY_HR_COLUMNS = [
+  { key: 'date', label: '年月日', type: 'date', width: '140px' },
+  { key: 'total_beats', label: '日次総心拍数', type: 'numeric', placeholder: '102607', width: '110px' },
+  { key: 'hr_max', label: '最大心拍数', type: 'numeric', placeholder: '125', width: '90px' },
+  { key: 'hr_min', label: '最小心拍数', type: 'numeric', placeholder: '43', width: '90px' },
+  { key: 'hr_mean', label: '平均心拍数', type: 'numeric', placeholder: '71', width: '90px' },
+  { key: 'analyze_hours', label: '解析可能時間', type: 'duration', width: '260px' },
 ];
 
 // シナリオ別プリセット定義
@@ -770,8 +786,8 @@ export const HOLTER_GROUPS = [
   {
     id: 'group_detailed_analysis',
     title: 'C. 詳細解析・追加項目 (ePatch 後半ページ)',
-    subtitle: 'トレンド → 日次負荷 → PVC形態解析 → 症状マトリクス → HRV → QT → PM機能',
-    sectionIds: ['heart_rate_trend', 'daily_burden', 'pvc_morphology', 'symptom_matrix', 'hrv', 'qt', 'pacemaker_func'],
+    subtitle: 'トレンド → 日次心拍数 → 日次負荷 → PVC形態解析 → 症状マトリクス → HRV → QT → PM機能',
+    sectionIds: ['heart_rate_trend', 'daily_heart_rate', 'daily_burden', 'pvc_morphology', 'symptom_matrix', 'hrv', 'qt', 'pacemaker_func'],
   },
 ];
 

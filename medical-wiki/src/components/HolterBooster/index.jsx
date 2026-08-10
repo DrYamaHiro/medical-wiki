@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import styles from './styles.module.css';
 import {
   HOLTER_SECTIONS, HOLTER_ASSESSMENT_RULES, buildNormalPreset, PRESET_NOTE, SCENARIO_PRESETS,
-  SYMPTOM_MATRIX_SYMPTOMS, SYMPTOM_MATRIX_ARRHYTHMIAS, DAILY_BURDEN_COLUMNS,
+  SYMPTOM_MATRIX_SYMPTOMS, SYMPTOM_MATRIX_ARRHYTHMIAS, DAILY_BURDEN_COLUMNS, DAILY_HR_COLUMNS,
   durationToHours, formatDuration, formatDateTimeWithDay, formatDateWithDay, daysBetweenInclusive,
   HOLTER_GROUPS, sectionIdToGroupId, isTraceValue,
 } from './holterData.js';
@@ -63,6 +63,8 @@ export default function HolterBooster() {
   const [symptomMatrix, setSymptomMatrix] = useState({});
   // Phase 3: 日次負荷 state (array of row objects)
   const [dailyBurden, setDailyBurden] = useState([]);
+  // Phase 9: 日次心拍数 state (array of row objects)
+  const [dailyHeartRate, setDailyHeartRate] = useState([]);
   // Phase 3: セクション DOM への ref (スクロール用)
   const sectionRefs = useRef({});
   // Phase 3: 症状マトリクス・日次負荷用の特殊 sectionId (assessment rule 側と一致)
@@ -84,6 +86,17 @@ export default function HolterBooster() {
 
   const removeDailyRow = useCallback((idx) => {
     setDailyBurden((prev) => prev.filter((_, i) => i !== idx));
+  }, []);
+
+  // Phase 9: 日次心拍数テーブル操作
+  const addDailyHRRow = useCallback(() => {
+    setDailyHeartRate((prev) => [...prev, {}]);
+  }, []);
+  const updateDailyHRRow = useCallback((idx, key, value) => {
+    setDailyHeartRate((prev) => prev.map((r, i) => (i === idx ? { ...r, [key]: value } : r)));
+  }, []);
+  const removeDailyHRRow = useCallback((idx) => {
+    setDailyHeartRate((prev) => prev.filter((_, i) => i !== idx));
   }, []);
 
   const scrollToSection = useCallback((sectionId) => {
@@ -193,6 +206,7 @@ export default function HolterBooster() {
     setGroupCollapsed(buildInitialGroupCollapsed());
     setSymptomMatrix({});
     setDailyBurden([]);
+    setDailyHeartRate([]);
   };
 
   const gender = findings.sex === '女性' ? 'female' : 'male';
@@ -282,6 +296,23 @@ export default function HolterBooster() {
         if (parts.length > 0) lines.push(`  ・${parts.join(' / ')}`);
       });
     }
+    // 日次心拍数出力
+    const validDailyHR = dailyHeartRate.filter((r) => Object.values(r).some(isValueSet));
+    if (validDailyHR.length > 0) {
+      lines.push('');
+      lines.push('■ 日次心拍数');
+      validDailyHR.forEach((r) => {
+        const parts = DAILY_HR_COLUMNS
+          .filter((c) => isValueSet(r[c.key]))
+          .map((c) => {
+            const v = r[c.key];
+            if (c.type === 'date') return `${c.label} ${formatDateWithDay(v, startDate)}`;
+            if (c.type === 'duration') return `${c.label} ${formatDuration(v)}`;
+            return `${c.label} ${v}`;
+          });
+        if (parts.length > 0) lines.push(`  ・${parts.join(' / ')}`);
+      });
+    }
     const trimmed = overallComment.trim();
     if (trimmed) {
       lines.push('');
@@ -289,7 +320,7 @@ export default function HolterBooster() {
       lines.push(`  ${trimmed}`);
     }
     return lines.join('\n');
-  }, [findings, overallComment, symptomMatrix, dailyBurden]);
+  }, [findings, overallComment, symptomMatrix, dailyBurden, dailyHeartRate]);
 
   // アセスメント自動生成 (level 別にグルーピング、sectionId 付き)
   const assessmentGroups = useMemo(() => {
@@ -438,12 +469,14 @@ export default function HolterBooster() {
                 <div className={styles.groupBody}>
                   {groupSections.map((section) => {
           const isCollapsed = !!collapsed[section.id];
-          // 特殊セクション: 症状マトリクス / 日次負荷 の入力済カウント
+          // 特殊セクション: 症状マトリクス / 日次負荷 / 日次心拍数 の入力済カウント
           let inputCount;
           if (section.id === 'symptom_matrix') {
             inputCount = Object.values(symptomMatrix).filter(Boolean).length;
           } else if (section.id === 'daily_burden') {
             inputCount = dailyBurden.length;
+          } else if (section.id === 'daily_heart_rate') {
+            inputCount = dailyHeartRate.length;
           } else {
             inputCount = section.items.filter((it) => {
               if (it.type === 'sub_header') return false;
@@ -454,7 +487,7 @@ export default function HolterBooster() {
             }).length;
           }
           const badgeLabel = section.id === 'symptom_matrix' ? `${inputCount} 件対応`
-            : section.id === 'daily_burden' ? `${inputCount} 日入力済`
+            : (section.id === 'daily_burden' || section.id === 'daily_heart_rate') ? `${inputCount} 日入力済`
             : `${inputCount} 件入力済`;
           return (
             <div key={section.id} id={`holter-section-${section.id}`} className={styles.organCard}>
@@ -510,40 +543,46 @@ export default function HolterBooster() {
                   </div>
                 </div>
               )}
-              {!isCollapsed && section.id === 'daily_burden' && (
+              {!isCollapsed && (section.id === 'daily_burden' || section.id === 'daily_heart_rate') && (() => {
+                const isBurden = section.id === 'daily_burden';
+                const cols = isBurden ? DAILY_BURDEN_COLUMNS : DAILY_HR_COLUMNS;
+                const rows = isBurden ? dailyBurden : dailyHeartRate;
+                const updateRow = isBurden ? updateDailyRow : updateDailyHRRow;
+                const removeRow = isBurden ? removeDailyRow : removeDailyHRRow;
+                const addRow = isBurden ? addDailyRow : addDailyHRRow;
+                const hint = isBurden
+                  ? 'ePatch p.9「日次負荷サマリー」— 日ごとの割合と拍動数/エピソード数を入力。<0.01% はチップで指定可。'
+                  : 'ePatch「日次心拍数」— 日ごとの総心拍数・最大/最小/平均 HR・解析可能時間を入力。';
+                return (
                 <div className={styles.organBody}>
-                  <p className={styles.matrixHint}>ePatch p.9「日次負荷サマリー」の要旨。日ごとの負荷変動から発作性パターンを評価します。</p>
+                  <p className={styles.matrixHint}>{hint}</p>
                   <div className={styles.dailyTableWrapper}>
                     <table className={styles.dailyTable}>
                       <thead>
                         <tr>
-                          {DAILY_BURDEN_COLUMNS.map((c) => (
-                            <th key={c.key} style={{ minWidth: c.width }}>{c.label}</th>
-                          ))}
+                          {cols.map((c) => (<th key={c.key} style={{ minWidth: c.width }}>{c.label}</th>))}
                           <th style={{ width: '40px' }}></th>
                         </tr>
                       </thead>
                       <tbody>
-                        {dailyBurden.length === 0 && (
+                        {rows.length === 0 && (
                           <tr>
-                            <td colSpan={DAILY_BURDEN_COLUMNS.length + 1} className={styles.dailyEmpty}>
-                              「+ 日を追加」で日次データを入力できます (任意入力)。
-                            </td>
+                            <td colSpan={cols.length + 1} className={styles.dailyEmpty}>「+ 日を追加」で日次データを入力できます (任意入力)。</td>
                           </tr>
                         )}
-                        {dailyBurden.map((row, idx) => (
+                        {rows.map((row, idx) => (
                           <tr key={idx}>
-                            {DAILY_BURDEN_COLUMNS.map((c) => (
+                            {cols.map((c) => (
                               <td key={c.key}>
                                 {c.type === 'date' && (
-                                  <input type="date" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateDailyRow(idx, c.key, e.target.value)} />
+                                  <input type="date" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateRow(idx, c.key, e.target.value)} />
                                 )}
                                 {c.type === 'datetime' && (
-                                  <input type="datetime-local" step="1" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateDailyRow(idx, c.key, e.target.value)} />
+                                  <input type="datetime-local" step="1" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateRow(idx, c.key, e.target.value)} />
                                 )}
                                 {c.type === 'duration' && (() => {
                                   const d = (row[c.key] && typeof row[c.key] === 'object') ? row[c.key] : { d: '', h: '', m: '', s: '' };
-                                  const upd = (k, val) => updateDailyRow(idx, c.key, { ...d, [k]: val });
+                                  const upd = (k, val) => updateRow(idx, c.key, { ...d, [k]: val });
                                   return (
                                     <span style={{ display: 'inline-flex', gap: '2px', alignItems: 'center', flexWrap: 'wrap' }}>
                                       <input type="number" min="0" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.d || ''} onChange={(e) => upd('d', e.target.value)} placeholder="日" />
@@ -557,35 +596,51 @@ export default function HolterBooster() {
                                     </span>
                                   );
                                 })()}
-                                {(c.type === 'numeric' || c.type === 'text') && (
-                                  <input
-                                    type={c.type === 'numeric' ? 'number' : 'text'}
-                                    step="any"
-                                    className={styles.dailyInput}
-                                    value={row[c.key] || ''}
-                                    onChange={(e) => updateDailyRow(idx, c.key, e.target.value)}
-                                    placeholder={c.placeholder}
-                                  />
+                                {c.type === 'numeric' && (() => {
+                                  const cellVal = row[c.key];
+                                  const cellTrace = isTraceValue(cellVal);
+                                  return (
+                                    <span style={{ display: 'inline-flex', gap: '3px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                      <input
+                                        type="number"
+                                        step="any"
+                                        className={styles.dailyInput}
+                                        style={{ width: c.allowsTrace ? '55px' : '', ...(cellTrace ? { background: '#eceff1', color: '#90a4ae' } : {}) }}
+                                        value={cellTrace ? '' : (cellVal || '')}
+                                        onChange={(e) => updateRow(idx, c.key, e.target.value)}
+                                        placeholder={c.placeholder}
+                                        disabled={cellTrace}
+                                      />
+                                      {c.allowsTrace && (
+                                        <button
+                                          type="button"
+                                          className={`${styles.traceChip} ${cellTrace ? styles.traceChipActive : ''}`}
+                                          style={{ padding: '0.15rem 0.35rem', fontSize: '0.65rem', margin: 0 }}
+                                          onClick={() => updateRow(idx, c.key, cellTrace ? '' : '<0.01')}
+                                          title="ePatch レポートで <0.01% と表記されている場合に使用"
+                                        >{cellTrace ? '<0.01 ✓' : '<0.01'}</button>
+                                      )}
+                                    </span>
+                                  );
+                                })()}
+                                {c.type === 'text' && (
+                                  <input type="text" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateRow(idx, c.key, e.target.value)} placeholder={c.placeholder} />
                                 )}
                               </td>
                             ))}
                             <td>
-                              <button
-                                type="button"
-                                className={styles.dailyRemoveBtn}
-                                onClick={() => removeDailyRow(idx)}
-                                title="この行を削除"
-                              >×</button>
+                              <button type="button" className={styles.dailyRemoveBtn} onClick={() => removeRow(idx)} title="この行を削除">×</button>
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
-                  <button type="button" className={styles.dailyAddBtn} onClick={addDailyRow}>+ 日を追加</button>
+                  <button type="button" className={styles.dailyAddBtn} onClick={addRow}>+ 日を追加</button>
                 </div>
-              )}
-              {!isCollapsed && section.id !== 'symptom_matrix' && section.id !== 'daily_burden' && (
+                );
+              })()}
+              {!isCollapsed && section.id !== 'symptom_matrix' && section.id !== 'daily_burden' && section.id !== 'daily_heart_rate' && (
                 <div className={styles.organBody}>
                   {section.items.map((item, itemIdx) => {
                     // sub_header 型 は視覚区切りとして描画 (入力欄なし、任意で「全てなし」ボタン付き)
