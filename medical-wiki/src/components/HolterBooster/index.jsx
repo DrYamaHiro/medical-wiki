@@ -34,12 +34,13 @@ function formatToday() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-// section の初期折りたたみ状態を build
+// section の初期折りたたみ状態: Phase 4 で全セクションデフォルト折りたたみ
 function buildInitialCollapsed() {
   const s = {};
-  HOLTER_SECTIONS.forEach((sec) => {
-    if (sec.defaultCollapsed) s[sec.id] = true;
-  });
+  HOLTER_SECTIONS.forEach((sec) => { s[sec.id] = true; });
+  // 動的セクション (symptom_matrix, daily_burden) も閉じる
+  s.symptom_matrix = true;
+  s.daily_burden = true;
   return s;
 }
 
@@ -331,12 +332,23 @@ export default function HolterBooster() {
 
         {HOLTER_SECTIONS.map((section) => {
           const isCollapsed = !!collapsed[section.id];
-          const inputCount = section.items.filter((it) => {
-            const v = findings[it.id];
-            const c = comments[it.id];
-            const has = Array.isArray(v) ? v.length > 0 : (v !== undefined && v !== '' && v !== null);
-            return has || (c && c.trim() !== '');
-          }).length;
+          // 特殊セクション: 症状マトリクス / 日次負荷 の入力済カウント
+          let inputCount;
+          if (section.id === 'symptom_matrix') {
+            inputCount = Object.values(symptomMatrix).filter(Boolean).length;
+          } else if (section.id === 'daily_burden') {
+            inputCount = dailyBurden.length;
+          } else {
+            inputCount = section.items.filter((it) => {
+              const v = findings[it.id];
+              const c = comments[it.id];
+              const has = Array.isArray(v) ? v.length > 0 : (v !== undefined && v !== '' && v !== null);
+              return has || (c && c.trim() !== '');
+            }).length;
+          }
+          const badgeLabel = section.id === 'symptom_matrix' ? `${inputCount} 件対応`
+            : section.id === 'daily_burden' ? `${inputCount} 日入力済`
+            : `${inputCount} 件入力済`;
           return (
             <div key={section.id} id={`holter-section-${section.id}`} className={styles.organCard}>
               <button
@@ -348,10 +360,101 @@ export default function HolterBooster() {
                 <span className={styles.organToggle}>{isCollapsed ? '▸' : '▾'}</span>
                 <span className={styles.organName}>{section.title}</span>
                 {inputCount > 0 && (
-                  <span className={styles.organBadge}>{inputCount} 件入力済</span>
+                  <span className={styles.organBadge}>{badgeLabel}</span>
                 )}
               </button>
-              {!isCollapsed && (
+              {!isCollapsed && section.id === 'symptom_matrix' && (
+                <div className={styles.organBody}>
+                  <p className={styles.matrixHint}>ePatch p.12「患者症状 vs 不整脈相関」の要旨。症状ごとに紐付いた不整脈をクリックしてください。</p>
+                  <div className={styles.matrixWrapper}>
+                    <table className={styles.matrix}>
+                      <thead>
+                        <tr>
+                          <th className={styles.matrixCorner}>症状 \ 不整脈</th>
+                          {SYMPTOM_MATRIX_ARRHYTHMIAS.map((a) => (
+                            <th key={a} className={styles.matrixColHead}>{a}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {SYMPTOM_MATRIX_SYMPTOMS.map((s) => (
+                          <tr key={s}>
+                            <th className={styles.matrixRowHead}>{s}</th>
+                            {SYMPTOM_MATRIX_ARRHYTHMIAS.map((a) => {
+                              const key = `${s}→${a}`;
+                              const active = !!symptomMatrix[key];
+                              return (
+                                <td key={a} className={styles.matrixCell}>
+                                  <button
+                                    type="button"
+                                    className={`${styles.matrixBtn} ${active ? styles.matrixBtnActive : ''}`}
+                                    onClick={() => toggleMatrixCell(s, a)}
+                                    aria-pressed={active}
+                                  >
+                                    {active ? '●' : ''}
+                                  </button>
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+              {!isCollapsed && section.id === 'daily_burden' && (
+                <div className={styles.organBody}>
+                  <p className={styles.matrixHint}>ePatch p.9「日次負荷サマリー」の要旨。日ごとの負荷変動から発作性パターンを評価します。</p>
+                  <div className={styles.dailyTableWrapper}>
+                    <table className={styles.dailyTable}>
+                      <thead>
+                        <tr>
+                          {DAILY_BURDEN_COLUMNS.map((c) => (
+                            <th key={c.key} style={{ minWidth: c.width }}>{c.label}</th>
+                          ))}
+                          <th style={{ width: '40px' }}></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {dailyBurden.length === 0 && (
+                          <tr>
+                            <td colSpan={DAILY_BURDEN_COLUMNS.length + 1} className={styles.dailyEmpty}>
+                              「+ 日を追加」で日次データを入力できます (任意入力)。
+                            </td>
+                          </tr>
+                        )}
+                        {dailyBurden.map((row, idx) => (
+                          <tr key={idx}>
+                            {DAILY_BURDEN_COLUMNS.map((c) => (
+                              <td key={c.key}>
+                                <input
+                                  type={c.type === 'numeric' ? 'number' : 'text'}
+                                  step="any"
+                                  className={styles.dailyInput}
+                                  value={row[c.key] || ''}
+                                  onChange={(e) => updateDailyRow(idx, c.key, e.target.value)}
+                                  placeholder={c.placeholder}
+                                />
+                              </td>
+                            ))}
+                            <td>
+                              <button
+                                type="button"
+                                className={styles.dailyRemoveBtn}
+                                onClick={() => removeDailyRow(idx)}
+                                title="この行を削除"
+                              >×</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <button type="button" className={styles.dailyAddBtn} onClick={addDailyRow}>+ 日を追加</button>
+                </div>
+              )}
+              {!isCollapsed && section.id !== 'symptom_matrix' && section.id !== 'daily_burden' && (
                 <div className={styles.organBody}>
                   {section.items.map((item) => (
                     <div key={item.id} className={`${styles.itemRow} ${item.emergency ? styles.itemRowEmergency : ''}`}>
@@ -440,129 +543,6 @@ export default function HolterBooster() {
             </div>
           );
         })}
-
-        {/* Phase 3: 症状 × 不整脈 クロス集計マトリクス */}
-        <div id="holter-section-symptom_matrix" className={styles.organCard}>
-          <button
-            type="button"
-            className={styles.organHeader}
-            onClick={() => toggleSection('symptom_matrix')}
-            aria-expanded={!collapsed.symptom_matrix}
-          >
-            <span className={styles.organToggle}>{collapsed.symptom_matrix ? '▸' : '▾'}</span>
-            <span className={styles.organName}>症状 × 不整脈 クロス集計 (Phase 3)</span>
-            {Object.values(symptomMatrix).filter(Boolean).length > 0 && (
-              <span className={styles.organBadge}>{Object.values(symptomMatrix).filter(Boolean).length} 件対応</span>
-            )}
-          </button>
-          {!collapsed.symptom_matrix && (
-            <div className={styles.organBody}>
-              <p className={styles.matrixHint}>ePatch page 12 「患者症状 vs 不整脈相関」の要旨。症状ごとに紐付いた不整脈をクリックしてください。</p>
-              <div className={styles.matrixWrapper}>
-                <table className={styles.matrix}>
-                  <thead>
-                    <tr>
-                      <th className={styles.matrixCorner}>症状 \ 不整脈</th>
-                      {SYMPTOM_MATRIX_ARRHYTHMIAS.map((a) => (
-                        <th key={a} className={styles.matrixColHead}>{a}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {SYMPTOM_MATRIX_SYMPTOMS.map((s) => (
-                      <tr key={s}>
-                        <th className={styles.matrixRowHead}>{s}</th>
-                        {SYMPTOM_MATRIX_ARRHYTHMIAS.map((a) => {
-                          const key = `${s}→${a}`;
-                          const active = !!symptomMatrix[key];
-                          return (
-                            <td key={a} className={styles.matrixCell}>
-                              <button
-                                type="button"
-                                className={`${styles.matrixBtn} ${active ? styles.matrixBtnActive : ''}`}
-                                onClick={() => toggleMatrixCell(s, a)}
-                                aria-pressed={active}
-                              >
-                                {active ? '●' : ''}
-                              </button>
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Phase 3: 日次負荷サマリー */}
-        <div id="holter-section-daily_burden" className={styles.organCard}>
-          <button
-            type="button"
-            className={styles.organHeader}
-            onClick={() => toggleSection('daily_burden')}
-            aria-expanded={!collapsed.daily_burden}
-          >
-            <span className={styles.organToggle}>{collapsed.daily_burden ? '▸' : '▾'}</span>
-            <span className={styles.organName}>日次負荷サマリー (Phase 3)</span>
-            {dailyBurden.length > 0 && (
-              <span className={styles.organBadge}>{dailyBurden.length} 日入力済</span>
-            )}
-          </button>
-          {!collapsed.daily_burden && (
-            <div className={styles.organBody}>
-              <p className={styles.matrixHint}>ePatch page 9 「日次負荷サマリー」の要旨。日ごとの負荷変動から発作性パターンを評価します。</p>
-              <div className={styles.dailyTableWrapper}>
-                <table className={styles.dailyTable}>
-                  <thead>
-                    <tr>
-                      {DAILY_BURDEN_COLUMNS.map((c) => (
-                        <th key={c.key} style={{ minWidth: c.width }}>{c.label}</th>
-                      ))}
-                      <th style={{ width: '40px' }}></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dailyBurden.length === 0 && (
-                      <tr>
-                        <td colSpan={DAILY_BURDEN_COLUMNS.length + 1} className={styles.dailyEmpty}>
-                          「+ 日を追加」で日次データを入力できます (任意入力)。
-                        </td>
-                      </tr>
-                    )}
-                    {dailyBurden.map((row, idx) => (
-                      <tr key={idx}>
-                        {DAILY_BURDEN_COLUMNS.map((c) => (
-                          <td key={c.key}>
-                            <input
-                              type={c.type === 'numeric' ? 'number' : 'text'}
-                              step="any"
-                              className={styles.dailyInput}
-                              value={row[c.key] || ''}
-                              onChange={(e) => updateDailyRow(idx, c.key, e.target.value)}
-                              placeholder={c.placeholder}
-                            />
-                          </td>
-                        ))}
-                        <td>
-                          <button
-                            type="button"
-                            className={styles.dailyRemoveBtn}
-                            onClick={() => removeDailyRow(idx)}
-                            title="この行を削除"
-                          >×</button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <button type="button" className={styles.dailyAddBtn} onClick={addDailyRow}>+ 日を追加</button>
-            </div>
-          )}
-        </div>
 
         <div className={styles.overallCommentBlock}>
           <label className={styles.overallCommentLabel}>【全般所見・総合コメント】（記録全体・年齢・基礎疾患・薬剤・今後の方針など自由記載）</label>
