@@ -57,7 +57,9 @@ export const HOLTER_SECTIONS = [
   {
     id: 'ectopic_spvc',
     title: '4a. 上室性期外収縮 (ePatch: 異所性)',
+    sectionGate: { itemId: 'spvc_present', absentValues: ['なし'] },
     items: [
+      { id: 'spvc_present', label: '上室性期外収縮', type: 'choice', options: ['なし', 'あり (下記に詳細)'], hint: '「なし」で下記詳細は入力不要' },
       { id: 'spvc_total', label: '上室性期外収縮 総数', type: 'numeric', unit: '個', placeholder: '4665' },
       { id: 'spvc_percent', label: '上室性期外収縮 出現率', type: 'numeric', unit: '%', placeholder: '0.88', allowsTrace: true },
       { id: 'spvc_single', label: '　内 単発', type: 'numeric', unit: '個', placeholder: '4321' },
@@ -71,7 +73,9 @@ export const HOLTER_SECTIONS = [
   {
     id: 'ectopic_pvc',
     title: '4b. 心室性期外収縮 (ePatch: 異所性)',
+    sectionGate: { itemId: 'pvc_present', absentValues: ['なし'] },
     items: [
+      { id: 'pvc_present', label: '心室性期外収縮', type: 'choice', options: ['なし', 'あり (下記に詳細)'], hint: '「なし」で下記詳細は入力不要' },
       { id: 'pvc_total', label: '心室性期外収縮 総数', type: 'numeric', unit: '個', placeholder: '22182' },
       { id: 'pvc_percent', label: '心室性期外収縮 出現率', type: 'numeric', unit: '%', placeholder: '4.19', allowsTrace: true, normalRange: { min: 0, max: 1, note: '<1%正常域、10%以上でPVC心筋症リスク' } },
       { id: 'pvc_single', label: '　内 単発', type: 'numeric', unit: '個', placeholder: '19828' },
@@ -88,7 +92,9 @@ export const HOLTER_SECTIONS = [
   {
     id: 'patient_events',
     title: '5a. 患者イベント (ePatch: 症状時タップ回数)',
+    sectionGate: { itemId: 'patient_events_present', absentValues: ['なし (タップ・症状記録なし)'] },
     items: [
+      { id: 'patient_events_present', label: '患者イベント', type: 'choice', options: ['なし (タップ・症状記録なし)', 'あり (下記に回数)'], hint: '「なし」で下記詳細は入力不要' },
       { id: 'patient_events_count', label: '患者イベント数 (タップ回数)', type: 'numeric', unit: '回', placeholder: '3', hint: 'ePatch: 症状時タップ数、症状記録シート記載のみは含まず' },
     ],
   },
@@ -99,8 +105,10 @@ export const HOLTER_SECTIONS = [
   {
     id: 'pacing_events',
     title: '5b. ペーシングによる拍動 (ePatch: PM 拍動数)',
+    sectionGate: { itemId: 'pacing_present', absentValues: ['ペースメーカーなし (該当なし)'] },
     items: [
-      { id: 'pacing_beats_count', label: 'ペーシング拍動数', type: 'numeric', unit: '拍', placeholder: '', hint: 'ePatch は現在非表示扱い (機能不全評価は 22. PM 機能セクション参照)' },
+      { id: 'pacing_present', label: 'ペースメーカー', type: 'choice', options: ['ペースメーカーなし (該当なし)', 'あり (下記に拍動数)'], hint: 'PM 未装着なら「なし」を選ぶと下記は入力不要 (PM 患者で他目的の検査も「あり」を選択可)' },
+      { id: 'pacing_beats_count', label: 'ペーシング拍動数', type: 'numeric', unit: '拍', placeholder: '', hint: 'ePatch は現在非表示扱い (機能不全評価は 20. PM 機能セクション参照)' },
     ],
   },
 
@@ -203,12 +211,12 @@ export const HOLTER_SECTIONS = [
     id: 'findings',
     title: '12. 所見 (ePatch: エピソード5枠の下・所見欄) — 基本調律 + 陽性所見15 + 詳細所見17',
     items: [
-      { id: 'sub_basic_rhythm', type: 'sub_header', label: '(1) 基本調律' },
+      { id: 'sub_basic_rhythm', type: 'sub_header', label: '(1) 基本調律', allNoneButton: true },
       { id: 'find_sinus_rhythm', label: '洞調律 (Sinus rhythm)', type: 'choice', options: ['なし', 'あり'], hint: 'ePatch (+) 相当' },
       { id: 'find_sinus_tachycardia', label: '洞頻脈 (Sinus tachycardia)', type: 'choice', options: ['なし', 'あり'], hint: 'ePatch (+) 相当、最大HR + 時刻を要記載' },
       { id: 'find_sinus_bradycardia', label: '洞徐脈 (Sinus bradycardia)', type: 'choice', options: ['なし', 'あり'], hint: 'ePatch (+) 相当、最小HR + 時刻を要記載' },
 
-      { id: 'sub_common15', type: 'sub_header', label: '(2) 陽性所見 — よく使う15項目 (ePatch: 緊急項目/該当項目 (+))' },
+      { id: 'sub_common15', type: 'sub_header', label: '(2) 陽性所見 — よく使う15項目 (ePatch: 緊急項目/該当項目 (+))', allNoneButton: true },
       { id: 'find_af', label: '心房細動/粗動 Paroxysmal AF/AFL', type: 'choice', options: ['なし', 'あり'], emergency: true },
       { id: 'find_svt_other', label: 'その他の上室性頻拍 SVT', type: 'choice', options: ['なし', 'あり'] },
       { id: 'find_pause', label: 'ポーズ Pause (2.5秒以上)', type: 'choice', options: ['なし', 'あり'] },
@@ -225,7 +233,7 @@ export const HOLTER_SECTIONS = [
       { id: 'find_tachy_190', label: '頻脈 190bpm 以上が 30秒以上持続', type: 'choice', options: ['なし', 'あり'], emergency: true },
       { id: 'find_brady_35', label: '徐脈 35bpm 未満が 30秒以上持続', type: 'choice', options: ['なし', 'あり'], emergency: true },
 
-      { id: 'sub_detail17', type: 'sub_header', label: '(3) 詳細所見 — 追加17項目 (ePatch: その他解析項目 (+))' },
+      { id: 'sub_detail17', type: 'sub_header', label: '(3) 詳細所見 — 追加17項目 (ePatch: その他解析項目 (+))', allNoneButton: true },
       { id: 'find_non_conducted_spvc', label: '非伝導性上室性期外収縮', type: 'choice', options: ['なし', 'あり'] },
       { id: 'find_aberrant', label: '変行伝導', type: 'choice', options: ['なし', 'あり'] },
       { id: 'find_wandering_pm', label: '移動性ペースメーカー', type: 'choice', options: ['なし', 'あり'] },

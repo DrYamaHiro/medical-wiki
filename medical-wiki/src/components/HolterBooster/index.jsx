@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import styles from './styles.module.css';
 import {
   HOLTER_SECTIONS, HOLTER_ASSESSMENT_RULES, buildNormalPreset, PRESET_NOTE, SCENARIO_PRESETS,
@@ -149,6 +149,39 @@ export default function HolterBooster() {
     setOverallComment((prev) => {
       if (prev.includes(scenario.note)) return prev;
       return prev ? `${prev}\n${scenario.note}` : scenario.note;
+    });
+  }, []);
+
+  // Phase 8: 5b「ペースメーカーなし」選択 → find_pm_failure を自動で「該当なし」に反映
+  useEffect(() => {
+    const pacing = findings.pacing_present;
+    if (pacing === 'ペースメーカーなし (該当なし)' && findings.find_pm_failure !== '該当なし (デバイスなし)') {
+      setFindings((prev) => ({ ...prev, find_pm_failure: '該当なし (デバイスなし)' }));
+    }
+    // PM あり選択に切り替わり かつ既存が「該当なし」なら空にして再選択を促す
+    if (pacing === 'あり (下記に拍動数)' && findings.find_pm_failure === '該当なし (デバイスなし)') {
+      setFindings((prev) => ({ ...prev, find_pm_failure: '' }));
+    }
+  }, [findings.pacing_present, findings.find_pm_failure]);
+
+  // Phase 8: sub_header の「全てなし」ボタン — 該当 sub_group 内の choice item を「なし」に一括設定
+  const applyAllNoneFromHeader = useCallback((section, headerIdx) => {
+    // 該当 sub_header 以降、次の sub_header または末尾までの choice item を対象
+    const targets = [];
+    for (let i = headerIdx + 1; i < section.items.length; i++) {
+      const it = section.items[i];
+      if (it.type === 'sub_header') break;
+      if (it.type !== 'choice') continue;
+      // 特殊: find_pm_failure は「該当なし (デバイスなし)」
+      if (it.id === 'find_pm_failure') targets.push([it.id, '該当なし (デバイスなし)']);
+      else if (it.options && it.options.includes('なし')) targets.push([it.id, 'なし']);
+    }
+    if (targets.length === 0) return;
+    if (!window.confirm(`この区分の ${targets.length} 項目を「なし」に一括設定します。既存の選択は上書きされます。よろしいですか？`)) return;
+    setFindings((prev) => {
+      const next = { ...prev };
+      targets.forEach(([id, val]) => { next[id] = val; });
+      return next;
     });
   }, []);
 
@@ -554,11 +587,21 @@ export default function HolterBooster() {
               )}
               {!isCollapsed && section.id !== 'symptom_matrix' && section.id !== 'daily_burden' && (
                 <div className={styles.organBody}>
-                  {section.items.map((item) => {
-                    // sub_header 型 は視覚区切りとして描画 (入力欄なし)
+                  {section.items.map((item, itemIdx) => {
+                    // sub_header 型 は視覚区切りとして描画 (入力欄なし、任意で「全てなし」ボタン付き)
                     if (item.type === 'sub_header') {
                       return (
-                        <div key={item.id} className={styles.subHeader}>{item.label}</div>
+                        <div key={item.id} className={styles.subHeader}>
+                          <span>{item.label}</span>
+                          {item.allNoneButton && (
+                            <button
+                              type="button"
+                              className={styles.subHeaderBtn}
+                              onClick={() => applyAllNoneFromHeader(section, itemIdx)}
+                              title="この区分の項目を全て「なし」に一括設定"
+                            >この区分を全てなし</button>
+                          )}
+                        </div>
                       );
                     }
                     // sectionGate: gate が「なし」等の absentValues に一致していて、

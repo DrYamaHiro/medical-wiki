@@ -136,6 +136,10 @@
 
 /* Phase 7: sub_header (所見統合セクション内の視覚区切り) */
 .subHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.55rem 0.8rem;
   margin: 0.6rem -0.9rem;
   background: linear-gradient(90deg, #ede7f6 0%, #f3e5f5 50%, transparent 100%);
@@ -145,6 +149,19 @@
   font-size: 0.9rem;
 }
 .subHeader:first-child { margin-top: 0; }
+.subHeaderBtn {
+  padding: 0.28rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #fff;
+  color: #6a1b9a;
+  border: 1.5px solid #ce93d8;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.subHeaderBtn:hover { background: #f3e5f5; }
 
 /* Phase 7: sectionGate — なし選択時に他項目を disable 表示 */
 .itemRowGatedOff {
