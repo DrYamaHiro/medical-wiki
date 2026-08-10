@@ -5,6 +5,7 @@ import {
   SYMPTOM_MATRIX_SYMPTOMS, SYMPTOM_MATRIX_ARRHYTHMIAS, DAILY_BURDEN_COLUMNS, DAILY_HR_COLUMNS,
   durationToHours, formatDuration, formatDateTimeWithDay, formatDateWithDay, daysBetweenInclusive,
   HOLTER_GROUPS, sectionIdToGroupId, isTraceValue,
+  MATRIX_SYMBOLS, MATRIX_SYMBOL_LABELS, isMatrixCorrelated, nextMatrixSymbol,
 } from './holterData.js';
 
 const ABNORMAL_KEYWORDS = ['あり', '相関あり', '発作性', '持続性', 'ショック', '不適切', 'モビッツ', 'Mobitz II', '完全', '高度', '2:1', 'SSS', '疑い', 'torsades', '多形性'];
@@ -71,9 +72,17 @@ export default function HolterBooster() {
   sectionRefs.current.symptom_matrix = sectionRefs.current.symptom_matrix || { current: null };
   sectionRefs.current.daily_burden = sectionRefs.current.daily_burden || { current: null };
 
+  // Phase 10: マトリクスセルクリック → 記号を循環 (未選択→●→◑→◐→△→−→未選択)
   const toggleMatrixCell = useCallback((symptom, arr) => {
     const key = `${symptom}→${arr}`;
-    setSymptomMatrix((prev) => ({ ...prev, [key]: !prev[key] }));
+    setSymptomMatrix((prev) => {
+      const cur = prev[key];
+      const next = nextMatrixSymbol(cur);
+      const nextMap = { ...prev };
+      if (next === '' || next === undefined) delete nextMap[key];
+      else nextMap[key] = next;
+      return nextMap;
+    });
   }, []);
 
   const addDailyRow = useCallback(() => {
@@ -269,11 +278,14 @@ export default function HolterBooster() {
       }
     });
     // 症状 × 不整脈 マトリクス出力
-    const matrixEntries = Object.entries(symptomMatrix).filter(([, v]) => v).map(([k]) => k);
+    const matrixEntries = Object.entries(symptomMatrix).filter(([, v]) => v && v !== '');
     if (matrixEntries.length > 0) {
       lines.push('');
-      lines.push('■ 症状 × 不整脈 クロス集計');
-      matrixEntries.forEach((k) => lines.push(`  ・${k}`));
+      lines.push('■ 症状 × 不整脈 クロス集計 (相関度)');
+      matrixEntries.forEach(([k, sym]) => {
+        const lbl = MATRIX_SYMBOL_LABELS[sym] || sym;
+        lines.push(`  ・${k}  ${sym} (${lbl})`);
+      });
     }
     // 日次負荷サマリー出力
     const isValueSet = (v) => {
@@ -443,7 +455,7 @@ export default function HolterBooster() {
           // グループ全体の入力済み件数
           let groupInputCount = 0;
           groupSections.forEach((sec) => {
-            if (sec.id === 'symptom_matrix') groupInputCount += Object.values(symptomMatrix).filter(Boolean).length;
+            if (sec.id === 'symptom_matrix') groupInputCount += Object.values(symptomMatrix).filter((v) => v && v !== '').length;
             else if (sec.id === 'daily_burden') groupInputCount += dailyBurden.length;
             else groupInputCount += sec.items.filter((it) => {
               if (it.type === 'sub_header' || it.type === 'linked_display') return false;
@@ -477,7 +489,7 @@ export default function HolterBooster() {
           // 特殊セクション: 症状マトリクス / 日次負荷 / 日次心拍数 の入力済カウント
           let inputCount;
           if (section.id === 'symptom_matrix') {
-            inputCount = Object.values(symptomMatrix).filter(Boolean).length;
+            inputCount = Object.values(symptomMatrix).filter((v) => v && v !== '').length;
           } else if (section.id === 'daily_burden') {
             inputCount = dailyBurden.length;
           } else if (section.id === 'daily_heart_rate') {
@@ -510,7 +522,10 @@ export default function HolterBooster() {
               </button>
               {!isCollapsed && section.id === 'symptom_matrix' && (
                 <div className={styles.organBody}>
-                  <p className={styles.matrixHint}>ePatch p.12「患者症状 vs 不整脈相関」の要旨。症状ごとに紐付いた不整脈をクリックしてください。</p>
+                  <p className={styles.matrixHint}>
+                    ePatch p.12「患者症状 vs 不整脈相関」を相関頻度で表現。<br />
+                    セルをクリックすると記号が循環: <strong>未選択 → ●(毎回 100%) → ◑(ほぼ 70-90%) → ◐(半分 40-60%) → △(たまに 10-30%) → −(なし 0% 明示) → 未選択</strong>
+                  </p>
                   <div className={styles.matrixWrapper}>
                     <table className={styles.matrix}>
                       <thead>
@@ -527,16 +542,20 @@ export default function HolterBooster() {
                             <th className={styles.matrixRowHead}>{s}</th>
                             {SYMPTOM_MATRIX_ARRHYTHMIAS.map((a) => {
                               const key = `${s}→${a}`;
-                              const active = !!symptomMatrix[key];
+                              const sym = symptomMatrix[key] || '';
+                              const cls = [styles.matrixBtn];
+                              if (isMatrixCorrelated(sym)) cls.push(styles.matrixBtnActive);
+                              if (sym === '−') cls.push(styles.matrixBtnDenied);
                               return (
                                 <td key={a} className={styles.matrixCell}>
                                   <button
                                     type="button"
-                                    className={`${styles.matrixBtn} ${active ? styles.matrixBtnActive : ''}`}
+                                    className={cls.join(' ')}
                                     onClick={() => toggleMatrixCell(s, a)}
-                                    aria-pressed={active}
+                                    aria-pressed={!!sym}
+                                    title={sym ? MATRIX_SYMBOL_LABELS[sym] : 'クリックで相関度を設定'}
                                   >
-                                    {active ? '●' : ''}
+                                    {sym}
                                   </button>
                                 </td>
                               );

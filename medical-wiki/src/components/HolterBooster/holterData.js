@@ -313,6 +313,7 @@ export const HOLTER_SECTIONS = [
     id: 'hrv',
     title: '19. 心拍数変動 HRV (ePatch: 心拍数変動 時間/周波数領域解析)',
     items: [
+      { id: 'hrv_mean_nn', label: '平均 (NN 間隔)', type: 'numeric', unit: 'ms', placeholder: '848', hint: 'ePatch: RR間隔の平均、大きいほど徐脈傾向' },
       { id: 'sdnn', label: 'SDNN', type: 'numeric', unit: 'ms', placeholder: '204', normalRange: { min: 100, max: 300, note: '<50ms 予後不良指標' } },
       { id: 'sdann', label: 'SDANN', type: 'numeric', unit: 'ms', placeholder: '184' },
       { id: 'asdnn', label: 'ASDNN (5分間 SDNN の平均)', type: 'numeric', unit: 'ms', placeholder: '87' },
@@ -351,8 +352,21 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'pvc_morphology',
-    title: '17. 心室形態解析 (ePatch: PVC 形態解析、主要形態1-9)',
+    title: '17. 時間別割合 + 心室形態解析 (ePatch p.8-11)',
     items: [
+      { id: 'sub_17_af_hourly', type: 'sub_header', label: '(1) 心房細動/粗動の1時間あたりの割合 (ePatch p.8 棒グラフ)' },
+      { id: 'ref_af_burden_percent', type: 'linked_display', label: 'AF/AFL 総割合', sourceId: 'af_burden_percent', sourceSectionId: 'episode_af', unit: '%', hint: '7. 心房細動 セクションと共有 (時間別分布は ePatch グラフ参照)' },
+      { id: 'af_hourly_note', label: '時間帯・ピーク帯コメント', type: 'text', placeholder: '例: 22-04時に集中、平均 91bpm、100%到達日あり' },
+
+      { id: 'sub_17_spvc_hourly', type: 'sub_header', label: '(2) 上室性期外収縮の1時間あたりの割合 (ePatch p.8 棒グラフ)' },
+      { id: 'ref_spvc_percent', type: 'linked_display', label: 'SVPC 出現率', sourceId: 'spvc_percent', sourceSectionId: 'ectopic_spvc', unit: '%', hint: '4a. 上室性期外収縮 と共有' },
+      { id: 'spvc_hourly_note', label: '時間帯・ピーク帯コメント', type: 'text', placeholder: '例: 昼間に多い、活動時集中、ピーク時 2.4%/h' },
+
+      { id: 'sub_17_pvc_hourly', type: 'sub_header', label: '(3) 心室性期外収縮の1時間あたりの割合 (ePatch p.9 棒グラフ)' },
+      { id: 'ref_pvc_percent', type: 'linked_display', label: 'PVC 出現率', sourceId: 'pvc_percent', sourceSectionId: 'ectopic_pvc', unit: '%', hint: '4b. 心室性期外収縮 と共有' },
+      { id: 'pvc_hourly_note', label: '時間帯・ピーク帯コメント', type: 'text', placeholder: '例: 覚醒時集中、深夜低下、ピーク時 18%/h' },
+
+      { id: 'sub_17_morphology', type: 'sub_header', label: '(4) PVC の形態解析 (ePatch p.9 主要形態1-9)' },
       { id: 'pvc_morph1_beats', label: '形態1 拍動数', type: 'numeric', unit: '個', placeholder: '12796' },
       { id: 'pvc_morph1_percent', label: '形態1 割合', type: 'numeric', unit: '%', placeholder: '57.63', hint: '≥80% で単一起源優位、アブレーション適応検討材料' },
       { id: 'pvc_morph2_beats', label: '形態2 拍動数', type: 'numeric', unit: '個', placeholder: '4551' },
@@ -391,6 +405,7 @@ export const HOLTER_SECTIONS = [
   {
     id: 'pacemaker_func',
     title: '21. ペースメーカー機能評価 (植込例のみ)',
+    sectionGate: { itemId: 'pacing_present', absentValues: ['ペースメーカーなし (該当なし)'] },
     items: [
       { id: 'device_type', label: 'デバイス種別', type: 'choice', options: ['なし', 'PPM', 'ICD', 'CRT-P/D'] },
       { id: 'pacing_percent_a', label: '心房 (A) ペーシング率', type: 'numeric', unit: '%', placeholder: '30' },
@@ -510,7 +525,11 @@ export const HOLTER_ASSESSMENT_RULES = [
   { level: 'workup', sectionId: 'symptom_matrix', when: (f) => {
       if (!f.symptom_matrix || typeof f.symptom_matrix !== 'object') return false;
       const criticalCorrelations = ['失神・前失神→ポーズ', '失神・前失神→AVブロック', '失神・前失神→VT'];
-      return criticalCorrelations.some((k) => f.symptom_matrix[k]);
+      // 相関記号 (●/◑/◐/△) が付いていれば hit、'−' や '' はスキップ
+      return criticalCorrelations.some((k) => {
+        const v = f.symptom_matrix[k];
+        return typeof v === 'string' && v !== '' && v !== '−';
+      });
     },
     text: '症状マトリクスで失神と重篤不整脈 (ポーズ/AVB/VT) の直接対応あり。原因不整脈と失神が結び付いており、即時介入 (PM/ICD/アブレーション) を検討。' },
   { level: 'workup', sectionId: 'daily_burden', when: (f) => {
@@ -618,9 +637,32 @@ export function buildNormalPreset() {
 
 export const PRESET_NOTE = '※プリセット「洞調律・有意所見なし」適用済み — 個別項目 (数値・ST・CVHRI・QTc等) を実レポートと照合してから最終判断してください。';
 
-// 症状×不整脈マトリクス定義 (Phase 3)
-export const SYMPTOM_MATRIX_SYMPTOMS = ['動悸', '失神・前失神', 'めまい・ふらつき', '胸痛・胸部不快', '息切れ・倦怠感'];
+// 症状×不整脈マトリクス定義 (Phase 3 → 10 で記号相関式に拡張)
+// 症状なし: 不整脈時に症状が伴わないケース (無症候性)
+export const SYMPTOM_MATRIX_SYMPTOMS = ['症状なし (無症候性)', '動悸', '失神・前失神', 'めまい・ふらつき', '胸痛・胸部不快', '息切れ・倦怠感'];
 export const SYMPTOM_MATRIX_ARRHYTHMIAS = ['PVC', 'SVPC', '洞頻脈', '洞徐脈', 'AF/AFL', 'SVT', 'VT', 'ポーズ', 'AVブロック', 'ST変化'];
+
+// 相関度シンボル (クリックで循環)
+// 未選択 → 毎回 → ほぼ → 半分 → たまに → なし → 未選択
+export const MATRIX_SYMBOLS = ['●', '◑', '◐', '△', '−'];
+export const MATRIX_SYMBOL_LABELS = {
+  '●': '毎回 (100%)',
+  '◑': 'ほぼ (70-90%)',
+  '◐': '半分 (40-60%)',
+  '△': 'たまに (10-30%)',
+  '−': 'なし (0% 明示)',
+};
+// 「相関あり」と判定する記号 (診断補助ルール用): '−' 除く
+export function isMatrixCorrelated(v) {
+  return typeof v === 'string' && v !== '' && v !== '−';
+}
+// 次の記号 (undefined/'' → '●' → '◑' → '◐' → '△' → '−' → undefined)
+export function nextMatrixSymbol(v) {
+  const idx = MATRIX_SYMBOLS.indexOf(v);
+  if (idx === -1) return MATRIX_SYMBOLS[0];
+  if (idx === MATRIX_SYMBOLS.length - 1) return ''; // 「−」の次は未選択に戻る
+  return MATRIX_SYMBOLS[idx + 1];
+}
 
 // 日次負荷サマリーの列定義 (Phase 9: ePatch 日次負荷サマリー準拠、全て割合対応)
 // 順序: 日付 / AF(継続+割合) / SVPC(割合+拍動数) / PVC(割合+拍動数) / SVT(割合+数) / AVB(割合+数) / 心室調律(割合+数)

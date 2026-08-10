@@ -644,6 +644,8 @@
 .matrixBtn:hover { background: #f3e5f5; }
 .matrixBtnActive { background: #c62828; color: #fff; }
 .matrixBtnActive:hover { background: #b71c1c; }
+.matrixBtnDenied { background: #eceff1; color: #546e7a; }
+.matrixBtnDenied:hover { background: #cfd8dc; }
 
 /* Phase 3: 日次負荷テーブル */
 .dailyTableWrapper {
