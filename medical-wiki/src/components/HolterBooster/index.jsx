@@ -62,6 +62,9 @@ export default function HolterBooster() {
 
   // Phase 3: 症状マトリクス state
   const [symptomMatrix, setSymptomMatrix] = useState({});
+  // Phase 10.2: マトリクス記号の直接選択ポップオーバー (長押し/右クリックで開く)
+  const [matrixPopover, setMatrixPopover] = useState(null); // key or null
+  const longPressTimer = useRef(null);
   // Phase 3: 日次負荷 state (array of row objects)
   const [dailyBurden, setDailyBurden] = useState([]);
   // Phase 9: 日次心拍数 state (array of row objects)
@@ -72,7 +75,7 @@ export default function HolterBooster() {
   sectionRefs.current.symptom_matrix = sectionRefs.current.symptom_matrix || { current: null };
   sectionRefs.current.daily_burden = sectionRefs.current.daily_burden || { current: null };
 
-  // Phase 10: マトリクスセルクリック → 記号を循環 (未選択→●→◑→◐→△→−→未選択)
+  // Phase 10: マトリクスセルクリック → 記号を循環 (未選択→●→◎→○→△→−→未選択)
   const toggleMatrixCell = useCallback((symptom, arr) => {
     const key = `${symptom}→${arr}`;
     setSymptomMatrix((prev) => {
@@ -83,6 +86,29 @@ export default function HolterBooster() {
       else nextMap[key] = next;
       return nextMap;
     });
+  }, []);
+
+  // Phase 10.2: 記号を直接設定 (ポップオーバーから)
+  const setMatrixCell = useCallback((key, sym) => {
+    setSymptomMatrix((prev) => {
+      const nextMap = { ...prev };
+      if (!sym) delete nextMap[key];
+      else nextMap[key] = sym;
+      return nextMap;
+    });
+    setMatrixPopover(null);
+  }, []);
+
+  // 長押し検出 (500ms)
+  const startLongPress = useCallback((key) => {
+    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+    longPressTimer.current = setTimeout(() => {
+      setMatrixPopover(key);
+      longPressTimer.current = null;
+    }, 500);
+  }, []);
+  const cancelLongPress = useCallback(() => {
+    if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; }
   }, []);
 
   const addDailyRow = useCallback(() => {
@@ -101,6 +127,40 @@ export default function HolterBooster() {
   const addDailyHRRow = useCallback(() => {
     setDailyHeartRate((prev) => [...prev, {}]);
   }, []);
+
+  // Phase 10.2: 記録期間 (A) から日付行を自動生成
+  const autoFillDates = useCallback((which) => {
+    const start = findings.record_start_date;
+    const end = findings.record_end_date;
+    if (!start || !end) {
+      alert('2. レポートサマリー の「記録開始日」「記録終了日」を先に入力してください。');
+      return;
+    }
+    const s = new Date(start + 'T00:00:00');
+    const e = new Date(end + 'T00:00:00');
+    if (isNaN(s.getTime()) || isNaN(e.getTime()) || e < s) {
+      alert('記録開始日・終了日の指定が不正です。');
+      return;
+    }
+    const days = Math.floor((e - s) / (24 * 3600 * 1000)) + 1;
+    if (days > 31) {
+      alert('記録期間が 31 日を超えています。日付を確認してください。');
+      return;
+    }
+    const dates = [];
+    for (let i = 0; i < days; i++) {
+      const d = new Date(s.getTime() + i * 24 * 3600 * 1000);
+      dates.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`);
+    }
+    const setter = which === 'burden' ? setDailyBurden : setDailyHeartRate;
+    setter((prev) => {
+      // 既存行が空でなければ確認
+      if (prev.length > 0 && !window.confirm(`既存の ${prev.length} 行を破棄して ${days} 日分の行を作成します。よろしいですか？`)) {
+        return prev;
+      }
+      return dates.map((dt) => ({ date: dt }));
+    });
+  }, [findings.record_start_date, findings.record_end_date]);
   const updateDailyHRRow = useCallback((idx, key, value) => {
     setDailyHeartRate((prev) => prev.map((r, i) => (i === idx ? { ...r, [key]: value } : r)));
   }, []);
@@ -524,7 +584,8 @@ export default function HolterBooster() {
                 <div className={styles.organBody}>
                   <p className={styles.matrixHint}>
                     ePatch p.12「患者症状 vs 不整脈相関」を相関頻度で表現。<br />
-                    セルをクリックすると相関度が循環: <strong>未選択 → ●(毎回 100%・赤) → ◎(ほぼ 70-90%・橙) → ○(半分 40-60%・黄) → △(たまに 10-30%・青) → −(なし 0%明示・灰) → 未選択</strong>
+                    <strong>クリック</strong>で相関度が循環: 未選択 → ●(毎回 100%・赤) → ◎(ほぼ 70-90%・橙) → ○(半分 40-60%・黄) → △(たまに 10-30%・青) → −(なし 0%明示・灰) → 未選択<br />
+                    <strong>長押し (0.5秒) または右クリック</strong>で一覧から直接選択できます。
                   </p>
                   <div className={styles.matrixWrapper}>
                     <table className={styles.matrix}>
@@ -546,17 +607,49 @@ export default function HolterBooster() {
                               const lvl = MATRIX_SYMBOL_LEVEL[sym];
                               const cls = [styles.matrixBtn];
                               if (lvl) cls.push(styles[`matrixBtnLvl${lvl}`]);
+                              const popOpen = matrixPopover === key;
                               return (
-                                <td key={a} className={styles.matrixCell}>
+                                <td key={a} className={`${styles.matrixCell} ${styles.matrixCellWrap}`}>
                                   <button
                                     type="button"
                                     className={cls.join(' ')}
                                     onClick={() => toggleMatrixCell(s, a)}
+                                    onContextMenu={(e) => { e.preventDefault(); setMatrixPopover(popOpen ? null : key); }}
+                                    onPointerDown={() => startLongPress(key)}
+                                    onPointerUp={cancelLongPress}
+                                    onPointerLeave={cancelLongPress}
+                                    onPointerCancel={cancelLongPress}
                                     aria-pressed={!!sym}
-                                    title={sym ? MATRIX_SYMBOL_LABELS[sym] : 'クリックで相関度を設定'}
+                                    title={sym ? `${MATRIX_SYMBOL_LABELS[sym]} (クリックで次へ / 長押し・右クリックで直接選択)` : 'クリックで相関度を設定 (長押し・右クリックで直接選択)'}
                                   >
                                     {sym}
                                   </button>
+                                  {popOpen && (
+                                    <div className={styles.matrixPopover} onMouseLeave={() => setMatrixPopover(null)}>
+                                      {MATRIX_SYMBOLS.map((ms) => {
+                                        const mlvl = MATRIX_SYMBOL_LEVEL[ms];
+                                        return (
+                                          <button
+                                            key={ms}
+                                            type="button"
+                                            className={styles.matrixPopoverItem}
+                                            onClick={() => setMatrixCell(key, ms)}
+                                          >
+                                            <span className={`${styles.matrixPopoverSym} ${styles[`matrixBtnLvl${mlvl}`]}`}>{ms}</span>
+                                            {MATRIX_SYMBOL_LABELS[ms]}
+                                          </button>
+                                        );
+                                      })}
+                                      <button
+                                        type="button"
+                                        className={styles.matrixPopoverItem}
+                                        onClick={() => setMatrixCell(key, '')}
+                                      >
+                                        <span className={styles.matrixPopoverSym} style={{ border: '1px dashed #b0bec5' }}></span>
+                                        未選択に戻す
+                                      </button>
+                                    </div>
+                                  )}
                                 </td>
                               );
                             })}
@@ -596,26 +689,30 @@ export default function HolterBooster() {
                         )}
                         {rows.map((row, idx) => (
                           <tr key={idx}>
-                            {cols.map((c) => (
-                              <td key={c.key}>
+                            {cols.map((c) => {
+                              // Gate: A/B の該当セクションで「なし」なら列を disable
+                              const gateV = c.gateItemId ? findings[c.gateItemId] : undefined;
+                              const colGated = !!(c.gateItemId && c.gateAbsentValues && c.gateAbsentValues.includes(gateV));
+                              return (
+                              <td key={c.key} className={colGated ? styles.dailyCellGated : ''}>
                                 {c.type === 'date' && (
-                                  <input type="date" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateRow(idx, c.key, e.target.value)} />
+                                  <input type="date" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateRow(idx, c.key, e.target.value)} disabled={colGated} />
                                 )}
                                 {c.type === 'datetime' && (
-                                  <input type="datetime-local" step="1" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateRow(idx, c.key, e.target.value)} />
+                                  <input type="datetime-local" step="1" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateRow(idx, c.key, e.target.value)} disabled={colGated} />
                                 )}
                                 {c.type === 'duration' && (() => {
                                   const d = (row[c.key] && typeof row[c.key] === 'object') ? row[c.key] : { d: '', h: '', m: '', s: '' };
                                   const upd = (k, val) => updateRow(idx, c.key, { ...d, [k]: val });
                                   return (
                                     <span style={{ display: 'inline-flex', gap: '2px', alignItems: 'center', flexWrap: 'wrap' }}>
-                                      <input type="number" min="0" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.d || ''} onChange={(e) => upd('d', e.target.value)} placeholder="日" />
+                                      <input type="number" min="0" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.d || ''} onChange={(e) => upd('d', e.target.value)} placeholder="日" disabled={colGated} />
                                       <span style={{ fontSize: '0.7rem' }}>日</span>
-                                      <input type="number" min="0" max="23" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.h || ''} onChange={(e) => upd('h', e.target.value)} placeholder="時" />
+                                      <input type="number" min="0" max="23" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.h || ''} onChange={(e) => upd('h', e.target.value)} placeholder="時" disabled={colGated} />
                                       <span style={{ fontSize: '0.7rem' }}>時</span>
-                                      <input type="number" min="0" max="59" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.m || ''} onChange={(e) => upd('m', e.target.value)} placeholder="分" />
+                                      <input type="number" min="0" max="59" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.m || ''} onChange={(e) => upd('m', e.target.value)} placeholder="分" disabled={colGated} />
                                       <span style={{ fontSize: '0.7rem' }}>分</span>
-                                      <input type="number" min="0" max="59" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.s || ''} onChange={(e) => upd('s', e.target.value)} placeholder="秒" />
+                                      <input type="number" min="0" max="59" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.s || ''} onChange={(e) => upd('s', e.target.value)} placeholder="秒" disabled={colGated} />
                                       <span style={{ fontSize: '0.7rem' }}>秒</span>
                                     </span>
                                   );
@@ -629,11 +726,11 @@ export default function HolterBooster() {
                                         type="number"
                                         step="any"
                                         className={styles.dailyInput}
-                                        style={{ width: c.allowsTrace ? '55px' : '', ...(cellTrace ? { background: '#eceff1', color: '#90a4ae' } : {}) }}
+                                        style={{ width: c.allowsTrace ? '55px' : '', ...((cellTrace || colGated) ? { background: '#eceff1', color: '#90a4ae' } : {}) }}
                                         value={cellTrace ? '' : (cellVal || '')}
                                         onChange={(e) => updateRow(idx, c.key, e.target.value)}
-                                        placeholder={c.placeholder}
-                                        disabled={cellTrace}
+                                        placeholder={colGated ? '—' : c.placeholder}
+                                        disabled={cellTrace || colGated}
                                       />
                                       {c.allowsTrace && (
                                         <button
@@ -642,16 +739,18 @@ export default function HolterBooster() {
                                           style={{ padding: '0.15rem 0.35rem', fontSize: '0.65rem', margin: 0 }}
                                           onClick={() => updateRow(idx, c.key, cellTrace ? '' : '<0.01')}
                                           title="ePatch レポートで <0.01% と表記されている場合に使用"
+                                          disabled={colGated}
                                         >{cellTrace ? '<0.01 ✓' : '<0.01'}</button>
                                       )}
                                     </span>
                                   );
                                 })()}
                                 {c.type === 'text' && (
-                                  <input type="text" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateRow(idx, c.key, e.target.value)} placeholder={c.placeholder} />
+                                  <input type="text" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateRow(idx, c.key, e.target.value)} placeholder={c.placeholder} disabled={colGated} />
                                 )}
                               </td>
-                            ))}
+                              );
+                            })}
                             <td>
                               <button type="button" className={styles.dailyRemoveBtn} onClick={() => removeRow(idx)} title="この行を削除">×</button>
                             </td>
@@ -660,7 +759,15 @@ export default function HolterBooster() {
                       </tbody>
                     </table>
                   </div>
-                  <button type="button" className={styles.dailyAddBtn} onClick={addRow}>+ 日を追加</button>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <button type="button" className={styles.dailyAddBtn} onClick={addRow}>+ 日を追加</button>
+                    <button
+                      type="button"
+                      className={styles.dailyAutoBtn}
+                      onClick={() => autoFillDates(isBurden ? 'burden' : 'hr')}
+                      title="2. レポートサマリー の記録開始日〜終了日から日付行を一括生成"
+                    >記録期間から日付を自動生成</button>
+                  </div>
                 </div>
                 );
               })()}
@@ -816,10 +923,15 @@ export default function HolterBooster() {
                           {item.type === 'linked_display' && (() => {
                             const v = findings[item.sourceId];
                             const hasV = v !== undefined && v !== '' && v !== null;
+                            // Gate 反映: A/B の gateItem が「なし」なら absentDisplay を表示 (デフォ 0)
+                            const gateV = item.gateItemId ? findings[item.gateItemId] : undefined;
+                            const isAbsent = item.gateItemId && item.gateAbsentValues && item.gateAbsentValues.includes(gateV);
                             return (
                               <span className={styles.linkedDisplay}>
                                 {hasV ? (
                                   <strong>{v}{item.unit || ''}</strong>
+                                ) : isAbsent ? (
+                                  <strong style={{ color: '#546e7a' }}>{item.absentDisplay || '0'}{item.unit || ''} <span style={{ fontSize: '0.7rem', fontWeight: 400 }}>(なし選択で自動)</span></strong>
                                 ) : (
                                   <span className={styles.linkedDisplayEmpty}>未入力</span>
                                 )}

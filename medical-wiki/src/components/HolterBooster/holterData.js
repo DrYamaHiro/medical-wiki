@@ -355,15 +355,15 @@ export const HOLTER_SECTIONS = [
     title: '17. 時間別割合 + 心室形態解析 (ePatch p.8-11)',
     items: [
       { id: 'sub_17_af_hourly', type: 'sub_header', label: '(1) 心房細動/粗動の1時間あたりの割合 (ePatch p.8 棒グラフ)' },
-      { id: 'ref_af_burden_percent', type: 'linked_display', label: 'AF/AFL 総割合', sourceId: 'af_burden_percent', sourceSectionId: 'episode_af', unit: '%', hint: '7. 心房細動 セクションと共有 (時間別分布は ePatch グラフ参照)' },
+      { id: 'ref_af_burden_percent', type: 'linked_display', label: 'AF/AFL 総割合', sourceId: 'af_burden_percent', sourceSectionId: 'episode_af', unit: '%', gateItemId: 'af_present', gateAbsentValues: ['なし'], absentDisplay: '0', hint: '7. 心房細動 と共有。7 で「なし」なら 0% 自動表示' },
       { id: 'af_hourly_note', label: '時間帯・ピーク帯コメント', type: 'text', placeholder: '例: 22-04時に集中、平均 91bpm、100%到達日あり' },
 
       { id: 'sub_17_spvc_hourly', type: 'sub_header', label: '(2) 上室性期外収縮の1時間あたりの割合 (ePatch p.8 棒グラフ)' },
-      { id: 'ref_spvc_percent', type: 'linked_display', label: 'SVPC 出現率', sourceId: 'spvc_percent', sourceSectionId: 'ectopic_spvc', unit: '%', hint: '4a. 上室性期外収縮 と共有' },
+      { id: 'ref_spvc_percent', type: 'linked_display', label: 'SVPC 出現率', sourceId: 'spvc_percent', sourceSectionId: 'ectopic_spvc', unit: '%', gateItemId: 'spvc_present', gateAbsentValues: ['なし'], absentDisplay: '0', hint: '4a. 上室性期外収縮 と共有。4a で「なし」なら 0% 自動表示' },
       { id: 'spvc_hourly_note', label: '時間帯・ピーク帯コメント', type: 'text', placeholder: '例: 昼間に多い、活動時集中、ピーク時 2.4%/h' },
 
       { id: 'sub_17_pvc_hourly', type: 'sub_header', label: '(3) 心室性期外収縮の1時間あたりの割合 (ePatch p.9 棒グラフ)' },
-      { id: 'ref_pvc_percent', type: 'linked_display', label: 'PVC 出現率', sourceId: 'pvc_percent', sourceSectionId: 'ectopic_pvc', unit: '%', hint: '4b. 心室性期外収縮 と共有' },
+      { id: 'ref_pvc_percent', type: 'linked_display', label: 'PVC 出現率', sourceId: 'pvc_percent', sourceSectionId: 'ectopic_pvc', unit: '%', gateItemId: 'pvc_present', gateAbsentValues: ['なし'], absentDisplay: '0', hint: '4b. 心室性期外収縮 と共有。4b で「なし」なら 0% 自動表示' },
       { id: 'pvc_hourly_note', label: '時間帯・ピーク帯コメント', type: 'text', placeholder: '例: 覚醒時集中、深夜低下、ピーク時 18%/h' },
 
       { id: 'sub_17_morphology', type: 'sub_header', label: '(4) PVC の形態解析 (ePatch p.9 主要形態1-9)' },
@@ -674,21 +674,22 @@ export function nextMatrixSymbol(v) {
 }
 
 // 日次負荷サマリーの列定義 (Phase 9: ePatch 日次負荷サマリー準拠、全て割合対応)
+// Phase 10.2: 各不整脈列に gateItemId 追加 — A/B の該当セクションで「なし」なら列 disable
 // 順序: 日付 / AF(継続+割合) / SVPC(割合+拍動数) / PVC(割合+拍動数) / SVT(割合+数) / AVB(割合+数) / 心室調律(割合+数)
 export const DAILY_BURDEN_COLUMNS = [
   { key: 'date', label: '日付', type: 'date', width: '140px' },
-  { key: 'af_duration', label: 'AF 継続時間', type: 'duration', width: '260px' },
-  { key: 'af_percent', label: 'AF %', type: 'numeric', placeholder: '0', width: '90px', allowsTrace: true },
-  { key: 'spvc_percent', label: 'SVPC %', type: 'numeric', placeholder: '0.52', width: '90px', allowsTrace: true },
-  { key: 'spvc_beats', label: 'SVPC 拍動数', type: 'numeric', placeholder: '325', width: '90px' },
-  { key: 'pvc_percent', label: 'PVC %', type: 'numeric', placeholder: '3.73', width: '90px', allowsTrace: true },
-  { key: 'pvc_beats', label: 'PVC 拍動数', type: 'numeric', placeholder: '2335', width: '90px' },
-  { key: 'svt_percent', label: 'SVT %', type: 'numeric', placeholder: '0.02', width: '90px', allowsTrace: true },
-  { key: 'svt_episodes', label: 'SVT 数', type: 'numeric', placeholder: '5', width: '75px' },
-  { key: 'avb_percent', label: 'AVB %', type: 'numeric', placeholder: '0', width: '90px', allowsTrace: true },
-  { key: 'avb_episodes', label: 'AVB 数', type: 'numeric', placeholder: '0', width: '75px' },
-  { key: 'vent_percent', label: '心室調律 %', type: 'numeric', placeholder: '0.01', width: '95px', allowsTrace: true },
-  { key: 'vent_episodes', label: '心室調律 数', type: 'numeric', placeholder: '3', width: '90px' },
+  { key: 'af_duration', label: 'AF 継続時間', type: 'duration', width: '260px', gateItemId: 'af_present', gateAbsentValues: ['なし'] },
+  { key: 'af_percent', label: 'AF %', type: 'numeric', placeholder: '0', width: '90px', allowsTrace: true, gateItemId: 'af_present', gateAbsentValues: ['なし'] },
+  { key: 'spvc_percent', label: 'SVPC %', type: 'numeric', placeholder: '0.52', width: '90px', allowsTrace: true, gateItemId: 'spvc_present', gateAbsentValues: ['なし'] },
+  { key: 'spvc_beats', label: 'SVPC 拍動数', type: 'numeric', placeholder: '325', width: '90px', gateItemId: 'spvc_present', gateAbsentValues: ['なし'] },
+  { key: 'pvc_percent', label: 'PVC %', type: 'numeric', placeholder: '3.73', width: '90px', allowsTrace: true, gateItemId: 'pvc_present', gateAbsentValues: ['なし'] },
+  { key: 'pvc_beats', label: 'PVC 拍動数', type: 'numeric', placeholder: '2335', width: '90px', gateItemId: 'pvc_present', gateAbsentValues: ['なし'] },
+  { key: 'svt_percent', label: 'SVT %', type: 'numeric', placeholder: '0.02', width: '90px', allowsTrace: true, gateItemId: 'svt_other_present', gateAbsentValues: ['なし'] },
+  { key: 'svt_episodes', label: 'SVT 数', type: 'numeric', placeholder: '5', width: '75px', gateItemId: 'svt_other_present', gateAbsentValues: ['なし'] },
+  { key: 'avb_percent', label: 'AVB %', type: 'numeric', placeholder: '0', width: '90px', allowsTrace: true, gateItemId: 'avb_type', gateAbsentValues: ['なし'] },
+  { key: 'avb_episodes', label: 'AVB 数', type: 'numeric', placeholder: '0', width: '75px', gateItemId: 'avb_type', gateAbsentValues: ['なし'] },
+  { key: 'vent_percent', label: '心室調律 %', type: 'numeric', placeholder: '0.01', width: '95px', allowsTrace: true, gateItemId: 'vent_rhythm_present', gateAbsentValues: ['なし'] },
+  { key: 'vent_episodes', label: '心室調律 数', type: 'numeric', placeholder: '3', width: '90px', gateItemId: 'vent_rhythm_present', gateAbsentValues: ['なし'] },
 ];
 
 // 日次心拍数の列定義 (Phase 9 新設: ePatch 日次心拍数準拠)
