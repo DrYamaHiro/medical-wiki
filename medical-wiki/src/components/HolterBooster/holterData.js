@@ -26,9 +26,10 @@ export const HOLTER_SECTIONS = [
     id: 'report_summary',
     title: '2. レポートサマリー (ePatch: 記録期間・解析時間・ノイズ・作成日)',
     items: [
-      { id: 'record_start_date', label: '記録開始日', type: 'date', hint: 'カレンダーから選択、記録期間 (日数) は自動算出' },
+      { id: 'record_start_date', label: '記録開始日', type: 'date', hint: 'カレンダーから選択' },
       { id: 'record_end_date', label: '記録終了日', type: 'date' },
-      { id: 'analyze_duration', label: '解析時間 (時:分:秒)', type: 'duration', hint: 'ePatch: 「解析時間 4日 23時間 53分」等、時分秒で入力' },
+      { id: 'record_duration', label: '記録時間 (日:時:分:秒)', type: 'duration', hint: 'ePatch レポートの「記録時間」欄をそのまま入力 (例: 5日 0時間 0分 0秒)' },
+      { id: 'analyze_duration', label: '解析時間 (日:時:分:秒)', type: 'duration', hint: 'ePatch レポートの「解析時間」欄 (例: 4日 23時間 53分)' },
       { id: 'noise_percent', label: 'ノイズ割合', type: 'numeric', unit: '%', placeholder: '0.03', allowsTrace: true, normalRange: { min: 0, max: 30, note: '>30% で解析信頼性低下、微小所見は控えめに解釈' } },
       { id: 'report_date', label: 'レポート作成日 (解析日)', type: 'date', hint: '出力テキストの日付として使用' },
     ],
@@ -108,7 +109,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'cvhri',
-    title: '6. CVHRI (ePatch: 睡眠時周期性心拍変動指数) ★重要指標',
+    title: '6. CVHRI (ePatch: 睡眠時周期性心拍変動指数)',
     items: [
       { id: 'cvhri_mean', label: 'CVHRI 平均 (夜間 23-6時)', type: 'numeric', placeholder: '26', normalRange: { min: 0, max: 15, note: 'ePatch 明示: ≥15 で OSA 疑い → 簡易 PSG 早期実施推奨' } },
       { id: 'cvhri_max', label: 'CVHRI 最大', type: 'numeric', placeholder: '41' },
@@ -122,8 +123,9 @@ export const HOLTER_SECTIONS = [
   {
     id: 'episode_af',
     title: '7. 心房細動/粗動 (ePatch: 右カラム上部・代表ストリップ付き)',
+    sectionGate: { itemId: 'af_present', absentValues: ['なし'] },
     items: [
-      { id: 'af_present', label: 'AF/AFL', type: 'choice', options: ['なし', 'あり (発作性)', 'あり (持続性)'] },
+      { id: 'af_present', label: 'AF/AFL', type: 'choice', options: ['なし', 'あり (発作性)', 'あり (持続性)'], hint: '「なし」で下記詳細は入力不要' },
       { id: 'af_burden_percent', label: 'AF/AFL 割合', type: 'numeric', unit: '%', placeholder: '8.75', allowsTrace: true },
       { id: 'af_longest_duration', label: '最長エピソード持続', type: 'text', placeholder: '例: 10時間29分' },
       { id: 'af_longest_time', label: '最長エピソード発生日時', type: 'datetime' },
@@ -138,7 +140,9 @@ export const HOLTER_SECTIONS = [
   {
     id: 'episode_svt_other',
     title: '8. その他の上室性頻拍 (ePatch: 右カラム・代表ストリップ付き)',
+    sectionGate: { itemId: 'svt_other_present', absentValues: ['なし'] },
     items: [
+      { id: 'svt_other_present', label: 'その他の上室性頻拍', type: 'choice', options: ['なし', 'あり'], hint: '「なし」で下記詳細は入力不要' },
       { id: 'svt_other_episodes', label: 'エピソード数 (3連発以上)', type: 'numeric', unit: '回', placeholder: '38' },
       { id: 'svt_max_beats', label: '最長連発数', type: 'numeric', unit: '拍', placeholder: '16', normalRange: { min: 0, max: 14, note: '15拍以上は臨床的意義あり、QRS 幅で AT/SVT vs Wide QRS 鑑別' } },
       { id: 'svt_max_hr', label: '最大心拍数', type: 'numeric', unit: 'bpm', placeholder: '159' },
@@ -152,7 +156,9 @@ export const HOLTER_SECTIONS = [
   {
     id: 'episode_pause',
     title: '9. ポーズ (ePatch: 右カラム・代表ストリップ付き)',
+    sectionGate: { itemId: 'pause_present', absentValues: ['なし'] },
     items: [
+      { id: 'pause_present', label: 'ポーズ (2.5秒以上)', type: 'choice', options: ['なし', 'あり'], hint: '「なし」で下記詳細は入力不要' },
       { id: 'pause_count', label: 'ポーズ回数 (2.5秒以上)', type: 'numeric', unit: '回', placeholder: '1' },
       { id: 'pause_max_sec', label: '最長R-R間隔', type: 'numeric', unit: '秒', placeholder: '2.538', normalRange: { min: 0, max: 3.0, note: '≥3秒はメール連絡項目 (覚醒 or 症状伴えば PM 検討)' } },
       { id: 'pause_max_time', label: '最長発生日時', type: 'datetime' },
@@ -160,7 +166,7 @@ export const HOLTER_SECTIONS = [
   },
 
   // ============================================================
-  // 10. 房室ブロック (ePatch: エピソード枠4)
+  // 10. 房室ブロック (ePatch: エピソード枠4) — avb_type 自体が「なし」オプション込み
   // ============================================================
   {
     id: 'episode_avb',
@@ -176,7 +182,9 @@ export const HOLTER_SECTIONS = [
   {
     id: 'episode_vent_rhythm',
     title: '11. 心室調律 (ePatch: 右カラム下部・代表ストリップ付き、VT + AIVR)',
+    sectionGate: { itemId: 'vent_rhythm_present', absentValues: ['なし'] },
     items: [
+      { id: 'vent_rhythm_present', label: '心室調律 (VT+AIVR)', type: 'choice', options: ['なし', 'あり'], hint: '「なし」で下記詳細は入力不要' },
       { id: 'vent_rhythm_episodes', label: '総エピソード数 (VT+AIVR)', type: 'numeric', unit: '回', placeholder: '56', hint: '平均HR40以上・3連発以上' },
       { id: 'vt_episodes', label: '　内 VT (平均HR≥100)', type: 'numeric', unit: '回', placeholder: '50' },
       { id: 'vt_longest_beats', label: '　VT 最長連発数', type: 'numeric', unit: '拍', placeholder: '10' },
@@ -188,25 +196,19 @@ export const HOLTER_SECTIONS = [
   },
 
   // ============================================================
-  // 12. 所見 - 基本調律 (ePatch: 所見欄 - 基本調律 3項目) ★新規
+  // 12. 所見 (ePatch: エピソード5枠の下の所見欄) — 基本調律・陽性所見15・詳細所見17 を統合
+  // sub_header 型の item で内部を 3 ブロックに視覚区切り
   // ============================================================
   {
-    id: 'findings_basic_rhythm',
-    title: '12. 所見 — 基本調律 (ePatch: エピソード5枠の下・所見欄)',
+    id: 'findings',
+    title: '12. 所見 (ePatch: エピソード5枠の下・所見欄) — 基本調律 + 陽性所見15 + 詳細所見17',
     items: [
+      { id: 'sub_basic_rhythm', type: 'sub_header', label: '(1) 基本調律' },
       { id: 'find_sinus_rhythm', label: '洞調律 (Sinus rhythm)', type: 'choice', options: ['なし', 'あり'], hint: 'ePatch (+) 相当' },
       { id: 'find_sinus_tachycardia', label: '洞頻脈 (Sinus tachycardia)', type: 'choice', options: ['なし', 'あり'], hint: 'ePatch (+) 相当、最大HR + 時刻を要記載' },
       { id: 'find_sinus_bradycardia', label: '洞徐脈 (Sinus bradycardia)', type: 'choice', options: ['なし', 'あり'], hint: 'ePatch (+) 相当、最小HR + 時刻を要記載' },
-    ],
-  },
 
-  // ============================================================
-  // 13. 所見 - 陽性所見よく使う15項目 (ePatch: 緊急項目 + 緊急項目以外)
-  // ============================================================
-  {
-    id: 'findings_common',
-    title: '13. 所見 — 陽性所見よく使う15 (ePatch: 所見欄 緊急項目/該当項目 (+))',
-    items: [
+      { id: 'sub_common15', type: 'sub_header', label: '(2) 陽性所見 — よく使う15項目 (ePatch: 緊急項目/該当項目 (+))' },
       { id: 'find_af', label: '心房細動/粗動 Paroxysmal AF/AFL', type: 'choice', options: ['なし', 'あり'], emergency: true },
       { id: 'find_svt_other', label: 'その他の上室性頻拍 SVT', type: 'choice', options: ['なし', 'あり'] },
       { id: 'find_pause', label: 'ポーズ Pause (2.5秒以上)', type: 'choice', options: ['なし', 'あり'] },
@@ -222,16 +224,8 @@ export const HOLTER_SECTIONS = [
       { id: 'find_pm_failure', label: 'ペースメーカー機能不全', type: 'choice', options: ['該当なし (デバイスなし)', 'なし', 'あり'], emergency: true },
       { id: 'find_tachy_190', label: '頻脈 190bpm 以上が 30秒以上持続', type: 'choice', options: ['なし', 'あり'], emergency: true },
       { id: 'find_brady_35', label: '徐脈 35bpm 未満が 30秒以上持続', type: 'choice', options: ['なし', 'あり'], emergency: true },
-    ],
-  },
 
-  // ============================================================
-  // 14. 所見 - 詳細所見17項目 (ePatch: その他解析項目 相当)
-  // ============================================================
-  {
-    id: 'findings_detail',
-    title: '14. 所見 — 詳細所見17 (ePatch: 所見欄 その他解析項目 (+))',
-    items: [
+      { id: 'sub_detail17', type: 'sub_header', label: '(3) 詳細所見 — 追加17項目 (ePatch: その他解析項目 (+))' },
       { id: 'find_non_conducted_spvc', label: '非伝導性上室性期外収縮', type: 'choice', options: ['なし', 'あり'] },
       { id: 'find_aberrant', label: '変行伝導', type: 'choice', options: ['なし', 'あり'] },
       { id: 'find_wandering_pm', label: '移動性ペースメーカー', type: 'choice', options: ['なし', 'あり'] },
@@ -257,9 +251,10 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'st',
-    title: '15. ST 変動詳細 (ePatch: 所見 - ST variation)',
+    title: '13. ST 変動詳細 (ePatch: 所見の続き - ST variation)',
+    sectionGate: { itemId: 'st_present', absentValues: ['なし'] },
     items: [
-      { id: 'st_present', label: 'ST 変動の有無', type: 'choice', options: ['なし', 'あり (下記に詳細)', '未評価'], hint: '「なし」を選ぶと下記詳細は入力不要' },
+      { id: 'st_present', label: 'ST 変動の有無', type: 'choice', options: ['なし', 'あり (下記に詳細)', '未評価'], hint: '「なし」で下記詳細は入力不要' },
       { id: 'st_depression_max', label: 'ST 低下 最大値', type: 'numeric', unit: 'mm', placeholder: '0', normalRange: { min: 0, max: 1.0, note: 'ePatch: ≥1mm 30秒以上 (upslope 型は2mm以上) で有意' } },
       { id: 'st_depression_duration', label: 'ST 低下 総持続時間', type: 'numeric', unit: '分', placeholder: '0' },
       { id: 'st_elevation_max', label: 'ST 上昇 最大値', type: 'numeric', unit: 'mm', placeholder: '0', normalRange: { min: 0, max: 2.0, note: 'ePatch: ≥2mm 30秒以上で有意 (冠攣縮・心外膜炎鑑別)' } },
@@ -275,7 +270,7 @@ export const HOLTER_SECTIONS = [
   //   ここでは placeholder として空の items 配列を持つカードとして扱う。
   {
     id: 'daily_burden',
-    title: '16. 日次負荷サマリー (ePatch: 日次心拍数 + 日次負荷)',
+    title: '15. 日次負荷サマリー (ePatch: 日次心拍数 + 日次負荷)',
     items: [
       // 動的テーブルは index.jsx 側で描画。この配列は空でよいが、
       // renderer が items.map するので何か少なくとも 1 個ダミーは不要 (0件でOK)。
@@ -287,7 +282,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'heart_rate_trend',
-    title: '17. 心拍数の傾向 (ePatch: 徐脈/頻脈エピソード + 昼夜HR)',
+    title: '14. 心拍数の傾向 (ePatch: 徐脈/頻脈エピソード + 昼夜HR、トレンドチャート要旨)',
     items: [
       { id: 'brady_episodes', label: '徐脈エピソード数', type: 'numeric', unit: '回', placeholder: '0', hint: 'ePatch: 50bpm未満が10拍連続 (小児は年齢別閾値)' },
       { id: 'tachy_episodes', label: '頻脈エピソード数', type: 'numeric', unit: '回', placeholder: '0', hint: 'ePatch: 100bpm超が10拍連続' },
@@ -301,7 +296,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'hrv',
-    title: '18. 心拍数変動 HRV (ePatch: 時間/周波数領域解析)',
+    title: '18. 心拍数変動 HRV (ePatch: 心拍数変動 時間/周波数領域解析)',
     items: [
       { id: 'sdnn', label: 'SDNN', type: 'numeric', unit: 'ms', placeholder: '204', normalRange: { min: 100, max: 300, note: '<50ms 予後不良指標' } },
       { id: 'sdann', label: 'SDANN', type: 'numeric', unit: 'ms', placeholder: '184' },
@@ -320,7 +315,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'qt',
-    title: '19. QT / QTc (ePatch: Bazett 男450 / 女460ms 閾値)',
+    title: '19. QT / QTc (ePatch: QT間隔解析 Bazett 男450 / 女460ms)',
     items: [
       { id: 'qt_min', label: '最小 QT間隔', type: 'numeric', unit: 'ms', placeholder: '330' },
       { id: 'qt_mean', label: '平均 QT間隔', type: 'numeric', unit: 'ms', placeholder: '388' },
@@ -341,7 +336,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'pvc_morphology',
-    title: '20. 心室形態解析 (ePatch: 主要形態1-9)',
+    title: '16. 心室形態解析 (ePatch: PVC 形態解析、主要形態1-9)',
     items: [
       { id: 'pvc_morph1_beats', label: '形態1 拍動数', type: 'numeric', unit: '個', placeholder: '12796' },
       { id: 'pvc_morph1_percent', label: '形態1 割合', type: 'numeric', unit: '%', placeholder: '57.63', hint: '≥80% で単一起源優位、アブレーション適応検討材料' },
@@ -371,7 +366,7 @@ export const HOLTER_SECTIONS = [
   // ※ 特殊 UI (マトリクス)、items は空、UI 側 symptomMatrix state で管理
   {
     id: 'symptom_matrix',
-    title: '21. 症状 × 不整脈 クロス集計 (ePatch: 患者の症状)',
+    title: '17. 症状 × 不整脈 クロス集計 (ePatch: 患者の症状)',
     items: [],
   },
 
@@ -380,7 +375,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'pacemaker_func',
-    title: '22. ペースメーカー機能評価 (植込例のみ)',
+    title: '20. ペースメーカー機能評価 (植込例のみ)',
     items: [
       { id: 'device_type', label: 'デバイス種別', type: 'choice', options: ['なし', 'PPM', 'ICD', 'CRT-P/D'] },
       { id: 'pacing_percent_a', label: '心房 (A) ペーシング率', type: 'numeric', unit: '%', placeholder: '30' },
@@ -394,35 +389,35 @@ export const HOLTER_SECTIONS = [
 // sectionId: クリック時にスクロール/展開する対象セクション (Phase 4 新セクションIDに更新)
 export const HOLTER_ASSESSMENT_RULES = [
   // 【緊急】ePatch メール連絡項目相当
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => f.find_avb2_mobitz2 === 'あり',
+  { level: 'emergency', sectionId: 'findings', when: (f) => f.find_avb2_mobitz2 === 'あり',
     text: '2度AVブロック Mobitz II 型あり (メール連絡項目)。PM 適応 (JCS クラス I)、循環器紹介。' },
-  { level: 'emergency', sectionId: 'findings_detail', when: (f) => f.find_avb_high === 'あり' || f.avb_type === '高度',
+  { level: 'emergency', sectionId: 'findings', when: (f) => f.find_avb_high === 'あり' || f.avb_type === '高度',
     text: '高度房室ブロックあり (メール連絡項目)。PM 適応、循環器紹介。' },
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => f.find_avb3 === 'あり' || f.avb_type === '完全 (3度)',
+  { level: 'emergency', sectionId: 'findings', when: (f) => f.find_avb3 === 'あり' || f.avb_type === '完全 (3度)',
     text: '完全房室ブロック (3度) あり (メール連絡項目)。PM 適応 (クラス I)、緊急対応要否評価。' },
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => f.find_vt === 'あり' || parseFloat(f.vt_longest_beats || 0) >= 4,
+  { level: 'emergency', sectionId: 'findings', when: (f) => f.find_vt === 'あり' || parseFloat(f.vt_longest_beats || 0) >= 4,
     text: '心室頻拍 (VT / PVC 4連発以上) あり (メール連絡項目)。循環器紹介、原因精査 (虚血・心筋症)、ICD 適応評価。' },
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => f.find_ront === 'あり',
+  { level: 'emergency', sectionId: 'findings', when: (f) => f.find_ront === 'あり',
     text: 'R on T 現象あり (メール連絡項目)。torsades / VF リスク、QT・電解質 (K/Mg)・薬剤確認。' },
   { level: 'emergency', sectionId: 'episode_pause', when: (f) => { const v = parseFloat(f.pause_max_sec || 0); return v >= 3.0; },
     text: 'ポーズ ≥3秒あり (メール連絡項目)。覚醒帯 or 症状伴えば PM 適応 (JCS クラス I)、無症候・睡眠中は迷走神経性か個別評価。' },
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => f.find_pause === 'あり' && f.diary_correlation === '症状時に不整脈あり (相関)',
+  { level: 'emergency', sectionId: 'findings', when: (f) => f.find_pause === 'あり' && f.diary_correlation === '症状時に不整脈あり (相関)',
     text: 'ポーズと症状の相関あり。無症候であっても再検・PM 適応を積極評価。' },
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => f.find_af === 'あり' && f.af_present !== 'あり (発作性)' && f.af_present !== 'あり (持続性)' && !f.af_present,
+  { level: 'emergency', sectionId: 'findings', when: (f) => f.find_af === 'あり' && f.af_present !== 'あり (発作性)' && f.af_present !== 'あり (持続性)' && !f.af_present,
     text: '新規 AF 検出の可能性 (メール連絡項目)。CHA₂DS₂-VASc に基づく抗凝固検討、心エコー・甲状腺評価。' },
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => f.find_pm_failure === 'あり',
+  { level: 'emergency', sectionId: 'findings', when: (f) => f.find_pm_failure === 'あり',
     text: 'ペースメーカー機能不全 (メール連絡項目)。植込み施設へ速やかにコンサルト。' },
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => f.find_tachy_190 === 'あり',
+  { level: 'emergency', sectionId: 'findings', when: (f) => f.find_tachy_190 === 'あり',
     text: '190bpm 以上の頻脈が 30秒以上持続 (メール連絡項目)。原因検索 (SVT/VT/AF fast) と緊急対応要否評価。' },
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => f.find_brady_35 === 'あり',
+  { level: 'emergency', sectionId: 'findings', when: (f) => f.find_brady_35 === 'あり',
     text: '35bpm 未満の徐脈が 30秒以上持続 (メール連絡項目)。SSS・薬剤性徐脈評価、PM 適応検討。' },
   { level: 'emergency', sectionId: 'patient_info', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('失神・前失神'),
     text: '主訴に失神あり (メール連絡項目対象)。有意所見なくても長時間モニタリング / ILR / チルト試験等の追加検討。' },
   { level: 'emergency', sectionId: 'qt', when: (f) => { const v = parseFloat(f.qtc_max || 0); return v > 500; },
     text: 'QTc >500ms。torsades リスク、原因薬剤中止・K/Mg 補正・循環器コンサルト。' },
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('失神・前失神') && (f.find_pause === 'あり' || f.find_avb3 === 'あり' || f.find_avb2_mobitz2 === 'あり' || f.find_avb_high === 'あり' || parseFloat(f.pause_max_sec || 0) >= 2.0),
+  { level: 'emergency', sectionId: 'findings', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('失神・前失神') && (f.find_pause === 'あり' || f.find_avb3 === 'あり' || f.find_avb2_mobitz2 === 'あり' || f.find_avb_high === 'あり' || parseFloat(f.pause_max_sec || 0) >= 2.0),
     text: '失神主訴 + 徐脈系不整脈 (ポーズ/高度AVB) あり。症候性徐脈として即時 PM 適応評価、緊急循環器コンサルト。' },
-  { level: 'emergency', sectionId: 'findings_common', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('失神・前失神') && (f.find_vt === 'あり' || f.find_ront === 'あり' || parseFloat(f.vt_longest_beats || 0) >= 4),
+  { level: 'emergency', sectionId: 'findings', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('失神・前失神') && (f.find_vt === 'あり' || f.find_ront === 'あり' || parseFloat(f.vt_longest_beats || 0) >= 4),
     text: '失神主訴 + 心室性不整脈 (VT/RonT) あり。症候性 VT として ICD 適応評価、緊急循環器コンサルト。' },
   { level: 'emergency', sectionId: 'symptom_matrix', when: (f) => f.diary_correlation === '症状時に不整脈あり (相関)' && Array.isArray(f.correlated_arrhythmias) && (f.correlated_arrhythmias.includes('VT') || f.correlated_arrhythmias.includes('ポーズ') || f.correlated_arrhythmias.includes('AF/AFL')),
     text: '症状と重篤不整脈 (VT/ポーズ/AF) の直接相関あり。原因治療を優先的に検討 (抗不整脈薬・アブレーション・PM/ICD)。' },
@@ -468,11 +463,11 @@ export const HOLTER_ASSESSMENT_RULES = [
       return nightMax >= 480 && day > 0 && day < 450;
     },
     text: '夜間最大 QTc ≥480ms かつ昼間 <450ms。昼間正常・夜間延長パターン、薬剤 (夜服用) と徐脈時 QT 動態を確認。' },
-  { level: 'workup', sectionId: 'findings_detail', when: (f) => f.find_delta === 'あり' || f.find_delta_intermittent === 'あり',
+  { level: 'workup', sectionId: 'findings', when: (f) => f.find_delta === 'あり' || f.find_delta_intermittent === 'あり',
     text: 'Δ波あり (WPW 症候群疑い)。頻脈発作歴・QRS 幅・偽性 VT との鑑別評価、循環器紹介検討。' },
   { level: 'workup', sectionId: 'episode_avb', when: (f) => f.avb_type === '2:1',
     text: '2:1 房室ブロックあり。Mobitz I / II の判別必要 (PR 進行観察)、症候性なら PM 適応検討。' },
-  { level: 'workup', sectionId: 'findings_detail', when: (f) => f.find_sa_block === 'あり',
+  { level: 'workup', sectionId: 'findings', when: (f) => f.find_sa_block === 'あり',
     text: '洞房ブロックあり。SSS スペクトラム内、症状相関で PM 適応評価。' },
   { level: 'workup', sectionId: 'ectopic_spvc', when: (f) => { const v = parseFloat(f.spvc_total || 0); return v >= 300 && v < 1000; },
     text: 'SVPC ≥300個/日。AF 発症予測因子、定期フォロー (年 1-2回) と生活習慣・血圧・甲状腺評価。' },
@@ -523,11 +518,11 @@ export const HOLTER_ASSESSMENT_RULES = [
     text: '日次 PVC 割合の変動 ≥5% (発作性/日内変動大)。症状日・活動レベル・薬剤服用時間と重ねて評価。' },
 
   // Phase 4: 基本調律ルール
-  { level: 'reference', sectionId: 'findings_basic_rhythm', when: (f) => f.find_sinus_tachycardia === 'あり',
+  { level: 'reference', sectionId: 'findings', when: (f) => f.find_sinus_tachycardia === 'あり',
     text: '洞頻脈あり (ePatch 基本調律 +)。発熱・貧血・脱水・甲状腺機能亢進・不安・カフェイン等の誘因評価。' },
-  { level: 'reference', sectionId: 'findings_basic_rhythm', when: (f) => f.find_sinus_bradycardia === 'あり',
+  { level: 'reference', sectionId: 'findings', when: (f) => f.find_sinus_bradycardia === 'あり',
     text: '洞徐脈あり (ePatch 基本調律 +)。薬剤 (β遮断薬・CCB・ジゴキシン)・甲状腺機能低下・アスリート心・OSA 等を鑑別。' },
-  { level: 'reference', sectionId: 'findings_basic_rhythm', when: (f) => f.find_sinus_rhythm === 'なし' && (f.find_af === 'あり' || f.avb_type === '完全 (3度)' || f.find_junctional_escape_rhythm === 'あり'),
+  { level: 'reference', sectionId: 'findings', when: (f) => f.find_sinus_rhythm === 'なし' && (f.find_af === 'あり' || f.avb_type === '完全 (3度)' || f.find_junctional_escape_rhythm === 'あり'),
     text: '洞調律 (+) が付いていない — 主調律が AF / 補充調律 / 完全AVB 等の可能性。基本調律の評価を再確認。' },
 
   // 【参考】臨床背景として意識
@@ -547,9 +542,9 @@ export const HOLTER_ASSESSMENT_RULES = [
     text: '症状時に有意な不整脈記録なし。不整脈以外の原因 (起立性低血圧・血糖・過換気・精神症状等) を鑑別。' },
   { level: 'reference', sectionId: 'patient_info', when: (f) => f.diary_correlation === '症状時に不整脈あり (相関)',
     text: '症状と不整脈の相関あり。治療介入 (薬剤/アブレーション/デバイス) を検討。' },
-  { level: 'reference', sectionId: 'findings_detail', when: (f) => f.find_t_inversion === 'あり',
+  { level: 'reference', sectionId: 'findings', when: (f) => f.find_t_inversion === 'あり',
     text: 'T波陰転化あり。虚血・心筋炎・心尖部肥大型心筋症・脳血管障害等の鑑別、12誘導心電図・心エコー確認。' },
-  { level: 'reference', sectionId: 'findings_detail', when: (f) => f.find_ivcd === 'あり',
+  { level: 'reference', sectionId: 'findings', when: (f) => f.find_ivcd === 'あり',
     text: '心室内伝導遅延あり。基礎心疾患 (心筋症・虚血・電解質) の評価、CRT 適応関連の指標。' },
   { level: 'reference', sectionId: 'ectopic_spvc', when: (f) => { const v = parseFloat(f.spvc_total || 0); return v >= 100 && v < 300; },
     text: 'SVPC 100-299個/日。加齢・ストレス・カフェイン等でも見られる範囲、症状なければ経過観察でよい。' },
@@ -558,13 +553,13 @@ export const HOLTER_ASSESSMENT_RULES = [
       return day > 0 && night > 0 && (day - night) >= 10 && (day - night) < 20;
     },
     text: '昼夜 HR 較差 10-19 bpm。若干低め、加齢や薬剤の影響を意識して評価。' },
-  { level: 'reference', sectionId: 'findings_common', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('動悸') && (f.find_pvc === 'あり' || f.find_pvc_couplet === 'あり') && f.find_af !== 'あり' && f.find_vt !== 'あり',
+  { level: 'reference', sectionId: 'findings', when: (f) => Array.isArray(f.symptom) && f.symptom.includes('動悸') && (f.find_pvc === 'あり' || f.find_pvc_couplet === 'あり') && f.find_af !== 'あり' && f.find_vt !== 'あり',
     text: '動悸主訴で PVC/PVC二連発のみ (VT/AF なし)。PVC 由来の動悸の可能性、頻回なら生活指導・β遮断薬検討。' },
   { level: 'reference', sectionId: 'hrv', when: (f) => { const lf = parseFloat(f.lf || 0); const hf = parseFloat(f.hf || 0); return lf > 0 && hf > 0 && (lf / hf) > 3; },
     text: 'LF/HF > 3。交感神経優位、ストレス・不安・心不全・DM 神経障害等の背景を意識。' },
-  { level: 'reference', sectionId: 'findings_detail', when: (f) => f.find_junctional === 'あり' || f.find_junctional_escape_rhythm === 'あり',
+  { level: 'reference', sectionId: 'findings', when: (f) => f.find_junctional === 'あり' || f.find_junctional_escape_rhythm === 'あり',
     text: '接合部調律あり。徐脈時の補充調律として現れることが多い、洞機能不全 (SSS) 評価も検討。' },
-  { level: 'reference', sectionId: 'findings_detail', when: (f) => f.find_wandering_pm === 'あり',
+  { level: 'reference', sectionId: 'findings', when: (f) => f.find_wandering_pm === 'あり',
     text: '移動性ペースメーカーあり。健康な人でも見られる、若年者・高迷走神経緊張・徐脈時に多い、通常経過観察。' },
   { level: 'reference', sectionId: 'episode_avb', when: (f) => {
       if (f.avb_type !== '2度 Mobitz I (Wenckebach)') return false;
@@ -678,27 +673,30 @@ export const SCENARIO_PRESETS = [
 // ヘルパー関数 (Phase 5: 時刻・日付・duration 型の値変換)
 // ============================================================
 
-// duration オブジェクト { h, m, s } → 総時間 (小数)
+// duration オブジェクト { d, h, m, s } → 総時間 (小数)
 export function durationToHours(v) {
   if (!v || typeof v !== 'object') return 0;
+  const d = parseFloat(v.d || 0);
   const h = parseFloat(v.h || 0);
   const m = parseFloat(v.m || 0);
   const s = parseFloat(v.s || 0);
-  return h + m / 60 + s / 3600;
+  return d * 24 + h + m / 60 + s / 3600;
 }
 
-// duration オブジェクト → 表示文字列 "24時間30分15秒"
+// duration オブジェクト → 表示文字列 "5日 23時間 53分 15秒"
 export function formatDuration(v) {
   if (!v || typeof v !== 'object') return '';
+  const d = parseInt(v.d || 0, 10);
   const h = parseInt(v.h || 0, 10);
   const m = parseInt(v.m || 0, 10);
   const s = parseInt(v.s || 0, 10);
-  if (h === 0 && m === 0 && s === 0) return '';
+  if (d === 0 && h === 0 && m === 0 && s === 0) return '';
   const parts = [];
+  if (d > 0) parts.push(`${d}日`);
   if (h > 0) parts.push(`${h}時間`);
   if (m > 0) parts.push(`${m}分`);
   if (s > 0) parts.push(`${s}秒`);
-  return parts.join('');
+  return parts.join(' ');
 }
 
 // datetime-local "YYYY-MM-DDTHH:mm" → 記録開始日基準で「日X HH:mm」形式に整形
@@ -757,14 +755,14 @@ export const HOLTER_GROUPS = [
   {
     id: 'group_episodes_findings',
     title: 'B. エピソード5枠と所見 (ePatch 右カラム + 所見欄)',
-    subtitle: 'AF → 上室頻拍 → ポーズ → AVブロック → 心室調律 → 基本調律 → 陽性所見',
-    sectionIds: ['episode_af', 'episode_svt_other', 'episode_pause', 'episode_avb', 'episode_vent_rhythm', 'findings_basic_rhythm', 'findings_common', 'findings_detail'],
+    subtitle: 'AF → 上室頻拍 → ポーズ → AVブロック → 心室調律 → 所見 (基本調律+陽性所見15+詳細17) → ST 変動',
+    sectionIds: ['episode_af', 'episode_svt_other', 'episode_pause', 'episode_avb', 'episode_vent_rhythm', 'findings', 'st'],
   },
   {
     id: 'group_detailed_analysis',
-    title: 'C. 詳細解析・追加項目',
-    subtitle: 'ST → 日次負荷 → 心拍数の傾向 → HRV → QT → 心室形態 → 症状マトリクス → PM機能',
-    sectionIds: ['st', 'daily_burden', 'heart_rate_trend', 'hrv', 'qt', 'pvc_morphology', 'symptom_matrix', 'pacemaker_func'],
+    title: 'C. 詳細解析・追加項目 (ePatch 後半ページ)',
+    subtitle: 'トレンド → 日次負荷 → PVC形態解析 → 症状マトリクス → HRV → QT → PM機能',
+    sectionIds: ['heart_rate_trend', 'daily_burden', 'pvc_morphology', 'symptom_matrix', 'hrv', 'qt', 'pacemaker_func'],
   },
 ];
 

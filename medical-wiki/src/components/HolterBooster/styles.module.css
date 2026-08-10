@@ -133,6 +133,47 @@
   border-color: #4a148c;
 }
 .traceChipActive:hover { background: #4a148c; color: #fff; }
+
+/* Phase 7: sub_header (所見統合セクション内の視覚区切り) */
+.subHeader {
+  padding: 0.55rem 0.8rem;
+  margin: 0.6rem -0.9rem;
+  background: linear-gradient(90deg, #ede7f6 0%, #f3e5f5 50%, transparent 100%);
+  border-left: 4px solid #6a1b9a;
+  color: #4a148c;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.subHeader:first-child { margin-top: 0; }
+
+/* Phase 7: sectionGate — なし選択時に他項目を disable 表示 */
+.itemRowGatedOff {
+  opacity: 0.5;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 6px,
+    rgba(200, 200, 200, 0.15) 6px,
+    rgba(200, 200, 200, 0.15) 12px
+  );
+  pointer-events: none;
+}
+.itemRowGatedOff .itemValue button,
+.itemRowGatedOff input,
+.itemRowGatedOff button {
+  cursor: not-allowed !important;
+}
+.gatedTag {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: #90a4ae;
+  color: #fff;
+  border-radius: 3px;
+  vertical-align: middle;
+}
 .scenarioBtn {
   background: #fff;
   color: #6a1b9a;

@@ -187,10 +187,16 @@ export default function HolterBooster() {
     // 記録期間の総日数を計算し先頭近くに提示
     const recDays = daysBetweenInclusive(findings.record_start_date, findings.record_end_date);
     HOLTER_SECTIONS.forEach((section) => {
+      // sectionGate: gate が「なし」等なら gate item のみ出力
+      const gate = section.sectionGate;
+      const gateVal = gate ? findings[gate.itemId] : undefined;
+      const isGatedAbsent = gate && gate.absentValues.includes(gateVal);
       const entries = section.items
+        .filter((it) => it.type !== 'sub_header')
         .map((it) => {
+          if (isGatedAbsent && it.id !== gate.itemId) return null; // gate 以外は出力しない
           const v = findings[it.id];
-          const hasValueForObj = it.type === 'duration' && v && typeof v === 'object' && (v.h || v.m || v.s);
+          const hasValueForObj = it.type === 'duration' && v && typeof v === 'object' && (v.d || v.h || v.m || v.s);
           const hasValueForArr = Array.isArray(v) && v.length > 0;
           const hasValueForPrim = !Array.isArray(v) && (typeof v !== 'object' || v === null) && (v !== undefined && v !== '' && v !== null);
           if (!hasValueForObj && !hasValueForArr && !hasValueForPrim) return null;
@@ -360,9 +366,10 @@ export default function HolterBooster() {
             if (sec.id === 'symptom_matrix') groupInputCount += Object.values(symptomMatrix).filter(Boolean).length;
             else if (sec.id === 'daily_burden') groupInputCount += dailyBurden.length;
             else groupInputCount += sec.items.filter((it) => {
+              if (it.type === 'sub_header') return false;
               const v = findings[it.id];
               if (Array.isArray(v)) return v.length > 0;
-              if (v && typeof v === 'object') return !!(v.h || v.m || v.s);
+              if (v && typeof v === 'object') return !!(v.d || v.h || v.m || v.s);
               return v !== undefined && v !== '' && v !== null;
             }).length;
           });
@@ -395,9 +402,10 @@ export default function HolterBooster() {
             inputCount = dailyBurden.length;
           } else {
             inputCount = section.items.filter((it) => {
+              if (it.type === 'sub_header') return false;
               const v = findings[it.id];
               if (Array.isArray(v)) return v.length > 0;
-              if (v && typeof v === 'object') return !!(v.h || v.m || v.s); // duration 型
+              if (v && typeof v === 'object') return !!(v.d || v.h || v.m || v.s); // duration 型
               return v !== undefined && v !== '' && v !== null;
             }).length;
           }
@@ -511,12 +519,29 @@ export default function HolterBooster() {
               )}
               {!isCollapsed && section.id !== 'symptom_matrix' && section.id !== 'daily_burden' && (
                 <div className={styles.organBody}>
-                  {section.items.map((item) => (
-                    <div key={item.id} className={`${styles.itemRow} ${item.emergency ? styles.itemRowEmergency : ''}`}>
+                  {section.items.map((item) => {
+                    // sub_header 型 は視覚区切りとして描画 (入力欄なし)
+                    if (item.type === 'sub_header') {
+                      return (
+                        <div key={item.id} className={styles.subHeader}>{item.label}</div>
+                      );
+                    }
+                    // sectionGate: gate が「なし」等の absentValues に一致していて、
+                    // かつこの item が gate item 自体でなければ disabled 化
+                    let isGatedOff = false;
+                    if (section.sectionGate) {
+                      const gateVal = findings[section.sectionGate.itemId];
+                      if (section.sectionGate.absentValues.includes(gateVal) && item.id !== section.sectionGate.itemId) {
+                        isGatedOff = true;
+                      }
+                    }
+                    return (
+                    <div key={item.id} className={`${styles.itemRow} ${item.emergency ? styles.itemRowEmergency : ''} ${isGatedOff ? styles.itemRowGatedOff : ''}`}>
                       <div className={styles.itemLabel}>
                         <span>
                           {item.label}
                           {item.emergency && <span className={styles.emergencyTag}>緊急</span>}
+                          {isGatedOff && <span className={styles.gatedTag}>入力不要</span>}
                         </span>
                         {(item.hint || item.normalRange?.note) && (
                           <span className={styles.itemHint}>{item.hint || item.normalRange.note}</span>
@@ -536,6 +561,7 @@ export default function HolterBooster() {
                                 type="button"
                                 className={cls.join(' ')}
                                 onClick={() => setField(item.id, active ? '' : opt)}
+                                disabled={isGatedOff}
                               >
                                 {opt}
                               </button>
@@ -554,6 +580,7 @@ export default function HolterBooster() {
                                 type="button"
                                 className={cls.join(' ')}
                                 onClick={() => toggleMultiChoice(item.id, opt)}
+                                disabled={isGatedOff}
                               >
                                 {opt}
                               </button>
@@ -572,8 +599,8 @@ export default function HolterBooster() {
                                   onChange={(e) => setField(item.id, e.target.value)}
                                   placeholder={item.placeholder}
                                   title={item.normalRange?.note || ''}
-                                  disabled={isTrace}
-                                  style={isTrace ? { background: '#eceff1', color: '#90a4ae' } : {}}
+                                  disabled={isTrace || isGatedOff}
+                                  style={(isTrace || isGatedOff) ? { background: '#eceff1', color: '#90a4ae' } : {}}
                                 />
                                 {item.unit && <span className={styles.unit}>{item.unit}</span>}
                                 {item.allowsTrace && (
@@ -582,6 +609,7 @@ export default function HolterBooster() {
                                     className={`${styles.traceChip} ${isTrace ? styles.traceChipActive : ''}`}
                                     onClick={() => setField(item.id, isTrace ? '' : '<0.01')}
                                     title="ePatch レポートで <0.01% と表記されている場合に使用"
+                                    disabled={isGatedOff}
                                   >
                                     {isTrace ? '<0.01% ✓' : '<0.01%'}
                                   </button>
@@ -596,6 +624,7 @@ export default function HolterBooster() {
                               value={findings[item.id] || ''}
                               onChange={(e) => setField(item.id, e.target.value)}
                               placeholder={item.placeholder}
+                              disabled={isGatedOff}
                             />
                           )}
                           {item.type === 'date' && (
@@ -604,6 +633,7 @@ export default function HolterBooster() {
                               className={styles.dateInput}
                               value={findings[item.id] || ''}
                               onChange={(e) => setField(item.id, e.target.value)}
+                              disabled={isGatedOff}
                             />
                           )}
                           {item.type === 'datetime' && (
@@ -613,6 +643,7 @@ export default function HolterBooster() {
                               className={styles.dateInput}
                               value={findings[item.id] || ''}
                               onChange={(e) => setField(item.id, e.target.value)}
+                              disabled={isGatedOff}
                             />
                           )}
                           {item.type === 'time' && (
@@ -622,18 +653,21 @@ export default function HolterBooster() {
                               className={styles.dateInput}
                               value={findings[item.id] || ''}
                               onChange={(e) => setField(item.id, e.target.value)}
+                              disabled={isGatedOff}
                             />
                           )}
                           {item.type === 'duration' && (() => {
-                            const d = (findings[item.id] && typeof findings[item.id] === 'object') ? findings[item.id] : { h: '', m: '', s: '' };
+                            const d = (findings[item.id] && typeof findings[item.id] === 'object') ? findings[item.id] : { d: '', h: '', m: '', s: '' };
                             const upd = (k, val) => setField(item.id, { ...d, [k]: val });
                             return (
                               <>
-                                <input type="number" min="0" step="1" className={styles.numInput} style={{ width: '70px' }} value={d.h || ''} onChange={(e) => upd('h', e.target.value)} placeholder="時" />
+                                <input type="number" min="0" step="1" className={styles.numInput} style={{ width: '60px' }} value={d.d || ''} onChange={(e) => upd('d', e.target.value)} placeholder="日" disabled={isGatedOff} />
+                                <span className={styles.unit}>日</span>
+                                <input type="number" min="0" max="23" step="1" className={styles.numInput} style={{ width: '60px' }} value={d.h || ''} onChange={(e) => upd('h', e.target.value)} placeholder="時" disabled={isGatedOff} />
                                 <span className={styles.unit}>時間</span>
-                                <input type="number" min="0" max="59" step="1" className={styles.numInput} style={{ width: '60px' }} value={d.m || ''} onChange={(e) => upd('m', e.target.value)} placeholder="分" />
+                                <input type="number" min="0" max="59" step="1" className={styles.numInput} style={{ width: '60px' }} value={d.m || ''} onChange={(e) => upd('m', e.target.value)} placeholder="分" disabled={isGatedOff} />
                                 <span className={styles.unit}>分</span>
-                                <input type="number" min="0" max="59" step="1" className={styles.numInput} style={{ width: '60px' }} value={d.s || ''} onChange={(e) => upd('s', e.target.value)} placeholder="秒" />
+                                <input type="number" min="0" max="59" step="1" className={styles.numInput} style={{ width: '60px' }} value={d.s || ''} onChange={(e) => upd('s', e.target.value)} placeholder="秒" disabled={isGatedOff} />
                                 <span className={styles.unit}>秒</span>
                               </>
                             );
@@ -641,7 +675,8 @@ export default function HolterBooster() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
