@@ -1,0 +1,9 @@
+{
+  "label": "生理学的検査",
+  "position": 8,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "エコー・ホルター心電図など、生理学的検査の所見入力・判読支援ツール"
+  }
+}
