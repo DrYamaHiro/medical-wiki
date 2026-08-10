@@ -53,7 +53,7 @@ function buildInitialGroupCollapsed() {
 }
 
 export default function HolterBooster() {
-  const [findings, setFindings] = useState(() => ({ report_date: formatToday() }));
+  const [findings, setFindings] = useState({});
   const [overallComment, setOverallComment] = useState('');
   const [collapsed, setCollapsed] = useState(buildInitialCollapsed);
   const [groupCollapsed, setGroupCollapsed] = useState(buildInitialGroupCollapsed);
@@ -154,7 +154,7 @@ export default function HolterBooster() {
 
   const reset = () => {
     if (!window.confirm('入力内容をすべてクリアしますか？')) return;
-    setFindings({ report_date: formatToday() });
+    setFindings({});
     setOverallComment('');
     setCollapsed(buildInitialCollapsed());
     setGroupCollapsed(buildInitialGroupCollapsed());
