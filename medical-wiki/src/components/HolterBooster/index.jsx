@@ -178,19 +178,21 @@ export default function HolterBooster() {
   }, [findings.pacing_present, findings.find_pm_failure]);
 
   // Phase 8: sub_header の「全てなし」ボタン — 該当 sub_group 内の choice item を「なし」に一括設定
+  // 注: find_pm_failure は 5b (pacing_present) と自動同期されるため、このボタンでは上書きしない
   const applyAllNoneFromHeader = useCallback((section, headerIdx) => {
-    // 該当 sub_header 以降、次の sub_header または末尾までの choice item を対象
     const targets = [];
+    let skippedPm = false;
     for (let i = headerIdx + 1; i < section.items.length; i++) {
       const it = section.items[i];
       if (it.type === 'sub_header') break;
       if (it.type !== 'choice') continue;
-      // 特殊: find_pm_failure は「該当なし (デバイスなし)」
-      if (it.id === 'find_pm_failure') targets.push([it.id, '該当なし (デバイスなし)']);
-      else if (it.options && it.options.includes('なし')) targets.push([it.id, 'なし']);
+      // find_pm_failure は 5b と自動同期、ここでは触らない (上書き防止)
+      if (it.id === 'find_pm_failure') { skippedPm = true; continue; }
+      if (it.options && it.options.includes('なし')) targets.push([it.id, 'なし']);
     }
     if (targets.length === 0) return;
-    if (!window.confirm(`この区分の ${targets.length} 項目を「なし」に一括設定します。既存の選択は上書きされます。よろしいですか？`)) return;
+    const skipMsg = skippedPm ? '\n(※ ペースメーカー機能不全は 5b の設定に連動するため上書きしません)' : '';
+    if (!window.confirm(`この区分の ${targets.length} 項目を「なし」に一括設定します。既存の選択は上書きされます。よろしいですか？${skipMsg}`)) return;
     setFindings((prev) => {
       const next = { ...prev };
       targets.forEach(([id, val]) => { next[id] = val; });
