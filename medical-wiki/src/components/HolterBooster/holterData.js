@@ -14,7 +14,7 @@ export const HOLTER_SECTIONS = [
     items: [
       { id: 'sex', label: '性別 (QTc正常値用)', type: 'choice', options: ['男性', '女性'] },
       { id: 'symptom', label: '主訴・依頼理由', type: 'multichoice', options: ['動悸', '失神・前失神', 'めまい・ふらつき', '胸痛・胸部不快', '不整脈フォロー', 'AF検出目的', 'ペースメーカー機能評価', '無症候性 (定期評価)'] },
-      { id: 'diary_correlation', label: '症状日誌との相関', type: 'choice', options: ['未評価・日誌なし', '症状時に不整脈あり (相関)', '症状時に不整脈なし', '一部相関'] },
+      { id: 'diary_correlation', label: '症状記録シート/患者イベントとの相関', type: 'choice', options: ['未評価・記録なし', '症状時に不整脈あり (相関)', '症状時に不整脈なし', '一部相関'], hint: 'ePatch 用語: 「症状記録シート」= 紙の症状記入、「患者イベント」= 患者ボタン タップ回数' },
       { id: 'correlated_arrhythmias', label: '相関した不整脈 (相関ありの場合)', type: 'multichoice', options: ['PVC', 'SVPC', '洞頻脈', '洞徐脈', 'AF/AFL', 'SVT', 'VT', 'ポーズ', 'その他'] },
     ],
   },
@@ -559,9 +559,9 @@ export const HOLTER_ASSESSMENT_RULES = [
       const rows = Array.isArray(f.daily_burden) ? f.daily_burden : [];
       return rows.length >= 2;
     },
-    text: '日次負荷データ入力あり。日ごとのばらつきと症状日誌・活動記録を照合し、発作誘因の同定を試みる。' },
+    text: '日次負荷データ入力あり。日ごとのばらつきと症状記録シート/患者イベント・活動記録を照合し、発作誘因の同定を試みる。' },
   { level: 'reference', sectionId: 'patient_events', when: (f) => { const v = parseFloat(f.patient_events_count || 0); return v >= 5; },
-    text: '患者イベント数 ≥5回。頻回の自覚症状、症状日誌との詳細照合と原因特定を優先。' },
+    text: '患者イベント数 ≥5回。頻回の自覚症状、症状記録シートとの詳細照合と原因特定を優先。' },
 ];
 
 // 「洞調律・有意所見なし」プリセット - find_* を全て「なし」、AF/AVB/心室調律を「なし」に設定
