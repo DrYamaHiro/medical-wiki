@@ -227,14 +227,25 @@ export default function HolterBooster() {
       matrixEntries.forEach((k) => lines.push(`  ・${k}`));
     }
     // 日次負荷サマリー出力
-    const validDaily = dailyBurden.filter((r) => Object.values(r).some((v) => v !== undefined && v !== '' && v !== null));
+    const isValueSet = (v) => {
+      if (v === undefined || v === '' || v === null) return false;
+      if (typeof v === 'object' && !Array.isArray(v)) return !!(v.d || v.h || v.m || v.s);
+      return true;
+    };
+    const validDaily = dailyBurden.filter((r) => Object.values(r).some(isValueSet));
     if (validDaily.length > 0) {
       lines.push('');
       lines.push('■ 日次負荷サマリー');
       validDaily.forEach((r) => {
         const parts = DAILY_BURDEN_COLUMNS
-          .filter((c) => r[c.key] !== undefined && r[c.key] !== '' && r[c.key] !== null)
-          .map((c) => `${c.label} ${r[c.key]}`);
+          .filter((c) => isValueSet(r[c.key]))
+          .map((c) => {
+            const v = r[c.key];
+            if (c.type === 'date') return `${c.label} ${formatDateWithDay(v, startDate)}`;
+            if (c.type === 'datetime') return `${c.label} ${formatDateTimeWithDay(v, startDate)}`;
+            if (c.type === 'duration') return `${c.label} ${formatDuration(v)}`;
+            return `${c.label} ${v}`;
+          });
         if (parts.length > 0) lines.push(`  ・${parts.join(' / ')}`);
       });
     }
@@ -491,14 +502,38 @@ export default function HolterBooster() {
                           <tr key={idx}>
                             {DAILY_BURDEN_COLUMNS.map((c) => (
                               <td key={c.key}>
-                                <input
-                                  type={c.type === 'numeric' ? 'number' : 'text'}
-                                  step="any"
-                                  className={styles.dailyInput}
-                                  value={row[c.key] || ''}
-                                  onChange={(e) => updateDailyRow(idx, c.key, e.target.value)}
-                                  placeholder={c.placeholder}
-                                />
+                                {c.type === 'date' && (
+                                  <input type="date" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateDailyRow(idx, c.key, e.target.value)} />
+                                )}
+                                {c.type === 'datetime' && (
+                                  <input type="datetime-local" step="1" className={styles.dailyInput} value={row[c.key] || ''} onChange={(e) => updateDailyRow(idx, c.key, e.target.value)} />
+                                )}
+                                {c.type === 'duration' && (() => {
+                                  const d = (row[c.key] && typeof row[c.key] === 'object') ? row[c.key] : { d: '', h: '', m: '', s: '' };
+                                  const upd = (k, val) => updateDailyRow(idx, c.key, { ...d, [k]: val });
+                                  return (
+                                    <span style={{ display: 'inline-flex', gap: '2px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                      <input type="number" min="0" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.d || ''} onChange={(e) => upd('d', e.target.value)} placeholder="日" />
+                                      <span style={{ fontSize: '0.7rem' }}>日</span>
+                                      <input type="number" min="0" max="23" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.h || ''} onChange={(e) => upd('h', e.target.value)} placeholder="時" />
+                                      <span style={{ fontSize: '0.7rem' }}>時</span>
+                                      <input type="number" min="0" max="59" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.m || ''} onChange={(e) => upd('m', e.target.value)} placeholder="分" />
+                                      <span style={{ fontSize: '0.7rem' }}>分</span>
+                                      <input type="number" min="0" max="59" step="1" className={styles.dailyInput} style={{ width: '48px' }} value={d.s || ''} onChange={(e) => upd('s', e.target.value)} placeholder="秒" />
+                                      <span style={{ fontSize: '0.7rem' }}>秒</span>
+                                    </span>
+                                  );
+                                })()}
+                                {(c.type === 'numeric' || c.type === 'text') && (
+                                  <input
+                                    type={c.type === 'numeric' ? 'number' : 'text'}
+                                    step="any"
+                                    className={styles.dailyInput}
+                                    value={row[c.key] || ''}
+                                    onChange={(e) => updateDailyRow(idx, c.key, e.target.value)}
+                                    placeholder={c.placeholder}
+                                  />
+                                )}
                               </td>
                             ))}
                             <td>

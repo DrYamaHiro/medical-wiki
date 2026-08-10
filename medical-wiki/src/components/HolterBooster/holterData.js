@@ -607,12 +607,12 @@ export const PRESET_NOTE = '※プリセット「洞調律・有意所見なし�
 export const SYMPTOM_MATRIX_SYMPTOMS = ['動悸', '失神・前失神', 'めまい・ふらつき', '胸痛・胸部不快', '息切れ・倦怠感'];
 export const SYMPTOM_MATRIX_ARRHYTHMIAS = ['PVC', 'SVPC', '洞頻脈', '洞徐脈', 'AF/AFL', 'SVT', 'VT', 'ポーズ', 'AVブロック', 'ST変化'];
 
-// 日次負荷サマリーの列定義 (Phase 3)
+// 日次負荷サマリーの列定義 (Phase 8: date/datetime/duration picker 対応)
 export const DAILY_BURDEN_COLUMNS = [
-  { key: 'date', label: '日付', type: 'text', placeholder: '例: 12/10 (日1)', width: '110px' },
-  { key: 'analyze_hours', label: '解析可能時間', type: 'text', placeholder: '例: 14時間17分', width: '110px' },
+  { key: 'date', label: '日付', type: 'date', width: '140px' },
+  { key: 'analyze_hours', label: '解析可能時間', type: 'duration', width: '260px' },
   { key: 'af_percent', label: 'AF %', type: 'numeric', placeholder: '0', width: '70px' },
-  { key: 'af_duration', label: 'AF 継続時間', type: 'text', placeholder: '52分41秒', width: '90px' },
+  { key: 'af_duration', label: 'AF 継続時間', type: 'duration', width: '260px' },
   { key: 'spvc_beats', label: 'SVPC 数', type: 'numeric', placeholder: '325', width: '75px' },
   { key: 'spvc_percent', label: 'SVPC %', type: 'numeric', placeholder: '0.52', width: '65px' },
   { key: 'pvc_beats', label: 'PVC 数', type: 'numeric', placeholder: '2335', width: '75px' },
@@ -620,6 +620,7 @@ export const DAILY_BURDEN_COLUMNS = [
   { key: 'svt_episodes', label: 'SVT 回', type: 'numeric', placeholder: '5', width: '55px' },
   { key: 'avb_episodes', label: 'AVB 回', type: 'numeric', placeholder: '0', width: '55px' },
   { key: 'vent_episodes', label: '心室調律 回', type: 'numeric', placeholder: '3', width: '80px' },
+  { key: 'peak_event_datetime', label: 'イベント日時', type: 'datetime', width: '210px' },
   { key: 'note', label: 'メモ (症状等)', type: 'text', placeholder: '', width: '150px' },
 ];
 
