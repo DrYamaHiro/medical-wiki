@@ -20,35 +20,33 @@ export const HOLTER_SECTIONS = [
   },
 
   // ============================================================
-  // 2. レポートサマリー (ePatch: 記録時間・解析時間・ノイズ割合)
+  // 2. レポートサマリー (ePatch: 記録期間・解析時間・ノイズ割合・レポート作成日)
   // ============================================================
   {
     id: 'report_summary',
-    title: '2. レポートサマリー (ePatch: 記録時間・解析時間・ノイズ割合)',
+    title: '2. レポートサマリー (ePatch: 記録期間・解析時間・ノイズ・作成日)',
     items: [
-      { id: 'record_days', label: '記録期間', type: 'text', placeholder: '例: 5日 (開始 2025/12/10 - 終了 2025/12/15)' },
-      { id: 'analyze_hours', label: '解析時間', type: 'numeric', unit: '時間', placeholder: '24', normalRange: { min: 20, max: 168, note: '<20時間で解析信頼性やや低下' } },
+      { id: 'record_start_date', label: '記録開始日', type: 'date', hint: 'カレンダーから選択、記録期間 (日数) は自動算出' },
+      { id: 'record_end_date', label: '記録終了日', type: 'date' },
+      { id: 'analyze_duration', label: '解析時間 (時:分:秒)', type: 'duration', hint: 'ePatch: 「解析時間 4日 23時間 53分」等、時分秒で入力' },
       { id: 'noise_percent', label: 'ノイズ割合', type: 'numeric', unit: '%', placeholder: '0.03', normalRange: { min: 0, max: 30, note: '>30% で解析信頼性低下、微小所見は控えめに解釈' } },
+      { id: 'report_date', label: 'レポート作成日 (解析日)', type: 'date', hint: '出力テキストの日付として使用' },
     ],
   },
 
   // ============================================================
-  // 3. 心拍数 (ePatch: 最大 / 最小 / 平均 / 総心拍数)
+  // 3. 心拍数 (ePatch: 最大 / 最小 / 平均 / 総心拍数) — 4項目 + 最大/最小の日時
   // ============================================================
   {
     id: 'heart_rate',
     title: '3. 心拍数 (ePatch: 最大 / 最小 / 平均 / 総心拍数)',
     items: [
       { id: 'hr_max', label: '最大心拍数', type: 'numeric', unit: 'bpm', placeholder: '157', normalRange: { min: 90, max: 190, note: '≥190bpm は緊急項目 (30秒以上持続で該当)' } },
-      { id: 'hr_max_time', label: '最大心拍数の時刻', type: 'text', placeholder: '例: 08:56:20 am (日6)' },
+      { id: 'hr_max_datetime', label: '　最大心拍数の日時', type: 'datetime', hint: 'カレンダー+時計から選択、記録期間内であれば「日X」も自動表示' },
       { id: 'hr_min', label: '最小心拍数', type: 'numeric', unit: 'bpm', placeholder: '43', normalRange: { min: 35, max: 70, note: '<35bpm は緊急項目 (30秒以上持続で該当)' } },
-      { id: 'hr_min_time', label: '最小心拍数の時刻', type: 'text', placeholder: '例: 03:29:10 am (日2)' },
+      { id: 'hr_min_datetime', label: '　最小心拍数の日時', type: 'datetime' },
       { id: 'hr_mean', label: '平均心拍数', type: 'numeric', unit: 'bpm', placeholder: '73', normalRange: { min: 60, max: 90 } },
       { id: 'total_beats', label: '総心拍数', type: 'numeric', unit: '拍', placeholder: '529697' },
-      { id: 'brady_episodes', label: '徐脈エピソード数', type: 'numeric', unit: '回', placeholder: '0', hint: 'ePatch: 50bpm未満が10拍連続 (小児は年齢別閾値)' },
-      { id: 'tachy_episodes', label: '頻脈エピソード数', type: 'numeric', unit: '回', placeholder: '0', hint: 'ePatch: 100bpm超が10拍連続' },
-      { id: 'hr_day_mean', label: '昼間平均HR (6-22時)', type: 'numeric', unit: 'bpm', placeholder: '80', hint: '任意、昼夜較差評価に使用' },
-      { id: 'hr_night_mean', label: '夜間平均HR (22-6時)', type: 'numeric', unit: 'bpm', placeholder: '60', hint: '任意、昼夜較差評価に使用' },
     ],
   },
 
@@ -84,14 +82,24 @@ export const HOLTER_SECTIONS = [
   },
 
   // ============================================================
-  // 5. 患者イベント・ペーシング (ePatch: 患者イベント / ペーシングされた拍動)
+  // 5a. 患者イベント (ePatch: 患者イベント)
   // ============================================================
   {
     id: 'patient_events',
-    title: '5. 患者イベント・ペーシング (ePatch: 患者イベント / ペーシング)',
+    title: '5a. 患者イベント (ePatch: 症状時タップ回数)',
     items: [
       { id: 'patient_events_count', label: '患者イベント数 (タップ回数)', type: 'numeric', unit: '回', placeholder: '3', hint: 'ePatch: 症状時タップ数、症状記録シート記載のみは含まず' },
-      { id: 'pacing_beats_count', label: 'ペーシング拍動数', type: 'numeric', unit: '拍', placeholder: '', hint: 'ePatch は現在非表示扱い、機能不全評価は 20. PM 機能セクション参照' },
+    ],
+  },
+
+  // ============================================================
+  // 5b. ペーシングによる拍動 (ePatch: ペーシングされた拍動)
+  // ============================================================
+  {
+    id: 'pacing_events',
+    title: '5b. ペーシングによる拍動 (ePatch: PM 拍動数)',
+    items: [
+      { id: 'pacing_beats_count', label: 'ペーシング拍動数', type: 'numeric', unit: '拍', placeholder: '', hint: 'ePatch は現在非表示扱い (機能不全評価は 22. PM 機能セクション参照)' },
     ],
   },
 
@@ -104,7 +112,7 @@ export const HOLTER_SECTIONS = [
     items: [
       { id: 'cvhri_mean', label: 'CVHRI 平均 (夜間 23-6時)', type: 'numeric', placeholder: '26', normalRange: { min: 0, max: 15, note: 'ePatch 明示: ≥15 で OSA 疑い → 簡易 PSG 早期実施推奨' } },
       { id: 'cvhri_max', label: 'CVHRI 最大', type: 'numeric', placeholder: '41' },
-      { id: 'cvhri_max_date', label: 'CVHRI 最大の日付', type: 'text', placeholder: '例: 日5 (2025/12/14)' },
+      { id: 'cvhri_max_date', label: 'CVHRI 最大の日付', type: 'date' },
     ],
   },
 
@@ -118,7 +126,7 @@ export const HOLTER_SECTIONS = [
       { id: 'af_present', label: 'AF/AFL', type: 'choice', options: ['なし', 'あり (発作性)', 'あり (持続性)'] },
       { id: 'af_burden_percent', label: 'AF/AFL 割合', type: 'numeric', unit: '%', placeholder: '8.75' },
       { id: 'af_longest_duration', label: '最長エピソード持続', type: 'text', placeholder: '例: 10時間29分' },
-      { id: 'af_longest_time', label: '最長エピソード発生日時', type: 'text', placeholder: '例: 日5 11:07pm' },
+      { id: 'af_longest_time', label: '最長エピソード発生日時', type: 'datetime' },
       { id: 'af_max_hr', label: '最大心拍数 (AF/AFL中)', type: 'numeric', unit: 'bpm', placeholder: '157' },
       { id: 'aflutter_present', label: '心房粗動 (AFL) 単独確認', type: 'choice', options: ['なし', 'あり'] },
     ],
@@ -134,7 +142,7 @@ export const HOLTER_SECTIONS = [
       { id: 'svt_other_episodes', label: 'エピソード数 (3連発以上)', type: 'numeric', unit: '回', placeholder: '38' },
       { id: 'svt_max_beats', label: '最長連発数', type: 'numeric', unit: '拍', placeholder: '16', normalRange: { min: 0, max: 14, note: '15拍以上は臨床的意義あり、QRS 幅で AT/SVT vs Wide QRS 鑑別' } },
       { id: 'svt_max_hr', label: '最大心拍数', type: 'numeric', unit: 'bpm', placeholder: '159' },
-      { id: 'svt_longest_time', label: '最長エピソード発生日時', type: 'text', placeholder: '例: 日1 11:50pm' },
+      { id: 'svt_longest_time', label: '最長エピソード発生日時', type: 'datetime' },
     ],
   },
 
@@ -147,7 +155,7 @@ export const HOLTER_SECTIONS = [
     items: [
       { id: 'pause_count', label: 'ポーズ回数 (2.5秒以上)', type: 'numeric', unit: '回', placeholder: '1' },
       { id: 'pause_max_sec', label: '最長R-R間隔', type: 'numeric', unit: '秒', placeholder: '2.538', normalRange: { min: 0, max: 3.0, note: '≥3秒はメール連絡項目 (覚醒 or 症状伴えば PM 検討)' } },
-      { id: 'pause_max_time', label: '最長発生日時', type: 'text', placeholder: '例: 日6 03:02am' },
+      { id: 'pause_max_time', label: '最長発生日時', type: 'datetime' },
     ],
   },
 
@@ -255,7 +263,7 @@ export const HOLTER_SECTIONS = [
       { id: 'st_depression_duration', label: 'ST 低下 総持続時間', type: 'numeric', unit: '分', placeholder: '0' },
       { id: 'st_elevation_max', label: 'ST 上昇 最大値', type: 'numeric', unit: 'mm', placeholder: '0', normalRange: { min: 0, max: 2.0, note: 'ePatch: ≥2mm 30秒以上で有意 (冠攣縮・心外膜炎鑑別)' } },
       { id: 'st_symptom_correlation', label: 'ST変化と症状の相関', type: 'choice', options: ['未評価', '相関あり', '相関なし', '一部相関', 'ST変化なし'] },
-      { id: 'st_max_time', label: '最大 ST 変動の時刻', type: 'text', placeholder: '例: 日5 08:17am' },
+      { id: 'st_max_time', label: '最大 ST 変動の日時', type: 'datetime' },
     ],
   },
 
@@ -274,11 +282,25 @@ export const HOLTER_SECTIONS = [
   },
 
   // ============================================================
-  // 17. 心拍数変動 HRV (ePatch: 心拍数変動 時間/周波数領域解析)
+  // 17. 心拍数の傾向 (ePatch: 心拍数トレンド — 徐脈/頻脈エピソード + 昼夜HR)
+  // ============================================================
+  {
+    id: 'heart_rate_trend',
+    title: '17. 心拍数の傾向 (ePatch: 徐脈/頻脈エピソード + 昼夜HR)',
+    items: [
+      { id: 'brady_episodes', label: '徐脈エピソード数', type: 'numeric', unit: '回', placeholder: '0', hint: 'ePatch: 50bpm未満が10拍連続 (小児は年齢別閾値)' },
+      { id: 'tachy_episodes', label: '頻脈エピソード数', type: 'numeric', unit: '回', placeholder: '0', hint: 'ePatch: 100bpm超が10拍連続' },
+      { id: 'hr_day_mean', label: '昼間平均HR (6-22時)', type: 'numeric', unit: 'bpm', placeholder: '80', hint: '任意、昼夜較差評価に使用' },
+      { id: 'hr_night_mean', label: '夜間平均HR (22-6時)', type: 'numeric', unit: 'bpm', placeholder: '60', hint: '任意、昼夜較差評価に使用' },
+    ],
+  },
+
+  // ============================================================
+  // 18. 心拍数変動 HRV (ePatch: 心拍数変動 時間/周波数領域解析)
   // ============================================================
   {
     id: 'hrv',
-    title: '17. 心拍数変動 HRV (ePatch: 時間/周波数領域解析)',
+    title: '18. 心拍数変動 HRV (ePatch: 時間/周波数領域解析)',
     items: [
       { id: 'sdnn', label: 'SDNN', type: 'numeric', unit: 'ms', placeholder: '204', normalRange: { min: 100, max: 300, note: '<50ms 予後不良指標' } },
       { id: 'sdann', label: 'SDANN', type: 'numeric', unit: 'ms', placeholder: '184' },
@@ -297,7 +319,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'qt',
-    title: '18. QT / QTc (ePatch: Bazett 男450 / 女460ms 閾値)',
+    title: '19. QT / QTc (ePatch: Bazett 男450 / 女460ms 閾値)',
     items: [
       { id: 'qt_min', label: '最小 QT間隔', type: 'numeric', unit: 'ms', placeholder: '330' },
       { id: 'qt_mean', label: '平均 QT間隔', type: 'numeric', unit: 'ms', placeholder: '388' },
@@ -318,7 +340,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'pvc_morphology',
-    title: '19. 心室形態解析 (ePatch: 主要形態1-9)',
+    title: '20. 心室形態解析 (ePatch: 主要形態1-9)',
     items: [
       { id: 'pvc_morph1_beats', label: '形態1 拍動数', type: 'numeric', unit: '個', placeholder: '12796' },
       { id: 'pvc_morph1_percent', label: '形態1 割合', type: 'numeric', unit: '%', placeholder: '57.63', hint: '≥80% で単一起源優位、アブレーション適応検討材料' },
@@ -348,7 +370,7 @@ export const HOLTER_SECTIONS = [
   // ※ 特殊 UI (マトリクス)、items は空、UI 側 symptomMatrix state で管理
   {
     id: 'symptom_matrix',
-    title: '20. 症状 × 不整脈 クロス集計 (ePatch: 患者の症状)',
+    title: '21. 症状 × 不整脈 クロス集計 (ePatch: 患者の症状)',
     items: [],
   },
 
@@ -357,7 +379,7 @@ export const HOLTER_SECTIONS = [
   // ============================================================
   {
     id: 'pacemaker_func',
-    title: '21. ペースメーカー機能評価 (植込例のみ)',
+    title: '22. ペースメーカー機能評価 (植込例のみ)',
     items: [
       { id: 'device_type', label: 'デバイス種別', type: 'choice', options: ['なし', 'PPM', 'ICD', 'CRT-P/D'] },
       { id: 'pacing_percent_a', label: '心房 (A) ペーシング率', type: 'numeric', unit: '%', placeholder: '30' },
@@ -650,3 +672,68 @@ export const SCENARIO_PRESETS = [
     note: '※PM 定期評価プリセット適用済み — A/V ペーシング率と ICD 作動 (該当時) を実レポート値で入力してください。',
   },
 ];
+
+// ============================================================
+// ヘルパー関数 (Phase 5: 時刻・日付・duration 型の値変換)
+// ============================================================
+
+// duration オブジェクト { h, m, s } → 総時間 (小数)
+export function durationToHours(v) {
+  if (!v || typeof v !== 'object') return 0;
+  const h = parseFloat(v.h || 0);
+  const m = parseFloat(v.m || 0);
+  const s = parseFloat(v.s || 0);
+  return h + m / 60 + s / 3600;
+}
+
+// duration オブジェクト → 表示文字列 "24時間30分15秒"
+export function formatDuration(v) {
+  if (!v || typeof v !== 'object') return '';
+  const h = parseInt(v.h || 0, 10);
+  const m = parseInt(v.m || 0, 10);
+  const s = parseInt(v.s || 0, 10);
+  if (h === 0 && m === 0 && s === 0) return '';
+  const parts = [];
+  if (h > 0) parts.push(`${h}時間`);
+  if (m > 0) parts.push(`${m}分`);
+  if (s > 0) parts.push(`${s}秒`);
+  return parts.join('');
+}
+
+// datetime-local "YYYY-MM-DDTHH:mm" → 記録開始日基準で「日X HH:mm」形式に整形
+// 記録開始日がなければ "YYYY-MM-DD HH:mm" のまま返す
+export function formatDateTimeWithDay(dtStr, startDateStr) {
+  if (!dtStr) return '';
+  const [datePart, timePart] = String(dtStr).split('T');
+  if (!datePart || !timePart) return dtStr;
+  if (!startDateStr) return `${datePart} ${timePart}`;
+  const start = new Date(startDateStr + 'T00:00:00');
+  const target = new Date(datePart + 'T00:00:00');
+  if (isNaN(start.getTime()) || isNaN(target.getTime())) return `${datePart} ${timePart}`;
+  const diffDays = Math.floor((target - start) / (24 * 3600 * 1000)) + 1;
+  if (diffDays < 1 || diffDays > 30) return `${datePart} ${timePart}`;
+  return `日${diffDays} ${timePart} (${datePart})`;
+}
+
+// date "YYYY-MM-DD" → 記録開始日基準で「日X (MM/DD)」形式
+export function formatDateWithDay(dStr, startDateStr) {
+  if (!dStr) return '';
+  if (!startDateStr) return dStr;
+  const start = new Date(startDateStr + 'T00:00:00');
+  const target = new Date(dStr + 'T00:00:00');
+  if (isNaN(start.getTime()) || isNaN(target.getTime())) return dStr;
+  const diffDays = Math.floor((target - start) / (24 * 3600 * 1000)) + 1;
+  if (diffDays < 1 || diffDays > 30) return dStr;
+  const [, mm, dd] = dStr.split('-');
+  return `日${diffDays} (${mm}/${dd})`;
+}
+
+// 2つの date "YYYY-MM-DD" 間の日数 (両端含む)
+export function daysBetweenInclusive(startStr, endStr) {
+  if (!startStr || !endStr) return null;
+  const s = new Date(startStr + 'T00:00:00');
+  const e = new Date(endStr + 'T00:00:00');
+  if (isNaN(s.getTime()) || isNaN(e.getTime())) return null;
+  return Math.floor((e - s) / (24 * 3600 * 1000)) + 1;
+}
+

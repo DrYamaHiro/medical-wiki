@@ -3,6 +3,7 @@ import styles from './styles.module.css';
 import {
   HOLTER_SECTIONS, HOLTER_ASSESSMENT_RULES, buildNormalPreset, PRESET_NOTE, SCENARIO_PRESETS,
   SYMPTOM_MATRIX_SYMPTOMS, SYMPTOM_MATRIX_ARRHYTHMIAS, DAILY_BURDEN_COLUMNS,
+  durationToHours, formatDuration, formatDateTimeWithDay, formatDateWithDay, daysBetweenInclusive,
 } from './holterData.js';
 
 const ABNORMAL_KEYWORDS = ['あり', '相関あり', '発作性', '持続性', 'ショック', '不適切', 'モビッツ', 'Mobitz II', '完全', '高度', '2:1', 'SSS', '疑い', 'torsades', '多形性'];
@@ -45,10 +46,9 @@ function buildInitialCollapsed() {
 }
 
 export default function HolterBooster() {
-  const [findings, setFindings] = useState({});
+  const [findings, setFindings] = useState(() => ({ report_date: formatToday() }));
   const [overallComment, setOverallComment] = useState('');
   const [collapsed, setCollapsed] = useState(buildInitialCollapsed);
-  const [examDate, setExamDate] = useState(formatToday);
   const [copied, setCopied] = useState(false);
 
   // Phase 3: 症状マトリクス state
@@ -137,7 +137,7 @@ export default function HolterBooster() {
 
   const reset = () => {
     if (!window.confirm('入力内容をすべてクリアしますか？')) return;
-    setFindings({});
+    setFindings({ report_date: formatToday() });
     setOverallComment('');
     setCollapsed(buildInitialCollapsed());
     setSymptomMatrix({});
@@ -146,27 +146,49 @@ export default function HolterBooster() {
 
   const gender = findings.sex === '女性' ? 'female' : 'male';
 
-  // assessment rule に渡す拡張 findings (matrix と daily_burden を含む)
-  const enrichedFindings = useMemo(() => ({
-    ...findings,
-    symptom_matrix: symptomMatrix,
-    daily_burden: dailyBurden,
-  }), [findings, symptomMatrix, dailyBurden]);
+  // assessment rule に渡す拡張 findings (matrix・daily_burden + duration/日数から数値派生)
+  const enrichedFindings = useMemo(() => {
+    // 解析時間の時分秒 → 総時間 (小数) を rule 互換のため analyze_hours にセット
+    const analyzeHours = durationToHours(findings.analyze_duration);
+    // 記録期間 (日数) を record_days_num として算出 (両端含む)
+    const recDays = daysBetweenInclusive(findings.record_start_date, findings.record_end_date);
+    return {
+      ...findings,
+      analyze_hours: analyzeHours > 0 ? analyzeHours : undefined,
+      record_days_num: recDays,
+      symptom_matrix: symptomMatrix,
+      daily_burden: dailyBurden,
+    };
+  }, [findings, symptomMatrix, dailyBurden]);
 
   // 出力テキスト生成
   const output = useMemo(() => {
-    const lines = [`【ホルター心電図所見 (ePatch 準拠)】 ${examDate}`];
+    const reportDate = findings.report_date || formatToday();
+    const startDate = findings.record_start_date;
+    const lines = [`【ホルター心電図所見 (ePatch 準拠)】 レポート日 ${reportDate}`];
+    // 記録期間の総日数を計算し先頭近くに提示
+    const recDays = daysBetweenInclusive(findings.record_start_date, findings.record_end_date);
     HOLTER_SECTIONS.forEach((section) => {
       const entries = section.items
         .map((it) => {
           const v = findings[it.id];
-          const hasValue = Array.isArray(v) ? v.length > 0 : (v !== undefined && v !== '' && v !== null);
-          if (!hasValue) return null;
+          const hasValueForObj = it.type === 'duration' && v && typeof v === 'object' && (v.h || v.m || v.s);
+          const hasValueForArr = Array.isArray(v) && v.length > 0;
+          const hasValueForPrim = !Array.isArray(v) && (typeof v !== 'object' || v === null) && (v !== undefined && v !== '' && v !== null);
+          if (!hasValueForObj && !hasValueForArr && !hasValueForPrim) return null;
           if (it.type === 'numeric') return `${it.label} ${v}${it.unit || ''}`;
           if (it.type === 'multichoice') return `${it.label}: ${v.join(' / ')}`;
+          if (it.type === 'date') return `${it.label}: ${formatDateWithDay(v, startDate)}`;
+          if (it.type === 'datetime') return `${it.label}: ${formatDateTimeWithDay(v, startDate)}`;
+          if (it.type === 'duration') return `${it.label}: ${formatDuration(v)}`;
+          if (it.type === 'time') return `${it.label}: ${v}`;
           return `${it.label}: ${v}`;
         })
         .filter(Boolean);
+      // レポートサマリーの記録期間の合計日数を追記
+      if (section.id === 'report_summary' && recDays && entries.length > 0) {
+        entries.push(`(記録期間: 合計 ${recDays} 日間)`);
+      }
       if (entries.length > 0) {
         lines.push('');
         lines.push(`■ ${section.title}`);
@@ -199,7 +221,7 @@ export default function HolterBooster() {
       lines.push(`  ${trimmed}`);
     }
     return lines.join('\n');
-  }, [findings, overallComment, examDate, symptomMatrix, dailyBurden]);
+  }, [findings, overallComment, symptomMatrix, dailyBurden]);
 
   // アセスメント自動生成 (level 別にグルーピング、sectionId 付き)
   const assessmentGroups = useMemo(() => {
@@ -322,7 +344,9 @@ export default function HolterBooster() {
           } else {
             inputCount = section.items.filter((it) => {
               const v = findings[it.id];
-              return Array.isArray(v) ? v.length > 0 : (v !== undefined && v !== '' && v !== null);
+              if (Array.isArray(v)) return v.length > 0;
+              if (v && typeof v === 'object') return !!(v.h || v.m || v.s); // duration 型
+              return v !== undefined && v !== '' && v !== null;
             }).length;
           }
           const badgeLabel = section.id === 'symptom_matrix' ? `${inputCount} 件対応`
@@ -506,6 +530,46 @@ export default function HolterBooster() {
                               placeholder={item.placeholder}
                             />
                           )}
+                          {item.type === 'date' && (
+                            <input
+                              type="date"
+                              className={styles.dateInput}
+                              value={findings[item.id] || ''}
+                              onChange={(e) => setField(item.id, e.target.value)}
+                            />
+                          )}
+                          {item.type === 'datetime' && (
+                            <input
+                              type="datetime-local"
+                              step="1"
+                              className={styles.dateInput}
+                              value={findings[item.id] || ''}
+                              onChange={(e) => setField(item.id, e.target.value)}
+                            />
+                          )}
+                          {item.type === 'time' && (
+                            <input
+                              type="time"
+                              step="1"
+                              className={styles.dateInput}
+                              value={findings[item.id] || ''}
+                              onChange={(e) => setField(item.id, e.target.value)}
+                            />
+                          )}
+                          {item.type === 'duration' && (() => {
+                            const d = (findings[item.id] && typeof findings[item.id] === 'object') ? findings[item.id] : { h: '', m: '', s: '' };
+                            const upd = (k, val) => setField(item.id, { ...d, [k]: val });
+                            return (
+                              <>
+                                <input type="number" min="0" step="1" className={styles.numInput} style={{ width: '70px' }} value={d.h || ''} onChange={(e) => upd('h', e.target.value)} placeholder="時" />
+                                <span className={styles.unit}>時間</span>
+                                <input type="number" min="0" max="59" step="1" className={styles.numInput} style={{ width: '60px' }} value={d.m || ''} onChange={(e) => upd('m', e.target.value)} placeholder="分" />
+                                <span className={styles.unit}>分</span>
+                                <input type="number" min="0" max="59" step="1" className={styles.numInput} style={{ width: '60px' }} value={d.s || ''} onChange={(e) => upd('s', e.target.value)} placeholder="秒" />
+                                <span className={styles.unit}>秒</span>
+                              </>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>
@@ -531,13 +595,9 @@ export default function HolterBooster() {
       <div className={styles.outputSection}>
         <h4 className={styles.outputTitle}>コピペ用所見 + 診断補助</h4>
         <div className={styles.outputControls}>
-          <label style={{ fontSize: '0.85rem', fontWeight: 600 }}>検査日:</label>
-          <input
-            type="date"
-            className={styles.dateInput}
-            value={examDate}
-            onChange={(e) => setExamDate(e.target.value)}
-          />
+          <span style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-700)' }}>
+            レポート日: <strong>{findings.report_date || formatToday()}</strong> (レポートサマリー欄で変更可)
+          </span>
           <button
             type="button"
             className={`${styles.copyBtn} ${copied ? styles.copied : ''}`}
