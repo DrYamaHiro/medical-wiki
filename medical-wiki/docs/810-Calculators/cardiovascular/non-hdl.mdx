@@ -1,0 +1,63 @@
+---
+id: non-hdl
+title: "non-HDL-C 計算"
+sidebar_label: "non-HDL-C"
+sidebar_position: 4
+hide_table_of_contents: true
+description: "TC・HDL-C・LDL-C・TG から non-HDL-C を算出。入力が一部欠けていても算出可能な経路を自動選択し、リスク区分別の管理目標も判定します。"
+keywords: ["non-HDL-C", "nonHDL", "非HDLコレステロール", "脂質異常症", "動脈硬化", "レムナント", "高TG血症", "LDL-C", "Friedewald", "動脈硬化性疾患予防ガイドライン"]
+---
+import NonHDLCalculator from '@site/src/components/ClinicalCalc/NonHDLCalculator';
+
+# non-HDL-C 計算ツール
+
+総コレステロール・HDL-C・LDL-C・中性脂肪から **non-HDL-C** を算出します。**入力値が一部欠けていても、揃っている組み合わせから自動的に算出経路を選択**します。リスク区分を選べば管理目標の達成判定も表示されます。
+
+<NonHDLCalculator />
+
+## 算出経路
+
+入力が揃った方の経路が自動で選択されます（① が優先）。
+
+| # | 必要な入力 | 計算式 | 特徴 |
+|---|---|---|---|
+| ① | **TC + HDL-C** | non-HDL-C = TC − HDL-C | 定義式。TG 値に依存しないため最も正確。TG ≥400 でも使用可 |
+| ② | **LDL-C + TG** | non-HDL-C = LDL-C + TG/5 | Friedewald 式の逆算。TG &lt; 400 mg/dL でのみ有効 |
+
+どちらの組み合わせも揃わない場合は、あと何を入力すれば算出できるかを画面上に案内します。
+
+## 判定基準
+
+| non-HDL-C | 判定 |
+|---|---|
+| **&lt; 150 mg/dL** | 正常域 |
+| **150 〜 169 mg/dL** | 境界域高non-HDL-C血症 |
+| **≥ 170 mg/dL** | 高non-HDL-C血症 |
+
+## リスク区分別 管理目標
+
+non-HDL-C の管理目標は **LDL-C 目標 + 30 mg/dL** です。
+
+| リスク区分 | LDL-C | non-HDL-C |
+|---|---|---|
+| 一次予防 低リスク | &lt; 160 | &lt; 190 |
+| 一次予防 中リスク | &lt; 140 | &lt; 170 |
+| 一次予防 高リスク | &lt; 120 | &lt; 150 |
+| 二次予防 | &lt; 100 | &lt; 130 |
+| 二次予防（急性冠症候群・家族性高コレステロール血症・糖尿病合併・冠動脈疾患とアテローム血栓性脳梗塞の合併） | &lt; 70 | &lt; 100 |
+
+## non-HDL-C の臨床的意義
+
+- LDL 以外の**アテローム惹起性リポ蛋白**（VLDL・IDL・レムナント・Lp(a) 等）をすべて含む
+- **高TG血症・食後採血・糖尿病・メタボリック症候群**では LDL-C より病態を反映する
+- **随時（非空腹時）採血でも評価可能**
+- **TG 400 mg/dL 以上では Friedewald 式による LDL-C 推算が使用不可**となるが、non-HDL-C は TG の影響を受けにくいため、この状況でこそ有用
+
+## 関連ページ
+
+- [Friedewald 式（LDL-C 推算）](friedewald)
+- [久山町スコア（動脈硬化性疾患リスク）](hisayama)
+
+## 参考
+
+- 日本動脈硬化学会 動脈硬化性疾患予防ガイドライン2022年版
