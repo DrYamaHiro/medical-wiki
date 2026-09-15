@@ -742,6 +742,7 @@ export function evaluate(s) {
     alert = alert ? `${alert} ／ ${bpMsg}` : bpMsg;
   }
   if (alert) reasons.unshift(alert);
+  if (type === 'same_day') reasons.push('当日受診が必要: 医師または看護師から病院へ連絡調整。受付で手続き・書類を渡し、移動手段と到着予定時刻を確認');
 
   const decision = { type, ...DECISION[type], reasons, alert };
   if (decision.referral && decision.target === 'クリニック') {
@@ -767,21 +768,6 @@ export function evaluate(s) {
   }
   individual.forEach((f) => pushDept(f.dept));
   if (deptSet.length === 0 && decision.referral) pushDept('内科（生活習慣病）');
-
-  // --- ラベル ---
-  const labels = [];
-  if (type === 'same_day') labels.push('000: 【当日】紹介状');
-  else if (decision.referral) labels.push('000: 【後日】紹介状');
-  else if (type === 'pending_blood') labels.push('000: 紹介状無し（採血結果次第で後日作成の可能性あり。紹介先候補はカルテに記載。検診チーム回答: 特別なラベルは不要）');
-  else labels.push('000: 紹介状無し');
-  if (decision.referral && (dest.undecided || !dest.name)) {
-    labels.push('000: 宛先検索依頼（受付に紹介先検索を依頼。カルテに紹介依頼する診療科を記載 → 一旦保存 → 宛名無しの紹介状を作成）');
-  }
-  labels.push('01: ③医師診察 のラベルを消す（診察終了時）');
-  if (decision.referral) labels.push('混雑時: 紹介状の作成は後回しでも可。ラベルの実施と「診察終了」のステータス変更を先に行い、後から作成する（STEP5 ポイント）');
-  if (knownContact.length) labels.push('既知の頸動脈所見あり: 必要に応じてかかりつけ医に連絡（チャート備考）');
-  if (type === 'same_day') labels.push('当日受診が必要: 医師または看護師から病院へ連絡調整。受付で手続き・書類を渡し、移動手段と到着予定時刻を確認');
-  if (alert && type !== 'same_day') labels.push('症状・血圧の警告あり: 当日対応に切り替える場合はラベルを【当日】紹介状に変更');
 
   // --- 保健師への申し送り（運動制限）---
   const nurse = [];
@@ -810,7 +796,7 @@ export function evaluate(s) {
     vascularReferral: untreatedVascular ? vascularFindings : [],
     labs: { sbp, dbp, bp, bpGrade, labClasses, glu, gluBand: gluB, fpg, a1c, bmi, bmiCls, waist, obesityBand: obB, anyLab, bloodLevel, bloodReasons },
     elig, eligCount, eligUnknown, genderSet,
-    decision, autoType, depts: deptSet, labels, nurse, opinion, urgentSymptoms, alert,
+    decision, autoType, depts: deptSet, nurse, opinion, urgentSymptoms, alert,
     carotidMap: segInfo.mapText, carotidMapNormal: segInfo.normalCount,
   };
 }
@@ -903,10 +889,6 @@ export function buildChartText(ev, s, opts = {}) {
   lines.push(`【判定】${d.label}`);
   d.reasons.forEach((r) => lines.push(`  - ${r}`));
   return lines.join('\n');
-}
-
-export function buildLabelText(ev) {
-  return ev.labels.map((l) => `・${l}`).join('\n');
 }
 
 function layJoin(ev, exam) {

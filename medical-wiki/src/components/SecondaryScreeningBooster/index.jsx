@@ -5,7 +5,7 @@ import {
   LAB_BANDS, LAB_ORDER, bandFromValues,
   CAROTID_SEGMENTS, SEGMENT_PLAQUE, SEGMENT_STENOSIS, segmentStatus, applySegments,
   HEART_REGIONS, heartRegionStatus,
-  evaluate, buildChartText, buildLabelText, buildScriptText, buildNurseText, buildReferralText, buildOpinionText,
+  evaluate, buildChartText, buildScriptText, buildNurseText, buildReferralText, buildOpinionText,
 } from './screeningData.js';
 
 const INITIAL_BG = {
@@ -473,7 +473,6 @@ export default function SecondaryScreeningBooster() {
   const hasKakaritsuke = ev.hasKakaritsuke;
 
   const chartText = buildChartText(ev, state, { includeEcho });
-  const labelText = buildLabelText(ev);
   const scriptText = buildScriptText(ev, state);
   const nurseText = buildNurseText(ev);
   const referralText = buildReferralText(ev, state);
@@ -869,7 +868,6 @@ export default function SecondaryScreeningBooster() {
               <Chip active={includeEcho} onClick={() => setIncludeEcho((v) => !v)}>エコー要点を含める</Chip>
             )}
           />
-          <OutBlock id="labels" title="ラベル・事務対応（000 / 01）" text={labelText} copied={copied} onCopy={copy} />
           <OutBlock id="nurse" title="保健師への申し送り（運動制限・説明依頼）" text={nurseText} copied={copied} onCopy={copy} />
           <OutBlock id="script" title="患者説明トークスクリプト（導入・結果説明・締め）" text={scriptText} copied={copied} onCopy={copy} />
           {(d.referral || d.type === 'pending_blood') && (
