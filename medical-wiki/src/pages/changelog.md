@@ -9,6 +9,19 @@ title: "変更履歴"
 ---
 
 <details open>
+<summary><strong>ver.3.1.2.0</strong>（2026-09-14〜15）— 二次健診 Booster 追加</summary>
+
+労災二次健康診断の医師診察支援ツール `二次健診 Booster` を新設（生理学的検査カテゴリ）。
+
+- 検診チームのマニュアル（心エコー・頸部エコーの紹介状作成チャート、トークスクリプト、ラベル運用、運動制限基準、結果表の医師所見テンプレート）を入力補助に落とし込み
+- 一次健診値はカットオフ帯域のクリック選択（数値入力は任意）、エコー所見は技師伝達をカットオフ選択で入力
+- 紹介状の要否（当日 / 後日 / 採血結果次第 / なし）、ラベル（000/01）、保健師申し送り、患者説明スクリプト、診療情報提供書の下書き、医師所見テンプレート候補を自動生成
+- 緊急症状・III度高血圧の警告、既知/未知トグル、チャート外所見（心嚢液・上行大動脈・TRPG・甲状腺）は独自の目安として明示
+- 配置: `docs/810-Calculators/physiological-tests/secondary-screening-booster.mdx`
+
+</details>
+
+<details>
 <summary><strong>ver.3.1.0.1</strong>（2026-06-17〜23）— Echo Booster + ASRS-v1.1 + COPD-PS 追加</summary>
 
 エコー所見入力ツール `Echo Booster`、成人 ADHD スクリーニングツール `ASRS-v1.1`、COPD スクリーニングツール `COPD-PS` を新設。

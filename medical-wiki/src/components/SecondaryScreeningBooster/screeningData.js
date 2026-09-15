@@ -273,6 +273,108 @@ export function classifyBMI(n) {
 
 export const CLASS_LABEL = { A: '異常なし', B: '軽度異常', C: '要再検査・生活改善', D: '要精密検査・治療' };
 
+// 一次健診のクリック入力帯域（カットオフ選択）。elig: 労災二次健診の対象基準に該当するか
+// cls: 人間ドック協会の判定に対応。grade: JSH2025 の血圧分類。数値入力は任意（bandFromValues で帯域に変換）
+export const LAB_BANDS = {
+  bp: {
+    label: '血圧', unit: 'mmHg', fields: ['sbp', 'dbp'], fieldLabels: ['収縮期', '拡張期'],
+    options: [
+      { v: '130/85 未満', grade: 1, cls: 'A', elig: false },
+      { v: '130-139 / 85-89', grade: 2, cls: 'B', elig: true },
+      { v: '140-159 / 90-99（I度）', grade: 3, cls: 'C', elig: true },
+      { v: '160-179 / 100-109（II度）', grade: 4, cls: 'D', elig: true },
+      { v: '180/110 以上（III度）', grade: 5, cls: 'D', elig: true },
+    ],
+  },
+  ldl: {
+    label: 'LDL-C', unit: 'mg/dL', fields: ['ldl'], fieldLabels: ['LDL-C'],
+    options: [
+      { v: '140 未満', cls: 'A', elig: false },
+      { v: '140-179', cls: 'C', elig: true },
+      { v: '180 以上', cls: 'D', elig: true },
+    ],
+  },
+  hdl: {
+    label: 'HDL-C', unit: 'mg/dL', fields: ['hdl'], fieldLabels: ['HDL-C'],
+    options: [
+      { v: '40 以上', cls: 'A', elig: false },
+      { v: '30-39', cls: 'C', elig: true },
+      { v: '30 未満', cls: 'D', elig: true },
+    ],
+  },
+  tg: {
+    label: 'TG', unit: 'mg/dL', fields: ['tg'], fieldLabels: ['TG'],
+    options: [
+      { v: '150 未満', cls: 'A', elig: false },
+      { v: '150-299', cls: 'B', elig: true },
+      { v: '300-499', cls: 'C', elig: true },
+      { v: '500 以上', cls: 'D', elig: true },
+    ],
+  },
+  glu: {
+    label: '血糖', unit: '', fields: ['fpg', 'a1c'], fieldLabels: ['空腹時血糖 mg/dL', 'HbA1c %'],
+    options: [
+      { v: 'FPG 100未満 かつ HbA1c 5.6未満', cls: 'A', elig: false },
+      { v: 'FPG 100-109 / HbA1c 5.6-5.9', cls: 'B', elig: true },
+      { v: 'FPG 110-125 / HbA1c 6.0-6.4', cls: 'C', elig: true },
+      { v: 'FPG 126以上 かつ HbA1c 6.5以上（糖尿病型）', cls: 'D', elig: true },
+      { v: 'FPG 180以上 / HbA1c 9以上（運動禁忌水準）', cls: 'D', elig: true, exercise: true },
+    ],
+  },
+  obesity: {
+    label: '肥満度', unit: '', fields: ['bmi', 'waist'], fieldLabels: ['BMI', '腹囲 cm'],
+    options: [
+      { v: 'BMI 25未満 かつ 腹囲 男85/女90 未満', cls: 'A', elig: false, obese: false },
+      { v: 'BMI 25以上 または 腹囲 男85/女90 以上', cls: 'C', elig: true, obese: true },
+      { v: 'BMI 30以上', cls: 'D', elig: true, obese: true },
+    ],
+  },
+  ualb: {
+    label: 'アルブミン尿', unit: 'mg/gCr', fields: ['ualb'], fieldLabels: ['アルブミン尿'], optional: true,
+    options: [
+      { v: '30 未満', cls: 'A' },
+      { v: '30-299', cls: 'C' },
+      { v: '300 以上', cls: 'D' },
+    ],
+  },
+};
+export const LAB_ORDER = ['bp', 'ldl', 'hdl', 'tg', 'glu', 'obesity', 'ualb'];
+
+// 数値（任意入力）から帯域インデックスを求める。求まらなければ null
+export function bandFromValues(key, vals) {
+  const n = (x) => { if (x === '' || x === null || x === undefined) return null; const v = parseFloat(x); return Number.isFinite(v) ? v : null; };
+  switch (key) {
+    case 'bp': {
+      const sb = n(vals.sbp); const db = n(vals.dbp);
+      if (sb === null && db === null) return null;
+      const g = classifyBP(sb, db).grade;
+      if (g >= 3) return g - 1;
+      return ((sb !== null && sb >= 130) || (db !== null && db >= 85)) ? 1 : 0;
+    }
+    case 'ldl': { const v = n(vals.ldl); if (v === null) return null; return v >= 180 ? 2 : v >= 140 ? 1 : 0; }
+    case 'hdl': { const v = n(vals.hdl); if (v === null) return null; return v < 30 ? 2 : v < 40 ? 1 : 0; }
+    case 'tg': { const v = n(vals.tg); if (v === null) return null; return v >= 500 ? 3 : v >= 300 ? 2 : v >= 150 ? 1 : 0; }
+    case 'glu': {
+      const f = n(vals.fpg); const a = n(vals.a1c);
+      if (f === null && a === null) return null;
+      if ((f !== null && f >= 180) || (a !== null && a >= 9)) return 4;
+      return { A: 0, B: 1, C: 2, D: 3 }[classifyGlucose(f, a)];
+    }
+    case 'obesity': {
+      const b = n(vals.bmi); const w = n(vals.waist);
+      if (b === null && w === null) return null;
+      if (b !== null && b >= 30) return 2;
+      const genderSet = vals.gender === 'male' || vals.gender === 'female';
+      const cut = vals.gender === 'female' ? 90 : 85;
+      if ((b !== null && b >= 25) || (w !== null && genderSet && w >= cut)) return 1;
+      if (w !== null && !genderSet && (b === null || b < 25)) return null;
+      return 0;
+    }
+    case 'ualb': { const v = n(vals.ualb); if (v === null) return null; return v >= 300 ? 2 : v >= 30 ? 1 : 0; }
+    default: return null;
+  }
+}
+
 // ------------------------------------------------------------
 // 判定（決定タイプ）
 // ------------------------------------------------------------
@@ -345,25 +447,29 @@ export function evaluate(s) {
   const vascularFindings = findings.filter((f) => f.vascular && !f.known);
   const untreatedVascular = vascularFindings.length > 0 && !treatments.includes('dl') && !treatments.includes('ht');
 
-  // --- 一次健診（採血・血圧・体格）---
-  const sbp = num(labs.sbp); const dbp = num(labs.dbp);
-  const ldl = num(labs.ldl); const hdl = num(labs.hdl); const tg = num(labs.tg); const nonhdl = num(labs.nonhdl);
-  const fpg = num(labs.fpg); const a1c = num(labs.a1c); const ualb = num(labs.ualb);
-  const bmi = num(labs.bmi); const waist = num(labs.waist);
-  const bp = classifyBP(sbp, dbp);
-  const labClasses = [
-    { key: 'LDL-C', val: ldl, unit: 'mg/dL', cls: classifyLDL(ldl) },
-    { key: 'HDL-C', val: hdl, unit: 'mg/dL', cls: classifyHDL(hdl) },
-    { key: 'TG', val: tg, unit: 'mg/dL', cls: classifyTG(tg) },
-    { key: 'non-HDL-C', val: nonhdl, unit: 'mg/dL', cls: classifyNonHDL(nonhdl) },
-    { key: 'アルブミン尿', val: ualb, unit: 'mg/gCr', cls: classifyUAlb(ualb) },
-  ].filter((c) => c.val !== null);
-  const glu = classifyGlucose(fpg, a1c);
+  // --- 一次健診（クリック帯域。数値は任意）---
+  const bands = labs.bands || {};
+  const vals = { ...(labs.values || {}), gender: bg.gender };
+  const pickBand = (key) => { const i = bands[key]; if (i === null || i === undefined) return null; return LAB_BANDS[key].options[i] || null; };
+  const bpB = pickBand('bp');
+  const bpGrade = bpB ? bpB.grade : 0;
+  const sbp = num(vals.sbp); const dbp = num(vals.dbp);
+  const bp = bpB ? { grade: bpGrade, label: BP_GRADES[bpGrade], band: bpB.v } : null;
+  const ldlB = pickBand('ldl'); const hdlB = pickBand('hdl'); const tgB = pickBand('tg'); const ualbB = pickBand('ualb');
+  const labClasses = [['ldl', ldlB], ['hdl', hdlB], ['tg', tgB], ['ualb', ualbB]]
+    .filter(([, o]) => !!o)
+    .map(([k, o]) => ({ key: LAB_BANDS[k].label, band: o.v, val: num(vals[k]), unit: LAB_BANDS[k].unit, cls: o.cls }));
+  const gluB = pickBand('glu');
+  const glu = gluB ? gluB.cls : null;
+  const gluExercise = !!(gluB && gluB.exercise);
+  const fpg = num(vals.fpg); const a1c = num(vals.a1c);
+  const obB = pickBand('obesity');
+  const obese = obB ? !!obB.obese : null;
+  const bmi = num(vals.bmi); const waist = num(vals.waist);
   const bmiCls = classifyBMI(bmi);
-  const anyLab = labClasses.length > 0 || glu !== null || bp !== null || bmiCls !== null || waist !== null;
+  const anyLab = !!(bpB || labClasses.length || gluB || obB);
   const hasD = labClasses.some((c) => c.cls === 'D') || glu === 'D';
   const hasC = labClasses.some((c) => c.cls === 'C') || glu === 'C';
-  const bpGrade = bp ? bp.grade : 0;
   let bloodLevel = 'none';
   if (anyLab) {
     if (hasD || bpGrade >= 4) bloodLevel = 'high';
@@ -371,20 +477,17 @@ export function evaluate(s) {
     else bloodLevel = 'low';
   }
   const bloodReasons = [];
-  labClasses.forEach((c) => { if (c.cls === 'C' || c.cls === 'D') bloodReasons.push(`${c.key} ${c.val} (${c.cls}: ${CLASS_LABEL[c.cls]})`); });
-  if (glu === 'C' || glu === 'D') bloodReasons.push(`血糖 FPG ${fpg ?? '-'} / HbA1c ${a1c ?? '-'} (${glu}: ${CLASS_LABEL[glu]})`);
-  if (fpg !== null && fpg >= 126 && a1c === null) bloodReasons.push('FPG 126以上で HbA1c 未入力: HbA1c 6.5以上なら D（要精密検査・治療）相当');
-  if (a1c !== null && a1c >= 6.5 && fpg === null) bloodReasons.push('HbA1c 6.5以上で FPG 未入力: FPG 126以上なら D（要精密検査・治療）相当');
-  if (bpGrade >= 3) bloodReasons.push(`血圧 ${sbp ?? '-'}/${dbp ?? '-'} (${bp.label})`);
+  labClasses.forEach((c) => { if (c.cls === 'C' || c.cls === 'D') bloodReasons.push(`${c.key} ${c.val !== null ? `${c.val} ${c.unit}` : c.band} (${c.cls}: ${CLASS_LABEL[c.cls]})`); });
+  if (glu === 'C' || glu === 'D') bloodReasons.push(`血糖 ${(fpg !== null || a1c !== null) ? `FPG ${fpg ?? '-'} / HbA1c ${a1c ?? '-'}` : gluB.v} (${glu}: ${CLASS_LABEL[glu]})`);
+  if (bpGrade >= 3) bloodReasons.push(`血圧 ${(sbp !== null && dbp !== null) ? `${sbp}/${dbp}` : bpB.v} (${bp.label})`);
 
-  // 労災二次健診 対象基準（一次健診 4項目すべて異常）。未入力を含む場合は「未入力」扱い
-  const female = bg.gender === 'female';
+  // 労災二次健診 対象基準（一次健診 4項目すべて異常）。未選択は「未入力」扱い
   const genderSet = bg.gender === 'male' || bg.gender === 'female';
   const elig = {
-    bp: tri([sbp !== null ? sbp >= 130 : null, dbp !== null ? dbp >= 85 : null]),
-    lipid: tri([ldl !== null ? ldl >= 140 : null, hdl !== null ? hdl < 40 : null, tg !== null ? tg >= 150 : null]),
-    glu: tri([fpg !== null ? fpg >= 100 : null, a1c !== null ? a1c >= 5.6 : null]),
-    obesity: tri([bmi !== null ? bmi >= 25 : null, (waist !== null && genderSet) ? waist >= (female ? 90 : 85) : null]),
+    bp: bpB ? bpB.elig : null,
+    lipid: tri([ldlB ? ldlB.elig : null, hdlB ? hdlB.elig : null, tgB ? tgB.elig : null]),
+    glu: gluB ? gluB.elig : null,
+    obesity: obB ? obB.elig : null,
   };
   const eligCount = Object.values(elig).filter((v) => v === true).length;
   const eligUnknown = Object.values(elig).filter((v) => v === null).length;
@@ -406,7 +509,7 @@ export function evaluate(s) {
     }
   } else if (bpGrade >= 5 && wantSameDay) {
     type = 'same_day';
-    reasons.push(`III度高血圧（${sbp ?? '-'}/${dbp ?? '-'}）${urgentSymptoms.length ? `+ 緊急性を示唆する症状（${urgentLabel}）` : ''}→ 高血圧緊急症・切迫症を考慮し当日受診を提案。安静後に再測定して判断`);
+    reasons.push(`III度高血圧（${(sbp !== null && dbp !== null) ? `${sbp}/${dbp}` : bpB.v}）${urgentSymptoms.length ? `+ 緊急性を示唆する症状（${urgentLabel}）` : ''}→ 高血圧緊急症・切迫症を考慮し当日受診を提案。安静後に再測定して判断`);
   } else if (unknownClinic.length) {
     type = 'later_clinic';
     unknownClinic.forEach((f) => reasons.push(`${f.exam} ${f.label}: ${f.value}（未知）→ クリニック紹介`));
@@ -464,7 +567,7 @@ export function evaluate(s) {
     alert = `緊急性を示唆する症状（${urgentLabel}）あり。エコー・採血が正常でも症状主体で当日受診（救急要請を含む）の要否を判断すること。当日にする場合は「発行タイミング」または「最終判断」で指定`;
   }
   if (bpGrade >= 5 && type !== 'same_day') {
-    const bpMsg = `III度高血圧（${sbp ?? '-'}/${dbp ?? '-'}）: 安静後に再測定。頭痛・胸痛・視覚障害・神経症状があれば高血圧緊急症を考慮して当日受診。無症状でも数日以内の受診を勧奨${hasKakaritsuke ? '（本日中にかかりつけ医へ連絡・受診勧奨）' : ''}`;
+    const bpMsg = `III度高血圧（${(sbp !== null && dbp !== null) ? `${sbp}/${dbp}` : bpB.v}）: 安静後に再測定。頭痛・胸痛・視覚障害・神経症状があれば高血圧緊急症を考慮して当日受診。無症状でも数日以内の受診を勧奨${hasKakaritsuke ? '（本日中にかかりつけ医へ連絡・受診勧奨）' : ''}`;
     alert = alert ? `${alert} ／ ${bpMsg}` : bpMsg;
   }
   if (alert) reasons.unshift(alert);
@@ -517,10 +620,10 @@ export function evaluate(s) {
   if (bpGrade >= 5) nurse.push('III度高血圧（診察室 180/110、家庭血圧 160/110 以上）: 血圧コントロール必須。運動は降圧後に実施。運動前血圧が 180/110 以上の時は運動を控えて休養');
   else if (bpGrade === 4) nurse.push('II度高血圧（160-179/100-109）: 脳心血管病がなければ運動療法の対象。運動前血圧が 160/100 以上の時は散歩程度にとどめる');
   else if (bpGrade === 3) nurse.push('I度高血圧: 当日の運動前血圧を確認。160/100 以上なら散歩程度、180/110 以上なら運動を控える');
-  if ((fpg !== null && fpg >= 180) || (a1c !== null && a1c >= 9) || labs.ketone) nurse.push('血糖: 空腹時血糖 180 以上 / HbA1c 9% 以上 / 尿ケトン中等度以上 → 運動禁忌。医師相談の上で実施');
+  if (gluExercise || labs.ketone) nurse.push('血糖: 空腹時血糖 180 以上 / HbA1c 9% 以上 / 尿ケトン中等度以上 → 運動禁忌。医師相談の上で実施');
   const cvd = treatments.includes('heart') || treatments.includes('stroke') || findings.some((f) => f.action >= ACTION.CLINIC);
   if (cvd) nurse.push('心血管疾患あり（骨関節疾患・低体力者も同様）: 3メッツ以下の強度の生活活動（掃除・洗車・こどもと遊ぶ・自転車で買い物）のなかで身体活動量を増やすことから始める');
-  else if (bmi !== null && bmi >= 25 && !unknownHospital.length && bpGrade < 5) nurse.push('肥満: 初歩的なものから開始。3〜6メッツ程度（ウォーキング・自転車エルゴメーター・水中歩行）');
+  else if (obese && !unknownHospital.length && bpGrade < 5) nurse.push('肥満: 初歩的なものから開始。3〜6メッツ程度（ウォーキング・自転車エルゴメーター・水中歩行）');
   findings.forEach((f) => { if (f.hs && !nurse.includes(f.hs)) nurse.push(f.hs); });
 
   // --- 結果表 医師所見テンプレート（後日）---
@@ -534,7 +637,7 @@ export function evaluate(s) {
   return {
     hasKakaritsuke, findings, unknownHospital, unknownClinic, individual, knownList, knownHospital,
     vascularReferral: untreatedVascular ? vascularFindings : [],
-    labs: { sbp, dbp, bp, bpGrade, labClasses, glu, fpg, a1c, bmi, bmiCls, waist, anyLab, bloodLevel, bloodReasons },
+    labs: { sbp, dbp, bp, bpGrade, labClasses, glu, gluBand: gluB, fpg, a1c, bmi, bmiCls, waist, obesityBand: obB, anyLab, bloodLevel, bloodReasons },
     elig, eligCount, eligUnknown, genderSet,
     decision, autoType, depts: deptSet, labels, nurse, opinion, urgentSymptoms, alert,
   };
@@ -571,15 +674,25 @@ function symptomText(bg) {
 function labSummary(ev, forReferral) {
   const L = ev.labs;
   const parts = [];
-  if (L.bp) parts.push(forReferral ? `血圧 ${L.sbp ?? '-'}/${L.dbp ?? '-'} mmHg（${L.bp.label}）` : `BP ${L.sbp ?? '-'}/${L.dbp ?? '-'} (${L.bp.label})`);
-  L.labClasses.forEach((c) => parts.push(forReferral ? `${c.key} ${c.val} ${c.unit}` : `${c.key} ${c.val} (${c.cls})`));
-  if (forReferral) {
-    if (L.fpg !== null) parts.push(`空腹時血糖 ${L.fpg} mg/dL`);
-    if (L.a1c !== null) parts.push(`HbA1c ${L.a1c} %`);
-  } else if (L.glu) {
-    parts.push(`FPG ${L.fpg ?? '-'} / HbA1c ${L.a1c ?? '-'} (${L.glu})`);
+  if (L.bp && !(forReferral && L.bp.grade <= 1)) {
+    const numeric = L.sbp !== null && L.dbp !== null;
+    const v = numeric ? `${L.sbp}/${L.dbp}${forReferral ? ' mmHg' : ''}` : L.bp.band;
+    const grade = (numeric || L.bp.grade >= 3) ? (forReferral ? `（${L.bp.label}）` : ` (${L.bp.label})`) : '';
+    parts.push(forReferral ? `血圧 ${v}${grade}` : `BP ${v}${grade}`);
+  }
+  L.labClasses.forEach((c) => {
+    if (forReferral && c.cls === 'A') return;
+    const v = c.val !== null ? `${c.val}${forReferral ? ` ${c.unit}` : ''}` : c.band;
+    parts.push(forReferral ? `${c.key} ${v}` : `${c.key} ${v} (${c.cls})`);
+  });
+  if (L.gluBand && !(forReferral && L.glu === 'A')) {
+    const v = (L.fpg !== null || L.a1c !== null)
+      ? `${L.fpg !== null ? `空腹時血糖 ${L.fpg}${forReferral ? ' mg/dL' : ''}` : ''}${L.fpg !== null && L.a1c !== null ? '、' : ''}${L.a1c !== null ? `HbA1c ${L.a1c}${forReferral ? ' %' : ''}` : ''}`
+      : `血糖 ${L.gluBand.v}`;
+    parts.push(forReferral ? v : `${v} (${L.glu})`);
   }
   if (L.bmi !== null) parts.push(forReferral ? `BMI ${L.bmi}` : `BMI ${L.bmi} (${L.bmiCls})`);
+  else if (L.obesityBand && !(forReferral && !L.obesityBand.obese)) parts.push(`肥満度 ${L.obesityBand.v}`);
   if (L.waist !== null) parts.push(`腹囲 ${L.waist} cm`);
   return parts.join('、');
 }
