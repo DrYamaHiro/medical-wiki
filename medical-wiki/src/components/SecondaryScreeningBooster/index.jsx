@@ -3,6 +3,7 @@ import styles from './styles.module.css';
 import {
   ACTION, SYMPTOMS, TREATMENTS, DEPTS, CARDIAC_ITEMS, CAROTID_ITEMS, CLASS_LABEL, OPINION_TEMPLATES,
   LAB_BANDS, LAB_ORDER, bandFromValues,
+  CAROTID_SEGMENTS, SEGMENT_PLAQUE, SEGMENT_STENOSIS, segmentStatus, applySegments,
   evaluate, buildChartText, buildLabelText, buildScriptText, buildNurseText, buildReferralText, buildOpinionText,
 } from './screeningData.js';
 
@@ -38,7 +39,9 @@ function ClsBadge({ cls }) {
 // エコー所見の1行: カットオフ帯域のチップが主、数値入力は任意（showNumeric）
 function ExamItemRow({ item, st, hasKakaritsuke, onChange, showNumeric }) {
   const s = st || {};
-  const selectedIdxs = item.multi ? (s.multi || []) : (s.v === null || s.v === undefined ? [] : [s.v]);
+  let selectedIdxs;
+  if (item.matrix) selectedIdxs = Object.values(s.matrix || {}).filter((i) => i !== null && i !== undefined);
+  else selectedIdxs = item.multi ? (s.multi || []) : (s.v === null || s.v === undefined ? [] : [s.v]);
   const selectedOpts = selectedIdxs.map((i) => item.options[i]).filter(Boolean);
   const needKnown = selectedOpts.some((o) => o.action >= ACTION.INDIVIDUAL);
   const notes = selectedOpts.filter((o) => o.note).map((o) => o.note);
@@ -61,8 +64,32 @@ function ExamItemRow({ item, st, hasKakaritsuke, onChange, showNumeric }) {
         {item.hint && <span className={styles.itemHint}>{item.hint}</span>}
       </div>
       <div className={styles.itemValueWrap}>
+        {item.matrix && (
+          <div className={styles.matrixWrap}>
+            {item.rows.map((row) => {
+              const cur = (s.matrix || {})[row.key];
+              return (
+                <div key={row.key} className={styles.matrixRow}>
+                  <span className={styles.matrixKey} title={row.name}>{row.key}</span>
+                  {item.options.map((opt, idx) => (
+                    <Chip
+                      key={opt.v}
+                      active={cur === idx}
+                      abnormal={opt.action >= ACTION.CLINIC}
+                      warn={!!opt.warn}
+                      title={row.name}
+                      onClick={() => onChange({ matrix: { ...(s.matrix || {}), [row.key]: cur === idx ? null : idx } })}
+                    >
+                      {opt.v}
+                    </Chip>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        )}
         <div className={styles.itemValue}>
-          {item.options.map((opt, idx) => {
+          {!item.matrix && item.options.map((opt, idx) => {
             const active = selectedIdxs.includes(idx);
             return (
               <Chip
@@ -209,6 +236,49 @@ function LabBandRow({ bandKey, band, values, gender, onBand, onValues, showNumer
   );
 }
 
+const SEG_COLOR = { unset: '#b0bec5', normal: '#66bb6a', plaque: '#f9a825', clinic: '#ef6c00', hospital: '#c62828' };
+
+// 頸動脈の模式図（患者の右側を画面の左に描く）。部位をクリックして所見を入れる
+function CarotidMap({ segments, selected, onSelect }) {
+  const sides = [
+    { side: '右', x: 100, dir: 1 },
+    { side: '左', x: 260, dir: -1 },
+  ];
+  const segPath = (side, key, x, dir) => {
+    switch (key) {
+      case 'CCA': return { d: `M ${x} 232 L ${x} 138`, lx: x + 14, ly: 195 };
+      case 'BIF': return { d: `M ${x} 138 L ${x} 108`, lx: x + 16, ly: 126, bulb: true };
+      case 'ICA': return { d: `M ${x} 108 L ${x + 28 * dir} 22`, lx: x + 34 * dir - 10, ly: 16 };
+      case 'ECA': return { d: `M ${x} 108 L ${x - 30 * dir} 22`, lx: x - 30 * dir - 10, ly: 16 };
+      default: return { d: '' };
+    }
+  };
+  return (
+    <svg viewBox="0 0 360 250" className={styles.mapSvg} role="img" aria-label="頸動脈の模式図">
+      <text x="100" y="246" textAnchor="middle" className={styles.mapSideLabel}>右（患者の右側）</text>
+      <text x="260" y="246" textAnchor="middle" className={styles.mapSideLabel}>左</text>
+      {sides.map(({ side, x, dir }) => (
+        ['CCA', 'BIF', 'ICA', 'ECA'].map((key) => {
+          const sg = CAROTID_SEGMENTS.find((g) => g.side === side && g.key === key);
+          const st = segments[sg.id];
+          const status = segmentStatus(st);
+          const geo = segPath(side, key, x, dir);
+          const isSel = selected === sg.id;
+          return (
+            <g key={sg.id} className={styles.mapSeg} onClick={() => onSelect(sg.id)}>
+              <title>{sg.name}</title>
+              {isSel && <path d={geo.d} stroke="#0d47a1" strokeWidth="26" strokeLinecap="round" fill="none" opacity="0.35" />}
+              <path d={geo.d} stroke={SEG_COLOR[status]} strokeWidth="16" strokeLinecap="round" fill="none" />
+              {geo.bulb && <circle cx={x} cy="122" r="15" fill={SEG_COLOR[status]} stroke={isSel ? '#0d47a1' : '#fff'} strokeWidth={isSel ? 3 : 2} />}
+              <text x={geo.lx} y={geo.ly} className={styles.mapLabel}>{key}</text>
+            </g>
+          );
+        })
+      ))}
+    </svg>
+  );
+}
+
 function OutBlock({ id, title, text, copied, onCopy, extra }) {
   return (
     <div className={styles.outBlock}>
@@ -255,10 +325,16 @@ export default function SecondaryScreeningBooster() {
   const [includeEcho, setIncludeEcho] = useState(true);
   const [showLabNumeric, setShowLabNumeric] = useState(false);
   const [showEchoNumeric, setShowEchoNumeric] = useState(false);
+  const [selSeg, setSelSeg] = useState('R-BIF');
   const [copied, setCopied] = useState('');
 
   const state = { bg, labs, cardiac, carotid, cFree, kFree, override, timing, dest };
   const ev = evaluate(state);
+  const carotidDerived = applySegments(carotid).derived;
+  const segments = carotid.segments || {};
+  const patchSegment = (id, patch) => setCarotid((prev) => ({ ...prev, segments: { ...(prev.segments || {}), [id]: { ...((prev.segments || {})[id] || {}), ...patch } } }));
+  const clearSegment = (id) => setCarotid((prev) => { const segs = { ...(prev.segments || {}) }; delete segs[id]; return { ...prev, segments: segs }; });
+  const setAllSegmentsNormal = () => setCarotid((prev) => { const segs = {}; CAROTID_SEGMENTS.forEach((sg) => { segs[sg.id] = { plaque: 0, stenosis: 0 }; }); return { ...prev, segments: segs }; });
   const hasKakaritsuke = ev.hasKakaritsuke;
 
   const chartText = buildChartText(ev, state, { includeEcho });
@@ -301,7 +377,10 @@ export default function SecondaryScreeningBooster() {
 
   const setAllNormal = (items, setter) => {
     const next = {};
-    items.forEach((it) => { next[it.id] = it.multi ? { multi: [] } : { v: 0 }; });
+    items.forEach((it) => {
+      if (it.matrix) { const m = {}; it.rows.forEach((r) => { m[r.key] = 0; }); next[it.id] = { matrix: m }; }
+      else next[it.id] = it.multi ? { multi: [] } : { v: 0 };
+    });
     setter(next);
   };
   const setAllLabNormal = () => setLabs((prev) => {
@@ -476,12 +555,47 @@ export default function SecondaryScreeningBooster() {
         <h4 className={styles.sectionTitle}>
           <span className={styles.phaseBadge}>3</span>頸部エコー（技師の口頭伝達をカットオフでクリック）
           <span style={{ marginLeft: 'auto', display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-            <button type="button" className={styles.toolbarBtn} onClick={() => setAllNormal(CAROTID_ITEMS, setCarotid)}>全て正常</button>
+            <button type="button" className={styles.toolbarBtn} onClick={() => { setAllNormal(CAROTID_ITEMS, setCarotid); setAllSegmentsNormal(); }}>全て正常</button>
             <button type="button" className={styles.toolbarBtn} onClick={() => setCarotid({})}>クリア</button>
           </span>
         </h4>
+        <div className={styles.mapWrap}>
+          <div>
+            <CarotidMap segments={segments} selected={selSeg} onSelect={setSelSeg} />
+            <p className={styles.noteText}>部位を押して所見を入れる。色: 灰=未入力、緑=異常なし、黄=安定プラーク、橙=狭窄 50-69%、赤=不安定プラーク / 狭窄 70%以上</p>
+          </div>
+          <div className={styles.mapPanel}>
+            {(() => {
+              const sg = CAROTID_SEGMENTS.find((g) => g.id === selSeg) || CAROTID_SEGMENTS[1];
+              const st = segments[sg.id] || {};
+              return (
+                <>
+                  <p className={styles.mapPanelTitle}>{sg.name}（{sg.label}）</p>
+                  <div className={styles.subRow}>
+                    <span className={styles.subLabel}>プラーク</span>
+                    {SEGMENT_PLAQUE.map((v, idx) => (
+                      <Chip key={v} active={st.plaque === idx} abnormal={idx === 2} warn={idx === 1} onClick={() => patchSegment(sg.id, { plaque: st.plaque === idx ? null : idx })}>{v}</Chip>
+                    ))}
+                  </div>
+                  <div className={styles.subRow}>
+                    <span className={styles.subLabel}>狭窄率</span>
+                    {SEGMENT_STENOSIS.map((v, idx) => (
+                      <Chip key={v} active={st.stenosis === idx} abnormal={idx >= 1} onClick={() => patchSegment(sg.id, { stenosis: st.stenosis === idx ? null : idx })}>{v}</Chip>
+                    ))}
+                  </div>
+                  <div className={styles.subRow}>
+                    <button type="button" className={styles.toolbarBtn} onClick={() => patchSegment(sg.id, { plaque: 0, stenosis: 0 })}>この部位は異常なし</button>
+                    <button type="button" className={styles.toolbarBtn} onClick={() => clearSegment(sg.id)}>この部位を未入力に戻す</button>
+                    <button type="button" className={styles.toolbarBtn} onClick={setAllSegmentsNormal}>全部位 異常なし</button>
+                  </div>
+                  {ev.carotidMap && <p className={styles.noteText}>部位別所見: {ev.carotidMap}</p>}
+                </>
+              );
+            })()}
+          </div>
+        </div>
         {CAROTID_ITEMS.map((item) => (
-          <ExamItemRow key={item.id} item={item} st={carotid[item.id]} hasKakaritsuke={hasKakaritsuke} showNumeric={showEchoNumeric} onChange={(p) => patchCarotid(item.id, p)} />
+          <ExamItemRow key={item.id} item={item} st={carotidDerived[item.id]} hasKakaritsuke={hasKakaritsuke} showNumeric={showEchoNumeric} onChange={(p) => patchCarotid(item.id, p)} />
         ))}
         <textarea className={styles.freeArea} rows={2} aria-label="頸部エコー 自由記載" placeholder="頸部エコー 自由記載（任意。技師コメント・追加所見など）" value={kFree} onChange={(e) => setKFree(e.target.value)} />
       </div>

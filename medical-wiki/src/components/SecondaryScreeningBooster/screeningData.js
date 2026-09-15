@@ -105,12 +105,21 @@ export const CARDIAC_ITEMS = [
     ],
   },
   {
-    id: 'valve', label: '弁膜症',
-    sub: { id: 'valve_type', label: '弁', options: ['AS', 'AR', 'MS', 'MR', 'TR', 'PR'] },
+    id: 'valve', label: '弁膜症', matrix: true, hint: '弁ごとに重症度を選択。チャートでは軽症は「なし」扱い、中等症はクリニック紹介、重症は病院紹介',
+    rows: [
+      { key: 'AS', name: '大動脈弁狭窄症', jp: '大動脈弁', kind: '狭窄' },
+      { key: 'AR', name: '大動脈弁閉鎖不全症', jp: '大動脈弁', kind: '逆流' },
+      { key: 'MS', name: '僧帽弁狭窄症', jp: '僧帽弁', kind: '狭窄' },
+      { key: 'MR', name: '僧帽弁閉鎖不全症', jp: '僧帽弁', kind: '逆流' },
+      { key: 'TR', name: '三尖弁閉鎖不全症', jp: '三尖弁', kind: '逆流' },
+      { key: 'PR', name: '肺動脈弁閉鎖不全症', jp: '肺動脈弁', kind: '逆流' },
+    ],
+    // deg: 患者説明の程度表現。軽症はカルテ要点にのみ載せ、患者説明・判定には使わない（チャート上「なし」扱い）
     options: [
-      { v: 'なし (軽症を含む)', action: 0 },
-      { v: 'あり (中等症)', action: 3, lay: '心臓の弁に中等度の異常（逆流や狭窄）がありました', dept: '循環器内科', dx: '弁膜症 (中等症)' },
-      { v: 'あり (重症)', action: 4, lay: '心臓の弁に高度の異常（逆流や狭窄）がありました', dept: '循環器内科', dx: '弁膜症 (重症)' },
+      { v: 'なし', action: 0 },
+      { v: '軽症 (trivial/mild)', action: 0, warn: true, mild: true },
+      { v: '中等症', action: 3, deg: '中等度の', dept: '循環器内科' },
+      { v: '重症', action: 4, deg: '高度の', dept: '循環器内科' },
     ],
   },
   {
@@ -156,6 +165,59 @@ export const CARDIAC_ITEMS = [
 ];
 
 // ------------------------------------------------------------
+// 頸動脈マップ: 解剖学的部位（左右 x CCA/BIF/ICA/ECA）ごとにプラーク・狭窄を記録し、
+// チャート項目（plaque / stenosis）にはその最大値を反映する
+// ------------------------------------------------------------
+export const CAROTID_SEGMENTS = [
+  { id: 'R-CCA', side: '右', key: 'CCA', label: '右CCA', name: '右総頸動脈', lay: '右の総頸動脈' },
+  { id: 'R-BIF', side: '右', key: 'BIF', label: '右BIF', name: '右頸動脈分岐部（球部）', lay: '右の分岐部' },
+  { id: 'R-ICA', side: '右', key: 'ICA', label: '右ICA', name: '右内頸動脈', lay: '右の内頸動脈' },
+  { id: 'R-ECA', side: '右', key: 'ECA', label: '右ECA', name: '右外頸動脈', lay: '右の外頸動脈' },
+  { id: 'L-CCA', side: '左', key: 'CCA', label: '左CCA', name: '左総頸動脈', lay: '左の総頸動脈' },
+  { id: 'L-BIF', side: '左', key: 'BIF', label: '左BIF', name: '左頸動脈分岐部（球部）', lay: '左の分岐部' },
+  { id: 'L-ICA', side: '左', key: 'ICA', label: '左ICA', name: '左内頸動脈', lay: '左の内頸動脈' },
+  { id: 'L-ECA', side: '左', key: 'ECA', label: '左ECA', name: '左外頸動脈', lay: '左の外頸動脈' },
+];
+// plaque / stenosis 項目の選択肢と同じ並び（インデックスをそのまま流用）
+export const SEGMENT_PLAQUE = ['なし', '安定プラーク', '潰瘍・可動性・不安定'];
+export const SEGMENT_STENOSIS = ['50%未満', '50-69%', '70%以上'];
+
+export function segmentStatus(st) {
+  if (!st || (st.plaque === undefined && st.stenosis === undefined) || (st.plaque === null && st.stenosis === null)) return 'unset';
+  const pl = st.plaque ?? 0; const sn = st.stenosis ?? 0;
+  if (pl >= 2 || sn >= 2) return 'hospital';
+  if (sn === 1) return 'clinic';
+  if (pl === 1) return 'plaque';
+  return 'normal';
+}
+
+// 部位入力をチャート項目に反映した頸部エコー state を返す
+export function applySegments(carotid) {
+  const segs = (carotid && carotid.segments) || {};
+  const entries = CAROTID_SEGMENTS
+    .map((sg) => ({ sg, st: segs[sg.id] }))
+    .filter((e) => e.st && segmentStatus(e.st) !== 'unset');
+  const derived = { ...(carotid || {}) };
+  const merge = (key) => {
+    const vals = entries.map((e) => (e.st[key] === null || e.st[key] === undefined ? -1 : e.st[key]));
+    const mx = vals.length ? Math.max(...vals) : -1;
+    if (mx < 0) return;
+    const cur = derived[key] || {};
+    const v = (cur.v === null || cur.v === undefined) ? mx : Math.max(cur.v, mx);
+    const hit = entries.filter((e) => (e.st[key] ?? -1) === v && v > 0);
+    derived[key] = { ...cur, v, loc: hit.map((e) => e.sg.label), locLay: hit.map((e) => e.sg.lay) };
+  };
+  merge('plaque');
+  merge('stenosis');
+  const abnormal = entries.filter((e) => (e.st.plaque ?? 0) > 0 || (e.st.stenosis ?? 0) > 0);
+  const mapText = abnormal
+    .map((e) => `${e.sg.label}: ${[(e.st.plaque ?? 0) > 0 ? SEGMENT_PLAQUE[e.st.plaque] : null, (e.st.stenosis ?? 0) > 0 ? `狭窄 ${SEGMENT_STENOSIS[e.st.stenosis]}` : null].filter(Boolean).join('・')}`)
+    .join('、');
+  const normalCount = entries.length - abnormal.length;
+  return { derived, entries, mapText, normalCount };
+}
+
+// ------------------------------------------------------------
 // 頸部エコー（技師伝達）: チャート準拠 + 甲状腺の偶発所見
 // ------------------------------------------------------------
 export const CAROTID_ITEMS = [
@@ -184,7 +246,7 @@ export const CAROTID_ITEMS = [
     ],
   },
   {
-    id: 'plaque', label: 'プラーク',
+    id: 'plaque', label: 'プラーク', hint: '頸動脈マップで部位を押すと最大値が自動反映',
     options: [
       { v: 'なし', action: 0 },
       { v: 'あり (安定: 等〜高輝度・均一・可動性なし)', action: 2, vascular: true, contact: true, lay: '血管の壁にプラーク（動脈硬化のこぶ）がありました', dept: '内科（生活習慣病）', dx: '頸動脈プラーク (安定)', note: 'チャートに単独の行はなく個別判断。プラークは IMT 1.1mm以上の限局性隆起性病変なので、max IMT が 1.2mm以上なら「1.2mm以上」の行（クリニック紹介）に該当する。備考「未治療の場合は紹介」（検診チーム回答: 当院からかかりつけ等へ紹介）に従い、脂質・血圧が未治療なら後日紹介状', hs: 'プラークあり: 脂質・血圧についての説明を依頼', patient: 'プラークがあると脳梗塞のリスクが高くなります。治療介入が必要になる場合があります' },
@@ -192,7 +254,7 @@ export const CAROTID_ITEMS = [
     ],
   },
   {
-    id: 'stenosis', label: '狭窄率 (最大)',
+    id: 'stenosis', label: '狭窄率 (最大)', hint: '頸動脈マップで部位を押すと最大値が自動反映',
     numeric: { unit: '%', placeholder: '0', hint: '数値入力で自動分類', classify: (n) => (n >= 70 ? 2 : n >= 50 ? 1 : 0) },
     options: [
       { v: 'なし・50%未満', action: 0 },
@@ -406,6 +468,30 @@ function collectFindings(items, exam, examLabel, hasKakaritsuke) {
   const out = [];
   items.forEach((item) => {
     const st = exam[item.id] || {};
+    if (item.matrix) {
+      const m = st.matrix || {};
+      const known = hasKakaritsuke && st.known === 'known';
+      item.rows.forEach((row) => {
+        const idx = m[row.key];
+        if (idx === null || idx === undefined) return;
+        const opt = item.options[idx];
+        if (!opt) return;
+        let eff = opt.action;
+        if (opt.action >= ACTION.INDIVIDUAL && known) eff = ACTION.CONTINUE;
+        out.push({
+          exam: examLabel, id: `${item.id}_${row.key}`, label: `${item.label} ${row.key}`, value: opt.v,
+          num: '', numUnit: '', sub: [],
+          action: opt.action, known, eff,
+          note: opt.note,
+          lay: opt.deg ? `心臓の弁（${row.jp}）に${opt.deg}${row.kind}がありました` : undefined,
+          dept: opt.dept,
+          dx: opt.mild || opt.deg ? `${row.name} (${opt.v.replace(' (trivial/mild)', '')})` : undefined,
+          hs: undefined, patient: undefined,
+          warn: !!opt.warn, vascular: false, contact: false,
+        });
+      });
+      return;
+    }
     let idxs = [];
     if (item.multi) idxs = st.multi || [];
     else if (st.v !== null && st.v !== undefined) idxs = [st.v];
@@ -422,6 +508,7 @@ function collectFindings(items, exam, examLabel, hasKakaritsuke) {
         action: opt.action, known, eff,
         note: opt.note, lay: opt.lay, dept: opt.dept, dx: opt.dx, hs: opt.hs, patient: opt.patient,
         warn: !!opt.warn, vascular: !!opt.vascular, contact: !!opt.contact,
+        loc: st.loc || [], locLay: st.locLay || [],
       });
     });
   });
@@ -434,9 +521,10 @@ export function evaluate(s) {
   const treatments = bg.treatments || [];
 
   // --- エコー所見 ---
+  const segInfo = applySegments(carotid);
   const findings = [
     ...collectFindings(CARDIAC_ITEMS, cardiac, '心エコー', hasKakaritsuke),
-    ...collectFindings(CAROTID_ITEMS, carotid, '頸部エコー', hasKakaritsuke),
+    ...collectFindings(CAROTID_ITEMS, segInfo.derived, '頸部エコー', hasKakaritsuke),
   ];
   const unknownHospital = findings.filter((f) => f.eff === ACTION.HOSPITAL);
   const unknownClinic = findings.filter((f) => f.eff === ACTION.CLINIC);
@@ -640,6 +728,7 @@ export function evaluate(s) {
     labs: { sbp, dbp, bp, bpGrade, labClasses, glu, gluBand: gluB, fpg, a1c, bmi, bmiCls, waist, obesityBand: obB, anyLab, bloodLevel, bloodReasons },
     elig, eligCount, eligUnknown, genderSet,
     decision, autoType, depts: deptSet, labels, nurse, opinion, urgentSymptoms, alert,
+    carotidMap: segInfo.mapText, carotidMapNormal: segInfo.normalCount,
   };
 }
 
@@ -650,6 +739,7 @@ function findingLine(f) {
   let t = `${f.label}: ${f.value}`;
   if (f.num) t += ` (${f.num}${f.numUnit})`;
   if (f.sub && f.sub.length) t += ` [${f.sub.join('/')}]`;
+  if (f.loc && f.loc.length) t += `（${f.loc.join('・')}）`;
   if (f.action > 0) t += f.known ? '【既知・通院中】' : '【未知】';
   return t;
 }
@@ -717,6 +807,7 @@ export function buildChartText(ev, s, opts = {}) {
   if (opts.includeEcho !== false) {
     lines.push(`【心エコー（技師伝達・要点）】${echoSummary(ev, '心エコー')}${cFree ? `。${cFree}` : ''}`);
     lines.push(`【頸部エコー（技師伝達・要点）】${echoSummary(ev, '頸部エコー')}${kFree ? `。${kFree}` : ''}`);
+    if (ev.carotidMap) lines.push(`【頸動脈 部位別】${ev.carotidMap}${ev.carotidMapNormal ? `（他 ${ev.carotidMapNormal} 部位は異常なし）` : ''}`);
   }
   if (ev.labs.anyLab) {
     const src = labs.source === 'secondary' ? '二次健診採血' : '一次健診';
@@ -738,7 +829,7 @@ export function buildLabelText(ev) {
 function layJoin(ev, exam) {
   const list = ev.findings.filter((f) => f.exam === exam && f.lay);
   if (list.length === 0) return '特に問題となる所見はありませんでした';
-  return list.map((f) => f.lay).join('。また、');
+  return list.map((f) => (f.locLay && f.locLay.length ? `${f.lay}（${f.locLay.join('・')}）` : f.lay)).join('。また、');
 }
 
 export function buildScriptText(ev, s) {
@@ -815,7 +906,7 @@ export function buildReferralText(ev, s) {
   if (d.type === 'same_day' || d.type === 'later_hospital') targets = ev.unknownHospital;
   else if (d.type === 'later_clinic') targets = [...ev.unknownClinic, ...ev.vascularReferral];
   targets = [...targets, ...ev.individual];
-  const dxList = targets.map((f) => f.dx || `${f.label} ${f.value}`);
+  const dxList = Array.from(new Set(targets.map((f) => `${f.dx || `${f.label} ${f.value}`}${f.loc && f.loc.length ? `（${f.loc.join('・')}）` : ''}`)));
   const deptRaw = dest.dept || ev.depts[0] || '';
   const dept = deptRaw.replace('（生活習慣病）', '');
   const L = [];
@@ -834,7 +925,7 @@ export function buildReferralText(ev, s) {
   const tr = treatmentText(bg);
   L.push(`既往・治療: かかりつけ医 ${ev.hasKakaritsuke ? `あり${bg.kakaritsukeName ? `（${bg.kakaritsukeName}）` : ''}` : 'なし'}。治療中: ${tr || 'なし'}`);
   if (ev.labs.anyLab) L.push(`${labs.source === 'secondary' ? '二次健診採血' : '一次健診'}結果: ${labSummary(ev, true)}`);
-  L.push(`本日のエコー所見（技師所見・医師確認）: 心エコー: ${echoSummary(ev, '心エコー')}${cFree ? `。${cFree}` : ''} ／ 頸動脈エコー: ${echoSummary(ev, '頸部エコー')}${kFree ? `。${kFree}` : ''}`);
+  L.push(`本日のエコー所見（技師所見・医師確認）: 心エコー: ${echoSummary(ev, '心エコー')}${cFree ? `。${cFree}` : ''} ／ 頸動脈エコー: ${echoSummary(ev, '頸部エコー')}${ev.carotidMap ? `（部位別: ${ev.carotidMap}）` : ''}${kFree ? `。${kFree}` : ''}`);
   L.push('');
   const tail = labs.source === 'secondary' ? '' : '本日の採血結果は後日判明次第、受診者を通じて共有いたします。';
   L.push(`依頼事項: 上記につき、精査および治療方針のご検討をお願い申し上げます。${d.sameDay ? '当日中の受診を前提にご紹介いたします。' : ''}${tail}`);

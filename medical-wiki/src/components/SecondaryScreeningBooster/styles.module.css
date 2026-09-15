@@ -129,6 +129,39 @@
 .choiceChipIndiv { border-color: #ce93d8; background: #f3e5f5; color: #6a1b9a; }
 .choiceChipIndivActive { background: #7b1fa2; color: #fff; border-color: #6a1b9a; }
 
+/* 弁ごとの重症度マトリクス */
+.matrixWrap { display: flex; flex-direction: column; gap: 0.25rem; }
+.matrixRow { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; }
+.matrixKey {
+  display: inline-block;
+  min-width: 2.4em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #37474f;
+  cursor: help;
+}
+
+/* 頸動脈マップ */
+.mapWrap {
+  display: grid;
+  grid-template-columns: minmax(220px, 340px) 1fr;
+  gap: 0.8rem;
+  align-items: start;
+  margin-bottom: 0.7rem;
+  padding: 0.6rem 0.8rem;
+  background: #fff;
+  border: 2px solid #90caf9;
+  border-radius: 8px;
+}
+.mapSvg { width: 100%; max-width: 340px; height: auto; display: block; }
+.mapSeg { cursor: pointer; }
+.mapSeg:hover path { filter: brightness(0.9); }
+.mapLabel { font-size: 12px; font-weight: 700; fill: #37474f; pointer-events: none; }
+.mapSideLabel { font-size: 11px; fill: #607d8b; }
+.mapPanel { display: flex; flex-direction: column; gap: 0.2rem; }
+.mapPanelTitle { margin: 0 0 0.2rem 0; font-size: 0.9rem; font-weight: 700; color: #0d47a1; }
+@media (max-width: 700px) { .mapWrap { grid-template-columns: 1fr; } }
+
 /* 既知/未知 トグル */
 .knownRow {
   display: flex;
