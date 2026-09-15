@@ -162,6 +162,19 @@
 .mapPanelTitle { margin: 0 0 0.2rem 0; font-size: 0.9rem; font-weight: 700; color: #0d47a1; }
 @media (max-width: 700px) { .mapWrap { grid-template-columns: 1fr; } }
 
+/* 心臓マップ（HeartMap） */
+.mapSeg:hover rect, .mapSeg:hover ellipse { filter: brightness(0.92); }
+.mapLabelIn {
+  font-size: 13px;
+  font-weight: 700;
+  fill: #263238;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
 /* 既知/未知 トグル */
 .knownRow {
   display: flex;

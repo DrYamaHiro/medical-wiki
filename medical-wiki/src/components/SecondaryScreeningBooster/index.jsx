@@ -4,6 +4,7 @@ import {
   ACTION, SYMPTOMS, TREATMENTS, DEPTS, CARDIAC_ITEMS, CAROTID_ITEMS, CLASS_LABEL, OPINION_TEMPLATES,
   LAB_BANDS, LAB_ORDER, bandFromValues,
   CAROTID_SEGMENTS, SEGMENT_PLAQUE, SEGMENT_STENOSIS, segmentStatus, applySegments,
+  HEART_REGIONS, heartRegionStatus,
   evaluate, buildChartText, buildLabelText, buildScriptText, buildNurseText, buildReferralText, buildOpinionText,
 } from './screeningData.js';
 
@@ -37,11 +38,17 @@ function ClsBadge({ cls }) {
 }
 
 // エコー所見の1行: カットオフ帯域のチップが主、数値入力は任意（showNumeric）
-function ExamItemRow({ item, st, hasKakaritsuke, onChange, showNumeric }) {
+// rowFilter / optionFilter は表示を絞るだけで、state（matrix / multi の他の値）は変更しない
+function ExamItemRow({ item, st, hasKakaritsuke, onChange, showNumeric, rowFilter, optionFilter }) {
   const s = st || {};
+  const rows = item.matrix ? (rowFilter ? item.rows.filter((r) => rowFilter.includes(r.key)) : item.rows) : [];
+  const visibleOptions = item.options
+    .map((opt, idx) => ({ opt, idx }))
+    .filter(({ idx }) => !optionFilter || optionFilter.includes(idx));
   let selectedIdxs;
-  if (item.matrix) selectedIdxs = Object.values(s.matrix || {}).filter((i) => i !== null && i !== undefined);
-  else selectedIdxs = item.multi ? (s.multi || []) : (s.v === null || s.v === undefined ? [] : [s.v]);
+  if (item.matrix) selectedIdxs = rows.map((r) => (s.matrix || {})[r.key]).filter((i) => i !== null && i !== undefined);
+  else if (item.multi) selectedIdxs = (s.multi || []).filter((i) => !optionFilter || optionFilter.includes(i));
+  else selectedIdxs = (s.v === null || s.v === undefined) ? [] : [s.v];
   const selectedOpts = selectedIdxs.map((i) => item.options[i]).filter(Boolean);
   const needKnown = selectedOpts.some((o) => o.action >= ACTION.INDIVIDUAL);
   const notes = selectedOpts.filter((o) => o.note).map((o) => o.note);
@@ -66,7 +73,7 @@ function ExamItemRow({ item, st, hasKakaritsuke, onChange, showNumeric }) {
       <div className={styles.itemValueWrap}>
         {item.matrix && (
           <div className={styles.matrixWrap}>
-            {item.rows.map((row) => {
+            {rows.map((row) => {
               const cur = (s.matrix || {})[row.key];
               return (
                 <div key={row.key} className={styles.matrixRow}>
@@ -89,7 +96,7 @@ function ExamItemRow({ item, st, hasKakaritsuke, onChange, showNumeric }) {
           </div>
         )}
         <div className={styles.itemValue}>
-          {!item.matrix && item.options.map((opt, idx) => {
+          {!item.matrix && visibleOptions.map(({ opt, idx }) => {
             const active = selectedIdxs.includes(idx);
             return (
               <Chip
@@ -279,6 +286,116 @@ function CarotidMap({ segments, selected, onSelect }) {
   );
 }
 
+const HEART_COLOR = { unset: '#b0bec5', normal: '#66bb6a', warn: '#f9a825', individual: '#ab47bc', clinic: '#ef6c00', hospital: '#c62828' };
+
+// 心臓の模式図（心尖部四腔像に準じた配置）。領域を押して、その領域の所見を入れる
+function HeartMap({ cardiac, selected, onSelect }) {
+  const color = (id) => HEART_COLOR[heartRegionStatus(id, cardiac)];
+  const nameOf = (id) => (HEART_REGIONS.find((r) => r.id === id) || {}).name || id;
+  const sel = (id) => selected === id;
+  const edge = (id) => ({ stroke: sel(id) ? '#0d47a1' : '#ffffff', strokeWidth: sel(id) ? 3.5 : 2 });
+  const PERI_D = 'M 180 74 C 268 74 328 104 328 172 C 328 250 268 296 180 296 C 92 296 32 250 32 172 C 32 104 92 74 180 74 Z';
+  const AO_D = 'M 296 200 C 310 186 312 146 304 88';
+  const PA_D = 'M 76 198 C 60 184 54 140 60 84';
+  return (
+    <svg viewBox="0 0 360 300" className={styles.mapSvg} role="img" aria-label="心臓の模式図">
+      {/* 心膜（心嚢） */}
+      <g className={styles.mapSeg} onClick={() => onSelect('PERI')}>
+        <title>{nameOf('PERI')}</title>
+        <path d={PERI_D} fill="none" stroke="rgba(0,0,0,0)" strokeWidth="18" />
+        {sel('PERI') && <path d={PERI_D} fill="none" stroke="#0d47a1" strokeWidth="12" opacity="0.35" />}
+        <path d={PERI_D} fill="none" stroke={color('PERI')} strokeWidth="3.5" strokeDasharray="8 5" />
+        <text x="180" y="66" textAnchor="middle" className={styles.mapLabel}>心膜 Peri</text>
+      </g>
+      {/* 心房中隔（装飾。クリック対象ではない） */}
+      <rect x="160" y="118" width="40" height="58" rx="10" fill="#cfd8dc" pointerEvents="none" />
+      {/* 上行大動脈 */}
+      <g className={styles.mapSeg} onClick={() => onSelect('AO')}>
+        <title>{nameOf('AO')}</title>
+        {sel('AO') && <path d={AO_D} stroke="#0d47a1" strokeWidth="30" strokeLinecap="round" fill="none" opacity="0.35" />}
+        <path d={AO_D} stroke={color('AO')} strokeWidth="20" strokeLinecap="round" fill="none" />
+        <text x="306" y="124" textAnchor="middle" className={styles.mapLabelIn}>Ao</text>
+      </g>
+      {/* 右心系（右房・右室・肺動脈をまとめて 1 領域） */}
+      <g className={styles.mapSeg} onClick={() => onSelect('RV')}>
+        <title>{nameOf('RV')}</title>
+        {sel('RV') && <path d={PA_D} stroke="#0d47a1" strokeWidth="30" strokeLinecap="round" fill="none" opacity="0.35" />}
+        <path d={PA_D} stroke={color('RV')} strokeWidth="20" strokeLinecap="round" fill="none" />
+        <text x="58" y="118" textAnchor="middle" className={styles.mapLabelIn}>PA</text>
+        <rect x="84" y="116" width="76" height="58" rx="16" fill={color('RV')} {...edge('RV')} />
+        <text x="122" y="150" textAnchor="middle" className={styles.mapLabelIn}>RA</text>
+        <rect x="84" y="194" width="76" height="60" rx="16" fill={color('RV')} {...edge('RV')} />
+        <text x="122" y="230" textAnchor="middle" className={styles.mapLabelIn}>RV</text>
+      </g>
+      {/* 左房 */}
+      <g className={styles.mapSeg} onClick={() => onSelect('LA')}>
+        <title>{nameOf('LA')}</title>
+        <rect x="200" y="116" width="76" height="58" rx="16" fill={color('LA')} {...edge('LA')} />
+        <text x="238" y="150" textAnchor="middle" className={styles.mapLabelIn}>LA</text>
+      </g>
+      {/* 左室（内腔） */}
+      <g className={styles.mapSeg} onClick={() => onSelect('LV')}>
+        <title>{nameOf('LV')}</title>
+        <rect x="200" y="194" width="64" height="60" rx="14" fill={color('LV')} {...edge('LV')} />
+        <text x="232" y="230" textAnchor="middle" className={styles.mapLabelIn}>LV</text>
+      </g>
+      {/* 心室中隔・前壁の壁厚 */}
+      <g className={styles.mapSeg} onClick={() => onSelect('IVS')}>
+        <title>{nameOf('IVS')}</title>
+        <rect x="162" y="192" width="36" height="64" rx="10" fill={color('IVS')} {...edge('IVS')} />
+        <text x="180" y="228" textAnchor="middle" className={styles.mapLabelIn}>IVS</text>
+      </g>
+      {/* 左室後壁・側壁の壁厚 */}
+      <g className={styles.mapSeg} onClick={() => onSelect('PW')}>
+        <title>{nameOf('PW')}</title>
+        <rect x="268" y="192" width="26" height="60" rx="10" fill={color('PW')} {...edge('PW')} />
+        <text x="281" y="228" textAnchor="middle" className={styles.mapLabelIn}>PW</text>
+      </g>
+      {/* 房室弁 */}
+      <g className={styles.mapSeg} onClick={() => onSelect('TV')}>
+        <title>{nameOf('TV')}</title>
+        <ellipse cx="122" cy="184" rx="30" ry="9" fill={color('TV')} {...edge('TV')} />
+        <text x="122" y="188" textAnchor="middle" className={styles.mapLabelIn}>TV</text>
+      </g>
+      <g className={styles.mapSeg} onClick={() => onSelect('MV')}>
+        <title>{nameOf('MV')}</title>
+        <ellipse cx="234" cy="184" rx="29" ry="9" fill={color('MV')} {...edge('MV')} />
+        <text x="234" y="188" textAnchor="middle" className={styles.mapLabelIn}>MV</text>
+      </g>
+      {/* 流出路の弁 */}
+      <g className={styles.mapSeg} onClick={() => onSelect('AV')}>
+        <title>{nameOf('AV')}</title>
+        <ellipse cx="303" cy="195" rx="19" ry="7.5" transform="rotate(49 303 195)" fill={color('AV')} {...edge('AV')} />
+        <text x="303" y="200" textAnchor="middle" className={styles.mapLabelIn}>AV</text>
+      </g>
+      <g className={styles.mapSeg} onClick={() => onSelect('PV')}>
+        <title>{nameOf('PV')}</title>
+        <ellipse cx="72" cy="192" rx="19" ry="7.5" transform="rotate(-49 72 192)" fill={color('PV')} {...edge('PV')} />
+        <text x="72" y="197" textAnchor="middle" className={styles.mapLabelIn}>PV</text>
+      </g>
+      {/* 不整脈（心電図波形のアイコン） */}
+      <g className={styles.mapSeg} onClick={() => onSelect('RHYTHM')}>
+        <title>{nameOf('RHYTHM')}</title>
+        <rect x="6" y="6" width="92" height="62" rx="8" fill="rgba(0,0,0,0)" />
+        <rect x="6" y="6" width="92" height="44" rx="8" fill={color('RHYTHM')} {...edge('RHYTHM')} />
+        <polyline
+          points="14,30 28,30 32,22 36,42 40,12 44,36 48,30 62,30 66,24 70,38 74,30 90,30"
+          fill="none" stroke="#263238" strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" pointerEvents="none"
+        />
+        <text x="52" y="64" textAnchor="middle" className={styles.mapLabel}>不整脈 Rhythm</text>
+      </g>
+      {/* 先天性心疾患 */}
+      <g className={styles.mapSeg} onClick={() => onSelect('OTHER')}>
+        <title>{nameOf('OTHER')}</title>
+        <rect x="262" y="6" width="92" height="62" rx="8" fill="rgba(0,0,0,0)" />
+        <rect x="262" y="6" width="92" height="44" rx="8" fill={color('OTHER')} {...edge('OTHER')} />
+        <text x="308" y="34" textAnchor="middle" className={styles.mapLabelIn}>CHD</text>
+        <text x="308" y="64" textAnchor="middle" className={styles.mapLabel}>先天性心疾患</text>
+      </g>
+    </svg>
+  );
+}
+
 function OutBlock({ id, title, text, copied, onCopy, extra }) {
   return (
     <div className={styles.outBlock}>
@@ -326,6 +443,8 @@ export default function SecondaryScreeningBooster() {
   const [showLabNumeric, setShowLabNumeric] = useState(false);
   const [showEchoNumeric, setShowEchoNumeric] = useState(false);
   const [selSeg, setSelSeg] = useState('R-BIF');
+  const [selHeart, setSelHeart] = useState('LV');
+  const [showAllCardiac, setShowAllCardiac] = useState(false);
   const [copied, setCopied] = useState('');
 
   const state = { bg, labs, cardiac, carotid, cFree, kFree, override, timing, dest };
@@ -335,6 +454,22 @@ export default function SecondaryScreeningBooster() {
   const patchSegment = (id, patch) => setCarotid((prev) => ({ ...prev, segments: { ...(prev.segments || {}), [id]: { ...((prev.segments || {})[id] || {}), ...patch } } }));
   const clearSegment = (id) => setCarotid((prev) => { const segs = { ...(prev.segments || {}) }; delete segs[id]; return { ...prev, segments: segs }; });
   const setAllSegmentsNormal = () => setCarotid((prev) => { const segs = {}; CAROTID_SEGMENTS.forEach((sg) => { segs[sg.id] = { plaque: 0, stenosis: 0 }; }); return { ...prev, segments: segs }; });
+  // 心臓マップ: 選択中の領域に属する入力だけを正常値にする（他の弁・他の選択肢は保持）
+  const setHeartRegionNormal = (rg) => setCardiac((prev) => {
+    const next = { ...prev };
+    (rg.items || []).forEach((id) => { next[id] = { ...(next[id] || {}), v: 0, num: '' }; });
+    Object.keys(rg.matrix || {}).forEach((itemId) => {
+      const cur = next[itemId] || {};
+      const m = { ...(cur.matrix || {}) };
+      (rg.matrix[itemId] || []).forEach((k) => { m[k] = 0; });
+      next[itemId] = { ...cur, matrix: m };
+    });
+    if ((rg.others || []).length) {
+      const cur = next.c_other || {};
+      next.c_other = { ...cur, multi: (cur.multi || []).filter((i) => !rg.others.includes(i)) };
+    }
+    return next;
+  });
   const hasKakaritsuke = ev.hasKakaritsuke;
 
   const chartText = buildChartText(ev, state, { includeEcho });
@@ -544,7 +679,70 @@ export default function SecondaryScreeningBooster() {
             <button type="button" className={styles.toolbarBtn} onClick={() => setShowEchoNumeric((v) => !v)}>{showEchoNumeric ? '数値入力を隠す' : '数値入力（任意）'}</button>
           </span>
         </h4>
-        {CARDIAC_ITEMS.map((item) => (
+        <div className={styles.mapWrap}>
+          <div>
+            <HeartMap cardiac={cardiac} selected={selHeart} onSelect={setSelHeart} />
+            <p className={styles.noteText}>領域を押して所見を入れる（IVS=中隔・前壁の壁厚、PW=後壁の壁厚）。色: 灰=未入力、緑=異常なし、黄=軽症、紫=個別判断、橙=クリニック紹介、赤=病院紹介</p>
+          </div>
+          <div className={styles.mapPanel}>
+            {(() => {
+              const rg = HEART_REGIONS.find((r) => r.id === selHeart) || HEART_REGIONS[0];
+              const otherItem = CARDIAC_ITEMS.find((it) => it.id === 'c_other');
+              return (
+                <>
+                  <p className={styles.mapPanelTitle}>{rg.name}</p>
+                  {(rg.items || []).map((id) => {
+                    const item = CARDIAC_ITEMS.find((it) => it.id === id);
+                    if (!item) return null;
+                    return (
+                      <ExamItemRow
+                        key={item.id}
+                        item={item}
+                        st={cardiac[item.id]}
+                        hasKakaritsuke={hasKakaritsuke}
+                        showNumeric={showEchoNumeric}
+                        onChange={(p) => patchCardiac(item.id, p)}
+                      />
+                    );
+                  })}
+                  {Object.keys(rg.matrix || {}).map((itemId) => {
+                    const item = CARDIAC_ITEMS.find((it) => it.id === itemId);
+                    if (!item) return null;
+                    return (
+                      <ExamItemRow
+                        key={itemId}
+                        item={item}
+                        st={cardiac[itemId]}
+                        hasKakaritsuke={hasKakaritsuke}
+                        showNumeric={showEchoNumeric}
+                        rowFilter={rg.matrix[itemId]}
+                        onChange={(p) => patchCardiac(itemId, p)}
+                      />
+                    );
+                  })}
+                  {(rg.others || []).length > 0 && otherItem && (
+                    <ExamItemRow
+                      item={otherItem}
+                      st={cardiac.c_other}
+                      hasKakaritsuke={hasKakaritsuke}
+                      showNumeric={showEchoNumeric}
+                      optionFilter={rg.others}
+                      onChange={(p) => patchCardiac('c_other', p)}
+                    />
+                  )}
+                  <div className={styles.subRow}>
+                    <button type="button" className={styles.toolbarBtn} onClick={() => setHeartRegionNormal(rg)}>この領域は異常なし</button>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+        </div>
+        <div className={styles.subRow}>
+          <button type="button" className={styles.toolbarBtn} onClick={() => setShowAllCardiac((v) => !v)}>{showAllCardiac ? '一覧を隠す' : '全項目を一覧で表示'}</button>
+          <span className={styles.itemHint}>模式図で入れた内容はそのまま一覧にも反映されます</span>
+        </div>
+        {showAllCardiac && CARDIAC_ITEMS.map((item) => (
           <ExamItemRow key={item.id} item={item} st={cardiac[item.id]} hasKakaritsuke={hasKakaritsuke} showNumeric={showEchoNumeric} onChange={(p) => patchCardiac(item.id, p)} />
         ))}
         <textarea className={styles.freeArea} rows={2} aria-label="心エコー 自由記載" placeholder="心エコー 自由記載（任意。技師コメント・追加所見など）" value={cFree} onChange={(e) => setCFree(e.target.value)} />

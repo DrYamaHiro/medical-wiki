@@ -65,6 +65,7 @@ export const DEPTS = [
 export const CARDIAC_ITEMS = [
   {
     id: 'wm', label: '壁運動',
+    sub: { id: 'wm_site', label: '部位', options: ['前壁', '中隔', '下壁', '側壁', '心尖部'] },
     options: [
       { v: '異常なし', action: 0 },
       { v: '異常あり', action: 4, lay: '心臓の壁の動きが一部弱くなっている部分がありました', dept: '循環器内科', dx: '左室壁運動異常' },
@@ -80,12 +81,27 @@ export const CARDIAC_ITEMS = [
     ],
   },
   {
-    id: 'wall', label: '壁厚 (IVS/PW 最大)',
-    numeric: { unit: 'mm', placeholder: '10', hint: '数値入力で自動分類', classify: (n) => (n >= 16 ? 2 : n >= 13 ? 1 : 0) },
+    id: 'wall', label: '壁厚', matrix: true, hint: '中隔・前壁と後壁を別々に。最大値で判定',
+    rows: [
+      { key: 'IVS', name: '心室中隔・前壁', jp: '中隔・前壁' },
+      { key: 'PW', name: '左室後壁', jp: '後壁' },
+    ],
     options: [
-      { v: '肥厚なし (13mm未満)', action: 0 },
-      { v: '肥厚あり (13mm以上16mm未満)', action: 3, lay: '心臓の壁がやや厚くなっていました。長年の血圧の影響も考えられます', dept: '循環器内科', dx: '左室壁肥厚 (13-15mm)', note: '長期的な血圧高値の影響も考えられる。基礎疾患により血圧が高い状態もまれにあるため、血圧管理についての説明を依頼', hs: '壁肥厚あり: 血圧管理についての説明を依頼', patient: '血圧による影響かもしれませんが、他の可能性もありフォローが必要なのでクリニックの受診に紹介します' },
-      { v: '肥厚あり (16mm以上)', action: 4, lay: '心臓の壁が厚くなっていました', dept: '循環器内科', dx: '左室壁肥厚 (16mm以上)', note: '高血圧性心筋症・肥大型心筋症・アミロイド心筋症・スポーツ心臓など鑑別必要' },
+      { v: '13mm未満', action: 0 },
+      {
+        v: '13mm以上16mm未満', action: 3, dept: '循環器内科',
+        layTpl: '心臓の壁（{jp}）がやや厚くなっていました。長年の血圧の影響も考えられます',
+        dxTpl: '左室壁肥厚 {key} (13-15mm)',
+        note: '長期的な血圧高値の影響も考えられる。基礎疾患により血圧が高い状態もまれにあるため、血圧管理についての説明を依頼',
+        hs: '壁肥厚あり: 血圧管理についての説明を依頼',
+        patient: '血圧による影響かもしれませんが、他の可能性もありフォローが必要なのでクリニックの受診に紹介します',
+      },
+      {
+        v: '16mm以上', action: 4, dept: '循環器内科',
+        layTpl: '心臓の壁（{jp}）が厚くなっていました',
+        dxTpl: '左室壁肥厚 {key} (16mm以上)',
+        note: '高血圧性心筋症・肥大型心筋症・アミロイド心筋症・スポーツ心臓など鑑別必要',
+      },
     ],
   },
   {
@@ -163,6 +179,71 @@ export const CARDIAC_ITEMS = [
     ],
   },
 ];
+
+// ------------------------------------------------------------
+// 心臓マップ: 模式図の領域（regionId）と心エコー項目の対応
+//   items:  CARDIAC_ITEMS の id（単一選択の項目）
+//   matrix: マトリクス項目の「item id → 表示する行キー」（valve / wall など）
+//   others: c_other（複数選択）の選択肢 index
+// ------------------------------------------------------------
+export const HEART_REGIONS = [
+  { id: 'LV', name: '左室（壁運動・内腔・収縮力）', items: ['wm', 'lvdd', 'ef'], matrix: {}, others: [] },
+  { id: 'IVS', name: '壁厚: 心室中隔・前壁', items: [], matrix: { wall: ['IVS'] }, others: [] },
+  { id: 'PW', name: '壁厚: 左室後壁', items: [], matrix: { wall: ['PW'] }, others: [] },
+  { id: 'LA', name: '左房', items: [], matrix: {}, others: [1] },
+  { id: 'RV', name: '右心系（右房・右室・肺動脈）', items: ['ph'], matrix: {}, others: [] },
+  { id: 'AV', name: '大動脈弁', items: [], matrix: { valve: ['AS', 'AR'] }, others: [0] },
+  { id: 'MV', name: '僧帽弁', items: [], matrix: { valve: ['MS', 'MR'] }, others: [] },
+  { id: 'TV', name: '三尖弁', items: [], matrix: { valve: ['TR'] }, others: [] },
+  { id: 'PV', name: '肺動脈弁', items: [], matrix: { valve: ['PR'] }, others: [] },
+  { id: 'AO', name: '上行大動脈', items: ['aorta'], matrix: {}, others: [] },
+  { id: 'PERI', name: '心膜・心嚢液', items: ['pericardial'], matrix: {}, others: [] },
+  { id: 'RHYTHM', name: '不整脈', items: ['arr'], matrix: {}, others: [] },
+  { id: 'OTHER', name: '先天性心疾患', items: ['chd'], matrix: {}, others: [] },
+];
+
+// 模式図の色分けレベル（弱い順）。unset は未入力
+const HEART_LEVELS = ['unset', 'normal', 'warn', 'individual', 'clinic', 'hospital'];
+
+function heartLevelOf(opt) {
+  if (!opt) return 'unset';
+  if (opt.action >= ACTION.HOSPITAL) return 'hospital';
+  if (opt.action >= ACTION.CLINIC) return 'clinic';
+  if (opt.action >= ACTION.INDIVIDUAL) return 'individual';
+  return opt.warn ? 'warn' : 'normal';
+}
+
+// 領域に属する入力の最大レベルを返す。既知/未知は色に反映しない
+export function heartRegionStatus(regionId, cardiac) {
+  const region = HEART_REGIONS.find((r) => r.id === regionId);
+  if (!region) return 'unset';
+  const c = cardiac || {};
+  let best = 0;
+  const bump = (lv) => { const i = HEART_LEVELS.indexOf(lv); if (i > best) best = i; };
+  (region.items || []).forEach((id) => {
+    const item = CARDIAC_ITEMS.find((x) => x.id === id);
+    const st = c[id];
+    if (!item || !st || st.v === null || st.v === undefined) return;
+    bump(heartLevelOf(item.options[st.v]));
+  });
+  Object.keys(region.matrix || {}).forEach((itemId) => {
+    const item = CARDIAC_ITEMS.find((x) => x.id === itemId);
+    const m = (c[itemId] && c[itemId].matrix) || {};
+    (region.matrix[itemId] || []).forEach((key) => {
+      const idx = m[key];
+      if (!item || idx === null || idx === undefined) return;
+      bump(heartLevelOf(item.options[idx]));
+    });
+  });
+  if ((region.others || []).length) {
+    const item = CARDIAC_ITEMS.find((x) => x.id === 'c_other');
+    const multi = c.c_other && c.c_other.multi;
+    if (item && Array.isArray(multi)) {
+      region.others.forEach((idx) => { bump(multi.includes(idx) ? heartLevelOf(item.options[idx]) : 'normal'); });
+    }
+  }
+  return HEART_LEVELS[best];
+}
 
 // ------------------------------------------------------------
 // 頸動脈マップ: 解剖学的部位（左右 x CCA/BIF/ICA/ECA）ごとにプラーク・狭窄を記録し、
@@ -478,16 +559,18 @@ function collectFindings(items, exam, examLabel, hasKakaritsuke) {
         if (!opt) return;
         let eff = opt.action;
         if (opt.action >= ACTION.INDIVIDUAL && known) eff = ACTION.CONTINUE;
+        // layTpl / dxTpl があれば行ごとに差し込む。無ければ弁用の既定テンプレ
+        const fill = (t) => t.replace(/\{jp\}/g, row.jp || row.name).replace(/\{key\}/g, row.key).replace(/\{name\}/g, row.name);
         out.push({
           exam: examLabel, id: `${item.id}_${row.key}`, label: `${item.label} ${row.key}`, value: opt.v,
           num: '', numUnit: '', sub: [],
           action: opt.action, known, eff,
           note: opt.note,
-          lay: opt.deg ? `心臓の弁（${row.jp}）に${opt.deg}${row.kind}がありました` : undefined,
+          lay: opt.layTpl ? fill(opt.layTpl) : (opt.deg ? `心臓の弁（${row.jp}）に${opt.deg}${row.kind}がありました` : undefined),
           dept: opt.dept,
-          dx: opt.mild || opt.deg ? `${row.name} (${opt.v.replace(' (trivial/mild)', '')})` : undefined,
-          hs: undefined, patient: undefined,
-          warn: !!opt.warn, vascular: false, contact: false,
+          dx: opt.dxTpl ? fill(opt.dxTpl) : ((opt.mild || opt.deg) ? `${row.name} (${opt.v.replace(' (trivial/mild)', '')})` : undefined),
+          hs: opt.hs, patient: opt.patient,
+          warn: !!opt.warn, vascular: !!opt.vascular, contact: !!opt.contact,
         });
       });
       return;
