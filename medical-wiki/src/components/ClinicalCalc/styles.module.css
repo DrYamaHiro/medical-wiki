@@ -252,3 +252,226 @@
     max-width: 120px;
   }
 }
+
+/* ============================================
+   URGED（RLS）チェックリスト用 追加スタイル
+   ============================================ */
+
+.sectionBlock {
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px dashed var(--ifm-color-emphasis-300);
+}
+
+.sectionBlock:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin-bottom: 0.5rem;
+}
+
+.sectionNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+.sectionNote {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+  line-height: 1.5;
+  margin: 0.2rem 0 0.5rem;
+}
+
+/* チップ */
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
+.chip {
+  padding: 0.32rem 0.75rem;
+  font-size: 0.82rem;
+  border: 1.5px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.chip:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.chipActive {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
+
+.chipYes.chipActive {
+  border-color: #2e7d32;
+  background: #2e7d32;
+  color: #fff;
+}
+
+.chipNo.chipActive {
+  border-color: #c62828;
+  background: #c62828;
+  color: #fff;
+}
+
+.chipUnclear.chipActive {
+  border-color: #f9a825;
+  background: #f9a825;
+  color: #3e2723;
+}
+
+/* 必須基準カード */
+.criteriaCard {
+  border: 1.5px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.55rem;
+  background: var(--ifm-background-color);
+}
+
+.criteriaHead {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.criteriaKey {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 6px;
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-font-color-base);
+  font-weight: 800;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.criteriaTitle {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ifm-font-color-base);
+}
+
+.criteriaQ {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--ifm-font-color-base);
+  margin: 0.35rem 0 0;
+}
+
+.criteriaHint {
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--ifm-color-emphasis-600);
+  margin: 0.25rem 0 0;
+  padding-left: 0.6rem;
+  border-left: 3px solid var(--ifm-color-emphasis-300);
+}
+
+/* 判定バッジ */
+.statusBadge {
+  margin: 0.6rem 0 0;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.statusSub {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.92;
+}
+
+/* 折りたたみトグル */
+.collapseToggle {
+  width: 100%;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-align: left;
+  border: 1.5px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+}
+
+.collapseToggle:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+/* まとめリスト */
+.summaryList {
+  margin: 0.3rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--ifm-font-color-base);
+}
+
+.summaryList li {
+  margin-bottom: 0.15rem;
+}
+
+/* IRLS 項目 */
+.irlsItem {
+  margin-bottom: 0.65rem;
+}
+
+.irlsLabel {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+  margin-bottom: 0.1rem;
+}
+
+@media (max-width: 600px) {
+  .chip {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.6rem;
+  }
+}

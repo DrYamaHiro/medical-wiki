@@ -1,0 +1,139 @@
+---
+id: urged
+title: "URGED 基準チェックリスト（レストレスレッグス症候群）"
+sidebar_label: "URGED（RLS）"
+sidebar_position: 10
+hide_table_of_contents: true
+description: "URGED 基準（IRLSSG 2012 改訂必須診断基準）でレストレスレッグス症候群を評価し、経過型・臨床的意義・二次性因子・IRLS 重症度まで整理します。"
+keywords: ["RLS", "むずむず脚", "レストレスレッグス", "URGED", "IRLS", "下肢静止不能症候群", "Willis-Ekbom"]
+---
+import URGEDCalculator from '@site/src/components/ClinicalCalc/URGEDCalculator';
+
+# URGED 基準チェックリスト（レストレスレッグス症候群）
+レストレスレッグス症候群（RLS / 下肢静止不能症候群 / Willis-Ekbom 病）の必須診断基準を、頭字語 URGED に沿って確認するツールです。経過の型、臨床的意義、支持所見、二次性・増悪因子、IRLS 重症度までを1画面で整理し、カルテ貼付用テキストを生成します。
+
+<URGEDCalculator />
+
+## 使い方
+
+1. 必須基準 5 項目を「該当 / 非該当 / 不明」で入力します。5 項目すべてが該当で必須基準を満たします。
+2. 経過（頻度）と臨床的意義を選びます。**臨床的意義は ICSD-3 の診断要件**であり、治療判断にも直結します。
+3. 支持所見、二次性・増悪因子を該当するだけ選びます。
+4. 重症度を数値化したい場合は IRLS を開いて 10 項目に回答します（任意）。
+5. 生成されたテキストをコピーしてカルテ・紹介状に貼り付けます。
+
+入力した項目だけがテキストに反映されます。未入力の項目は出力されません。必須基準を満たしていない段階では、薬物療法の提案は表示されません。
+
+## URGED の 5 基準
+
+| 記号 | 基準 | 確認するポイント |
+| --- | --- | --- |
+| **U**（Urge） | 脚を動かしたいという欲求（衝動） | 多くは脚の不快な感覚（むずむず、ほてり、虫が這う感じ、痛みなど）を伴うか、その感覚が原因と本人が感じる。まれに腕など他の部位にも生じる |
+| **R**（Rest） | 安静時に始まる、または悪化する | 座っている、横になっているなど不動の状態で出現・増悪する |
+| **G**（Gets better with movement） | 運動により軽快する | 歩く、脚を伸ばすなどで、少なくとも動いている間は部分的または完全に軽快する |
+| **E**（Evening / night） | 夕方から夜間に出現・増悪する | 概日リズム性。重症化すると日中にも出るが、以前は夜間優位であったことを確認する |
+| **D**（Differential） | 他の疾患・行動上の状態だけでは説明できない | 症状が、こむら返り、体位による不快感、筋肉痛、静脈うっ滞、下肢浮腫、関節炎、習慣的な足踏みなど他の原因だけでは説明しきれず、RLS として独立した症状があるかを確認する |
+
+5 項目すべてを満たすことが必須です。1 項目でも満たさなければ RLS とは診断しません。
+
+## 臨床的意義（ICSD-3 の診断要件）
+
+IRLSSG 2012 改訂基準では、臨床的意義は経過とともに記載する specifier（特定用語）です。一方 **ICSD-3 は、この 5 基準を採用したうえで、症状が心配（concern）・苦痛・睡眠障害、または精神・身体・社会・職業・教育・行動面の機能障害を引き起こすことを診断要件として加えています**。
+
+本ツールの判定は次のように表示されます。
+
+| 入力 | 判定表示 |
+| --- | --- |
+| 5/5 該当 + 臨床的意義あり | 必須 5 基準 + 臨床的意義を満たす（ICSD-3 診断要件充足） |
+| 5/5 該当 + 臨床的意義なし | 必須 5 基準は充足。臨床的意義なし（ICSD-3 の診断要件は未充足） |
+| 5/5 該当 + 臨床的意義 未選択 | 必須 5 基準は充足。臨床的意義を確認してください |
+
+**臨床的意義が「なし」または未選択のあいだは、ツールは薬物療法の提案を表示しません。**「なし」では経過観察と誘因の是正のみ、未選択では臨床的意義の確認を促す表示になります。
+
+## 経過の型と支持所見
+
+必須基準を満たした場合、経過を次のように特定します。
+
+- **慢性持続型**: 未治療であれば、過去1年間に週2回以上症状が出る
+- **間欠型**: 未治療であれば、過去1年間は週2回未満だが、生涯で5回以上のエピソードがある
+- **いずれにも該当しない**: 生涯のエピソードが 5 回未満
+
+診断を**支持する所見**（必須ではありません。IRLSSG 2012 の supportive features）:
+
+- 睡眠時周期性四肢運動（PLMS）の指摘
+- 第1度近親者の家族歴
+- ドパミン作動薬への反応歴
+- 著明な日中の眠気を欠く
+
+## 二次性・増悪因子と鉄の状態、推奨検査
+
+該当があれば、薬物療法より先に原因・誘因の是正を検討します。
+
+- **鉄**: 鉄補充の適応域（フェリチン 75 ng/mL 以下 または TSAT 20% 未満）、鉄欠乏性貧血、胃切除後・慢性消化管出血
+- **基礎疾患・状態**: 慢性腎臓病・透析、妊娠（特に第3三半期）、糖尿病・末梢神経障害、パーキンソン病、脊髄疾患、多発性硬化症、未治療の閉塞性睡眠時無呼吸
+- **薬剤**: 第1世代抗ヒスタミン薬、抗うつ薬（SSRI・SNRI・三環系・ミルタザピン）、ドパミン拮抗薬（抗精神病薬・メトクロプラミド・スルピリド・プロクロルペラジン）、リチウム
+- **生活因子**: カフェイン・アルコール・ニコチン、睡眠不足
+
+**推奨検査**: 血清フェリチン、TSAT（トランスフェリン飽和度）、血算、腎機能、血糖・HbA1c。妊娠可能年齢では妊娠の有無を確認します。必要に応じてビタミンB12・葉酸も評価します。
+
+採血は可能なら朝に行い、鉄含有サプリ・食品を 24 時間以上避けてから採取します。フェリチンは炎症で偽高値になるため、CRP の併検を考慮してください。
+
+## 鉄の評価と補充
+
+- 血清フェリチン **75 ng/mL 以下**（または **TSAT 20% 未満**）で鉄補充を検討します（経口鉄、または静注鉄）。（IRLSSG 2018 / AASM 2025）
+- フェリチン **75〜100** では静注鉄を考慮します。（AASM 2025）
+- **TSAT 45% 以上では鉄過剰のリスクがあるため補充しません**（安全上限）。（IRLSSG 2018）
+
+IRLSSG 2018 のエビデンスでは、カルボキシマルトース第二鉄の静注はフェリチン 300 ng/mL（= μg/L）未満の中等症〜重症 RLS に有効とされます（難治例の参考。試験で用いられた投与量は RLS ページ / Drug Reference を参照。日本では RLS 単独は適応外）。
+
+:::warning 日本での静注鉄の適応
+日本ではカルボキシマルトース第二鉄（フェインジェクト等）の保険適応は**鉄欠乏性貧血**です。貧血を伴わない RLS に対する静注鉄の使用は適応外となります。
+:::
+
+## 治療の要点
+
+- **α2δ リガンド（ガバペンチンエナカルビル）、または鉄指標が適応域にある場合の静注カルボキシマルトース第二鉄を優先**します（AASM 2025 で強い推奨。他の静注鉄製剤は条件付き推奨）。ガバペンチン・プレガバリンは日本では RLS に適応がありません。カルボキシマルトース第二鉄も日本では鉄欠乏性貧血が適応であり、貧血を伴わない RLS には適応外です。
+- **ドパミン作動薬（プラミペキソール・ロチゴチン・ロピニロール・レボドパ）は augmentation のため標準的な使用は推奨されません**（AASM 2025 で条件付き非推奨）。使用する場合も短期・限定的に留めます。
+- **妊娠中**は鉄の評価と非薬物療法を優先し、薬物療法は妊娠特異的な安全性を個別に検討します。
+- **慢性腎臓病・透析**では腎機能に応じた薬剤選択・用量調整が必要です。
+- 未治療の閉塞性睡眠時無呼吸があれば、その治療を先行・併行します。
+- **臨床的意義を認めない場合**（ICSD-3 の診断要件を満たさない場合）は薬物療法に進まず、経過観察と誘因の是正に留めます。
+- 具体的な用量は本ページには記載していません。RLS 診療ページと Drug Reference を参照してください。
+
+## IRLS の解釈
+
+IRLS（IRLSSG 重症度評価尺度）は 10 項目・各 0-4 点、合計 0-40 点です。
+
+| 合計点 | 重症度 |
+| --- | --- |
+| 0 | なし |
+| 1-10 | 軽症 |
+| 11-20 | 中等症 |
+| 21-30 | 重症 |
+| 31-40 | 最重症 |
+
+IRLS は**診断成立後**の重症度評価・治療効果判定に用います。**直近 1 週間**について**患者本人が回答する自己記入尺度**であり、医師は設問の理解を確認するに留めます。初診時に記録しておくと、再診時の変化が評価しやすくなります。
+
+## 注意
+
+- **診断は医師が行います。** 本ツールは問診の構造化を助ける補助ツールであり、判定結果がそのまま診断になるものではありません。
+- **公式尺度のライセンス。** 本ツールの IRLS 項目は各設問の要点を簡潔に言い換えた表記です。研究や公式評価には IRLSSG（MAPI Research Trust）のライセンス版を用いてください。
+- **小児では表現が異なります。** 小児 RLS では症状の訴え方が成人と異なり、本人の言葉による訴えの確認が必要です。成人向けの本チェックリストをそのまま適用しないでください。
+- **用量は記載していません。** 薬物療法の具体的な用量は RLS 診療ページと Drug Reference を参照してください。
+
+## 出典
+
+- Allen RP, Picchietti DL, Garcia-Borreguero D, et al. Restless legs syndrome/Willis-Ekbom disease diagnostic criteria: updated International Restless Legs Syndrome Study Group (IRLSSG) consensus criteria. Sleep Med. 2014;15(8):860-873.（2012 年改訂コンセンサスの報告。臨床的意義は specifier）
+- American Academy of Sleep Medicine. International Classification of Sleep Disorders, 3rd ed. Darien, IL: AASM; 2014.（IRLSSG 2012 の 5 基準を採用し、臨床的意義を診断要件として加える。現行版は ICSD-3-TR〈2023〉）
+- Walters AS, LeBrocq C, Dhar A, et al. Validation of the International Restless Legs Syndrome Study Group rating scale for restless legs syndrome. Sleep Med. 2003;4(2):121-132.（IRLS）
+- Allen RP, Picchietti DL, Auerbach M, et al. Evidence-based and consensus clinical practice guidelines for the iron treatment of restless legs syndrome/Willis-Ekbom disease in adults and children: an IRLSSG task force report. Sleep Med. 2018;41:27-44.（鉄治療）
+- Winkelman JW, Berkowski JA, DelRosso LM, et al. Treatment of restless legs syndrome and periodic limb movement disorder: an American Academy of Sleep Medicine clinical practice guideline. J Clin Sleep Med. 2025;21(1):137-152.（α2δ リガンド・静注カルボキシマルトース第二鉄を強い推奨。他の静注鉄製剤は条件付き推奨。ドパミン作動薬は条件付き非推奨）
+- Garcia-Borreguero D, Kohnen R, Silber MH, et al. The long-term treatment of restless legs syndrome/Willis-Ekbom disease: evidence-based guidelines and clinical consensus best practice guidance: a report from the International Restless Legs Syndrome Study Group. Sleep Med. 2013;14(7):675-684.（長期治療）
+- Garcia-Borreguero D, Silber MH, Winkelman JW, et al. Guidelines for the first-line treatment of restless legs syndrome/Willis-Ekbom disease, prevention and treatment of dopaminergic augmentation: a combined task force of the IRLSSG, EURLSSG, and the RLS-foundation. Sleep Med. 2016;21:1-11.（augmentation の予防・対処）
+
+## 関連ページ
+
+- [むずむず脚症候群（RLS）診療ページ](../../160-sleep-apnea/g258-restless-legs-syndrome-rls.mdx)
+- [閉塞性睡眠時無呼吸症候群（OSAS）](../../160-sleep-apnea/g473-osas.mdx)
+- [ESS（エプワース眠気尺度）](./ess.mdx)
+- [不眠症](../../170-psychiatry/f510-insomnia.mdx)
