@@ -329,28 +329,43 @@
   background: var(--ifm-color-emphasis-100);
 }
 
-.chipActive {
-  border-color: var(--ifm-color-primary);
-  background: var(--ifm-color-primary);
-  color: #fff;
-}
-
-.chipYes.chipActive {
+/* 選択状態は hover より優先。:hover 併記で詳細度を確実に上回らせる
+   （タッチ端末は hover が残ったままになるため、これが無いと
+   「枠だけ緑・背景は薄灰色」に見えてしまう） */
+.chip.chipActive,
+.chip.chipActive:hover {
   border-color: #2e7d32;
   background: #2e7d32;
   color: #fff;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.25);
 }
 
-.chipNo.chipActive {
+.chip.chipYes.chipActive,
+.chip.chipYes.chipActive:hover {
+  border-color: #2e7d32;
+  background: #2e7d32;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.25);
+}
+
+.chip.chipNo.chipActive,
+.chip.chipNo.chipActive:hover {
   border-color: #c62828;
   background: #c62828;
   color: #fff;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.25);
 }
 
-.chipUnclear.chipActive {
+.chip.chipUnclear.chipActive,
+.chip.chipUnclear.chipActive:hover {
   border-color: #f9a825;
   background: #f9a825;
   color: #3e2723;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px rgba(249, 168, 37, 0.3);
 }
 
 /* 必須基準カード */
