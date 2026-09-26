@@ -1,14 +1,17 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * デュピクセント（デュピルマブ）統合ツール
  *
- * 1. 投与量計算（5適応 × 年齢 × 体重）
- * 2. 最適使用推進ガイドライン処方要件チェック
+ * 1. 投与量計算（7適応 × 年齢 × 体重）
+ * 2. 最適使用推進ガイドライン処方要件（AD・喘息・COPD・CRSwNP のみ。PN・CSU・BP は対象外）
  * 3. 適応別評価ツール（AD: IGA/EASI/BSA、喘息: ACT、CRSwNP: NPS、COPD: mMRC、PN: WI-NRS）
  *
- * 添付文書 2024年改訂版準拠
+ * 添付文書 2026年3月改訂（第14版）準拠
+ * 最適使用推進ガイドライン: AD・喘息・COPD 令和7年12月改訂 / CRSwNP 令和8年2月改訂
+ * 成人＝15歳以上として扱う（院内運用）
  */
 
 // ========== 定数 ==========
@@ -19,13 +22,18 @@ const INDICATIONS = [
   { key: 'crsnp', label: '鼻茸を伴う慢性副鼻腔炎' },
   { key: 'copd', label: 'COPD' },
   { key: 'pn', label: '結節性痒疹' },
+  { key: 'csu', label: '特発性の慢性蕁麻疹' },
+  { key: 'bp', label: '水疱性類天疱瘡（中等症から重症）' },
 ];
 
+// 成人のみ用法・用量が設定されている適応
+const ADULT_ONLY = ['crsnp', 'copd', 'pn', 'bp'];
+
 const AGE_GROUPS = [
-  { key: 'adult', label: '成人（15歳以上）' },
-  { key: 'child_12_14', label: '12〜14歳' },
-  { key: 'child_6_11', label: '6〜11歳' },
-  { key: 'child_6m_5', label: '生後6ヶ月〜5歳' },
+  { key: 'adult', label: '成人（15歳以上）', short: '成人' },
+  { key: 'child_12_14', label: '12〜14歳', short: '12〜14歳' },
+  { key: 'child_6_11', label: '6〜11歳', short: '6〜11歳' },
+  { key: 'child_6m_5', label: '生後6カ月〜5歳', short: '生後6カ月〜5歳' },
 ];
 
 // --- AD評価 ---
@@ -74,12 +82,13 @@ const ACT_QUESTIONS = [
 ];
 
 // --- CRSwNP: NPS ---
+// 最適使用推進ガイドライン（鼻茸を伴う慢性副鼻腔炎）5. 投与対象となる患者 の鼻茸スコア定義
 const NPS_LABELS = [
   '0: ポリープなし',
-  '1: 中鼻道に限局',
-  '2: 中鼻道を越えるが下鼻甲介下縁以内',
-  '3: 下鼻甲介下縁を越える',
-  '4: 鼻腔をほぼ完全に閉塞',
+  '1: 小さなポリープを中鼻道に認めるが、中鼻甲介下縁の下には達していない',
+  '2: 中鼻甲介下縁の下に達しているポリープを認める',
+  '3: 大きなポリープが下鼻甲介下縁に達している、又はポリープを中鼻甲介の内側に認める',
+  '4: 下鼻腔の完全な閉塞を引き起こしている大きなポリープを認める',
 ];
 
 // --- COPD: mMRC ---
@@ -91,31 +100,57 @@ const MMRC_LABELS = [
   '4: 息切れで外出困難/着替えで息切れ',
 ];
 
-// --- 最適使用推進ガイドライン要件 ---
+// --- 最適使用推進ガイドライン要件（5. 投与対象となる患者） ---
+// 対象: AD・喘息・COPD・CRSwNP（添付文書 4. 注2）。結節性痒疹・特発性の慢性蕁麻疹・水疱性類天疱瘡は対象外
 const GUIDELINE_REQ = {
   ad: [
-    'ステロイド外用薬やタクロリムス外用薬等の抗炎症外用薬を一定期間適切に使用しても効果不十分',
-    'IGA スコア 3以上（中等症以上）',
-    'EASI 16以上、または BSA 10%以上',
+    'アトピー性皮膚炎の確定診断（生後6カ月以上。小児は体重5kg以上）',
+    '抗炎症外用薬による適切な治療を直近6カ月以上実施（ステロイド外用薬は成人ストロングクラス以上、小児ミディアムクラス以上）しても十分な効果が得られない、又は外用薬への過敏症・副作用で継続困難',
+    '疾患活動性 — 以下のすべてに該当: IGA スコア 3以上 ／ EASI 16以上（又は顔面の広範囲に強い炎症を伴う皮疹: 目安として頭頸部 EASI 2.4以上、7歳以下は4.8以上） ／ 病変の体表面積（BSA）10%以上',
   ],
   asthma: [
-    '高用量 ICS + LABA等の既存治療を適切に行っても喘息症状をコントロールできない',
-    '血中好酸球数 150/μL以上（発作時は300/μL以上も考慮）',
-    '通年性の吸入抗原に対する特異的IgE陽性またはFeNO 25ppb以上が参考所見',
+    '吸入ステロイド薬とその他の長期管理薬のアドヒアランスや吸入手技が良好であることを確認した上で判断',
+    '気管支喘息の確定診断',
+    '成人: 中用量又は高用量の ICS とその他の長期管理薬（LABA・LAMA・LTRA・テオフィリン徐放製剤）を併用してもコントロール不良、かつ全身性ステロイド薬の投与等が必要な喘息増悪を年1回以上。ただし、中用量の ICS との併用は、医師により ICS を高用量に増量することが副作用等により困難であると判断された場合に限る',
+    '小児: 中用量又は高用量の ICS とその他の長期管理薬（LABA・LTRA・テオフィリン徐放製剤）を併用してもコントロール不良、かつ全身性ステロイド薬の投与等が必要な喘息増悪を年1回以上。ただし、中用量の ICS を投与しており LABA を併用していない患児は、医師により LABA を併用することが副作用等により困難であると判断された場合に限る',
+    '2型炎症バイオマーカー（血中好酸球数・FeNO・血清総IgE 等）: 適応判断のための基準値はない。1つ以上を測定し、その値と臨床成績を考慮して判断（参考: 6〜11歳の検証的試験の主要解析集団は血中好酸球数 150/μL以上又は FeNO 20ppb以上）',
   ],
   crsnp: [
-    '手術療法および既存の内科的治療（鼻噴霧用ステロイド等）を適切に行っても効果不十分',
-    '両側鼻茸スコア（NPS）5以上',
-    '鼻閉重症度スコア 2以上（中等症〜重症の鼻閉）',
+    '慢性副鼻腔炎の確定診断',
+    '鼻茸を伴う慢性副鼻腔炎の手術歴あり（全身状態等で手術不能の場合: 過去2年以内の全身性ステロイド薬で効果不十分、又は全身性ステロイド薬が禁忌、又は忍容性なし）',
+    '既存治療下でも以下のすべて: 鼻茸スコア 各鼻腔2以上かつ両側合計5以上 ／ 鼻閉重症度スコア 2（中等症）以上が8週間以上持続 ／ 嗅覚障害、鼻汁（前鼻漏／後鼻漏）等が8週間以上持続',
   ],
   copd: [
-    'LAMA + LABA + ICS 等の最大限の吸入療法を適切に行っても増悪を繰り返す',
-    '血中好酸球数 150/μL以上',
-    '前年に中等度以上の増悪を2回以上、または重度の増悪（入院）を1回以上',
+    'COPD の確定診断',
+    '気管支拡張薬投与後の FEV1 が予測値の30%超70%以下',
+    'LAMA・LABA・ICS（ICS 禁忌の場合は LAMA・LABA）を3カ月以上併用',
+    '中等度の増悪を年2回以上（うち1回は全身性ステロイド薬が必要）又は重度の増悪を年1回以上。うち少なくとも1回は上記併用中に発現',
+    '血中好酸球数 300/μL以上',
+    '禁煙・呼吸リハビリテーション等の非薬物療法の管理計画が作成され、適切に実施されている',
   ],
+};
+
+const GUIDELINE_URL = {
+  ad: 'https://www.pmda.go.jp/files/000278275.pdf',
+  asthma: 'https://www.pmda.go.jp/files/000278276.pdf',
+  copd: 'https://www.pmda.go.jp/files/000278277.pdf',
+  crsnp: 'https://www.pmda.go.jp/files/000279177.pdf',
+};
+
+// 最適使用推進ガイドライン対象外の適応: 添付文書「5. 効能又は効果に関連する注意」「7. 用法及び用量に関連する注意」の要点
+const NON_GUIDELINE_NOTE = {
   pn: [
-    '抗ヒスタミン薬、ステロイド外用薬等の既存治療を適切に行っても効果不十分',
-    '結節性痒疹の確定診断（20個以上の痒疹結節が6週間以上持続）',
+    '5.4: ステロイド外用剤等による治療を施行しても、痒疹結節を主体とする病変が多発し、複数の部位に及ぶ患者に用いる',
+    '5.5: 最新の診療ガイドライン等を参考に、臨床症状及び全身検索に基づいて他の皮膚疾患との鑑別を行う',
+  ],
+  csu: [
+    '5.6: 食物、物理的刺激等の蕁麻疹の症状を誘発する原因が特定されず、ヒスタミンH1受容体拮抗薬の増量等の適切な治療を行っても、日常生活に支障をきたすほどの痒みを伴う膨疹が繰り返して継続的に認められる場合に本剤を追加して投与する',
+    '7.3: 24週以降も継続する場合は必要性を慎重に判断し、24週間使用しても効果が認められない場合は漫然と投与を続けない',
+  ],
+  bp: [
+    '5.7: 最新の国内診療ガイドラインを参考に、全身性ステロイド薬の投与が必要な中等症から重症の水疱性類天疱瘡患者に対して本剤を投与する',
+    '5.8: 本剤の適用に先立ち、患者の症状や状態に応じて、全身性ステロイド薬単独による治療の実施も考慮する。全身性ステロイド薬単独による治療を行わず本剤との併用で治療を開始する場合は、最新の国内診療ガイドライン等を参照の上で、本剤の投与の必要性を慎重に判断する',
+    '7.4: 全身性ステロイド薬と併用で投与を開始し、病勢のコントロールが得られた後は全身性ステロイド薬の漸減を考慮する',
   ],
 };
 
@@ -130,58 +165,80 @@ const ASSESS_TABS = {
 
 // ========== 投与量計算 ==========
 
-function calcDose(indication, ageGroup, weight) {
+const PEN_300 = '300mgペン又はシリンジ';
+const PEN_200 = '200mgペン又はシリンジ';
+const NOTE_300_ONLY = '300mg製剤のみ（200mg製剤は本適応の効能なし）';
+const NOTE_AD_16W = '16週までに治療反応が得られない場合は投与中止を考慮（7.1）。最適使用推進ガイドライン：16週後までに治療反応が得られない場合は投与を中止すること';
+
+// 初回600mg → 300mg 2週間隔
+function dose600(band, notes) {
+  return { loading: 600, loadingNote: '（300mg製剤×2本。200mg製剤は用いない）', maintenance: 300, interval: 2, pen: PEN_300, band, notes };
+}
+// 初回400mg → 200mg 2週間隔
+function dose400(band, notes) {
+  return { loading: 400, loadingNote: '（200mg製剤×2本）', maintenance: 200, interval: 2, pen: PEN_200, band, notes };
+}
+// 負荷投与なし
+function doseNoLoad(mg, interval, band, notes) {
+  return { loading: null, loadingNote: '', maintenance: mg, interval, pen: mg === 300 ? PEN_300 : PEN_200, band, notes };
+}
+
+export function calcDose(indication, ageGroup, weight) {
+  const w = parseFloat(weight);
+
   if (indication === 'ad') {
-    if (ageGroup === 'adult') {
-      return { loading: 600, loadingNote: '（300mg×2本を2箇所に注射）', maintenance: 300, interval: 2, pen: '300mgペン', notes: '初回のみ600mg、以降300mg 2週間隔（体重によらず一律）' };
-    }
-    const w = parseFloat(weight);
+    if (ageGroup === 'adult') return dose600('', `初回600mg、以降300mg 2週間隔。${NOTE_AD_16W}`);
+    // 小児（生後6カ月以上）は年齢によらず体重のみで区分
+    if (w >= 60) return dose600('60kg以上', `60kg以上: 初回600mg、以降300mg 2週間隔。${NOTE_AD_16W}`);
+    if (w >= 30) return dose400('30-60kg', `30kg以上60kg未満: 初回400mg、以降200mg 2週間隔。${NOTE_AD_16W}`);
+    if (w >= 15) return doseNoLoad(300, 4, '15-30kg', `15kg以上30kg未満: 負荷投与なし、300mg 4週間隔。${NOTE_AD_16W}`);
+    if (w >= 5) return doseNoLoad(200, 4, '5-15kg', `5kg以上15kg未満: 負荷投与なし、200mg 4週間隔。${NOTE_AD_16W}`);
+    return { error: '体重5kg未満: 用法・用量の設定なし（生後6カ月未満も設定なし）' };
+  }
+
+  if (indication === 'csu') {
+    const csuNote = '24週以降の継続は必要性を慎重に判断し、24週で効果がなければ漫然と継続しない（7.3）';
+    if (ageGroup === 'adult') return dose600('', `初回600mg、以降300mg 2週間隔。${csuNote}`);
     if (ageGroup === 'child_12_14') {
-      if (w && w >= 60) return { loading: 600, loadingNote: '（300mg×2本）', maintenance: 300, interval: 2, pen: '300mgペン', notes: '初回のみ600mg、以降300mg 2週間隔' };
-      if (w && w >= 30) return { loading: 400, loadingNote: '（200mg×2本）', maintenance: 200, interval: 2, pen: '200mgペン', notes: '初回のみ400mg、以降200mg 2週間隔' };
+      if (w >= 60) return dose600('60kg以上', `12歳以上・60kg以上: 初回600mg、以降300mg 2週間隔。${csuNote}`);
+      if (w >= 30) return dose400('30-60kg', `12歳以上・30kg以上60kg未満: 初回400mg、以降200mg 2週間隔。${csuNote}`);
+      return { error: '12歳以上でも体重30kg未満: 用法・用量の設定なし' };
     }
-    if (ageGroup === 'child_6_11' || (ageGroup === 'child_12_14' && parseFloat(weight) < 30)) {
-      const w2 = parseFloat(weight);
-      if (w2 && w2 >= 60) return { loading: 600, loadingNote: '（300mg×2本）', maintenance: 300, interval: 2, pen: '300mgペン', notes: '60kg以上: 成人と同量' };
-      if (w2 && w2 >= 30) return { loading: 400, loadingNote: '（200mg×2本）', maintenance: 200, interval: 2, pen: '200mgペン', notes: '30-60kg: 初回400mg、以降200mg 2週間隔' };
-      if (w2 && w2 >= 15) return { loading: 600, loadingNote: '（300mg×2本）', maintenance: 300, interval: 4, pen: '300mgペン', notes: '15-30kg: 初回600mg、以降300mg 4週間隔' };
-      if (w2 && w2 >= 5) return { loading: 200, loadingNote: '（200mg×1本）', maintenance: 200, interval: 4, pen: '200mgペン', notes: '5-15kg: 初回200mg、以降200mg 4週間隔' };
-      return { error: '5kg未満は投与対象外' };
-    }
-    if (ageGroup === 'child_6m_5') {
-      const w3 = parseFloat(weight);
-      if (w3 && w3 >= 15) return { loading: 300, loadingNote: '（300mg×1本）', maintenance: 300, interval: 4, pen: '300mgペン', notes: '15kg以上: 初回300mg、以降300mg 4週間隔' };
-      if (w3 && w3 >= 5) return { loading: 200, loadingNote: '（200mg×1本）', maintenance: 200, interval: 4, pen: '200mgペン', notes: '5-15kg: 初回200mg、以降200mg 4週間隔' };
-      return { error: '5kg未満は投与対象外' };
-    }
+    return { error: '12歳未満: 用法・用量の設定なし' };
   }
 
   if (indication === 'asthma') {
     if (ageGroup === 'adult' || ageGroup === 'child_12_14') {
-      return { loading: 400, loadingNote: '（200mg×2本を2箇所に注射）', maintenance: 200, interval: 2, pen: '200mgペン', notes: '初回のみ400mg、以降200mg 2週間隔。経口ステロイド依存例や重症AD合併例では初回600mg→300mg q2wも考慮。' };
+      return dose600('', '成人及び12歳以上: 初回600mg、以降300mg 2週間隔');
     }
     if (ageGroup === 'child_6_11') {
-      const w = parseFloat(weight);
-      if (w && w >= 30) return { loading: null, loadingNote: '', maintenance: 200, interval: 2, pen: '200mgペン', notes: '30kg以上: 200mg 2週間隔（負荷投与なし）。100mg q2wも可。' };
-      if (w && w >= 15) return { loading: null, loadingNote: '', maintenance: 100, interval: 2, pen: '200mgペン（半量使用）', notes: '15-30kg: 100mg 2週間隔（負荷投与なし）。200mgペンの半量を使用。' };
-      return { error: '15kg未満の小児喘息への適応なし' };
+      if (w >= 30) return doseNoLoad(200, 2, '30kg以上', '6〜11歳・30kg以上: 負荷投与なし、200mg 2週間隔');
+      if (w >= 15) return doseNoLoad(300, 4, '15-30kg', '6〜11歳・15kg以上30kg未満: 負荷投与なし、300mg 4週間隔');
+      return { error: '6〜11歳で体重15kg未満: 用法・用量の設定なし' };
     }
-    if (ageGroup === 'child_6m_5') return { error: '6歳未満の喘息には適応なし（6歳以上が対象）' };
+    return { error: '6歳未満: 用法・用量の設定なし' };
   }
 
-  if (indication === 'crsnp') {
-    if (ageGroup === 'adult') return { loading: null, loadingNote: '', maintenance: 300, interval: 2, pen: '300mgペン', notes: '300mg 2週間隔（負荷投与なし）。既存の鼻噴霧用ステロイドは継続。' };
-    return { error: '成人のみ適応（小児への適応なし）' };
+  const adultOnlyError = { error: '成人のみ（小児の用法・用量の設定なし）' };
+
+  if (indication === 'pn') {
+    if (ageGroup === 'adult') return dose600('', `初回600mg、以降300mg 2週間隔。${NOTE_300_ONLY}`);
+    return adultOnlyError;
+  }
+
+  if (indication === 'bp') {
+    if (ageGroup === 'adult') return dose600('', `初回600mg、以降300mg 2週間隔。全身性ステロイド薬と併用で開始し、病勢コントロール後はステロイドの漸減を考慮（7.4）。${NOTE_300_ONLY}`);
+    return adultOnlyError;
   }
 
   if (indication === 'copd') {
-    if (ageGroup === 'adult') return { loading: null, loadingNote: '', maintenance: 300, interval: 2, pen: '300mgペン', notes: '300mg 2週間隔（負荷投与なし）。既存の吸入療法（LAMA/LABA/ICS）は継続。' };
-    return { error: '成人のみ適応（小児への適応なし）' };
+    if (ageGroup === 'adult') return doseNoLoad(300, 2, '', `負荷投与なし、300mg 2週間隔。${NOTE_300_ONLY}`);
+    return adultOnlyError;
   }
 
-  if (indication === 'pn') {
-    if (ageGroup === 'adult') return { loading: 600, loadingNote: '（300mg×2本を2箇所に注射）', maintenance: 300, interval: 2, pen: '300mgペン', notes: '初回のみ600mg、以降300mg 2週間隔' };
-    return { error: '成人のみ適応（小児への適応なし）' };
+  if (indication === 'crsnp') {
+    if (ageGroup === 'adult') return doseNoLoad(300, 2, '', `負荷投与なし、300mg 2週間隔。症状安定後は300mg 4週間隔も可。${NOTE_300_ONLY}`);
+    return adultOnlyError;
   }
 
   return null;
@@ -348,15 +405,15 @@ export default function DupixentCalculator() {
 
   // --- 投与量ロジック ---
   const needsWeight = useMemo(() => {
-    if (['crsnp', 'pn', 'copd'].includes(indication)) return false;
+    if (ADULT_ONLY.includes(indication)) return false;
     if (indication === 'ad') return ageGroup !== 'adult';
+    if (indication === 'csu') return ageGroup === 'child_12_14';
     if (indication === 'asthma') return ageGroup === 'child_6_11';
     return false;
   }, [indication, ageGroup]);
 
   const availableAgeGroups = useMemo(() => {
-    if (['crsnp', 'pn', 'copd'].includes(indication)) return AGE_GROUPS.filter(a => a.key === 'adult');
-    if (indication === 'asthma') return AGE_GROUPS.filter(a => a.key !== 'child_6m_5');
+    if (ADULT_ONLY.includes(indication)) return AGE_GROUPS.filter(a => a.key === 'adult');
     return AGE_GROUPS;
   }, [indication]);
 
@@ -365,12 +422,37 @@ export default function DupixentCalculator() {
     return calcDose(indication, ageGroup, weight);
   }, [indication, ageGroup, weight, needsWeight]);
 
+  // --- カルテ貼付用テキスト（投与量結果のみ。未入力・対象外のときは空） ---
+  const indicationLabel = INDICATIONS.find(i => i.key === indication)?.label || '';
+  const ageGroupLabel = AGE_GROUPS.find(a => a.key === ageGroup)?.label || '';
+  const ageGroupShort = AGE_GROUPS.find(a => a.key === ageGroup)?.short || '';
+  const outputText = useMemo(() => {
+    if (!result || result.error) return '';
+    const lines = [];
+    lines.push('【デュピクセント（デュピルマブ）投与量 __DATE__】');
+    lines.push('');
+    lines.push(`適応症: ${indicationLabel}`);
+    lines.push(`年齢区分: ${ageGroupLabel}`);
+    if (needsWeight) lines.push(`体重: ${weight} kg`);
+    lines.push('');
+    lines.push(`初回（負荷投与）: ${result.loading ? `${result.loading}mg${result.loadingNote}` : 'なし'}`);
+    lines.push(`維持投与: ${result.maintenance}mg`);
+    lines.push(`投与間隔: ${result.interval}週間隔`);
+    lines.push(`使用製剤: ${result.pen}`);
+    lines.push(`備考: ${result.notes}`);
+    return lines.join('\n');
+  }, [result, indicationLabel, ageGroupLabel, needsWeight, weight]);
+  const summary = outputText
+    ? `デュピクセント ${result.loading ? `初回${result.loading}mg、以降` : ''}${result.maintenance}mg ${result.interval}週間隔（${indicationLabel}・${ageGroupShort}${result.band ? ` ${result.band}` : ''}）`
+    : '';
+
   // --- 計算値 ---
   const easiTotal = useMemo(() => calcEasiTotal(easiScores), [easiScores]);
   const easiSeverity = getEasiSeverity(easiTotal);
   const bsaTotal = useMemo(() => BSA_PARTS.reduce((s, p) => s + (bsaSelected[p.key] ? p.bsa : 0), 0), [bsaSelected]);
   const actScore = useMemo(() => actAnswers.some(a => a === null) ? null : actAnswers.reduce((s, a) => s + a, 0), [actAnswers]);
   const npsTotal = (npsLeft !== null && npsRight !== null) ? npsLeft + npsRight : null;
+  const npsMeetsGl = npsTotal !== null && npsLeft >= 2 && npsRight >= 2 && npsTotal >= 5;
 
   // --- ハンドラ ---
   const handleIndicationChange = useCallback((key) => {
@@ -378,7 +460,7 @@ export default function DupixentCalculator() {
     setWeight('');
     setAssessTab(null);
     setShowGuideline(false);
-    if (['crsnp', 'pn', 'copd'].includes(key)) setAgeGroup('adult');
+    if (ADULT_ONLY.includes(key)) setAgeGroup('adult');
   }, []);
 
   const updateEasiScore = useCallback((rk, sk, v) => {
@@ -406,7 +488,7 @@ export default function DupixentCalculator() {
       <div className={styles.calcHeader}>
         <div>
           <p className={styles.calcTitle}>デュピクセント（デュピルマブ）</p>
-          <p className={styles.calcSub}>投与量計算 + 評価ツール（5適応対応）</p>
+          <p className={styles.calcSub}>投与量計算 + 評価ツール（7適応対応・添付文書 2026年3月改訂 第14版）</p>
         </div>
         <button className={styles.resetBtn} onClick={() => setWeight('')}>リセット</button>
       </div>
@@ -494,20 +576,38 @@ export default function DupixentCalculator() {
         </div>
       )}
 
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="処方日" />
+
       {/* 最適使用推進ガイドライン */}
-      <div className={styles.note} style={{ cursor: 'pointer', userSelect: 'none' }}
-        onClick={() => setShowGuideline(v => !v)}>
-        <strong>{showGuideline ? '▼' : '▶'} 最適使用推進ガイドライン — 主な処方要件</strong>
-        {showGuideline && (
-          <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.2rem', lineHeight: 1.8 }}>
-            {(GUIDELINE_REQ[indication] || []).map((req, i) => (
-              <li key={i}>{req}</li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {GUIDELINE_REQ[indication] ? (
+        <div className={styles.note}>
+          <div style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => setShowGuideline(v => !v)}>
+            <strong>{showGuideline ? '▼' : '▶'} 最適使用推進ガイドライン — 投与対象となる患者（要点）</strong>
+          </div>
+          {showGuideline && (
+            <>
+              <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.2rem', lineHeight: 1.8 }}>
+                {GUIDELINE_REQ[indication].map((req, i) => (
+                  <li key={i}>{req}</li>
+                ))}
+              </ul>
+              <div style={{ marginTop: '0.3rem' }}>
+                詳細は<a href={GUIDELINE_URL[indication]} target="_blank" rel="noopener noreferrer">最適使用推進ガイドライン（PMDA）</a>参照
+              </div>
+            </>
+          )}
+        </div>
+      ) : (
+        <div className={styles.note}>
+          <strong>最適使用推進ガイドライン対象外の適応</strong>
+          {(NON_GUIDELINE_NOTE[indication] || []).map((line, i) => (
+            <React.Fragment key={i}><br />添付文書 {line}</React.Fragment>
+          ))}
+        </div>
+      )}
 
       {/* ===== 評価ツール ===== */}
+      {currentTabs.length > 0 && (
       <div style={{ borderTop: '2px solid var(--ifm-color-emphasis-300)', padding: '0.8rem 1.2rem 0.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
           <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>評価ツール</span>
@@ -550,7 +650,7 @@ export default function DupixentCalculator() {
             <RadioList items={IGA_SCALE.map(s => ({ value: s.score, label: `${s.label} — ${s.desc}` }))} value={igaScore} onChange={setIgaScore} />
             {igaScore !== null && (
               <div style={{ marginTop: '0.5rem', padding: '0.5rem 0.7rem', borderRadius: '6px', background: igaScore >= 3 ? '#fff3e0' : '#e8f5e9', fontSize: '0.8rem', fontWeight: 600 }}>
-                IGA = {igaScore}{igaScore >= 3 && ' → ガイドライン基準（IGA≧3）を満たす'}{igaScore <= 1 && ' → 治療目標達成（IGA 0-1）'}
+                IGA = {igaScore}{igaScore >= 3 && ' → ガイドライン要件の1項目（IGA≧3）を満たす（EASI・BSA の基準もすべて必要）'}{igaScore <= 1 && ' → 治療目標達成（IGA 0-1）'}
               </div>
             )}
           </div>
@@ -600,7 +700,7 @@ export default function DupixentCalculator() {
             </div>
             {easiTotal >= 16 && (
               <div style={{ fontSize: '0.75rem', color: '#e65100', fontWeight: 600, marginTop: '0.3rem' }}>
-                EASI≧16 → ガイドライン基準を満たす
+                EASI≧16 → ガイドライン要件の1項目を満たす（IGA・BSA の基準もすべて必要）
               </div>
             )}
             <div style={{ fontSize: '0.7rem', color: 'var(--ifm-color-emphasis-500)', marginTop: '0.2rem' }}>
@@ -639,7 +739,7 @@ export default function DupixentCalculator() {
             </div>
             {bsaTotal >= 10 && (
               <div style={{ fontSize: '0.75rem', color: '#e65100', fontWeight: 600, marginTop: '0.3rem' }}>
-                BSA≧10% → ガイドライン基準を満たす
+                BSA≧10% → ガイドライン要件の1項目を満たす（IGA・EASI の基準もすべて必要）
               </div>
             )}
           </div>
@@ -715,12 +815,12 @@ export default function DupixentCalculator() {
             {npsTotal !== null && (
               <div style={{
                 padding: '0.6rem 0.7rem', borderRadius: '6px', color: '#fff',
-                background: npsTotal >= 5 ? '#f44336' : npsTotal > 0 ? '#ff9800' : '#757575',
+                background: npsMeetsGl ? '#f44336' : npsTotal > 0 ? '#ff9800' : '#757575',
                 display: 'flex', justifyContent: 'space-between',
               }}>
                 <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>NPS = {npsTotal} / 8</span>
                 <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>
-                  {npsTotal >= 5 ? 'ガイドライン基準（NPS≧5）を満たす' : 'NPS 5未満'}
+                  {npsMeetsGl ? 'ガイドライン基準（各側2以上かつ合計5以上）を満たす' : 'ガイドライン基準（各側2以上かつ合計5以上）未達'}
                 </span>
               </div>
             )}
@@ -784,16 +884,22 @@ export default function DupixentCalculator() {
           </div>
         )}
       </div>
+      )}
 
       {/* 注意事項 */}
       <div className={styles.note}>
-        <strong>共通注意事項:</strong><br />
+        <strong>共通注意事項（添付文書 2026年3月改訂 第14版）:</strong><br />
+        ・投与開始にあたっては、医療施設において、必ず医師によるか、医師の直接の監督のもとで投与を行う（8.7）<br />
         ・自己注射指導を実施し、十分な教育訓練を行ってから在宅自己注射に移行<br />
-        ・注射部位: 腹部・大腿部・上腕外側（毎回異なる部位に注射）<br />
-        ・冷蔵保存（2-8℃）。使用前に室温に45分以上戻す<br />
-        ・結膜炎（特にAD）の発現に注意（約10-20%）<br />
-        ・投与開始後も既存の基礎治療（外用療法・吸入療法等）は継続<br />
-        ・喘息/COPD: 経口ステロイドの急な中止は禁忌（漸減すること）
+        ・600mg投与時は300mg製剤2本を用い、200mg製剤は用いない（7.2）<br />
+        ・1回で全量を使用する製剤であり、再使用しない（分割使用不可）（14.2.5）<br />
+        ・皮膚及び皮下組織の薄い患者にはシリンジ製剤を用いる（14.2.3）<br />
+        ・200mg製剤の効能はアトピー性皮膚炎・特発性の慢性蕁麻疹・気管支喘息のみ<br />
+        ・注射部位: 腹部（へその周り5cmを外す）・大腿部・上腕部。同一箇所への繰り返し注射は避ける（14.2.1）<br />
+        ・冷蔵保存（2〜8℃、凍結を避ける）。投与前に室温に戻しておくことが望ましい（300mg製剤45分以上／200mg製剤30分以上）（14.1.1）<br />
+        ・結膜炎・アレルギー性結膜炎・角膜炎等の眼障害に注意（11.2）<br />
+        ・投与開始後も既存の基礎治療（外用療法・吸入療法等）は継続（水疱性類天疱瘡の全身性ステロイドは7.4に従い漸減を考慮）<br />
+        ・長期ステロイド療法中の患者では、本剤投与開始後にステロイド薬を急に中止しない。減量は医師の管理下で徐々に行う（8.3 重要な基本的注意、全適応共通）
       </div>
     </div>
   );

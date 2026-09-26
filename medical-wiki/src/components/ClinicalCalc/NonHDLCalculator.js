@@ -21,7 +21,7 @@ const RISK_CATEGORIES = [
   { key: 'none', label: '未選択', ldl: null, nonhdl: null, note: '' },
   { key: 'low', label: '一次予防 低リスク', ldl: 160, nonhdl: 190, note: '久山町スコアによる低リスク' },
   { key: 'mid', label: '一次予防 中リスク', ldl: 140, nonhdl: 170, note: '久山町スコアによる中リスク' },
-  { key: 'high', label: '一次予防 高リスク', ldl: 120, nonhdl: 150, note: '糖尿病・CKD・末梢動脈疾患・非心原性脳梗塞など' },
+  { key: 'high', label: '一次予防 高リスク', ldl: 120, nonhdl: 150, note: '糖尿病・CKD・末梢動脈疾患（PAD）' },
   { key: 'sec', label: '二次予防', ldl: 100, nonhdl: 130, note: '冠動脈疾患またはアテローム血栓性脳梗塞の既往' },
   { key: 'sec2', label: '二次予防（高リスク病態）', ldl: 70, nonhdl: 100, note: '急性冠症候群・家族性高コレステロール血症・糖尿病合併・冠動脈疾患とアテローム血栓性脳梗塞の合併' },
 ];
