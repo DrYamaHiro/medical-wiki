@@ -82,6 +82,8 @@ export default function GDS15Calculator() {
     return lines.join('\n');
   }, [allAnswered, score, judgment, answers]);
 
+  const summary = outputText ? `GDS-15 ${score}/15点（${judgment.text}）` : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -139,7 +141,7 @@ export default function GDS15Calculator() {
         )}
       </div>
 
-      <PsychCopyBox text={outputText} />
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-4点: 正常 / 5-9点: 軽度うつ傾向 / 10-15点: うつ状態<br />

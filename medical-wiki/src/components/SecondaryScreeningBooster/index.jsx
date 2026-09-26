@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
+import copyText, { COPY_FAILED_MESSAGE } from '../ClinicalCalc/copyText';
 import {
   ACTION, SYMPTOMS, TREATMENTS, DEPTS, CARDIAC_ITEMS, CAROTID_ITEMS, CLASS_LABEL, OPINION_TEMPLATES,
   LAB_BANDS, LAB_ORDER, bandFromValues,
@@ -530,12 +531,11 @@ export default function SecondaryScreeningBooster() {
   });
 
   const copy = async (key, text) => {
-    try {
-      await navigator.clipboard.writeText(text);
+    if (await copyText(text)) {
       setCopied(key);
       setTimeout(() => setCopied(''), 1800);
-    } catch {
-      alert('クリップボードへのコピーに失敗しました。テキストを手動で選択してコピーしてください。');
+    } else {
+      alert(COPY_FAILED_MESSAGE);
     }
   };
 

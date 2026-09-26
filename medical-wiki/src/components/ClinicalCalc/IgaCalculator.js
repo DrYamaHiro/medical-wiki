@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const IGA_SCALE = [
   { score: 0, label: 'クリア（0）', desc: '炎症性病変なし、色素沈着のみ' },
@@ -9,9 +10,35 @@ const IGA_SCALE = [
   { score: 4, label: '重症（4）', desc: '著明な紅斑、広範な丘疹・浸潤・苔癬化' },
 ];
 
+// 判定表示（画面表示とコピー用テキストで共用）
+const IGA_JUDGMENT = {
+  0: 'クリア — 治療目標達成',
+  1: 'ほぼクリア — 治療目標達成（IGA 0-1）',
+  2: '軽症',
+  3: '中等症 — 生物学的製剤の適応を検討（IGA≧3）',
+  4: '重症 — 生物学的製剤の適応を検討（IGA≧3）',
+};
+
 export default function IgaCalculator() {
   const [score, setScore] = useState(null);
   const reset = useCallback(() => setScore(null), []);
+
+  const outputText = useMemo(() => {
+    if (score === null) return '';
+    const item = IGA_SCALE.find(i => i.score === score);
+    const lines = [];
+    lines.push('【IGA（医師による全般的重症度評価） __DATE__】');
+    lines.push('');
+    lines.push(`IGA スコア: ${score} → ${IGA_JUDGMENT[score]}`);
+    lines.push('');
+    lines.push(`皮膚所見: ${item.label} ${item.desc}`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(IGA_JUDGMENT[score]);
+    return lines.join('\n');
+  }, [score]);
+
+  const summary = outputText ? `IGA ${score}：${IGA_JUDGMENT[score]}` : '';
 
   return (
     <div className={styles.calc}>
@@ -57,14 +84,12 @@ export default function IgaCalculator() {
           <div className={styles.resultJudge} style={{
             background: score === 0 ? '#4caf50' : score === 1 ? '#8bc34a' : score === 2 ? '#ff9800' : score === 3 ? '#f44336' : '#c62828',
           }}>
-            {score === 0 && 'クリア — 治療目標達成'}
-            {score === 1 && 'ほぼクリア — 治療目標達成（IGA 0-1）'}
-            {score === 2 && '軽症'}
-            {score === 3 && '中等症 — 生物学的製剤の適応を検討（IGA≧3）'}
-            {score === 4 && '重症 — 生物学的製剤の適応を検討（IGA≧3）'}
+            {IGA_JUDGMENT[score]}
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>IGA について:</strong><br />

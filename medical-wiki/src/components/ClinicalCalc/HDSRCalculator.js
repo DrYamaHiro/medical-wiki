@@ -94,6 +94,8 @@ export default function HDSRCalculator() {
     return lines.join('\n');
   }, [allAnswered, series, words, score, judge, q1, q2, q3, q4, q5, q6, q7, q8, q9]);
 
+  const summary = outputText ? `HDS-R ${score}/30点（${judge.text}）` : '';
+
   const BtnRow = ({ label, value, setter, options }) => (
     <div className={styles.inputGroup}>
       <label className={styles.inputLabel}>{label}</label>
@@ -287,7 +289,7 @@ export default function HDSRCalculator() {
         </div>
       )}
 
-      <PsychCopyBox text={outputText} />
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 21-30点: 正常範囲 / 20点以下: 認知症の疑い<br />

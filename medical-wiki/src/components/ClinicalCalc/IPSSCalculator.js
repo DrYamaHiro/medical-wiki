@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const IPSS_OPTIONS = [
   { value: 0, label: '0:全くない' },
@@ -69,6 +70,36 @@ export default function IPSSCalculator() {
 
   const judge = score !== null ? getJudgment(score) : null;
 
+  const outputText = useMemo(() => {
+    if (score === null) return '';
+    const optText = (opts, value) => {
+      const opt = opts.find((o) => o.value === value);
+      return `${opt.label.replace(/^\d+:/, '')} (${value}点)`;
+    };
+    const lines = [];
+    lines.push('【IPSS（国際前立腺症状スコア） __DATE__】');
+    lines.push('');
+    lines.push(`IPSS 合計: ${score}/35 点 → ${judge.text}`);
+    if (qol !== null) lines.push(`QOL スコア: ${qol}/6`);
+    lines.push('');
+    QUESTIONS.forEach((q, i) => {
+      lines.push(`Q${i + 1}. ${q}`);
+      lines.push(`  → ${optText(i === 6 ? Q7_OPTIONS : IPSS_OPTIONS, answers[i])}`);
+    });
+    if (qol !== null) {
+      lines.push('QOL. 現在の排尿状態がこのまま続くとしたら、どう思いますか?');
+      lines.push(`  → ${optText(QOL_OPTIONS, qol)}`);
+    }
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judge.text);
+    return lines.join('\n');
+  }, [score, judge, answers, qol]);
+
+  const summary = score !== null
+    ? `IPSS ${score}/35点（${judge.text}）${qol !== null ? `、QOL ${qol}/6` : ''}`
+    : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -134,6 +165,8 @@ export default function IPSSCalculator() {
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準（IPSS合計）:</strong> 0-7: 軽症 / 8-19: 中等症 / 20-35: 重症<br />

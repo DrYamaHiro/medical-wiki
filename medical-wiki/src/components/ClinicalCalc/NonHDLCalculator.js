@@ -152,6 +152,11 @@ export default function NonHDLCalculator() {
     return lines.join('\n');
   }, [calc, judge, riskObj, targetMet, tcVal, hdlVal, ldlVal, tgVal, derived, tgOver400]);
 
+  const summary = calc.value !== null
+    ? `non-HDL-C ${calc.value.toFixed(0)} mg/dL（${judge.text}${calc.route === 'friedewald' ? '、Friedewald 逆算' : ''}）`
+      + (riskObj && riskObj.nonhdl ? `、管理目標（${riskObj.label}）${riskObj.nonhdl} mg/dL 未満 → ${targetMet ? '目標達成' : '目標未達'}` : '')
+    : '';
+
   const numField = (label, unit, value, setter, placeholder, hint) => (
     <div className={styles.inputGroup}>
       <label className={styles.inputLabel}>
@@ -304,7 +309,7 @@ export default function NonHDLCalculator() {
         </div>
       )}
 
-      <PsychCopyBox text={outputText} dateLabel="採血日" />
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="採血日" />
 
       <div className={styles.note}>
         <table className={styles.judgeTable}>

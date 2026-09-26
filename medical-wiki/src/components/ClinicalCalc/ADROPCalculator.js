@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const ITEMS = [
   { key: 'A', label: 'A (Age): 男性70歳以上 / 女性75歳以上', score: 1 },
@@ -32,6 +33,26 @@ export default function ADROPCalculator() {
 
   const score = ITEMS.reduce((sum, item) => sum + (checks[item.key] ? item.score : 0), 0);
   const judgment = getJudgment(score);
+
+  const outputText = useMemo(() => {
+    const lines = [];
+    lines.push('【A-DROP（市中肺炎 重症度分類） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${score}/5 点 → ${judgment.text}`);
+    lines.push('');
+    ITEMS.forEach((item) => {
+      lines.push(item.label.replace(/₂/g, '2'));
+      lines.push(`  → ${checks[item.key] ? `該当 (${item.score}点)` : '非該当 (0点)'}`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judgment.text);
+    lines.push('');
+    lines.push('※ 未測定の項目は非該当（0点）として算出');
+    return lines.join('\n');
+  }, [checks, score, judgment]);
+
+  const summary = `A-DROP ${score}点（${judgment.text}）`;
 
   return (
     <div className={styles.calc}>
@@ -73,9 +94,12 @@ export default function ADROPCalculator() {
         </div>
       </div>
 
+      <PsychCopyBox text={outputText} summary={summary} />
+
       <div className={styles.note}>
         <strong>注:</strong> 日本呼吸器学会 成人肺炎診療ガイドライン2024。市中肺炎（CAP）の重症度分類に使用。<br />
-        A-DROPは日本独自のスコアリングで、CURB-65の日本版に相当します。
+        A-DROPは日本独自のスコアリングで、CURB-65の日本版に相当します。<br />
+        未測定の項目（BUN・SpO&#x2082; など）は非該当（0点）として算出されます。
       </div>
     </div>
   );

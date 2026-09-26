@@ -72,6 +72,8 @@ export default function GAD7Calculator() {
     return lines.join('\n');
   }, [score, judge, answers]);
 
+  const summary = outputText ? `GAD-7 ${score}/21点（${judge.text}）` : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -117,7 +119,7 @@ export default function GAD7Calculator() {
         </div>
       )}
 
-      <PsychCopyBox text={outputText} />
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-4:最小限 / 5-9:軽度 / 10-14:中等度 / 15-21:重度。<br />

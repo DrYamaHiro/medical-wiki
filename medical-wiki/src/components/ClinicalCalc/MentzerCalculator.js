@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * Mentzer index 計算ツール
@@ -42,6 +43,32 @@ export default function MentzerCalculator() {
   }, [index]);
 
   const reset = () => { setMcv(''); setRbc(''); };
+
+  const outputText = useMemo(() => {
+    if (index === null || !judge) return '';
+    const lines = [];
+    lines.push('【Mentzer index（小球性貧血の鑑別） __DATE__】');
+    lines.push('');
+    lines.push(`Mentzer index: ${index.toFixed(2)} → ${judge.text}`);
+    lines.push('');
+    lines.push('■ 入力値');
+    lines.push(`  MCV: ${mcvVal} fL`);
+    lines.push(`  RBC: ${rbcVal} x10^6/μL`);
+    lines.push('  計算式: MCV (fL) ÷ RBC (x10^6/μL)');
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(`${judge.text} (${judge.sub})`);
+    if (!microcytic) {
+      lines.push('※ MCV ≥80 fL のため小球性貧血ではありません。Mentzer index は本来小球性貧血 (MCV <80 fL) の鑑別で使用します。');
+    }
+    lines.push('');
+    lines.push('※ 感度・特異度は概ね 70-80% 程度で、あくまで補助指標。確定にはフェリチン・血清鉄・TIBC・Hb 電気泳動 (HbA2, HbF) 等の追加検査を要します。');
+    return lines.join('\n');
+  }, [index, judge, mcvVal, rbcVal, microcytic]);
+
+  const summary = index !== null && judge
+    ? `Mentzer index ${index.toFixed(2)}（${judge.text}）${!microcytic ? '／MCV ≥80 fL のため小球性貧血ではありません' : ''}`
+    : '';
 
   return (
     <div className={styles.calc}>
@@ -126,6 +153,8 @@ export default function MentzerCalculator() {
           </div>
         )}
       </div>
+
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="採血日" />
 
       {/* 判定基準テーブル */}
       <div className={styles.note}>

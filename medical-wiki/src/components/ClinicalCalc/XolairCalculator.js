@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * ゾレア（オマリズマブ）投与量計算ツール
@@ -202,6 +203,38 @@ export default function XolairCalculator() {
 
   const indicationLabel = INDICATIONS.find((i) => i.key === indication)?.label;
 
+  // カルテ貼付用テキスト（画面に表示中の結果のみ。範囲外・投与不可・未入力のときは空）
+  const outputText = useMemo(() => {
+    if (!result || result.outOfRange || result.noData) return '';
+    const vialsText = [
+      result.vials.v150 > 0 && `150mgシリンジ ×${result.vials.v150}`,
+      result.vials.v75 > 0 && `75mgシリンジ ×${result.vials.v75}`,
+    ].filter(Boolean).join('、');
+    const lines = [];
+    lines.push('【ゾレア（オマリズマブ）投与量 __DATE__】');
+    lines.push('');
+    lines.push(`適応症: ${indicationLabel}`);
+    if (needsTable) {
+      lines.push(`体重: ${weight} kg`);
+      lines.push(`血清総IgE: ${ige} IU/mL`);
+    } else {
+      lines.push('固定用量（体重・IgE値による用量調整は不要）');
+    }
+    lines.push('');
+    lines.push(`投与量: ${result.dose} mg`);
+    lines.push(`投与間隔: ${result.interval}週間ごと`);
+    lines.push(`使用本数: ${vialsText}`);
+    if (needsTable) {
+      lines.push('');
+      lines.push('※ 添付文書 投与量換算表による');
+    }
+    return lines.join('\n');
+  }, [result, indicationLabel, needsTable, weight, ige]);
+
+  const summary = outputText
+    ? `ゾレア ${result.dose}mg ${result.interval}週間ごと（${indicationLabel}）`
+    : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -349,6 +382,8 @@ export default function XolairCalculator() {
           この体重・IgEの組み合わせでは投与できません（1回あたりの最大投与量600mgを超えるため）
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="処方日" />
 
       {/* 注意・参考 */}
       <div className={styles.note}>

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * eGFR（推算糸球体濾過量）計算ツール
@@ -51,6 +52,28 @@ export default function EGFRCalculator() {
     if (egfr === null) return null;
     return getCKDStage(egfr);
   }, [egfr]);
+
+  const outputText = useMemo(() => {
+    if (egfr === null) return '';
+    const lines = [];
+    lines.push('【eGFR（推算糸球体濾過量・日本腎臓学会 2012年式） __DATE__】');
+    lines.push('');
+    lines.push(`eGFR: ${egfr.toFixed(1)} mL/min/1.73m² → CKDステージ ${stage.stage}（${stage.label}）`);
+    lines.push('');
+    lines.push('■ 入力値');
+    lines.push(`  性別: ${sex === 'female' ? '女性' : '男性'}`);
+    lines.push(`  年齢: ${age.trim()} 歳`);
+    lines.push(`  血清クレアチニン: ${cr.trim()} mg/dL`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(`CKDステージ ${stage.stage}（${stage.label}）`);
+    if (egfr < 45) {
+      lines.push('※ eGFR 45未満: 腎臓専門医への紹介を検討してください');
+    }
+    return lines.join('\n');
+  }, [egfr, stage, sex, age, cr]);
+
+  const summary = egfr !== null ? `eGFR ${egfr.toFixed(1)} mL/min/1.73m²（${stage.stage}）` : '';
 
   const reset = () => { setSex('male'); setAge(''); setCr(''); };
 
@@ -159,6 +182,8 @@ export default function EGFRCalculator() {
           eGFR 45未満: 腎臓専門医への紹介を検討してください
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="採血日" />
 
       {/* CKDステージ一覧テーブル */}
       <div className={styles.note}>

@@ -1,5 +1,6 @@
 import React, { useReducer, useMemo, useCallback, useEffect, useRef, useState } from 'react';
 import styles from './styles.module.css';
+import copyText, { COPY_FAILED_MESSAGE } from '../ClinicalCalc/copyText';
 import { OVERVIEW_DISEASES, DISEASE_CATEGORIES } from './overviewRegistry';
 import { LIFESTYLE_OPTIONS, LIFESTYLE_RESTRICTION_REASONS } from './lifestyleOptions';
 import { LIFESTYLE_RECOMMENDATIONS_V01 } from './lifestyleRecommendationsV01';
@@ -410,7 +411,7 @@ export default function OverviewBooster() {
       {state.step === 'step0_5' && <Step05Panel state={state} dispatch={dispatch} onNext={() => goto('step1')} onBack={() => goto('step0')} />}
       {state.step === 'step1' && <Step1Panel state={state} dispatch={dispatch} violations={violations} onNext={() => goto('step2')} onBack={() => goto('step0_5')} />}
       {state.step === 'step2' && <Step2Panel state={state} dispatch={dispatch} violations={violations} onNext={() => { handleIssueCode(); goto('summary'); }} onBack={() => goto('step1')} />}
-      {state.step === 'summary' && <SummaryPanel state={state} dispatch={dispatch} violations={violations} onBack={() => goto('step2')} onCopy={() => navigator.clipboard?.writeText(state.followupCode.issued)} />}
+      {state.step === 'summary' && <SummaryPanel state={state} dispatch={dispatch} violations={violations} onBack={() => goto('step2')} onCopy={async () => { const code = state.followupCode.issued; if (code && !(await copyText(code))) alert(COPY_FAILED_MESSAGE); }} />}
 
       <div className={styles.versionLabel}>
         禁忌ルール v{OVERVIEW_CONTRAINDICATIONS_VERSION} (最終更新: {OVERVIEW_CONTRAINDICATIONS_LAST_UPDATED})
@@ -1642,11 +1643,13 @@ function SummaryPanel({ state, dispatch, violations, onBack, onCopy }) {
   const txStatusLabel = (s) => ({ untreated: '未治療', lifestyle_only: '生活指導のみ', on_treatment: '薬物治療中' }[s] || '未指定');
   const carteText = useMemo(() => buildCarteText(state), [state]);
   const [copied, setCopied] = useState(false);
-  const handleCopyCarte = useCallback(() => {
-    navigator.clipboard?.writeText(carteText).then(() => {
+  const handleCopyCarte = useCallback(async () => {
+    if (await copyText(carteText)) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    });
+    } else {
+      alert(COPY_FAILED_MESSAGE);
+    }
   }, [carteText]);
   return (
     <div className={styles.section}>

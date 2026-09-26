@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 // COPD-PS (COPD Population Screener)
 // Martinez FJ et al. COPD 2008;5(2):85-95.
@@ -65,16 +66,9 @@ function getJudgment(score) {
   return { text: 'COPD の可能性は低い (定期的な再評価を)', color: '#2E7D32' };
 }
 
-function formatToday() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
-
 export default function COPDPSCalculator() {
   // 各 question で何番目の選択肢を選んだか (index)
   const [answers, setAnswers] = useState(Array(QUESTIONS.length).fill(null));
-  const [examDate, setExamDate] = useState(formatToday);
-  const [copied, setCopied] = useState(false);
 
   const setAnswer = useCallback((qi, oi) => {
     setAnswers((prev) => {
@@ -98,7 +92,7 @@ export default function COPDPSCalculator() {
   const outputText = useMemo(() => {
     if (score === null) return '';
     const lines = [];
-    lines.push(`【COPD-PS (COPD Population Screener) ${examDate}】`);
+    lines.push('【COPD-PS (COPD Population Screener) __DATE__】');
     lines.push('');
     lines.push(`合計: ${score}/10 点 → ${score >= 5 ? '陽性' : '陰性'}`);
     lines.push('');
@@ -120,17 +114,9 @@ export default function COPDPSCalculator() {
     lines.push('');
     lines.push('※ COPD-PS はスクリーニングツールであり、確定診断ではない。');
     return lines.join('\n');
-  }, [score, examDate, answers]);
+  }, [score, answers]);
 
-  const copyOutput = async () => {
-    try {
-      await navigator.clipboard.writeText(outputText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      alert('クリップボードへのコピーに失敗しました。テキストを手動で選択してコピーしてください。');
-    }
-  };
+  const summary = score !== null ? `COPD-PS ${score}/10点（${score >= 5 ? '陽性' : '陰性'}）→ ${judge.text}` : '';
 
   return (
     <div className={styles.calc}>
@@ -176,76 +162,10 @@ export default function COPDPSCalculator() {
             </div>
           </div>
         )}
-
-        {/* コピペ用 出力 */}
-        {score !== null && (
-          <div style={{
-            marginTop: '1.2rem',
-            padding: '0.9rem 1rem',
-            background: 'linear-gradient(180deg, #e8f5e9 0%, #fff 100%)',
-            border: '2px solid #66bb6a',
-            borderRadius: '8px',
-          }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '0.6rem',
-              gap: '0.5rem',
-              flexWrap: 'wrap',
-            }}>
-              <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#1b5e20' }}>
-                カルテ・紹介状貼付用テキスト
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <label style={{ fontSize: '0.78rem', fontWeight: 600 }}>検査日:</label>
-                <input
-                  type="date"
-                  value={examDate}
-                  onChange={(e) => setExamDate(e.target.value)}
-                  style={{
-                    padding: '0.25rem 0.45rem',
-                    fontSize: '0.8rem',
-                    border: '1.5px solid #b0bec5',
-                    borderRadius: '4px',
-                    fontFamily: 'inherit',
-                  }}
-                />
-                <button
-                  onClick={copyOutput}
-                  style={{
-                    padding: '0.4rem 0.9rem',
-                    fontSize: '0.85rem',
-                    background: copied ? '#00897b' : '#2e7d32',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontWeight: 600,
-                  }}
-                >
-                  {copied ? 'コピーしました' : '全文コピー'}
-                </button>
-              </div>
-            </div>
-            <pre style={{
-              background: '#fff',
-              border: '1px solid #c8e6c9',
-              borderRadius: '6px',
-              padding: '0.7rem 0.85rem',
-              fontFamily: '"Consolas", "Menlo", "Courier New", monospace',
-              fontSize: '0.82rem',
-              lineHeight: 1.55,
-              color: '#263238',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-              margin: 0,
-              maxHeight: '320px',
-              overflowY: 'auto',
-            }}>{outputText}</pre>
-          </div>
-        )}
       </div>
+
+      {/* コピペ用 出力 */}
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="検査日" />
 
       <div className={styles.note}>
         <strong>COPD-PS:</strong> 5 項目、合計 0-10 点の COPD スクリーニングツール (Martinez FJ et al. COPD 2008)。<br />

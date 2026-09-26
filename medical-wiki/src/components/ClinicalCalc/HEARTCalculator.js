@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const CATEGORIES = [
   {
@@ -62,17 +63,45 @@ function getJudgment(score) {
 
 export default function HEARTCalculator() {
   const [values, setValues] = useState({ H: 0, E: 0, A: 0, R: 0, T: 0 });
+  // 初期値の 0 点は未入力と区別できないため、5 項目すべて選んだかを別に持つ
+  const [touched, setTouched] = useState({});
 
   const select = useCallback((key, value) => {
     setValues((prev) => ({ ...prev, [key]: value }));
+    setTouched((prev) => ({ ...prev, [key]: true }));
   }, []);
 
   const reset = useCallback(() => {
     setValues({ H: 0, E: 0, A: 0, R: 0, T: 0 });
+    setTouched({});
   }, []);
+
+  const allSelected = CATEGORIES.every((cat) => touched[cat.key]);
 
   const score = Object.values(values).reduce((sum, v) => sum + v, 0);
   const judgment = getJudgment(score);
+
+  const outputText = useMemo(() => {
+    if (!allSelected) return '';
+    const lines = [];
+    lines.push('【HEART Score（急性冠症候群（ACS）リスク評価） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${score}/10 点 → ${judgment.text}`);
+    lines.push('');
+    CATEGORIES.forEach((cat) => {
+      const opt = cat.options.find((o) => o.value === values[cat.key]);
+      lines.push(cat.title);
+      lines.push(`  → ${opt ? opt.label : ''} (${values[cat.key]}点)`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judgment.text);
+    lines.push('');
+    lines.push('※ MACE: 主要心血管イベント（急性心筋梗塞、PCI/CABG、全死亡）');
+    return lines.join('\n');
+  }, [allSelected, values, score, judgment]);
+
+  const summary = outputText ? `HEART Score ${score}点（${judgment.text}）` : '';
 
   return (
     <div className={styles.calc}>
@@ -117,6 +146,8 @@ export default function HEARTCalculator() {
           {judgment.text}
         </div>
       </div>
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-3点: 低リスク（MACE 0.9-1.7%） / 4-6点: 中リスク（12-16%） / 7-10点: 高リスク（50-65%）<br />

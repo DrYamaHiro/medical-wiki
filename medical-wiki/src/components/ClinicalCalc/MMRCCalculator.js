@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const GRADES = [
   { value: 0, label: 'Grade 0: 激しい運動をしたときだけ息切れがある' },
@@ -27,6 +28,25 @@ export default function MMRCCalculator() {
   }, []);
 
   const judge = selected !== null ? getJudgment(selected) : null;
+
+  const outputText = useMemo(() => {
+    if (selected === null) return '';
+    const lines = [];
+    lines.push('【mMRC 息切れスケール（修正MRC息切れスケール） __DATE__】');
+    lines.push('');
+    lines.push(`mMRC Grade ${selected} → ${judge.text}`);
+    lines.push('');
+    lines.push(GRADES.find((g) => g.value === selected).label);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judge.text);
+    if (selected >= 2) {
+      lines.push('※ mMRC Grade 2以上: GOLD ABE分類においてB群（症状あり）に該当します');
+    }
+    return lines.join('\n');
+  }, [selected, judge]);
+
+  const summary = selected !== null ? `mMRC Grade ${selected}（${judge.text}）` : '';
 
   return (
     <div className={styles.calc}>
@@ -84,6 +104,8 @@ export default function MMRCCalculator() {
           mMRC Grade 2以上: GOLD ABE分類においてB群（症状あり）に該当します
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> Grade 0-1: 軽度 / Grade 2: 中等度 / Grade 3-4: 重度<br />

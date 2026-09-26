@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const QUESTIONS = [
   {
@@ -54,6 +55,25 @@ export default function ActCalculator() {
   }, [answers]);
 
   const judgment = total !== null ? getJudgment(total) : null;
+
+  const outputText = useMemo(() => {
+    if (total === null) return '';
+    const lines = [];
+    lines.push('【ACT（喘息コントロールテスト） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${total}/25 点 → ${judgment.text} — ${judgment.advice}`);
+    lines.push('');
+    QUESTIONS.forEach((item, qi) => {
+      lines.push(`Q${qi + 1}. ${item.q}`);
+      lines.push(`  → ${item.opts[answers[qi] - 1]} (${answers[qi]}点)`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(`${judgment.text} — ${judgment.advice}`);
+    return lines.join('\n');
+  }, [total, judgment, answers]);
+
+  const summary = total !== null ? `ACT ${total}/25点（${judgment.text}）` : '';
 
   return (
     <div className={styles.calc}>
@@ -115,6 +135,8 @@ export default function ActCalculator() {
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>ACT について:</strong><br />

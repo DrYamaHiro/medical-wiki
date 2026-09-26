@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const ITEMS = [
   { key: 'C', label: 'C: うっ血性心不全', score: 1 },
@@ -49,6 +50,26 @@ export default function CHADSCalculator() {
   const score = ITEMS.reduce((sum, item) => sum + (checks[item.key] ? item.score : 0), 0);
   const judgment = getJudgment(score, checks);
 
+  const outputText = useMemo(() => {
+    const lines = [];
+    lines.push('【CHA2DS2-VASc（心房細動 脳卒中リスク評価） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${score}点 → ${judgment.text}`);
+    lines.push('');
+    ITEMS.forEach((item) => {
+      lines.push(item.label.replace(/₂/g, '2'));
+      lines.push(`  → ${checks[item.key] ? `該当 (+${item.score}点)` : '非該当 (0点)'}`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judgment.text);
+    lines.push('');
+    lines.push('※ 非弁膜症性心房細動における脳卒中リスク評価。日本循環器学会 不整脈治療ガイドライン2024準拠。');
+    return lines.join('\n');
+  }, [checks, score, judgment]);
+
+  const summary = `CHA2DS2-VASc ${score}点（${judgment.text}）`;
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -88,6 +109,8 @@ export default function CHADSCalculator() {
           {judgment.text}
         </div>
       </div>
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>注:</strong> 非弁膜症性心房細動における脳卒中リスク評価。日本循環器学会 不整脈治療ガイドライン2024準拠。<br />

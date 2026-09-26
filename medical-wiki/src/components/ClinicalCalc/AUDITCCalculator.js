@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const QUESTIONS = [
   {
@@ -65,6 +66,29 @@ export default function AUDITCCalculator() {
   }, [answers]);
 
   const judge = score !== null && sex !== null ? getJudgment(score, sex) : null;
+
+  const outputText = useMemo(() => {
+    if (!judge) return '';
+    const lines = [];
+    lines.push('【AUDIT-C（アルコール使用障害スクリーニング 簡易版3問） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${score}/12 点 → ${judge.text}`);
+    lines.push(`性別: ${sex === 'male' ? '男性' : '女性'}`);
+    lines.push('');
+    QUESTIONS.forEach((q, i) => {
+      const opt = q.options.find((o) => o.value === answers[i]);
+      lines.push(`Q${i + 1}. ${q.text}`);
+      lines.push(`  → ${opt ? opt.label.replace(/^\d+:/, '') : ''} (${answers[i]}点)`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judge.text);
+    lines.push('');
+    lines.push('※ AUDIT-Cは完全版AUDIT(10問)の最初の3問で構成される簡易スクリーニングです。陽性の場合は完全版AUDITでの評価を推奨します。');
+    return lines.join('\n');
+  }, [judge, score, sex, answers]);
+
+  const summary = judge ? `AUDIT-C ${score}/12点（${judge.text}）` : '';
 
   return (
     <div className={styles.calc}>
@@ -139,6 +163,8 @@ export default function AUDITCCalculator() {
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong><br />

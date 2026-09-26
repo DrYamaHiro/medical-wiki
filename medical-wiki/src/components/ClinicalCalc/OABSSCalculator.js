@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const QUESTIONS = [
   {
@@ -76,6 +77,29 @@ export default function OABSSCalculator() {
 
   const judge = score !== null ? getJudgment(score) : null;
 
+  const oabText = oabDiagnosis ? '該当（Q3≧2 かつ 合計≧3）' : '非該当';
+
+  const outputText = useMemo(() => {
+    if (score === null) return '';
+    const lines = [];
+    lines.push('【OABSS（過活動膀胱症状スコア） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${score}/15 点 → ${judge.text}`);
+    lines.push('');
+    QUESTIONS.forEach((q, i) => {
+      const opt = q.options.find((o) => o.value === answers[i]);
+      lines.push(`Q${i + 1}. ${q.text}`);
+      lines.push(`  → ${opt.label.replace(/^\d+:/, '')} (${answers[i]}点)`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judge.text);
+    lines.push(`OAB 診断基準: ${oabText}`);
+    return lines.join('\n');
+  }, [score, judge, oabText, answers]);
+
+  const summary = score !== null ? `OABSS ${score}/15点（${judge.text}）、OAB 診断基準 ${oabText}` : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -114,7 +138,7 @@ export default function OABSSCalculator() {
           <div className={styles.resultRow}>
             <span className={styles.resultLabel}>OAB 診断基準</span>
             <span className={styles.resultValue} style={{ color: oabDiagnosis ? '#C62828' : '#2E7D32', fontSize: '1rem' }}>
-              {oabDiagnosis ? '該当（Q3≧2 かつ 合計≧3）' : '非該当'}
+              {oabText}
             </span>
           </div>
           <div className={styles.resultJudge} style={{ background: judge.color }}>
@@ -122,6 +146,8 @@ export default function OABSSCalculator() {
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-5: 軽症 / 6-11: 中等症 / 12-15: 重症<br />

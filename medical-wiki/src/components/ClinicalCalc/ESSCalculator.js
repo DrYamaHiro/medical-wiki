@@ -129,6 +129,12 @@ export default function ESSCalculator() {
     return lines.join('\n');
   }, [rawScore, adjustedScore, naCount, answeredNumeric, judge, osasAlert, answers]);
 
+  const summary = outputText
+    ? naCount === 0
+      ? `ESS ${rawScore}/24点（${judge.text}）`
+      : `ESS 24点満点換算 ${adjustedScore}点（${judge.text}、N/A ${naCount}項目）`
+    : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -229,7 +235,7 @@ export default function ESSCalculator() {
         </div>
       )}
 
-      <PsychCopyBox text={outputText} />
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-10:正常 / 11-14:軽度眠気 / 15-17:中等度眠気 / 18-24:重度眠気。<br />

@@ -55,6 +55,8 @@ export default function TDSCalculator() {
     return lines.join('\n');
   }, [checks, score, judgment]);
 
+  const summary = outputText ? `TDS ${score}/10点（${judgment.text}）` : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -109,7 +111,7 @@ export default function TDSCalculator() {
         </div>
       )}
 
-      <PsychCopyBox text={outputText} />
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-4点: ニコチン依存なし / 5-10点: ニコチン依存あり<br />

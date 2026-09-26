@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * FIB-4 index計算ツール
@@ -44,6 +45,32 @@ export default function FIB4Calculator() {
   }, [age]);
 
   const reset = () => { setAge(''); setAst(''); setAlt(''); setPlt(''); };
+
+  const outputText = useMemo(() => {
+    if (fib4 === null || !judge) return '';
+    const lines = [];
+    lines.push('【FIB-4 index（肝線維化の非侵襲的スクリーニング） __DATE__】');
+    lines.push('');
+    lines.push(`FIB-4 index: ${fib4.toFixed(2)} → ${judge.text}`);
+    lines.push('');
+    lines.push('■ 入力値');
+    lines.push(`  年齢: ${parseFloat(age)} 歳`);
+    lines.push(`  AST: ${parseFloat(ast)} U/L`);
+    lines.push(`  ALT: ${parseFloat(alt)} U/L`);
+    lines.push(`  血小板数: ${parseFloat(plt)} 万/μL`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(`${judge.text} (${judge.sub})`);
+    if (isYoung) {
+      lines.push('');
+      lines.push('※ 35歳未満では偽陰性が多く、FIB-4の信頼性が低下します');
+    }
+    return lines.join('\n');
+  }, [fib4, judge, isYoung, age, ast, alt, plt]);
+
+  const summary = fib4 !== null && judge
+    ? `FIB-4 index ${fib4.toFixed(2)}（${judge.text}、${judge.sub}）${isYoung ? '／35歳未満では偽陰性が多く、FIB-4の信頼性が低下します' : ''}`
+    : '';
 
   return (
     <div className={styles.calc}>
@@ -166,6 +193,8 @@ export default function FIB4Calculator() {
           </div>
         )}
       </div>
+
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="採血日" />
 
       {/* 判定基準テーブル */}
       <div className={styles.note}>

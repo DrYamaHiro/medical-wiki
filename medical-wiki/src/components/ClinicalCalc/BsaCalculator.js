@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const BSA_PARTS = [
   { key: 'head', label: '頭頸部', bsa: 9 },
@@ -123,6 +124,33 @@ export default function BsaCalculator() {
 
   const severity = getSeverity(total, condition);
 
+  const conditionLabel = CONDITIONS.find(c => c.key === condition).label;
+
+  const outputText = useMemo(() => {
+    if (total === 0) return '';
+    const note = getNote(condition);
+    const lines = [];
+    lines.push('【BSA（体表面積・Rule of Nines） __DATE__】');
+    lines.push('');
+    lines.push(condition === 'general' ? `BSA: ${total}%` : `BSA: ${total}% → ${severity.text}`);
+    lines.push('');
+    lines.push(`疾患（重症度基準）: ${conditionLabel}`);
+    lines.push(`選択部位: ${BSA_PARTS.filter(p => selected[p.key]).map(p => `${p.label} ${p.bsa}%`).join('、')}`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(severity.text);
+    if (note) {
+      lines.push(`※ ${note}`);
+    }
+    return lines.join('\n');
+  }, [total, condition, conditionLabel, severity, selected]);
+
+  const summary = outputText
+    ? condition === 'general'
+      ? `BSA ${total}%`
+      : `BSA ${total}%（${conditionLabel}）：${severity.text}`
+    : '';
+
   const reset = useCallback(() => {
     setSelected(() => {
       const init = {};
@@ -197,6 +225,8 @@ export default function BsaCalculator() {
           {getNote(condition)}
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>BSA について:</strong><br />

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * TSAT (Transferrin Saturation) 計算ツール
@@ -91,6 +92,36 @@ export default function TSATCalculator() {
   const reset = () => { setFe(''); setTibcInput(''); setUibcInput(''); setFerritin(''); };
 
   const normalRangeText = sex === 'female' ? '15-50%' : '20-45%';
+
+  const outputText = useMemo(() => {
+    if (tsat === null || !tsatJudge) return '';
+    const lines = [];
+    lines.push('【TSAT（トランスフェリン飽和度） __DATE__】');
+    lines.push('');
+    lines.push(`TSAT: ${tsat.toFixed(1)} % → ${tsatJudge.text}`);
+    lines.push(`正常範囲 (${sex === 'female' ? '女性' : '男性'}): ${normalRangeText}`);
+    if (combinedJudge) lines.push(`[フェリチン併用判定] ${combinedJudge.text}`);
+    lines.push('');
+    lines.push('■ 入力値');
+    lines.push(`  血清鉄 (Fe): ${feVal} μg/dL`);
+    if (tibcSource === 'direct') lines.push(`  TIBC: ${tibc.toFixed(0)} μg/dL (直接入力)`);
+    if (tibcSource === 'calculated') lines.push(`  TIBC: ${tibc.toFixed(0)} μg/dL (= Fe ${feVal} + UIBC ${uibcVal})`);
+    if (combinedJudge) lines.push(`  血清フェリチン: ${ferritinVal} ng/mL`);
+    lines.push('  計算式: TSAT (%) = (血清鉄 Fe ÷ TIBC) × 100');
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(`${tsatJudge.text} (${tsatJudge.sub})`);
+    if (combinedJudge) {
+      lines.push(`[フェリチン併用判定] ${combinedJudge.text} (${combinedJudge.sub})`);
+      lines.push('');
+      lines.push('※ フェリチンは急性期反応物質のため、炎症・感染・悪性腫瘍・肝疾患で偽性上昇。TSAT 低値 + フェリチン正常〜高値でも「機能的鉄欠乏」の可能性を考慮してください。');
+    }
+    return lines.join('\n');
+  }, [tsat, tsatJudge, combinedJudge, sex, normalRangeText, feVal, tibc, tibcSource, uibcVal, ferritinVal]);
+
+  const summary = tsat !== null && tsatJudge
+    ? `TSAT ${tsat.toFixed(1)}%（${tsatJudge.text}）${combinedJudge ? `、フェリチン ${ferritinVal} ng/mL → ${combinedJudge.text}` : ''}`
+    : '';
 
   return (
     <div className={styles.calc}>
@@ -247,6 +278,8 @@ export default function TSATCalculator() {
           </div>
         )}
       </div>
+
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="採血日" />
 
       {/* 判定基準テーブル */}
       <div className={styles.note}>

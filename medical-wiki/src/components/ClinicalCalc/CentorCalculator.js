@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const CHECK_ITEMS = [
   { key: 'exudate', label: '扁桃の白苔・滲出物', score: 1 },
@@ -44,6 +45,27 @@ export default function CentorCalculator() {
   const totalScore = checkScore + ageScore;
   const hasAge = ageKey !== null;
   const judgment = getJudgment(totalScore);
+
+  // 年齢区分を選ぶまでは貼付用テキストを出さない（画面も選択を促している）
+  const outputText = useMemo(() => {
+    if (!hasAge) return '';
+    const ageOpt = AGE_OPTIONS.find((o) => o.key === ageKey);
+    const lines = [];
+    lines.push('【Centor / McIsaac Score（溶連菌性咽頭炎リスク評価） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${totalScore} 点 → ${judgment.text}`);
+    lines.push('');
+    CHECK_ITEMS.forEach((item) => {
+      lines.push(`${item.label}: ${checks[item.key] ? `あり (+${item.score})` : 'なし (0)'}`);
+    });
+    lines.push(`年齢区分（McIsaac修正）: ${ageOpt.label} (${ageOpt.score >= 0 ? '+' : ''}${ageOpt.score})`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judgment.text);
+    return lines.join('\n');
+  }, [checks, ageKey, hasAge, totalScore, judgment]);
+
+  const summary = outputText ? `McIsaac ${totalScore}点（${judgment.text}）` : '';
 
   return (
     <div className={styles.calc}>
@@ -106,6 +128,8 @@ export default function CentorCalculator() {
           {judgment.text}
         </div>
       </div>
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-1点: GAS確率1-10%（検査・抗菌薬不要）/ 2-3点: GAS確率10-35%（迅速検査実施）/ 4-5点: GAS確率50-65%（迅速検査＋経験的治療考慮）<br />

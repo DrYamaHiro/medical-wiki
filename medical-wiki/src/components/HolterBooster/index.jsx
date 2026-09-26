@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import styles from './styles.module.css';
+import copyText, { COPY_FAILED_MESSAGE } from '../ClinicalCalc/copyText';
 import {
   HOLTER_SECTIONS, HOLTER_ASSESSMENT_RULES, buildNormalPreset, PRESET_NOTE, SCENARIO_PRESETS,
   SYMPTOM_MATRIX_SYMPTOMS, SYMPTOM_MATRIX_ARRHYTHMIAS, DAILY_BURDEN_COLUMNS, DAILY_HR_COLUMNS,
@@ -433,12 +434,11 @@ export default function HolterBooster() {
   }, [output, assessmentGroups, totalAssessCount]);
 
   const copyOutput = async () => {
-    try {
-      await navigator.clipboard.writeText(fullOutput);
+    if (await copyText(fullOutput)) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
-    } catch {
-      alert('クリップボードへのコピーに失敗しました。テキストを手動で選択してコピーしてください。');
+    } else {
+      alert(COPY_FAILED_MESSAGE);
     }
   };
 

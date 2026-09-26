@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * Friedewald式（LDL-C推算）計算ツール
@@ -51,6 +52,32 @@ export default function FriedewaldCalculator() {
   }, [ldl]);
 
   const reset = () => { setTc(''); setHdl(''); setTg(''); };
+
+  const outputText = useMemo(() => {
+    if (ldl === null || !judge) return '';
+    const lines = [];
+    lines.push('【Friedewald式（LDL-C推算） __DATE__】');
+    lines.push('');
+    lines.push(`LDL-C（推算）: ${ldl.toFixed(0)} mg/dL → ${judge.text}`);
+    if (nonHdl !== null) lines.push(`non-HDL-C: ${nonHdl.toFixed(0)} mg/dL`);
+    lines.push('');
+    lines.push('■ 入力値');
+    lines.push(`  総コレステロール (TC): ${parseFloat(tc)} mg/dL`);
+    lines.push(`  HDL-C: ${parseFloat(hdl)} mg/dL`);
+    lines.push(`  中性脂肪 (TG): ${parseFloat(tg)} mg/dL`);
+    lines.push('  計算式: LDL-C = TC - HDL-C - TG/5');
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(`${judge.text} (${judge.sub})`);
+    lines.push('');
+    lines.push('※ 食後採血ではTGが上昇しLDL-Cが過小評価されます。');
+    lines.push('※ 日本動脈硬化学会 動脈硬化性疾患予防ガイドライン2022');
+    return lines.join('\n');
+  }, [ldl, nonHdl, judge, tc, hdl, tg]);
+
+  const summary = ldl !== null && judge
+    ? `LDL-C（Friedewald） ${ldl.toFixed(0)} mg/dL（${judge.text}）${nonHdl !== null ? `、non-HDL-C ${nonHdl.toFixed(0)} mg/dL` : ''}`
+    : '';
 
   return (
     <div className={styles.calc}>
@@ -172,6 +199,8 @@ export default function FriedewaldCalculator() {
           </div>
         )}
       </div>
+
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="採血日" />
 
       {/* 判定基準テーブル */}
       <div className={styles.note}>

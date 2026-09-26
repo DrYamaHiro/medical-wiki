@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const NPS_GRADES = [
   { score: 0, label: 'ポリープなし' },
@@ -15,6 +16,31 @@ export default function NpsCalculator() {
   const reset = useCallback(() => { setRight(null); setLeft(null); }, []);
 
   const total = (right !== null && left !== null) ? right + left : null;
+
+  const judgeText = total === null ? null
+    : total === 0 ? 'ポリープなし'
+    : total >= 1 && total < 3 ? '軽度'
+    : total >= 3 && total < 5 ? '中等度'
+    : `高度（NPS≧5）— 生物学的製剤の適応基準を満たす`;
+
+  const outputText = useMemo(() => {
+    if (total === null) return '';
+    const gradeLabel = (score) => NPS_GRADES.find((g) => g.score === score).label;
+    const lines = [];
+    lines.push('【NPS（Nasal Polyp Score） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${total}/8 点 → ${judgeText}`);
+    lines.push(`内訳: 右 ${right} + 左 ${left}`);
+    lines.push('');
+    lines.push(`右側: ${right} ${gradeLabel(right)}`);
+    lines.push(`左側: ${left} ${gradeLabel(left)}`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judgeText);
+    return lines.join('\n');
+  }, [total, judgeText, right, left]);
+
+  const summary = total !== null ? `NPS ${total}/8点（右${right}+左${left}）→ ${judgeText}` : '';
 
   return (
     <div className={styles.calc}>
@@ -63,10 +89,7 @@ export default function NpsCalculator() {
           <div className={styles.resultJudge} style={{
             background: total >= 5 ? '#c62828' : total >= 3 ? '#F9A825' : total >= 1 ? '#ff9800' : '#2E7D32',
           }}>
-            {total === 0 && 'ポリープなし'}
-            {total >= 1 && total < 3 && '軽度'}
-            {total >= 3 && total < 5 && '中等度'}
-            {total >= 5 && `高度（NPS≧5）— 生物学的製剤の適応基準を満たす`}
+            {judgeText}
           </div>
         </div>
       )}
@@ -78,6 +101,8 @@ export default function NpsCalculator() {
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>NPS について:</strong><br />

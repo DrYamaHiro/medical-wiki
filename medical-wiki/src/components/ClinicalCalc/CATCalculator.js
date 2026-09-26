@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const QUESTIONS = [
   { left: '全く咳が出ない', right: 'いつも咳が出る' },
@@ -42,6 +43,25 @@ export default function CATCalculator() {
   }, [answers]);
 
   const judge = score !== null ? getJudgment(score) : null;
+
+  const outputText = useMemo(() => {
+    if (score === null) return '';
+    const lines = [];
+    lines.push('【CAT（COPD Assessment Test） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${score}/40 点 → ${judge.text}`);
+    lines.push('');
+    QUESTIONS.forEach((q, i) => {
+      lines.push(`Q${i + 1}. ${q.left} ←→ ${q.right}`);
+      lines.push(`  → ${answers[i]}点`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judge.text);
+    return lines.join('\n');
+  }, [score, judge, answers]);
+
+  const summary = score !== null ? `CAT ${score}/40点（${judge.text}）` : '';
 
   return (
     <div className={styles.calc}>
@@ -86,6 +106,8 @@ export default function CATCalculator() {
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-9: 影響小 / 10-20: 中等度 / 21-30: 高度 / 31-40: 非常に高度<br />

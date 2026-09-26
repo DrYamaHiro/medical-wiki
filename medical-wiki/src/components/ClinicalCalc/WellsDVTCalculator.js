@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const ITEMS = [
   { key: 'cancer', label: '活動性の悪性腫瘍（治療中、6ヶ月以内、緩和的治療）', score: 1 },
@@ -49,6 +50,29 @@ export default function WellsDVTCalculator() {
   const twoTier = getTwoTier(score);
   const judgment = getJudgment(score);
 
+  const outputText = useMemo(() => {
+    const lines = [];
+    lines.push('【Wells Score for DVT（深部静脈血栓症 臨床的確率評価） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${score}点`);
+    lines.push(`  【2段階分類】${twoTier.text}`);
+    lines.push(`  【3段階分類】${judgment.text}`);
+    lines.push('');
+    ITEMS.forEach((item) => {
+      lines.push(item.label);
+      lines.push(`  → ${checks[item.key] ? `該当 (${item.score > 0 ? `+${item.score}` : item.score}点)` : '非該当 (0点)'}`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(`【2段階分類】${twoTier.text}`);
+    lines.push(`【3段階分類】${judgment.text}`);
+    lines.push('');
+    lines.push('※ 年齢調整D-dimerカットオフ: 50歳以上では 年齢 × 10 ng/mL をカットオフとする。');
+    return lines.join('\n');
+  }, [checks, score, twoTier, judgment]);
+
+  const summary = `Wells DVT ${score}点（2段階: ${twoTier.text} / 3段階: ${judgment.text}）`;
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -93,6 +117,8 @@ export default function WellsDVTCalculator() {
           【3段階分類】{judgment.text}
         </div>
       </div>
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>2段階分類:</strong> 1点以下: DVT unlikely → D-dimer測定 / 2点以上: DVT likely → エコー検査<br />

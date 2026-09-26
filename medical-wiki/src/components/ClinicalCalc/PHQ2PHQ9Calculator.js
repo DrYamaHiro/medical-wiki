@@ -95,14 +95,22 @@ export default function PHQ2PHQ9Calculator() {
       lines.push('');
       lines.push('■ 判定');
       lines.push(phq9Judge.text);
-      if (suicideRisk) {
-        lines.push('※ Q9 (希死念慮) が1点以上 — 自殺リスクの詳細評価を要する。');
-      }
+    }
+    if (suicideRisk) {
+      lines.push('');
+      lines.push('※ Q9 (希死念慮) が1点以上 — 自殺リスクの詳細評価を要する。');
     }
     lines.push('');
     lines.push('※ PHQ-9 は自記式スクリーニング。確定診断は面接評価による。');
     return lines.join('\n');
   }, [phq2Score, phq9Score, phq9Judge, answers, suicideRisk]);
+
+  // PHQ-9 完了時は PHQ-9、それ以外は画面に出ている PHQ-2 の判定をそのまま使う
+  const summary = !outputText
+    ? ''
+    : phq9Score !== null
+      ? `PHQ-9 ${phq9Score}/27点（${phq9Judge.text}）${suicideRisk ? '、Q9 (希死念慮) が1点以上' : ''}`
+      : `PHQ-2 ${phq2Score}/6点：${phq2Judge.text}${suicideRisk ? '、Q9 (希死念慮) が1点以上' : ''}`;
 
   return (
     <div className={styles.calc}>
@@ -211,7 +219,7 @@ export default function PHQ2PHQ9Calculator() {
         )}
       </div>
 
-      <PsychCopyBox text={outputText} />
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>PHQ-2:</strong> 2問でスクリーニング。3点以上でPHQ-9へ進みます。<br />

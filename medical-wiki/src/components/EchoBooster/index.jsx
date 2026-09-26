@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import styles from './styles.module.css';
+import copyText, { COPY_FAILED_MESSAGE } from '../ClinicalCalc/copyText';
 import { ECHO_REGIONS } from './echoData.js';
 
 const ABNORMAL_KEYWORDS = ['異常', '肥厚', 'あり', '拡張', '上昇', '不均一', '腫大', '萎縮', '腫瘤', '狭窄', '低下', '逆方向', '貯留', '示唆', '疑い', '中等度', '高度', '閉塞', '血栓', '不可'];
@@ -173,12 +174,11 @@ export default function EchoBooster() {
   }, [output, assessments]);
 
   const copyOutput = async () => {
-    try {
-      await navigator.clipboard.writeText(fullOutput);
+    if (await copyText(fullOutput)) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
-    } catch {
-      alert('クリップボードへのコピーに失敗しました。テキストを手動で選択してコピーしてください。');
+    } else {
+      alert(COPY_FAILED_MESSAGE);
     }
   };
 

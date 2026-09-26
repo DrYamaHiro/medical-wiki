@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 function getJudgment(score) {
   if (score === 0) return { text: '痒みなし', color: '#2E7D32' };
@@ -13,6 +14,23 @@ export default function WiNrsCalculator() {
   const reset = useCallback(() => setScore(null), []);
 
   const judgment = score !== null ? getJudgment(score) : null;
+  // 判定表示（画面表示とコピー用テキストで共用）
+  const judgmentText = judgment ? `${judgment.text}${score >= 7 ? ' — 治療介入の強化を検討' : ''}` : '';
+
+  const outputText = useMemo(() => {
+    if (score === null) return '';
+    const lines = [];
+    lines.push('【WI-NRS（最悪の痒みの数値評価スケール） __DATE__】');
+    lines.push('（過去24時間で最もひどかった痒みの強さを0〜10で評価）');
+    lines.push('');
+    lines.push(`WI-NRS スコア: ${score} / 10 → ${judgmentText}`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judgmentText);
+    return lines.join('\n');
+  }, [score, judgmentText]);
+
+  const summary = outputText ? `WI-NRS ${score}/10（${judgmentText}）` : '';
 
   return (
     <div className={styles.calc}>
@@ -73,11 +91,12 @@ export default function WiNrsCalculator() {
             <span className={styles.resultValue}>{score} / 10</span>
           </div>
           <div className={styles.resultJudge} style={{ background: judgment.color }}>
-            {judgment.text}
-            {score >= 7 && ' — 治療介入の強化を検討'}
+            {judgmentText}
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>WI-NRS について:</strong><br />

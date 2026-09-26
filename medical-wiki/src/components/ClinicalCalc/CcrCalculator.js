@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * Ccr（クレアチニンクリアランス）計算ツール
@@ -51,6 +52,29 @@ export default function CcrCalculator() {
     if (ccr === null) return null;
     return getCcrStage(ccr);
   }, [ccr]);
+
+  const outputText = useMemo(() => {
+    if (ccr === null) return '';
+    const lines = [];
+    lines.push('【Ccr（クレアチニンクリアランス・Cockcroft-Gault式） __DATE__】');
+    lines.push('');
+    lines.push(`Ccr: ${ccr.toFixed(1)} mL/min → ${stage.label}`);
+    lines.push('');
+    lines.push('■ 入力値');
+    lines.push(`  性別: ${sex === 'female' ? '女性' : '男性'}`);
+    lines.push(`  年齢: ${age.trim()} 歳`);
+    lines.push(`  体重: ${weight.trim()} kg`);
+    lines.push(`  血清クレアチニン: ${cr.trim()} mg/dL`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(stage.label);
+    if (ccr < 30) {
+      lines.push('※ Ccr 30未満: 多くの薬剤で投与量調整または禁忌となります');
+    }
+    return lines.join('\n');
+  }, [ccr, stage, sex, age, weight, cr]);
+
+  const summary = ccr !== null ? `Ccr ${ccr.toFixed(1)} mL/min（${stage.label}）` : '';
 
   const reset = () => { setSex('male'); setAge(''); setWeight(''); setCr(''); };
 
@@ -177,6 +201,8 @@ export default function CcrCalculator() {
           Ccr 30未満: 多くの薬剤で投与量調整または禁忌となります
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="採血日" />
 
       {/* 判定基準テーブル */}
       <div className={styles.note}>

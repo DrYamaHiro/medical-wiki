@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 // ASRS-v1.1 (Adult ADHD Self-Report Scale, WHO)
 // Part A: 6問のスクリーニング (シンボル該当数で判定)
@@ -43,16 +44,9 @@ const PART_B_QUESTIONS = [
   { text: '何かを正確に思い出すために、最後の段階で集中することが難しいことが、どのくらいの頻度でありますか', short: '最終段階の集中困難' },
 ];
 
-function formatToday() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
-
 export default function ASRSCalculator() {
   // Part A 6問 + Part B 12問 = 18問
   const [answers, setAnswers] = useState(Array(18).fill(null));
-  const [examDate, setExamDate] = useState(formatToday);
-  const [copied, setCopied] = useState(false);
 
   const setAnswer = useCallback((index, value) => {
     setAnswers((prev) => {
@@ -99,7 +93,7 @@ export default function ASRSCalculator() {
   const outputText = useMemo(() => {
     if (!partA.complete) return '';
     const lines = [];
-    lines.push(`【ASRS-v1.1 (成人ADHD症状チェックリスト) ${examDate}】`);
+    lines.push('【ASRS-v1.1 (成人ADHD症状チェックリスト) __DATE__】');
     lines.push('');
     lines.push('■ Part A (スクリーニング)');
     lines.push(`該当: ${partA.hits}/6 → ${partA.positive ? '陽性' : '陰性'}`);
@@ -138,17 +132,11 @@ export default function ASRSCalculator() {
     lines.push('');
     lines.push('※ ASRS-v1.1 はスクリーニングツールであり、確定診断ではない。');
     return lines.join('\n');
-  }, [partA, partB, showPartB, answers, examDate]);
+  }, [partA, partB, showPartB, answers]);
 
-  const copyOutput = async () => {
-    try {
-      await navigator.clipboard.writeText(outputText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      alert('クリップボードへのコピーに失敗しました。テキストを手動で選択してコピーしてください。');
-    }
-  };
+  const summary = outputText
+    ? `ASRS-v1.1 Part A 該当 ${partA.hits}/6（${partA.positive ? '陽性' : '陰性'}）${showPartB && partB.complete ? `、総合 (A+B) ${partB.total}/72点` : ''}`
+    : '';
 
   return (
     <div className={styles.calc}>
@@ -251,79 +239,14 @@ export default function ASRSCalculator() {
             )}
           </>
         )}
-
-        {/* コピペ用 出力 */}
-        {partA.complete && (
-          <div style={{
-            marginTop: '1.2rem',
-            padding: '0.9rem 1rem',
-            background: 'linear-gradient(180deg, #e8f5e9 0%, #fff 100%)',
-            border: '2px solid #66bb6a',
-            borderRadius: '8px',
-          }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '0.6rem',
-              gap: '0.5rem',
-              flexWrap: 'wrap',
-            }}>
-              <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#1b5e20' }}>
-                カルテ・紹介状貼付用テキスト
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <label style={{ fontSize: '0.78rem', fontWeight: 600 }}>検査日:</label>
-                <input
-                  type="date"
-                  value={examDate}
-                  onChange={(e) => setExamDate(e.target.value)}
-                  style={{
-                    padding: '0.25rem 0.45rem',
-                    fontSize: '0.8rem',
-                    border: '1.5px solid #b0bec5',
-                    borderRadius: '4px',
-                    fontFamily: 'inherit',
-                  }}
-                />
-                <button
-                  onClick={copyOutput}
-                  style={{
-                    padding: '0.4rem 0.9rem',
-                    fontSize: '0.85rem',
-                    background: copied ? '#00897b' : '#2e7d32',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontWeight: 600,
-                  }}
-                >
-                  {copied ? 'コピーしました' : '全文コピー'}
-                </button>
-              </div>
-            </div>
-            <pre style={{
-              background: '#fff',
-              border: '1px solid #c8e6c9',
-              borderRadius: '6px',
-              padding: '0.7rem 0.85rem',
-              fontFamily: '"Consolas", "Menlo", "Courier New", monospace',
-              fontSize: '0.82rem',
-              lineHeight: 1.55,
-              color: '#263238',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-              margin: 0,
-              maxHeight: '320px',
-              overflowY: 'auto',
-            }}>{outputText}</pre>
-            <div style={{ fontSize: '0.72rem', color: '#558b2f', marginTop: '0.4rem' }}>
-              [該当] は Part A 該当項目 (Q1-4 は時々以上、Q5-6 は頻繁以上)
-            </div>
-          </div>
-        )}
       </div>
+
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="検査日" />
+      {partA.complete && (
+        <div style={{ margin: '0 1.2rem 0.5rem', fontSize: '0.72rem', color: '#558b2f' }}>
+          [該当] は Part A 該当項目 (Q1-4 は時々以上、Q5-6 は頻繁以上)
+        </div>
+      )}
 
       <div className={styles.note}>
         <strong>ASRS-v1.1:</strong> WHO 開発、成人 ADHD のスクリーニングツール。<br />

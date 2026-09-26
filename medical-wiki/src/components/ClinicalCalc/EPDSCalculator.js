@@ -157,6 +157,10 @@ export default function EPDSCalculator() {
     return lines.join('\n');
   }, [allAnswered, totalScore, judgment, selfHarmRisk, answers]);
 
+  const summary = outputText
+    ? `EPDS ${totalScore}/30点（${judgment.text}）${selfHarmRisk ? '、Q10 (自傷念慮) が1点以上' : ''}`
+    : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -237,7 +241,7 @@ export default function EPDSCalculator() {
         </div>
       )}
 
-      <PsychCopyBox text={outputText} />
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-8点: 正常範囲 / 9-12点: 産後うつの可能性 / 13-30点: 産後うつの可能性高い<br />

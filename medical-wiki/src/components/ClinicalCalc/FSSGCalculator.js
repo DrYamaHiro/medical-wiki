@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 const OPTIONS = [
   { value: 0, label: '0:ない' },
@@ -70,6 +71,30 @@ export default function FSSGCalculator() {
     ? (refluxScore > dysmotilityScore ? '酸逆流優位' : refluxScore < dysmotilityScore ? '運動不全優位' : '同等')
     : null;
 
+  const outputText = useMemo(() => {
+    if (!judge) return '';
+    const lines = [];
+    lines.push('【FSSG（Frequency Scale for the Symptoms of GERD） __DATE__】');
+    lines.push('');
+    lines.push(`合計: ${totalScore}/48 点 → ${judge.text}`);
+    lines.push(`酸逆流スコア: ${refluxScore}/28 点`);
+    lines.push(`運動不全スコア: ${dysmotilityScore}/20 点`);
+    if (dominance) lines.push(`優位パターン: ${dominance}`);
+    lines.push('');
+    QUESTIONS.forEach((q, i) => {
+      const opt = OPTIONS.find((o) => o.value === answers[i]);
+      lines.push(`Q${i + 1}. ${q} → ${opt ? opt.label.replace(/^\d+:/, '') : ''} (${answers[i]}点)`);
+    });
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(judge.text);
+    return lines.join('\n');
+  }, [judge, totalScore, refluxScore, dysmotilityScore, dominance, answers]);
+
+  const summary = judge
+    ? `FSSG ${totalScore}点（${judge.text}、酸逆流 ${refluxScore}点 / 運動不全 ${dysmotilityScore}点）`
+    : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -125,6 +150,8 @@ export default function FSSGCalculator() {
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-7点: 正常範囲 / 8点以上: GERD疑い<br />

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 import { VACCINE_LIST, CLINICS, DATA_LAST_UPDATED, DATA_FISCAL_YEAR } from './vaccineData';
 
 /**
@@ -79,6 +80,44 @@ export default function VaccineBillingCalculator() {
   const claim = hasContract
     ? (isExempt && matched.claimExempt !== undefined ? matched.claimExempt : matched.claim)
     : null;
+
+  // カルテ貼付用テキスト（画面に表示中の料金のみ。結果未表示のときは空）
+  const copyOut = useMemo(() => {
+    const noContractAtAll = !!(vaccine && clinicId && contracts.length === 0);
+    const resultShown = showResult && (hasContract || isNoContract);
+    if (!vaccine || !clinic || (!resultShown && !noContractAtAll)) return { text: '', summary: '' };
+    const lines = [];
+    let summary = '';
+    lines.push('【ワクチン料金 __DATE__】');
+    lines.push('');
+    lines.push(`拠点: ${clinic.name}（${clinic.municipality}）`);
+    lines.push(`ワクチン: ${vaccine.name}`);
+    if (resultShown && isNoContract) {
+      const selfPayText = vaccine.selfPay != null ? fmt(vaccine.selfPay) : '要確認（設定価格）';
+      lines.push('患者の居住自治体: その他（契約なし・全額自費）');
+      lines.push(`窓口負担（患者支払額）: ${selfPayText}`);
+      summary = `${vaccine.name}: 全額自費 ${vaccine.selfPay != null ? fmt(vaccine.selfPay) : '要確認'}`;
+    } else if (resultShown) {
+      lines.push(`患者の居住自治体: ${matched.city}（公費あり）`);
+      if (isExempt) lines.push(`減免適用: ${matched.exemptNote || '生活保護・非課税世帯'}`);
+      lines.push(`窓口負担（患者支払額）: ${fmt(copay)}`);
+      lines.push(`自治体請求金額（${matched.city}）: ${fmt(claim)}`);
+      if (matched.conditions) lines.push(`条件: ${matched.conditions}`);
+      if (matched.isReimbursement) lines.push('※ 窓口では全額自費で徴収。患者が後日、領収書+明細書で市に助成金申請するフローです');
+      summary = `${vaccine.name}: 窓口 ${fmt(copay)} ／ 請求 ${fmt(claim)}（${matched.city}${isExempt ? '・減免適用' : ''}）`;
+    } else {
+      const selfPayText = vaccine.selfPay != null ? fmt(vaccine.selfPay) : '要確認（設定価格）';
+      lines.push('この拠点ではこのワクチンの公費契約はありません → 全額自費');
+      lines.push(`全額自費: ${selfPayText}`);
+      summary = `${vaccine.name}: 全額自費 ${selfPayText}`;
+    }
+    if (showResult && (isTBD(copay) || isTBD(claim) || (isNoContract && isTBD(vaccine.selfPay)))) {
+      lines.push('※ この項目の料金はまだ確定していません（シーズン前 or 自治体未公表）。');
+    }
+    lines.push('');
+    lines.push(`※ 料金は${DATA_FISCAL_YEAR}時点（データ更新: ${DATA_LAST_UPDATED}）`);
+    return { text: lines.join('\n'), summary };
+  }, [vaccine, clinic, clinicId, contracts, showResult, hasContract, isNoContract, matched, isExempt, copay, claim]);
 
   const reset = () => {
     setClinicId('');
@@ -319,6 +358,8 @@ export default function VaccineBillingCalculator() {
           </div>
         </div>
       )}
+
+      <PsychCopyBox text={copyOut.text} summary={copyOut.summary} dateLabel="接種日" />
 
       {/* 契約自治体一覧テーブル */}
       {vaccine && clinicId && contracts.length > 0 && (

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * BMI（体格指数）計算ツール
@@ -61,6 +62,29 @@ export default function BMICalculator() {
     if (idealWeight === null || !w || w <= 0) return null;
     return w - idealWeight;
   }, [weight, idealWeight]);
+
+  const outputText = useMemo(() => {
+    if (bmi === null) return '';
+    const lines = [];
+    lines.push('【BMI（体格指数・日本肥満学会基準） __DATE__】');
+    lines.push('');
+    lines.push(`BMI: ${bmi.toFixed(1)} kg/m² → ${category.label}`);
+    lines.push(`標準体重（BMI 22）: ${idealWeight.toFixed(1)} kg`);
+    lines.push(`理想体重との差: ${weightDiff > 0 ? '+' : ''}${weightDiff.toFixed(1)} kg`);
+    lines.push('');
+    lines.push('■ 入力値');
+    lines.push(`  身長: ${height.trim()} cm`);
+    lines.push(`  体重: ${weight.trim()} kg`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(category.label);
+    if (bmi >= 25) {
+      lines.push('※ BMI 25以上かつ健康障害を合併 → 肥満症と診断');
+    }
+    return lines.join('\n');
+  }, [bmi, category, idealWeight, weightDiff, height, weight]);
+
+  const summary = bmi !== null ? `BMI ${bmi.toFixed(1)} kg/m²（${category.label}）` : '';
 
   const reset = () => { setHeight(''); setWeight(''); };
 
@@ -178,6 +202,8 @@ export default function BMICalculator() {
           BMI 25以上かつ健康障害を合併 → 肥満症と診断
         </div>
       )}
+
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="測定日" />
 
       {/* 判定基準テーブル */}
       <div className={styles.note}>

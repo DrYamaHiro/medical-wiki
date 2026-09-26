@@ -101,6 +101,16 @@ export default function URGEDCalculator() {
 
   const result = useMemo(() => evaluateUrged(state), [state]);
   const outputText = useMemo(() => buildUrgedText(state, result), [state, result]);
+  // 1 行要約: 画面の判定バッジと同じ judgment.label、IRLS は buildUrgedText と同じ表記
+  const summary = useMemo(() => {
+    if (!outputText) return '';
+    let s = `RLS URGED 基準 → ${result.judgment.label}`;
+    if (result.irls.score !== null && result.irls.severityLabel) {
+      const caveat = result.essential.status === 'met' ? '' : '。診断未確定のため参考値';
+      s += `、IRLS ${result.irls.score}/${result.irls.max}（${result.irls.severityLabel}${caveat}）`;
+    }
+    return s;
+  }, [outputText, result]);
 
   const irlsAnswered = result.irls.answered;
 
@@ -413,7 +423,7 @@ export default function URGEDCalculator() {
         </Section>
       </div>
 
-      <PsychCopyBox text={outputText} />
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>使い方:</strong> 必須基準 5 項目を「該当 / 非該当 / 不明」で入力すると判定が出ます。経過・支持所見・二次性因子・IRLS は任意入力で、入力した内容だけがコピー用テキストに反映されます。<br />

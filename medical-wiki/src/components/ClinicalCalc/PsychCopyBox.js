@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import copyText, { COPY_FAILED_MESSAGE } from './copyText';
 
 // 精神科系ツール共通のカルテ・紹介状貼付用コピーコンポーネント
 // props:
@@ -7,39 +8,58 @@ import React, { useState, useMemo } from 'react';
 //   defaultDate: string — 初期日付 YYYY-MM-DD (省略時 今日)
 //   onDateChange: (date) => void — 日付変更時のコールバック (省略時 内部 state)
 //   heading: string — ボックス上部見出し (省略時 "カルテ・紹介状貼付用テキスト")
+//   summary: string — 1 行要約（スコアと判定のみ）。指定時は「結果のみコピー」ボタンを表示
 
 function formatToday() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export default function PsychCopyBox({ text, dateLabel = '実施日', defaultDate, onDateChange, heading = 'カルテ・紹介状貼付用テキスト' }) {
-  const [internalDate, setInternalDate] = useState(defaultDate || formatToday);
-  const [copied, setCopied] = useState(false);
+export default function PsychCopyBox({ text, summary, dateLabel = '実施日', defaultDate, onDateChange, heading = 'カルテ・紹介状貼付用テキスト' }) {
+  // 今日の日付はマウント後に入れる（ビルド時の日付で SSR すると hydration が食い違うため）
+  const [internalDate, setInternalDate] = useState(defaultDate || '');
+  useEffect(() => {
+    if (!defaultDate) setInternalDate((prev) => prev || formatToday());
+  }, [defaultDate]);
+  const [copied, setCopied] = useState('');
 
   const displayDate = defaultDate !== undefined && onDateChange ? defaultDate : internalDate;
 
   const finalText = useMemo(() => {
     if (!text) return '';
-    if (text.includes('__DATE__')) return text.replace(/__DATE__/g, displayDate);
-    return text;
+    return text.replace(/__DATE__/g, displayDate);
   }, [text, displayDate]);
+
+  const finalSummary = useMemo(() => {
+    if (!summary) return '';
+    return summary.replace(/__DATE__/g, displayDate);
+  }, [summary, displayDate]);
 
   const handleDateChange = (v) => {
     if (onDateChange) onDateChange(v);
     else setInternalDate(v);
   };
 
-  const copy = async () => {
-    if (!finalText) return;
-    try {
-      await navigator.clipboard.writeText(finalText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      alert('クリップボードへのコピーに失敗しました。テキストを手動で選択してコピーしてください。');
+  const copy = async (key, value) => {
+    if (!value) return;
+    if (await copyText(value)) {
+      setCopied(key);
+      setTimeout(() => setCopied(''), 1800);
+    } else {
+      alert(COPY_FAILED_MESSAGE);
     }
   };
+
+  const buttonStyle = (key, base) => ({
+    padding: '0.4rem 0.9rem',
+    fontSize: '0.85rem',
+    background: copied === key ? '#00897b' : base,
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 600,
+  });
 
   if (!text) return null;
 
@@ -76,23 +96,29 @@ export default function PsychCopyBox({ text, dateLabel = '実施日', defaultDat
               fontFamily: 'inherit',
             }}
           />
-          <button
-            onClick={copy}
-            style={{
-              padding: '0.4rem 0.9rem',
-              fontSize: '0.85rem',
-              background: copied ? '#00897b' : '#2e7d32',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 600,
-            }}
-          >
-            {copied ? 'コピーしました' : '全文コピー'}
+          {finalSummary && (
+            <button type="button" onClick={() => copy('summary', finalSummary)} style={buttonStyle('summary', '#1565c0')}>
+              {copied === 'summary' ? 'コピーしました' : '結果のみコピー'}
+            </button>
+          )}
+          <button type="button" onClick={() => copy('full', finalText)} style={buttonStyle('full', '#2e7d32')}>
+            {copied === 'full' ? 'コピーしました' : '全文コピー'}
           </button>
         </div>
       </div>
+      {finalSummary && (
+        <div style={{
+          background: '#fff',
+          border: '1px solid #90caf9',
+          borderRadius: '6px',
+          padding: '0.45rem 0.85rem',
+          marginBottom: '0.5rem',
+          fontSize: '0.86rem',
+          fontWeight: 600,
+          color: '#0d47a1',
+          wordBreak: 'break-all',
+        }}>{finalSummary}</div>
+      )}
       <pre style={{
         background: '#fff',
         border: '1px solid #c8e6c9',

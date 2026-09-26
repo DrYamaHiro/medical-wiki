@@ -111,6 +111,8 @@ export default function EasiCalculator() {
     return lines.join('\n');
   }, [scores, total, bsa, severity]);
 
+  const summary = outputText ? `EASI ${total.toFixed(1)}（${severity.label}）` : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -172,7 +174,7 @@ export default function EasiCalculator() {
         </div>
       </div>
 
-      <PsychCopyBox text={outputText} />
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>EASI について:</strong><br />

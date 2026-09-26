@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styles from './styles.module.css';
+import PsychCopyBox from './PsychCopyBox';
 
 /**
  * CPI（C-peptide Index）計算ツール
@@ -30,6 +31,24 @@ export default function CPICalculator() {
     if (result >= 0.8) return { text: 'インスリン分泌能低下', sub: 'インスリン導入を検討', color: '#E65100' };
     return { text: 'インスリン依存状態', sub: 'インスリン治療が必要', color: '#C62828' };
   }, [result]);
+
+  const outputText = useMemo(() => {
+    if (result === null) return '';
+    const lines = [];
+    lines.push('【CPI（C-peptide Index・インスリン分泌能の評価） __DATE__】');
+    lines.push('');
+    lines.push(`CPI: ${result.toFixed(2)} → ${judge.text}（${judge.sub}）`);
+    lines.push('');
+    lines.push('■ 入力値');
+    lines.push(`  空腹時Cペプチド: ${cpeptide.trim()} ng/mL`);
+    lines.push(`  空腹時血糖: ${glucose.trim()} mg/dL`);
+    lines.push('');
+    lines.push('■ 判定');
+    lines.push(`${judge.text}（${judge.sub}）`);
+    return lines.join('\n');
+  }, [result, judge, cpeptide, glucose]);
+
+  const summary = result !== null ? `CPI ${result.toFixed(2)}（${judge.text}）` : '';
 
   const reset = () => { setCpeptide(''); setGlucose(''); };
 
@@ -99,6 +118,8 @@ export default function CPICalculator() {
           </div>
         )}
       </div>
+
+      <PsychCopyBox text={outputText} summary={summary} dateLabel="採血日" />
 
       {/* 判定基準テーブル */}
       <div className={styles.note}>

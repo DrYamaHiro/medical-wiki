@@ -60,6 +60,8 @@ export default function STOPBANGCalculator() {
     return lines.join('\n');
   }, [checks, score, judgment]);
 
+  const summary = outputText ? `STOP-BANG ${score}/8点（${judgment.text}）` : '';
+
   return (
     <div className={styles.calc}>
       <div className={styles.calcHeader}>
@@ -100,7 +102,7 @@ export default function STOPBANGCalculator() {
         </div>
       </div>
 
-      <PsychCopyBox text={outputText} />
+      <PsychCopyBox text={outputText} summary={summary} />
 
       <div className={styles.note}>
         <strong>判定基準:</strong> 0-2点: 低リスク / 3-4点: 中リスク / 5-8点: 高リスク<br />
