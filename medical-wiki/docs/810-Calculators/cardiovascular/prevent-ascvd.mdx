@@ -21,10 +21,14 @@ import PreventAscvdCalculator from '@site/src/components/ClinicalCalc/PreventAsc
 - PREVENT-ASCVD は **30〜79歳・臨床的ASCVDおよび無症候性動脈硬化なし・LDL-C 70〜189 mg/dL** の一次予防で10年リスクを推定し、低（&lt;3%）・境界（3〜&lt;5%）・中間（5〜&lt;10%）・高（≥10%）に区分します（1/B-NR）。30年リスクは30〜59歳のみ表示します。
 - 本ツールは PREVENT の **base model** を使います。GL は入手可能ならアルブミン尿・HbA1c・郵便番号（地域の社会的指標）も含めることを求めていますが、郵便番号は米国専用のため optional model は実装していません。BMI は ASCVD の式では係数が0のため入力不要です。
 - PREVENT は米国の集団データ（導出約330万人、外部検証約330万人）で作られた式です。日本動脈硬化学会「動脈硬化性疾患予防ガイドライン2022年版」は[久山町スコア](./hisayama)でリスク区分と管理目標を定めており、両者の閾値・目標値は異なります。
-- eGFR は PREVENT の導出と同じ CKD-EPI 2021 式を推奨します（クレアチニンを入力すると自動計算）。日本の検査報告 eGFR（日本腎臓学会の推算式）を入力した場合は値が異なりうることに注意してください。
 - LDL-C は検査報告値を優先し、空欄なら Sampson/NIH 式（TG ≤800 mg/dL）で推算します。GL は Friedewald 式・直接法（β定量以外）より Martin/Hopkins 式または Sampson/NIH 式を推奨しています（1/B-NR）。
 - PREVENT の入力範囲（収縮期血圧 90〜180 mmHg、総コレステロール 130〜320、HDL-C 20〜100 mg/dL、eGFR 15〜140）外の値は、最も近い範囲内の値で計算し注記します（AHA 公式計算機の扱い）。
 - 高TG血症の薬物選択、小児、スタチン関連筋症状の管理、薬物相互作用、薬剤ごとの用量は本ツールの範囲外です。
+- 未入力の項目があっても、年齢・性別があれば暫定の10年（30〜59歳は30年）リスクを表示します。未入力の項目は仮定値（収縮期血圧 130 mmHg、HDL-C 男性 55・女性 65 mg/dL、non-HDL-C は LDL-C＋30 mg/dL〈LDL-C も無ければ 145〉、eGFR 80〈CKD ステージ選択時はその区分の中央付近〉、喫煙・降圧薬・スタチンは「なし」）で点推定し、想定範囲での最小〜最大を併記します。区分が変わりうる場合は、区分を左右する項目を「最低限追加すべき評価項目」として示します。臨床的ASCVD・糖尿病・CKD・HIV・FH などはチェックが無ければ「なし」として扱います（HbA1c 単独の「糖尿病型」では糖尿病として扱いません）。
+- 総コレステロールが無い場合（特定健診など）は、non-HDL-C の検査報告値を入力するか、LDL-C・HDL-C・TG（≤800 mg/dL）から Sampson/NIH 式を逆算して non-HDL-C を推定します（推定と表示）。
+- スタチン強度: 高強度＝LDL-C ≥50%低下、中強度＝30〜49%低下（Table 6）。国内の承認用量は添付文書を確認してください。効果判定は治療前からの%低下と LDL-C／non-HDL-C の目標到達の両方で行い、LLT 開始・用量調整の4〜12週後に脂質検査、以後6〜12か月ごとに確認します（1/A）。
+- 日本の検査報告 eGFR は通常 日本腎臓学会の推算式です。クレアチニンを入力すると PREVENT の導出と同じ CKD-EPI 2021 式で計算します。
+- 出典: 2026 ACC/AHA/多学会 Guideline on the Management of Dyslipidemia（J Am Coll Cardiol 2026; Circulation 2026）; Khan SS, et al. PREVENT equations. Circulation 2024;149:430-449; Sampson M, et al. JAMA Cardiol 2020;5:540-548; CKD-EPI 2021.
 
 | 区分 | PREVENT-ASCVD 10年 | 主な推奨 | LDL-C／non-HDL-C 目標 |
 |---|---|---|---|

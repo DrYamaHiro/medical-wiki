@@ -3,7 +3,7 @@ import styles from './styles.module.css';
 import PsychCopyBox from './PsychCopyBox';
 import {
   evaluate, validNum, attain, reductionAchieved, recText, goalCite, buildText, buildSummary, RECS,
-  lpaHigh, enhTgAuto, PREVENT_NA,
+  lpaHigh, enhTgAuto, PREVENT_NA, preventNaMissingText, showsPreventLine, nonHdlSrcSuffix, bundleRequiredForDisplay,
 } from './preventAscvdData';
 
 /**
@@ -145,9 +145,11 @@ export default function PreventAscvdCalculator() {
 
   const [hefh, setHefh] = useState(false);
   const [hofh, setHofh] = useState(false);
-  const [dm, setDm] = useState(null);
+  // spec_addendum_v2 §B-2: dm はチェックボックス（初期値 false）
+  const [dm, setDm] = useState(false);
   const [dmEnhManual, setDmEnhManual] = useState({});
-  const [ckd, setCkd] = useState(null);
+  // spec_addendum_v2 §B-2: ckd 初期値は 'none'（表示「なし・G1〜G2」が選択済み）
+  const [ckd, setCkd] = useState('none');
   const [hiv, setHiv] = useState(false);
   const [hfref, setHfref] = useState(false);
   const [preg, setPreg] = useState(false);
@@ -162,6 +164,7 @@ export default function PreventAscvdCalculator() {
   const [fasting, setFasting] = useState(null);
   const [tc, setTc] = useState('');
   const [hdl, setHdl] = useState('');
+  const [nonHdlLab, setNonHdlLab] = useState(''); // spec_addendum_v2 §B-2（新規）
   const [tg, setTg] = useState('');
   const [ldlLab, setLdlLab] = useState('');
   const [ldlBaseline, setLdlBaseline] = useState('');
@@ -196,6 +199,7 @@ export default function PreventAscvdCalculator() {
   const sbpNum = numField('sbp', sbp).value;
   const tcNum = numField('tc', tc).value;
   const hdlNum = numField('hdl', hdl).value;
+  const nonHdlLabNum = numField('nonHdlLab', nonHdlLab).value;
   const tgNum = numField('tg', tg).value;
   const ldlLabNum = numField('ldlLab', ldlLab).value;
   const ldlBaselineNum = numField('ldlBaseline', ldlBaseline).value;
@@ -211,7 +215,7 @@ export default function PreventAscvdCalculator() {
     hr_cabgpci: hrCabgpci, hr_hf: hrHf, hr_htn: hrHtn, maxStatinEze,
     hefh, hofh, dm, dmEnh: dmEnhManual, ckd, hiv, hfref, preg: showPreg && preg,
     age: ageNum, sex, sbp: sbpNum, bptx, smoking, statin,
-    fasting, tc: tcNum, hdl: hdlNum, tg: tgNum, ldlLab: ldlLabNum,
+    fasting, tc: tcNum, hdl: hdlNum, nonHdlLab: nonHdlLabNum, tg: tgNum, ldlLab: ldlLabNum,
     ldlBaseline: statin === true ? ldlBaselineNum : null,
     apob: apobNum, lpa: lpaNum, lpaUnit,
     egfrLab: egfrLabNum, cr: crNum,
@@ -224,7 +228,7 @@ export default function PreventAscvdCalculator() {
   }), [
     ascvd, vhrMajor, hrCabgpci, hrHf, hrHtn, maxStatinEze, hefh, hofh, dm, dmEnhManual, ckd, hiv, hfref, preg, showPreg,
     enhLpaManual, enhTgManual, enhLdlManual,
-    ageNum, sex, sbpNum, bptx, smoking, statin, fasting, tcNum, hdlNum, tgNum, ldlLabNum, ldlBaselineNum,
+    ageNum, sex, sbpNum, bptx, smoking, statin, fasting, tcNum, hdlNum, nonHdlLabNum, tgNum, ldlLabNum, ldlBaselineNum,
     apobNum, lpaNum, lpaUnit, egfrLabNum, crNum, cacNum, cac75, incidCac, enhManual, enhRepro, showRepro,
   ]);
 
@@ -246,9 +250,9 @@ export default function PreventAscvdCalculator() {
 
   const reset = () => {
     setAscvd({}); setVhrMajor({}); setHrCabgpci(false); setHrHf(false); setHrHtn(false); setMaxStatinEze(false);
-    setHefh(false); setHofh(false); setDm(null); setDmEnhManual({}); setCkd(null); setHiv(false); setHfref(false); setPreg(false);
+    setHefh(false); setHofh(false); setDm(false); setDmEnhManual({}); setCkd('none'); setHiv(false); setHfref(false); setPreg(false);
     setAge(''); setSex(null); setSbp(''); setBptx(null); setSmoking(null); setStatin(null);
-    setFasting(null); setTc(''); setHdl(''); setTg(''); setLdlLab(''); setLdlBaseline(''); setApob(''); setLpa(''); setLpaUnit(null);
+    setFasting(null); setTc(''); setHdl(''); setNonHdlLab(''); setTg(''); setLdlLab(''); setLdlBaseline(''); setApob(''); setLpa(''); setLpaUnit(null);
     setEgfrLab(''); setCr('');
     setCac(''); setCac75(false); setIncidCac('none');
     setEnhManual({}); setEnhRepro(false);
@@ -302,7 +306,8 @@ export default function PreventAscvdCalculator() {
                 <span className={styles.checkLabel}>現在喫煙（自動、下の喫煙トグルから）: {smoking === null ? '未入力' : (smoking ? '該当' : '非該当')}</span>
               </div>
               <div className={`${styles.checkItem}`} style={{ opacity: 0.8 }}>
-                <span className={styles.checkLabel}>糖尿病（自動、下の糖尿病トグルから）: {dm === null ? '未入力' : (dm ? '該当' : '非該当')}</span>
+                {/* spec_addendum_v2 §B-2: 糖尿病はチェックボックスになったため常に該当/非該当が決まる */}
+                <span className={styles.checkLabel}>糖尿病（自動、上の糖尿病チェックから）: {dm ? '該当' : '非該当'}</span>
               </div>
               <label className={`${styles.checkItem} ${hrHf ? styles.checkItemActive : ''}`}>
                 <input type="checkbox" className={styles.checkbox} checked={hrHf} onChange={() => setHrHf((v) => !v)} />
@@ -338,14 +343,16 @@ export default function PreventAscvdCalculator() {
               <input type="checkbox" className={styles.checkbox} checked={hofh} onChange={() => setHofh((v) => !v)} />
               <span className={styles.checkLabel}>ホモ接合体家族性高コレステロール血症（HoFH）</span>
             </label>
+            {/* spec_addendum_v2 §B-2: 糖尿病はチェックボックス（トグルから変更、日本の実臨床に合わせる） */}
+            <label className={`${styles.checkItem} ${dm ? styles.checkItemActive : ''}`}>
+              <input type="checkbox" className={styles.checkbox} checked={dm} onChange={() => setDm((v) => !v)} />
+              <span className={styles.checkLabel}>
+                糖尿病（1型・2型）
+                {/* fix_v2_round1 L4: HbA1c 単独の糖尿病型は診断確定前のため、チェック時期を明示する */}
+                <br /><span style={{ fontSize: '0.78rem', opacity: 0.8 }}>診断済みの場合にチェック。HbA1c ≥6.5% 単独（糖尿病型）は診断確定後にチェック</span>
+              </span>
+            </label>
           </div>
-        </div>
-
-        <div className={styles.inputGroup}>
-          <label className={styles.inputLabel}>
-            糖尿病<span className={styles.inputUnit}>1型・2型を含む（PREVENT の定義: 糖尿病の既往）</span>
-          </label>
-          <Toggle options={[{ value: true, label: 'あり' }, { value: false, label: 'なし' }]} value={dm} onChange={setDm} />
         </div>
 
         {showDmEnh && (
@@ -431,6 +438,8 @@ export default function PreventAscvdCalculator() {
         </div>
         <NumInput id="tc" label="総コレステロール" unit="mg/dL" raw={tc} onChange={setTc} placeholder="200" />
         <NumInput id="hdl" label="HDLコレステロール" unit="mg/dL" raw={hdl} onChange={setHdl} placeholder="50" />
+        {/* spec_addendum_v2 §B-2（新規）: 総コレステロールが無い場合（特定健診など）の non-HDL-C 検査報告値 */}
+        <NumInput id="nonHdlLab" label="non-HDL-C（検査報告値）" unit="mg/dL（総コレステロールが無い場合）" raw={nonHdlLab} onChange={setNonHdlLab} placeholder="" />
         <NumInput id="tg" label="中性脂肪（TG）" unit="mg/dL" raw={tg} onChange={setTg} placeholder="120" />
         <NumInput id="ldlLab" label="LDLコレステロール（検査報告値）" unit="mg/dL（空欄なら Sampson/NIH 式で推算）" raw={ldlLab} onChange={setLdlLab} placeholder="130" />
         {statin === true && (
@@ -540,7 +549,8 @@ export default function PreventAscvdCalculator() {
             </div>
           )}
           <div className={styles.resultRow}>
-            <span className={styles.resultLabel}>non-HDL-C（TC − HDL-C）</span>
+            {/* fix_v2_round1 C1: 出所（TC−HDL／検査報告値／推定／仮定）でラベルを切り替え、コピーと表記を揃える */}
+            <span className={styles.resultLabel}>{`non-HDL-C${nonHdlSrcSuffix(result.nonHdlSrc)}`}</span>
             <span className={styles.resultValue} style={{ fontSize: '1.1rem' }}>{result.nonHdl !== null ? `${result.nonHdl} mg/dL` : '---'}</span>
           </div>
           {result.egfrUsed !== null && (
@@ -571,37 +581,48 @@ export default function PreventAscvdCalculator() {
 
           {result.route === 'incomplete' && (
             <div className={styles.resultRow}>
-              <span className={styles.resultLabel}>未入力</span>
+              {/* spec_addendum_v2 §A-5: ラベル「未入力」→「必須入力」 */}
+              <span className={styles.resultLabel}>必須入力</span>
               <span className={styles.resultValue} style={{ fontSize: '0.95rem' }}>{result.missing.join('・')}</span>
             </div>
           )}
 
           {result.route !== 'incomplete' && (
             <>
-              <div className={styles.resultRow}>
-                <span className={styles.resultLabel}>PREVENT-ASCVD</span>
-                <span className={styles.resultValue} style={{ fontSize: '1rem' }}>
-                  {result.prevent.ok
-                    ? `10年 ${result.prevent.ascvd10.toFixed(1)}%${result.prevent.ascvd30 !== null ? ` / 30年 ${result.prevent.ascvd30.toFixed(1)}%` : ''}`
-                    : (result.prevent.reason ? '適用外' : '未計算')}
-                  {/* fix_round1 C3: 参考値マーク（§4.6） */}
-                  {result.prevent.ok && result.prevent.outOfLdlRange && (
-                    <span style={{ fontSize: '0.78rem', fontWeight: 400 }}>（参考値: GL の区分適用範囲 LDL-C 70〜189 外）</span>
-                  )}
-                  {result.prevent.ok && result.prevent.ldlUnknown && (
-                    <span style={{ fontSize: '0.78rem', fontWeight: 400 }}>（LDL-C 未確定: 適用範囲 70〜189 の確認が必要）</span>
-                  )}
-                </span>
-              </div>
-              {!result.prevent.ok && result.prevent.reason && (
-                <div className={styles.note} style={{ color: 'var(--ifm-color-emphasis-600)' }}>{PREVENT_NA_TEXT(result.prevent.reason)}</div>
-              )}
-              {!result.prevent.ok && result.prevent.missing && (
-                <div className={styles.note} style={{ color: 'var(--ifm-color-emphasis-600)' }}>未入力: {result.prevent.missing.join('・')}</div>
+              {/* spec_addendum_v2 §A-3: PREVENT 行を出す経路の限定（画面・コピー共通） */}
+              {showsPreventLine(result) && (
+                <div className={styles.resultRow}>
+                  <span className={styles.resultLabel}>PREVENT-ASCVD</span>
+                  <span className={styles.resultValue} style={{ fontSize: '1rem' }}>
+                    {result.prevent.ok
+                      ? (result.prevent.provisional
+                        ? `暫定 10年 ${result.prevent.ascvd10.toFixed(1)}%（${result.prevent.provisional.range10[0].toFixed(1)}〜${result.prevent.provisional.range10[1].toFixed(1)}%）${result.prevent.provisional.range30 ? ` / 30年 ${result.prevent.ascvd30.toFixed(1)}%（${result.prevent.provisional.range30[0].toFixed(1)}〜${result.prevent.provisional.range30[1].toFixed(1)}%）` : ''}`
+                        : `10年 ${result.prevent.ascvd10.toFixed(1)}%${result.prevent.ascvd30 !== null ? ` / 30年 ${result.prevent.ascvd30.toFixed(1)}%` : ''}`)
+                      : (result.prevent.reason ? `適用外（${PREVENT_NA_TEXT(result.prevent.reason)}）`
+                        : (result.prevent.missing ? preventNaMissingText(result.prevent.missing) : '未計算'))}
+                    {/* fix_round1 C3 / spec_addendum_v2 §A-5: 参考値マーク（ldlUnknown の印は削除） */}
+                    {result.prevent.ok && result.prevent.outOfLdlRange && (
+                      <span style={{ fontSize: '0.78rem', fontWeight: 400 }}>（参考値: LDL-C &lt;70）</span>
+                    )}
+                  </span>
+                </div>
               )}
               {result.prevent.clampNotes && result.prevent.clampNotes.length > 0 && (
                 <div className={styles.note} style={{ color: '#E65100' }}>
                   {result.prevent.clampNotes.map((n) => <div key={n}>{n}</div>)}
+                </div>
+              )}
+              {/* spec_addendum_v2 §B-10: 仮定値（PREVENT 行の直下、灰色） */}
+              {result.assumed && result.assumed.length > 0 && (
+                <div className={styles.note} style={{ color: 'var(--ifm-color-emphasis-600)', fontSize: '0.78rem' }}>
+                  未入力（仮定値で計算）: {result.assumed.join('、')}
+                </div>
+              )}
+              {/* spec_addendum_v2 §B-10: 最低限追加すべき評価項目（判定ボックスの直前、赤太字）
+                  fix_v2_round1 L3: 5項目以上のときは表示だけ5つの束にまとめる */}
+              {result.required && result.required.length > 0 && (
+                <div className={styles.note} style={{ color: '#C62828', fontWeight: 700 }}>
+                  最低限追加すべき評価項目: {bundleRequiredForDisplay(result.required).join('・')}
                 </div>
               )}
 
@@ -643,7 +664,14 @@ export default function PreventAscvdCalculator() {
                     )}
                   </>
                 ) : (
-                  <><br /><span style={{ fontSize: '0.8rem', opacity: 0.9 }}>管理目標: GL に数値目標の記載なし</span></>
+                  <><br /><span style={{ fontSize: '0.8rem', opacity: 0.9 }}>
+                    {/* spec_addendum_v2 §A-7/§B-10: 目標が無いときの文言を場合分け */}
+                    管理目標: {result.route === 'provisional'
+                      ? 'LDL-C 入力後に表示'
+                      : (result.prevent.provisional && !result.prevent.provisional.stable
+                        ? 'リスク区分の確定後に表示'
+                        : 'GL に数値目標の記載なし')}
+                  </span></>
                 )}
               </div>
 
@@ -681,7 +709,8 @@ export default function PreventAscvdCalculator() {
                 <div className={styles.resultRow}>
                   <span className={styles.resultLabel}>リスク増強因子</span>
                   <span className={styles.resultValue} style={{ fontSize: '0.9rem' }}>
-                    {result.enhancers.count > 0 ? `${result.enhancers.count}項目（${result.enhancers.items.join('、')}）` : '該当なし（増強因子が無いことは低リスクを意味しない: p40）'}
+                    {/* spec_addendum_v2 §A-5 */}
+                    {result.enhancers.count > 0 ? `${result.enhancers.count}項目（${result.enhancers.items.join('、')}）` : '該当なし'}
                   </span>
                 </div>
               )}
@@ -733,11 +762,8 @@ export default function PreventAscvdCalculator() {
 
       <PsychCopyBox text={outputText} summary={summary} dateLabel="採血日" />
 
-      <div className={styles.note}>
-        <p>
-          <strong>参考:</strong> 2026 ACC/AHA/多学会 Guideline on the Management of Dyslipidemia（J Am Coll Cardiol 2026; Circulation 2026）; Khan SS, et al. PREVENT equations. Circulation 2024;149:430-449; Sampson M, et al. JAMA Cardiol 2020;5:540-548; CKD-EPI 2021.
-        </p>
-      </div>
+      {/* spec_addendum_v2 §A-5: 1行にする。詳しい出典は mdx 補足へ（§A-6） */}
+      <p style={{ fontSize: '0.78rem', opacity: 0.75 }}>出典: 2026 ACC/AHA 脂質異常症GL、PREVENT 式（Circulation 2024）</p>
     </div>
   );
 }

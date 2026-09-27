@@ -25,6 +25,7 @@ export const FIELD_RANGES = {
   egfrLab: [1, 200],
   cr: [0.1, 20],
   cac: [0, 9999],
+  nonHdlLab: [20, 1000], // spec_addendum_v2 §B-2
 };
 
 /**
@@ -129,6 +130,14 @@ export function sampsonLdl(tc, hdl, tg) {
   return tc / 0.948 - hdl / 0.971 - (tg / 8.56 + (tg * nonHdl) / 2140 - (tg * tg) / 16100) - 9.44;
 }
 
+/**
+ * spec_addendum_v2 §B-4: Sampson/NIH 式を TC について逆算（LDL-C・HDL-C・TG から non-HDL-C を推定する）。
+ * TG ≤800 のときだけ呼び出し側で使う。
+ */
+export function tcFromSampson(ldl, hdl, tg) {
+  return (ldl + hdl / 0.971 + tg / 8.56 - (tg * hdl) / 2140 - (tg * tg) / 16100 + 9.44) / (1 / 0.948 - tg / 2140);
+}
+
 /** CKD-EPI 2021 クレアチニン式（§3.3） */
 export function ckdEpi2021(cr, age, sex) {
   const k = sex === 'female' ? 0.7 : 0.9;
@@ -142,8 +151,9 @@ export function ckdEpi2021(cr, age, sex) {
    2. PREVENT 入力のクランプ（§4.5）
    ============================================================ */
 
+// spec_addendum_v2 §A-4: クランプ注記を短縮
 function clampNote(label, value, unit, lo, hi, endpoint) {
-  return `${label} ${value} ${unit} は PREVENT の入力範囲（${lo}〜${hi}）外のため ${endpoint} で計算しました。過大評価または過小評価の可能性があります。`;
+  return `${label} ${value} ${unit} → ${endpoint} で計算（PREVENT の範囲 ${lo}〜${hi}）`;
 }
 
 /**
@@ -176,68 +186,47 @@ export function clampForPrevent({ sbp, tc, hdl, egfr }) {
    3. PREVENT 非適用の理由（§10.2）
    ============================================================ */
 
+// spec_addendum_v2 §A-3: 文言は理由だけ（「適用外」は表示側 = buildText/buildSummary/UI が付ける）。
+// fix_round3 item2 で復活させた PREVENT_NA_HFREF の存在自体は維持し、文言だけ短縮する。
 export const PREVENT_NA = {
-  PREVENT_NA_ASCVD: '臨床的ASCVDがあるため PREVENT-ASCVD は用いません（二次予防）',
-  PREVENT_NA_FH: 'HeFH／HoFH では一般集団用のリスク式で10年・30年リスクを計算しない（3: Harm / C-EO）',
-  PREVENT_NA_LDL190: 'LDL-C ≥190 mg/dL は PREVENT-ASCVD の適用範囲外（重症高コレステロール血症の経路）',
-  PREVENT_NA_AGE: 'PREVENT-ASCVD の適用年齢は30〜79歳です',
-  PREVENT_NA_CAC300: 'CAC ≥300 は PREVENT の適用外（無症候性冠動脈硬化の経路）',
-  // fix_round3 item2: 元仕様どおり復活（fix_round2 R-A8 で誤って削除されたが、それは
-  // HF_NB／NOTE_HFREF_CAVEAT を経路非依存の add-on にする話であり、PREVENT の計算式そのものが
-  // HFrEF を除外対象としている事実とは別。HFrEF にチェックがある一次予防相当の人はこの理由で
-  // 「PREVENT は計算できません」に入るが、CAC 再分類・糖尿病・CKD・HIV・重症・二次予防の判定は
-  // PREVENT に依存しないためそのまま機能する。
-  PREVENT_NA_HFREF: 'PREVENT は心不全の既往が無い成人で作られた式のため HFrEF では適用外（AHA）。LLT の判断は二次予防・高リスク一次予防の必要性と余命で行う（p78 本文）',
-  PREVENT_NA_ESKD: '末期腎不全（CKD G5・透析・eGFR <15）は PREVENT の適用外（AHA PREVENT 計算機の入力範囲 eGFR 15〜140）',
+  PREVENT_NA_ASCVD: '二次予防',
+  PREVENT_NA_FH: 'FH（3: Harm）',
+  PREVENT_NA_LDL190: 'LDL-C ≥190',
+  PREVENT_NA_AGE: '30〜79歳のみ',
+  PREVENT_NA_CAC300: 'CAC ≥300',
+  PREVENT_NA_HFREF: 'HFrEF: 心不全既往のない成人で作られた式',
+  PREVENT_NA_ESKD: '末期腎不全: G5・透析・eGFR <15',
 };
 
 export function preventNaMissingText(missing) {
-  return `PREVENT 未計算: ${missing.join('・')}`;
+  return `未計算（未入力: ${missing.join('・')}）`;
 }
 
 /* ============================================================
    4. 注記文言（§10.3、定数名と逐語）
    ============================================================ */
 
+// spec_addendum_v2 §A: 注記を臨床上の行動／安全に関わるものだけに絞る（1件あたり通常0〜2件）。
+// 出典だけ・説明だけ・ツールの動き方の説明・定型文（旧 NOTE_INTENSITY 等）は削除し、
+// 一般的に役立つものは mdx の「補足」へ移した（§A-6）。
 export const NOTES = {
-  NOTE_LDL_DISCORDANT: (lab, sampson) => `LDL-C の検査報告値（${lab}）と Sampson/NIH 式（${sampson}）で判定区分が変わりうる差があります。判定には検査報告値を使っています（GL は直接法より Martin/Hopkins 式または Sampson/NIH 式を推奨: 1/B-NR）`,
-  NOTE_STATIN_BASELINE: 'スタチン内服中で治療前 LDL-C が未入力のため、現在の LDL-C で経路を判定しています。LDL-C 70〜189／≥190 の区分は治療前値で確認してください',
-  NOTE_EGFR_JSN: 'eGFR は検査報告値を使用。日本の検査報告値は通常 日本腎臓学会の推算式で、PREVENT の導出（CKD-EPI 2021 式）とは異なります。クレアチニンを入力すると CKD-EPI 2021 式で計算します',
-  NOTE_EGFR_LT60_NO_CKD: 'eGFR <60 です。CKD ステージを選択してください（3か月以上持続で CKD と診断、KDIGO の CKD 定義）',
-  NOTE_LOW_60PLUS: '60〜79歳の低リスクでは30年リスクを用いない。LDL-C 160〜189 での中強度スタチン（2a/C-LD）は GL 上30〜59歳が対象',
-  NOTE_LOW_60PLUS_COUNSEL: '健康行動のカウンセリングを継続（GL の低リスク推奨 1/A は30〜59歳が対象）',
-  NOTE_LOW_ENH: '低リスク（<3%）でも、強い早発CVD家族歴や非常に高い Lp(a) では LLT の検討が妥当な場合がある（本文 p40）',
-  NOTE_7679: '76〜79歳: PREVENT の適用年齢内だが、>75歳の新規開始は 2b（推定余命2.5年以上、利益・リスクの話し合い後）。機能状態・フレイル・多剤併用・余命も考慮（1/C-EO）',
-  NOTE_CAC_AGE: 'CAC 評価は一般に男性 ≥40歳・女性 ≥45歳が対象（p42）。30〜45歳のパーセンタイルは MESA ではなく専用ツールを用いる（p43）',
-  NOTE_CAC0_HIGHRISK: (list) => `CAC=0 でも治療延期の根拠にしない（高リスク状態あり: ${list.join('、')}）`,
-  NOTE_CAC0_OTHER: 'CAC=0 による治療延期の推奨（2a）は中間リスクおよび選択した境界リスクが対象',
-  NOTE_CAC0_FH: 'FH・重症高コレステロール血症では CAC=0 をリスク低減評価や治療延期の根拠にしない（p42–43）',
-  NOTE_CAROTID: '頸動脈プラークがあれば CAC=0 でも LLT 開始が勧められる（本文 p43）',
-  NOTE_FIG13_INCID: '図13 は偶発的CAC 中等度〜高度で「中〜高強度スタチン」と記載。本ツールは推奨本文（高強度）に従う',
-  NOTE_VHR_BOUNDARY: (footnoteJudge) => `超高リスク判定は図10の定義（年齢 ≥65歳、LDL-C ≥100 mg/dL）に従っています。推奨表脚注・本文（p62）の定義（>65歳、>100 mg/dL）では判定が「${footnoteJudge}」になります`,
-  NOTE_VHR_AGE_MISSING: '年齢未入力のため「年齢 ≥65歳」は非該当として判定しています',
-  NOTE_VHR_LDL_MISSING: 'LDL-C 未入力のため「最大耐容量スタチン＋エゼチミブ下で LDL-C ≥100」は非該当として判定しています',
-  NOTE_EZE_NOT_REQUIRED: 'PCSK9 抗体の開始前にエゼチミブ追加を必須としない（p63）',
-  NOTE_FIG11_ORDER: '追加順序は図11に従う（推奨本文では 4.2.6 推奨6・7 の順で、ベムペド酸がインクリシランより先に記載）',
-  NOTE_SEVERE_RF: '「追加のASCVD危険因子」は GL で個別に列挙されていないため、ツールは自動判定しません',
-  NOTE_FH_CONSIDER: '二次性原因が無ければ FH の可能性を考慮（パネル遺伝学的検査 2a/B-NR）',
-  NOTE_CKD_STAGE34: 'Top Take-Home Message 8 は「CKD stage 3 or 4」、推奨本文は「stage 3 or higher」。本ツールは推奨本文に従う',
-  NOTE_HD_START: '維持透析でのスタチン新規開始の利益は RCT で示されていない（本文）',
-  NOTE_HIV_REPRIEVE: '根拠の REPRIEVE 試験はピタバスタチン 4 mg。LDL-C・リスクの下限を設けていない（p80）',
-  NOTE_HIV_DDI: '抗レトロウイルス薬とスタチンの相互作用を確認（Table 22）',
-  NOTE_HFREF_CAVEAT: 'HF 自体は LLT の適応にならない。重度 CAC・危険因子・二次予防など他の適応で判断する（p78 本文）',
-  NOTE_YOUNG_LLT: '18〜29歳の LLT は RCT が無く、高い脂質負荷と多くのリスク増強因子がある場合の臨床判断と患者の希望による（本文 p73）',
-  NOTE_TAKEHOME1: '若年成人期に LDL-C ≥160 mg/dL または強い早発ASCVD家族歴がある場合は薬物療法の早期検討（Top Take-Home Message 1）',
-  NOTE_ELDER_CAC_POS: '>75歳の新規開始は 2b（推定余命2.5年以上、利益・リスクの話し合い後）',
-  NOTE_LDL70_NONHDL: 'LDL-C <70 だが non-HDL-C ≥100（または不明）: GL に該当する一次予防の区分推奨はありません。個別に判断',
-  NOTE_LPA_REFER: 'Lp(a) ≥200 nmol/L（≥75 mg/dL）は脂質専門医紹介の考慮事項（Table 9）',
-  NOTE_INTENSITY: 'スタチン強度: 高強度＝LDL-C ≥50%低下、中強度＝30〜49%低下（Table 6）。国内の承認用量は添付文書を確認',
-  NOTE_GOAL_BOTH: '効果判定はベースラインからの%低下と LDL-C／non-HDL-C の目標到達の両方で行う（p19–20）',
-  NOTE_MONITOR: 'LLT 開始・用量調整の4〜12週後に脂質検査、以後6〜12か月ごと（1/A）',
-  NOTE_CAC_INCID_IGNORED: '偶発的CACの入力は CAC スコアがあるため判定に使っていません。',
   NOTE_PREG_TABLE20: '妊娠中・授乳中は表20に従う（エゼチミブ・PCSK9 抗体・ベムペド酸・インクリシランは回避、スタチンは多くの場合中止）',
-  NOTE_PRIMARY_LDL_LOW_CONTINUE: 'スタチン内服中で治療前の LDL-C が不明のため、PREVENT は参考値。現行治療の継続を基本とする',
-  PRE_CORRECTION_NOTE: '本ツールは 2026 ACC/AHA 脂質異常症ガイドライン（2026年3月13日オンライン公開）の推奨・図表に基づきます。2026年6月と9月の訂正（Circulation 2026;153:e1447、154:e393）は、Take-Home Message の apoB の記載（TG >200 → ≥150）、高TG血症の推奨5・6の図番号、表5の胆汁酸吸着薬の用量・投与回数、査読委員名の修正で、本ツールの判定内容には影響しません。',
+  NOTE_LDL_DISCORDANT: (lab, sampson) => `LDL-C 検査値 ${lab} と Sampson/NIH 式 ${sampson} で判定区分が変わりうる（判定は検査値）`,
+  NOTE_STATIN_BASELINE: '治療前 LDL-C 未入力: 現在値で経路を判定（≥190・70〜189 は治療前値で確認）',
+  NOTE_EGFR_LT60_NO_CKD: 'eGFR <60: 3か月以上持続なら CKD ステージを選択',
+  NOTE_LOW_ENH: '低リスクでも強い早発CVD家族歴・非常に高い Lp(a) では LLT 検討が妥当な場合あり（p40）',
+  NOTE_7679: '76〜79歳: 新規開始は 2b（余命2.5年以上・話し合い後）',
+  NOTE_CAC0_HIGHRISK: (list) => `CAC=0 でも延期しない（${list.join('、')}）`,
+  NOTE_CAC0_FH: 'FH・LDL-C ≥190 では CAC=0 でも延期しない',
+  NOTE_CAROTID: '頸動脈プラークがあれば CAC=0 でも LLT 開始（p43）',
+  NOTE_HD_START: '維持透析: スタチン新規開始の利益は RCT で示されていない',
+  NOTE_HIV_DDI: 'ART とスタチンの相互作用を確認（Table 22）',
+  NOTE_HFREF_CAVEAT: 'HFrEF 自体は LLT の適応ではない。重度 CAC・危険因子など他の適応で判断（p78）',
+  NOTE_TAKEHOME1: 'LDL-C ≥160 または強い早発ASCVD家族歴: 薬物療法の早期検討（Take-Home 1）',
+  NOTE_ELDER_CAC_POS: '>75歳: 新規開始は 2b（余命2.5年以上・話し合い後）',
+  NOTE_LDL70_NONHDL: 'non-HDL-C ≥100（または不明）: 該当する区分推奨なし。個別に判断',
+  NOTE_LPA_REFER: 'Lp(a) ≥200 nmol/L（≥75 mg/dL）: 脂質専門医紹介を考慮（Table 9）',
+  NOTE_PRIMARY_LDL_LOW_CONTINUE: '治療前 LDL-C 不明: PREVENT は参考値。現行治療の継続が基本',
 };
 
 /* ============================================================
@@ -414,7 +403,9 @@ function b(v) { return v === true; }
 export function evaluate(p) {
   const age = ok(p.age) ? Math.floor(p.age) : null;
   const sex = (p.sex === 'male' || p.sex === 'female') ? p.sex : null;
-  const dm = p.dm === true ? true : (p.dm === false ? false : null);
+  // spec_addendum_v2 §B-2: dm はチェックボックス（あり/なし の二値、未チェック=false）。
+  // トグルの「未入力」という第三状態は無い（null/undefined は false 扱い）。
+  const dm = p.dm === true;
   const statin = p.statin === true ? true : (p.statin === false ? false : null);
   const bptx = p.bptx === true ? true : (p.bptx === false ? false : null);
   const smoking = p.smoking === true ? true : (p.smoking === false ? false : null);
@@ -424,6 +415,7 @@ export function evaluate(p) {
   const tg = ok(p.tg) ? p.tg : null;
   const fasting = (p.fasting === 'fasting' || p.fasting === 'casual') ? p.fasting : null;
   const ldlLab = ok(p.ldlLab) ? p.ldlLab : null;
+  const nonHdlLab = ok(p.nonHdlLab) ? p.nonHdlLab : null; // spec_addendum_v2 §B-2（新規）
   const ldlBaseline = ok(p.ldlBaseline) ? p.ldlBaseline : null;
   const apob = ok(p.apob) ? p.apob : null;
   const lpa = ok(p.lpa) ? p.lpa : null;
@@ -446,16 +438,60 @@ export function evaluate(p) {
   const pregFlag = sex === 'female' && preg;
   if (pregFlag) notes.push(NOTES.NOTE_PREG_TABLE20);
 
-  /* ---- 派生値: LDL-C・non-HDL-C（§3.1, §3.2） ---- */
-  const nonHdl = (tc !== null && hdl !== null) ? Math.round(tc - hdl) : null;
+  /* ---- 派生値: LDL-C・non-HDL-C（§3.1, §3.2、spec_addendum_v2 §B-4 で拡張） ---- */
+  let tgOver800 = tg !== null && tg > 800;
+
+  // spec_addendum_v2 §B-4: 総コレステロールが無いときの脂質の扱い（lipidMode）。
+  // 'tc': tc が入力されている（現行どおり）。
+  // 'nonhdl': nonHdlLab（検査報告値）、または ldlLab・hdl・tg（tg<=800）から Sampson/NIH 式を逆算。
+  // 'hard': tc・nonHdlLab が無く tg>800（推定しない）。
+  // 'missing': 上のどれにも当たらない（nonHdl を推定できない未入力項目にする、§B-3）。
+  let lipidMode;
+  let nonHdlSrc = null; // 'calc' | 'lab' | 'est'（表示用）
+  let tcEffForSampson = null; // tc が無いときに Sampson 順算へ流用する実効 TC
+  if (tc !== null) {
+    lipidMode = 'tc';
+    tcEffForSampson = tc;
+  } else if (nonHdlLab !== null) {
+    lipidMode = 'nonhdl';
+    nonHdlSrc = 'lab';
+    if (hdl !== null) tcEffForSampson = nonHdlLab + hdl;
+  } else if (ldlLab !== null && hdl !== null && tg !== null && tg <= 800) {
+    lipidMode = 'nonhdl';
+    nonHdlSrc = 'est';
+  } else if (tgOver800) {
+    lipidMode = 'hard';
+  } else {
+    lipidMode = 'missing';
+  }
+
+  let nonHdl = null;
+  if (lipidMode === 'tc') {
+    nonHdl = (hdl !== null) ? Math.round(tc - hdl) : null;
+    if (nonHdl !== null) nonHdlSrc = 'calc';
+  } else if (lipidMode === 'nonhdl') {
+    if (nonHdlSrc === 'lab') {
+      nonHdl = Math.round(nonHdlLab);
+    } else {
+      // 'est': Sampson/NIH 式を TC について逆算し、そこから non-HDL-C を求める
+      const tcBack = tcFromSampson(ldlLab, hdl, tg);
+      nonHdl = Math.round(tcBack - hdl);
+      tcEffForSampson = tcBack;
+    }
+  }
+  // 'missing' / 'hard' の nonHdl（表示）は null のまま（仮定値は §B-3 の assumed 側にのみ入れる）
+
   let ldlSampson = null;
-  let tgOver800 = false;
-  if (tc !== null && hdl !== null && tg !== null) {
-    if (tg > 800) { tgOver800 = true; }
-    else {
+  if (!tgOver800 && tg !== null) {
+    if (tc !== null && hdl !== null) {
       const raw = sampsonLdl(tc, hdl, tg);
       ldlSampson = raw > 0 ? Math.round(raw) : null;
+    } else if (lipidMode === 'nonhdl' && nonHdlSrc === 'lab' && hdl !== null && tcEffForSampson !== null) {
+      // spec_addendum_v2 §B-4 モード2: tcEff = nonHdlLab + hdl で Sampson 順算もできる
+      const raw = sampsonLdl(tcEffForSampson, hdl, tg);
+      ldlSampson = raw > 0 ? Math.round(raw) : null;
     }
+    // モード3（'est': Sampson 逆算）では ldlSampson は計算しない（往復するだけのため、null のまま）
   }
   const ldlCurrent = ldlLab !== null ? ldlLab : ldlSampson;
   const ldlSource = ldlLab !== null ? 'lab' : (ldlSampson !== null ? 'sampson' : null);
@@ -468,7 +504,8 @@ export function evaluate(p) {
   if (ldlLab !== null && ldlSampson !== null) {
     const lo = Math.min(ldlLab, ldlSampson);
     const hi = Math.max(ldlLab, ldlSampson);
-    if ([55, 70, 100, 160, 190].some((t) => lo < t && t <= hi)) {
+    // spec_addendum_v2 §A-2: 経路・区分に効く閾値だけに絞る（旧: 55,70,100,160,190）
+    if ([70, 160, 190].some((t) => lo < t && t <= hi)) {
       notes.push(NOTES.NOTE_LDL_DISCORDANT(ldlLab, ldlSampson));
     }
   }
@@ -487,7 +524,7 @@ export function evaluate(p) {
   } else if (egfrLab !== null) {
     egfrUsed = egfrLab;
     egfrSource = 'lab';
-    notes.push(NOTES.NOTE_EGFR_JSN);
+    // spec_addendum_v2 §A-2: NOTE_EGFR_JSN は削除（入力欄のヒントと mdx 補足に既にある）
   }
   if ((ckd === 'none') && egfrUsed !== null && egfrUsed < 60) {
     notes.push(NOTES.NOTE_EGFR_LT60_NO_CKD);
@@ -557,8 +594,8 @@ export function evaluate(p) {
   const hrCountFootnote = [age65Footnote, b(p.hr_cabgpci), smoking === true, dm === true, b(p.hr_hf), b(p.hr_htn), ldlHrFootnote].filter(Boolean).length;
   const vhrFootnote = majorCount >= 2 || (majorCount === 1 && hrCountFootnote >= 2);
 
-  if (age === null && (ev.acs12 || ev.mi || ev.isch || ev.pad || hasAscvdDef)) notes.push(NOTES.NOTE_VHR_AGE_MISSING);
-  if (maxStatinEze && ldlCurrent === null) notes.push(NOTES.NOTE_VHR_LDL_MISSING);
+  // spec_addendum_v2 §A-2/§B-8: NOTE_VHR_AGE_MISSING・NOTE_VHR_LDL_MISSING は削除し、
+  // buildSecondary() 内の「最低限追加すべき評価項目」（_secondaryRequired）に置き換える。
 
   /* ---- PREVENT 適用判定（§4.6、全経路共通の単一関数） ---- */
   function preventStatus(ldlRouteForCheck) {
@@ -573,28 +610,162 @@ export function evaluate(p) {
     // 経路非依存の add-on のまま（hfrefAlso/hfrefNotes、fix_round2 R-A8）。
     if (hfref) return { ok: false, reason: 'PREVENT_NA_HFREF' };
     if (ckd === 'G5' || ckd === 'dialysis' || (egfrUsed !== null && egfrUsed < 15)) return { ok: false, reason: 'PREVENT_NA_ESKD' };
+    // spec_addendum_v2 §B-9: 必須は性別と（'hard' のときの）総コレステロールまたは non-HDL-C だけ。
+    // 他の7項目（SBP・HDL-C・non-HDL-C・eGFR・喫煙・降圧薬・スタチン）は §B-3 の仮定値で暫定計算する。
     const missing = [];
     if (sex === null) missing.push('性別');
-    if (sbp === null) missing.push('収縮期血圧');
-    if (bptx === null) missing.push('降圧薬');
-    if (tc === null) missing.push('総コレステロール');
-    if (hdl === null) missing.push('HDL-C');
-    if (smoking === null) missing.push('喫煙');
-    if (statin === null) missing.push('スタチン');
-    if (egfrUsed === null) missing.push('eGFR（またはクレアチニン）');
+    if (lipidMode === 'hard') missing.push('総コレステロール または non-HDL-C');
     if (missing.length) return { ok: false, missing };
     return { ok: true };
   }
 
-  function computePrevent() {
+  /* ---- spec_addendum_v2 §B-3〜B-6: 未入力項目の仮定値・範囲・判定の安定性 ---- */
+  const ORDER = ['sbp', 'hdl', 'nonhdl', 'egfr', 'smk', 'bptx', 'statin'];
+  const REQUIRED_LABEL = {
+    sbp: '収縮期血圧', hdl: 'HDL-C', egfr: 'eGFR（またはクレアチニン）',
+    smk: '喫煙', bptx: '降圧薬', statin: 'スタチン内服',
+  };
+  function nonhdlRequiredLabel() {
+    // §B-4: ldlCurrent・hdl があり tg が無いとき TG（または総コレステロール）、それ以外は総コレステロール（またはnon-HDL-C）
+    if (ldlCurrent !== null && hdl !== null && tg === null) return 'TG（または総コレステロール）';
+    return '総コレステロール（または non-HDL-C）';
+  }
+  function requiredLabelFor(k) { return k === 'nonhdl' ? nonhdlRequiredLabel() : REQUIRED_LABEL[k]; }
+  const EGFR_RANGE_BY_CKD = { none: [60, 105], G3a: [45, 59], G3b: [30, 44], G4: [15, 29] };
+  const EGFR_ASSUMED_BY_CKD = { none: 80, G3a: 52, G3b: 37, G4: 22 };
+  function candidatesFor(k) {
+    // fix_v2_round1 L2: SBP の範囲上限を 160→180 に拡大
+    if (k === 'sbp') return [100, 110, 180];
+    if (k === 'hdl') return [35, 90];
+    if (k === 'nonhdl') return ldlCurrent !== null ? [ldlCurrent + 10, ldlCurrent + 60] : [100, 190];
+    if (k === 'egfr') {
+      const base = EGFR_RANGE_BY_CKD[ckd] || EGFR_RANGE_BY_CKD.none;
+      // fix_v2_round1 L2: eGFR・Cr が未入力で CKD 病期不明（none 相当）かつ 65歳以上なら下限を 45 に広げる
+      // （既定の仮定値 80 は EGFR_ASSUMED_BY_CKD.none のまま変えない）
+      if (base === EGFR_RANGE_BY_CKD.none && age !== null && age >= 65) return [45, 105];
+      return base;
+    }
+    return [false, true]; // smk / bptx / statin
+  }
+  function assumedValueFor(k) {
+    if (k === 'sbp') return 130;
+    if (k === 'hdl') return sex === 'female' ? 65 : 55;
+    if (k === 'nonhdl') return ldlCurrent !== null ? ldlCurrent + 30 : 145;
+    if (k === 'egfr') return EGFR_ASSUMED_BY_CKD[ckd] !== undefined ? EGFR_ASSUMED_BY_CKD[ckd] : 80;
+    return false; // smk / bptx / statin
+  }
+  function assumedLabelFor(k, v) {
+    if (k === 'sbp') return `収縮期血圧 ${v}`;
+    if (k === 'hdl') return `HDL-C ${v}`;
+    if (k === 'nonhdl') return ldlCurrent !== null ? `non-HDL-C ${v}（LDL-C＋30）` : `non-HDL-C ${v}`;
+    if (k === 'egfr') return `eGFR ${v}`;
+    if (k === 'smk') return `喫煙 ${v ? 'あり' : 'なし'}`;
+    if (k === 'bptx') return `降圧薬 ${v ? 'あり' : 'なし'}`;
+    return `スタチン ${v ? 'あり' : 'なし'}`;
+  }
+  /** リスク計算の線形予測子は連続変数の区分線形和なので、範囲の最小・最大は候補値の全組み合わせで厳密に求まる（§B-5） */
+  function riskAt(v) {
+    const tcForCalc = lipidMode === 'tc' ? tc : (v.nonhdl + v.hdl);
+    const clamped = clampForPrevent({ sbp: v.sbp, tc: tcForCalc, hdl: v.hdl, egfr: v.egfr });
+    return preventRisk(sex, age, clamped.sbp, v.bptx, clamped.tc, clamped.hdl, v.statin, dm, v.smk, clamped.egfr);
+  }
+  function cartesian(arrays) {
+    return arrays.reduce((acc, arr) => {
+      const out = [];
+      acc.forEach((prefix) => arr.forEach((v) => out.push([...prefix, v])));
+      return out;
+    }, [[]]);
+  }
+  /** §B-6: kind ごとの「判定キー」。同じキーの組み合わせだけなら区分・推奨は変わらない（stable） */
+  function decisionKey(kind, r10, r30) {
+    if (kind === 'primary') {
+      const c = categoryFromRisk(r10);
+      if (c === 'low' && age >= 30 && age <= 59 && !(ldlRoute !== null && ldlRoute >= 160 && ldlRoute <= 189)) {
+        return c + (r30 !== null && r30 >= 10 ? '+30' : '-30');
+      }
+      return c;
+    }
+    if (kind === 'dm3039') return String(r10 >= 3 || (r30 !== null && r30 >= 10));
+    if (kind === 'dm4075') return String(r10 >= 10);
+    return 'none'; // kind===null は常に安定（追加項目なし）
+  }
+  /** §A-4: クランプ注記は測定値（仮定値ではない）のときだけ出す */
+  function clampNotesForKnown() {
+    const tcForClamp = lipidMode === 'tc' ? tc : ((nonHdl !== null && hdl !== null) ? nonHdl + hdl : null);
+    return clampForPrevent({ sbp, tc: tcForClamp, hdl, egfr: egfrUsed }).clampNotes;
+  }
+
+  /**
+   * spec_addendum_v2 §B: PREVENT のリスク計算。kind は §B-6 の呼び出し元テーブルに従う
+   * （'primary' | 'dm3039' | 'dm4075' | null）。未入力の推定可能項目（§B-3）があれば
+   * 仮定値による点推定に加え、候補値の全組み合わせで範囲・判定の安定性（provisional）を返す。
+   */
+  function computePrevent(kind) {
     const st = preventStatus(ldlRoute);
     if (!st.ok) return { ...st, clampNotes: [] };
-    const clamped = clampForPrevent({ sbp, tc, hdl, egfr: egfrUsed });
-    const r = preventRisk(sex, age, clamped.sbp, bptx, clamped.tc, clamped.hdl, statin, dm === true, smoking === true, clamped.egfr);
+
+    const known = {};
+    const miss = [];
+    if (sbp !== null) known.sbp = sbp; else miss.push('sbp');
+    if (hdl !== null) known.hdl = hdl; else miss.push('hdl');
+    if (lipidMode === 'missing') miss.push('nonhdl'); else known.nonhdl = nonHdl;
+    if (egfrUsed !== null) known.egfr = egfrUsed; else miss.push('egfr');
+    if (smoking !== null) known.smk = smoking; else miss.push('smk');
+    if (bptx !== null) known.bptx = bptx; else miss.push('bptx');
+    if (statin !== null) known.statin = statin; else miss.push('statin');
+
+    const point = { ...known };
+    miss.forEach((k) => { point[k] = assumedValueFor(k); });
+    const pt = riskAt(point);
+    const clampNotes = clampNotesForKnown();
+
+    if (miss.length === 0) {
+      return {
+        ok: true, ascvd10: pt.risk10, ascvd30: pt.risk30, clampNotes,
+        outOfLdlRange: ldlRoute !== null && ldlRoute < 70,
+        ldlUnknown: ldlRoute === null,
+        provisional: null,
+      };
+    }
+
+    const missOrdered = ORDER.filter((k) => miss.includes(k));
+    let min10 = Infinity; let max10 = -Infinity; let min30 = Infinity; let max30 = -Infinity;
+    const keys = new Set();
+    cartesian(missOrdered.map((k) => candidatesFor(k))).forEach((combo) => {
+      const v = { ...point };
+      missOrdered.forEach((k, i) => { v[k] = combo[i]; });
+      const r = riskAt(v);
+      if (r.risk10 < min10) min10 = r.risk10;
+      if (r.risk10 > max10) max10 = r.risk10;
+      if (r.risk30 !== null) { if (r.risk30 < min30) min30 = r.risk30; if (r.risk30 > max30) max30 = r.risk30; }
+      keys.add(decisionKey(kind, r.risk10, r.risk30));
+    });
+    const stable = keys.size === 1;
+
+    const items = missOrdered.map((k) => {
+      const rs = candidatesFor(k).map((cv) => riskAt({ ...point, [k]: cv }));
+      const ks = new Set(rs.map((r) => decisionKey(kind, r.risk10, r.risk30)));
+      const r10s = rs.map((r) => r.risk10);
+      const sw10 = Math.round((Math.max(...r10s) - Math.min(...r10s)) * 10) / 10;
+      const r30s = rs.map((r) => r.risk30).filter((x) => x !== null);
+      const sw30 = r30s.length ? Math.round((Math.max(...r30s) - Math.min(...r30s)) * 10) / 10 : 0;
+      return { k, sw10, sw30, flips: ks.size > 1 };
+    }).sort((a, b) => (b.sw10 - a.sw10) || (b.sw30 - a.sw30) || (ORDER.indexOf(a.k) - ORDER.indexOf(b.k)));
+
+    let required = stable ? [] : items.filter((x) => x.flips).map((x) => x.k);
+    if (!stable && required.length === 0) required = items.filter((x) => x.sw10 > 0 || x.sw30 > 0).slice(0, 3).map((x) => x.k);
+
     return {
-      ok: true, ascvd10: r.risk10, ascvd30: r.risk30, clampNotes: clamped.clampNotes,
+      ok: true, ascvd10: pt.risk10, ascvd30: pt.risk30, clampNotes,
       outOfLdlRange: ldlRoute !== null && ldlRoute < 70,
       ldlUnknown: ldlRoute === null,
+      provisional: {
+        range10: [min10, max10],
+        range30: pt.risk30 === null ? null : [min30, max30],
+        stable,
+        assumed: missOrdered.map((k) => assumedLabelFor(k, point[k])),
+        required: required.map((k) => requiredLabelFor(k)),
+      },
     };
   }
 
@@ -608,8 +779,7 @@ export function evaluate(p) {
     // fix_round3 item1: このヘルパーは applyCac を実際に呼んだ route でのみ elderCacEmphasis を
     // 立てるための唯一の入口。呼ぶたびにまずリセットする。
     lastElderLowCac = false;
-    if (cac !== null && incidCac !== 'none') {
-    }
+    // spec_addendum_v2 §A-2: NOTE_CAC_INCID_IGNORED は削除（cac と incidCac が両方あるときの説明のみ）
     if (cac !== null) {
       // fix_round2 R-A10: 75歳超（経路を問わない）で CAC 0〜10 のときは S_CAC1・CAC_POS を出さず
       // O_ELDER_CAC（4.2.8.3 推奨4, p74, 2b/B-NR）を併記する。目標 <100 も採用しない。
@@ -635,9 +805,7 @@ export function evaluate(p) {
       if (!elderLowCac && ['low', 'borderline', 'intermediate'].includes(category) && cac >= 1) {
         if (category === 'borderline' || category === 'intermediate') extraRecs.push('CAC_POS');
       }
-      if (!elderLowCac && age !== null && ((sex === 'male' && age < 40) || (sex === 'female' && age < 45))) {
-        extraNotes.push(NOTES.NOTE_CAC_AGE);
-      }
+      // spec_addendum_v2 §A-2: NOTE_CAC_AGE は削除（説明のみ）
     } else if (incidCac === 'mild') {
       extraRecs.push('S_INCID_MILD', 'CAC_INCID');
       candidateGoal = makeGoal(100, 130, '≥30%', null, 'S_INCID_MILD');
@@ -689,18 +857,14 @@ export function evaluate(p) {
   if (hofh) return buildHofh();
   // 3. hefh
   if (hefh) return buildSevere(true);
-  // 4. ldlRoute 未確定 → incomplete（仕様書 §5 の順序どおり。fix_round1 A1: LDL-C 未確定のまま
-  //    HFrEF・HIV・糖尿病・若年・高齢などの確定的な推奨や目標を出さない）
+  // 4. ldlRoute 未確定 → 'provisional'（spec_addendum_v2 §B-9。旧: incomplete。fix_round1 A1 の
+  //    方針「LDL-C 未確定のまま確定的な推奨や目標を出さない」は維持し、リスクだけ出す）
   if (ldlRoute === null) {
-    // fix_round2 R-UI3: missing には項目名だけを入れる（「未入力: 」との二重文にしない）
-    return incompleteResult(['LDL-C（測定値、または TC・HDL-C・TG）']);
+    return buildProvisional();
   }
   // 5. ldlRoute >= 190
   if (ldlRoute >= 190) return buildSevere(false);
-  // 6. dm===null
-  if (dm === null) {
-    return incompleteResult(['糖尿病']);
-  }
+  // 6.（spec_addendum_v2 §B-2: dm はチェックボックス。未チェック=false のため incomplete 分岐は無い）
   // 7. dm===true
   if (dm === true) return buildDiabetes();
   // 8. CKD G3a-G5, 40-75, LDL 70-189
@@ -726,7 +890,8 @@ export function evaluate(p) {
       route: 'incomplete', missing, title: null, sub: null, color: null, category: null,
       prevent: { ok: false }, vhr: null, goal: null, optionalGoal: null,
       recs: [], alsoApplies: [], addOnSteps: null, enhancers: null, notes: [],
-      ldlCurrent, ldlSource, nonHdl, ldlBaseline, ldlRoute, egfrUsed, egfrSource, cr, egfrLabValue: egfrLab,
+      assumed: [], required: [],
+      ldlCurrent, ldlSource, nonHdl, nonHdlSrc, ldlBaseline, ldlRoute, egfrUsed, egfrSource, cr, egfrLabValue: egfrLab,
       reductionPct, tgOver800, ldlSampson, dmEnhLabels,
     };
   }
@@ -746,14 +911,17 @@ export function evaluate(p) {
 
   // fix_round2 R-A8: HFrEF にチェックがある場合は経路を問わず（incomplete を除く）
   // 常に HF_NB（条件付き）と固定注記を付ける。
-  // fix_round3 item3: ただし route==='secondary' では HF_NB を出さない（臨床的ASCVDがある時点で
-  // conditional「臨床的ASCVDも他のLLT適応も無い場合」は成立し得ないため）。NOTE_HFREF_CAVEAT は出す。
+  // fix_round3 item3: route==='secondary' では HF_NB を出さない（臨床的ASCVDがある時点で
+  // conditional「臨床的ASCVDも他のLLT適応も無い場合」は成立し得ないため）。
+  // spec_addendum_v2 §A-2（NOTE_HFREF_CAVEAT 行）: fix_round3 item3 の「secondary でも
+  // NOTE_HFREF_CAVEAT は出す」を上書きし、secondary では注記も出さない（臨床的ASCVD 自体が
+  // LLT の適応なので行動が変わらない）。
   function hfrefAlso(route) {
     return (hfref && route !== 'incomplete' && route !== 'secondary')
       ? [{ id: 'HF_NB', conditional: '臨床的ASCVDも他のLLT適応も無い場合' }] : [];
   }
   function hfrefNotes(route) {
-    return (hfref && route !== 'incomplete') ? [NOTES.NOTE_HFREF_CAVEAT] : [];
+    return (hfref && route !== 'incomplete' && route !== 'secondary') ? [NOTES.NOTE_HFREF_CAVEAT] : [];
   }
 
   function tgRecs() {
@@ -834,14 +1002,44 @@ export function evaluate(p) {
     ]));
     const extraNotes = [...lpaNotes(), ...hfrefNotes(route)];
     const recs = dedupeById(pregWrap(base.recs || []));
-    // §10.3: NOTE_INTENSITY・NOTE_GOAL_BOTH・NOTE_MONITOR は「目標を表示する全経路」で結果の最後に出す
-    const goalNotes = base.goal ? [NOTES.NOTE_INTENSITY, NOTES.NOTE_GOAL_BOTH, NOTES.NOTE_MONITOR] : [];
+    // spec_addendum_v2 §A-2: goalNotes（NOTE_INTENSITY・NOTE_GOAL_BOTH・NOTE_MONITOR）は削除（mdx 補足へ移設）
+    const prevent = base.prevent || { ok: false };
+    // spec_addendum_v2 §B-7: 全経路共通の「仮定値」「最低限追加すべき評価項目」
+    const assumed = (prevent.provisional && prevent.provisional.assumed) ? prevent.provisional.assumed : [];
+    const requiredParts = [];
+    if (route === 'provisional') requiredParts.push('LDL-C');
+    if (prevent.missing) requiredParts.push(...prevent.missing);
+    if (prevent.provisional && !prevent.provisional.stable) requiredParts.push(...prevent.provisional.required);
+    if (base._secondaryRequired) requiredParts.push(...base._secondaryRequired);
+    // fix_v2_round1 M1/M2: ldl_lt70・primary（スタチン内服未入力）、secondary（高リスク状態未確認）を
+    // 汎用の「経路固有の必須確認項目」として required に合流させる
+    if (base._extraRequired) requiredParts.push(...base._extraRequired);
+    // fix_v2_round1 follow-up（2026-09-27）: 変動要因としての「スタチン内服」（provisional.required）と
+    // M1 の「スタチン内服の有無」／「スタチン内服の有無（内服中なら治療前 LDL-C）」が両方入るときは、
+    // M1 側の文言だけを残す（重複除去）。表示位置は早い方（通常は provisional.required 側）を使う。
+    const STATIN_PLAIN = 'スタチン内服';
+    const STATIN_M1_VARIANTS = ['スタチン内服の有無', 'スタチン内服の有無（内服中なら治療前 LDL-C）'];
+    const statinPlainIdx = requiredParts.indexOf(STATIN_PLAIN);
+    const statinM1Idx = requiredParts.findIndex((x) => STATIN_M1_VARIANTS.includes(x));
+    let mergedRequiredParts = requiredParts;
+    if (statinPlainIdx !== -1 && statinM1Idx !== -1) {
+      const keepIdx = Math.min(statinPlainIdx, statinM1Idx);
+      const dropIdx = Math.max(statinPlainIdx, statinM1Idx);
+      const m1Text = requiredParts[statinM1Idx];
+      mergedRequiredParts = requiredParts
+        .map((x, i) => (i === keepIdx ? m1Text : x))
+        .filter((x, i) => i !== dropIdx);
+    }
+    const required = [...new Set(mergedRequiredParts)];
+    // spec_addendum_v2 §A-2 NOTE_STATIN_BASELINE: A13（primary の outOfLdlRange）では
+    // NOTE_PRIMARY_LDL_LOW_CONTINUE と重複するため出さない
+    const sharedNotes = base._excludeSharedNotes ? notes.filter((n) => !base._excludeSharedNotes.includes(n)) : notes;
     return {
       route,
       missing: base.missing || [],
       title: base.title, sub: base.sub, color: base.color,
       category: base.category || null,
-      prevent: base.prevent || { ok: false },
+      prevent,
       vhr: base.vhr || null,
       goal: base.goal || null,
       optionalGoal: base.optionalGoal || null,
@@ -849,8 +1047,9 @@ export function evaluate(p) {
       alsoApplies: also,
       addOnSteps: base.addOnSteps || null,
       enhancers: base.enhancers !== undefined ? base.enhancers : null,
-      notes: [...notes, ...(base.notes || []), ...extraNotes, ...goalNotes],
-      ldlCurrent, ldlSource, nonHdl, ldlBaseline, ldlRoute, egfrUsed, egfrSource, cr, egfrLabValue: egfrLab,
+      notes: [...sharedNotes, ...(base.notes || []), ...extraNotes],
+      assumed, required,
+      ldlCurrent, ldlSource, nonHdl, nonHdlSrc, ldlBaseline, ldlRoute, egfrUsed, egfrSource, cr, egfrLabValue: egfrLab,
       reductionPct, tgOver800, ldlSampson, dmEnhLabels, age, hfref, cacValue: cac,
       vhrDetail: base.vhrDetail || null,
       // fix_round1/2 C3, fix_round3 item1: 高齢者 CAC 強調は applyCac が実際に
@@ -893,7 +1092,7 @@ export function evaluate(p) {
       if (severeFh) mainRecs.push('F_55');
       goal = makeGoal(55, 85, '≥50%', 55, 'SEC_VH_STATIN');
       addOnSteps = FIG11_STEPS;
-      localNotes.push(NOTES.NOTE_EZE_NOT_REQUIRED);
+      // spec_addendum_v2 §A-2: NOTE_EZE_NOT_REQUIRED は削除（図11/図12 の追加手順で読める）
       // fix_round2 R-A12: 超高リスク（vhr）でも維持透析なら KHD と NOTE_HD_START を併記
       if (ckd === 'dialysis') {
         mainRecs.push('KHD');
@@ -906,7 +1105,7 @@ export function evaluate(p) {
       mainRecs = ['K_ASCVD', 'SEC_VH_ADD', 'SEC_VH_INCL', 'SEC_VH_BEMP'];
       goal = makeGoal(55, 85, '≥50%', 55, 'K_ASCVD');
       addOnSteps = FIG11_STEPS;
-      localNotes.push(NOTES.NOTE_EZE_NOT_REQUIRED);
+      // spec_addendum_v2 §A-2: NOTE_EZE_NOT_REQUIRED は削除
       // fix_round1 A12: 維持透析＋臨床的ASCVD は K_ASCVD に加え KHD と NOTE_HD_START を併記
       if (ckd === 'dialysis') {
         mainRecs.push('KHD');
@@ -926,7 +1125,7 @@ export function evaluate(p) {
       goal = makeGoal(70, 100, '≥50%', 70, 'SEC_NVH_STATIN');
       optionalGoal = makeGoal(55, 85, null, 55, 'SEC_NVH_OPT');
       addOnSteps = FIG12_STEPS;
-      localNotes.push(NOTES.NOTE_EZE_NOT_REQUIRED);
+      // spec_addendum_v2 §A-2: NOTE_EZE_NOT_REQUIRED は削除
       // fix_round2 R-A12: 非超高リスク（nvh）でも維持透析なら KHD と NOTE_HD_START を併記
       // （実際には ckdSevere が先に kind='ckd' を確定させるため到達しないが、仕様の明記どおり実装）
       if (ckd === 'dialysis') {
@@ -941,7 +1140,20 @@ export function evaluate(p) {
       const notAttained = (attain(ldlCurrent, goal.ldl) === '未達') || (attain(nonHdl, goal.nonHdl) === '未達');
       if (notAttained) { mainRecs.push('SEC_LPA'); lpa1InRecs = false; }
     }
-    if (age >= 76) mainRecs.push('O_ELDER_DISC');
+    if (age !== null && age >= 76) mainRecs.push('O_ELDER_DISC');
+
+    // spec_addendum_v2 §B-8: 二次予防の未入力（年齢・喫煙・LDL-C）。分かれば超高リスクになりうる
+    // （!vhr && majorCount===1 && hrCount+未入力数>=2）ときだけ required に入れる。
+    const missingHr = [];
+    if (age === null) missingHr.push('年齢');
+    if (smoking === null) missingHr.push('喫煙');
+    if (maxStatinEze && ldlCurrent === null) missingHr.push('LDL-C');
+    const secondaryRequired = (!vhr && majorCount === 1 && (hrCount + missingHr.length) >= 2) ? [...missingHr] : [];
+    // fix_v2_round1 M2: 主要イベント1件・高リスク状態0〜1件のときは、高リスク状態そのものの
+    // 確認（未確認の可能性）を required に加える（missingHr の有無に関わらず独立して適用）
+    if (!vhr && majorCount === 1 && hrCount <= 1) {
+      secondaryRequired.push('高リスク状態の確認（糖尿病・高血圧・CABG/PCI・心不全）');
+    }
 
     return finalize({
       route: 'secondary',
@@ -954,6 +1166,7 @@ export function evaluate(p) {
       enhancers: null,
       notes: localNotes,
       _lpa1InRecs: lpa1InRecs,
+      _secondaryRequired: secondaryRequired,
     });
   }
 
@@ -997,8 +1210,7 @@ export function evaluate(p) {
     if (isHefh) recs.push({ id: 'F_NOPREVENT' });
 
     if (cac !== null && cac === 0) localNotes.push(NOTES.NOTE_CAC0_FH);
-    // fix_round2 R-A4: HeFH 確定（hefh チェック）のときは NOTE_FH_CONSIDER を出さない
-    if (!isHefh && ldlRoute !== null && ldlRoute >= 190) localNotes.push(NOTES.NOTE_FH_CONSIDER);
+    // spec_addendum_v2 §A-2: NOTE_FH_CONSIDER は削除（推奨 F_GEN が同じ経路で既に出ている）
 
     const title = isHefh ? 'HeFH（家族性高コレステロール血症）' : '重症高コレステロール血症（LDL-C ≥190 mg/dL）';
 
@@ -1020,26 +1232,28 @@ export function evaluate(p) {
     let goal = null;
     const localNotes = [];
     let prevent = { ok: false, reason: 'PREVENT_NA_AGE' };
-    let referenceCategory = null;
-
-    const computePreventIfNeeded = () => {
-      const c = computePrevent();
-      return c;
-    };
+    let sub = '';
+    let provisionalStable = true; // 暫定だが判定が変わらないときだけ title に「（暫定入力あり）」を付ける
+    let hasProvisional = false;
 
     if (age <= 29) {
       if (dmEnhAny) recs.push('D_20'); else recs.push('D_COUNSEL');
       prevent = { ok: false, reason: 'PREVENT_NA_AGE' };
     } else if (age <= 39) {
-      const c = computePreventIfNeeded();
+      const c = computePrevent('dm3039');
       prevent = c;
-      const highRisk10 = c.ok && c.ascvd10 >= 3.0;
-      const highRisk30 = c.ok && c.ascvd30 !== null && c.ascvd30 >= 10.0;
-      // fix_round1 A6: D_20 と D_30PREVENT は排他にしない（両方の条件を満たせば両方表示）
+      if (c.provisional) { hasProvisional = true; provisionalStable = c.provisional.stable; }
       let anyShown = false;
       if (dmEnhAny) { recs.push('D_20'); anyShown = true; }
-      if (c.ok && (highRisk10 || highRisk30)) {
-        recs.push('D_30PREVENT');
+      if (c.ok && (!c.provisional || c.provisional.stable)) {
+        const highRisk10 = c.ascvd10 >= 3.0;
+        const highRisk30 = c.ascvd30 !== null && c.ascvd30 >= 10.0;
+        if (highRisk10 || highRisk30) { recs.push('D_30PREVENT'); anyShown = true; }
+      } else if (c.ok && c.provisional && !c.provisional.stable) {
+        // spec_addendum_v2 §B-7: open のときの条件文（逐語）
+        const [a10, b10] = c.provisional.range10;
+        const r30txt = c.provisional.range30 ? `・30年 ${c.provisional.range30[0].toFixed(1)}〜${c.provisional.range30[1].toFixed(1)}%` : '';
+        recs.push({ id: 'D_30PREVENT', conditional: `PREVENT 10年 ≥3% または 30年 ≥10% の場合（暫定 10年 ${a10.toFixed(1)}〜${b10.toFixed(1)}%${r30txt}）` });
         anyShown = true;
       } else if (!c.ok) {
         const why = c.missing ? `未入力項目 ${c.missing.join('・')}` : PREVENT_NA[c.reason];
@@ -1051,29 +1265,37 @@ export function evaluate(p) {
       recs.push('D_40');
       // fix_round1 A7: 任意 apoB（<90/<70）は TG 条件なしで表示（図1・図9）
       goal = makeGoal(100, 130, '30〜49%', 90, 'D_40');
-      const c = computePreventIfNeeded();
+      const c = computePrevent('dm4075');
       prevent = c;
-      // fix_round1 A5: 糖尿病特異的リスク増強因子（Table 17）があるときも D_HIGH（2a/B-R）を適用する。
-      // PREVENT が計算できて 10%未満でも、§8.3 どおり D_HIGH を条件付きで表示する（元実装では
-      // c.ok && ascvd10<10 のケースで D_HIGH が一切出ない不具合があった）。
+      if (c.provisional) { hasProvisional = true; provisionalStable = c.provisional.stable; }
       const highRiskDm = dmEnhAny;
-      if (highRiskDm || (c.ok && c.ascvd10 >= 10.0)) {
+      if (c.ok && c.provisional && !c.provisional.stable && !highRiskDm) {
+        // spec_addendum_v2 §B-7: open のときは D_HIGH を条件付きにし、D_ADD は出さない
+        const [a10, b10] = c.provisional.range10;
+        recs.push({ id: 'D_HIGH', conditional: `複数のASCVD危険因子がある場合（PREVENT 暫定 10年 ${a10.toFixed(1)}〜${b10.toFixed(1)}%）` });
+      } else if (highRiskDm || (c.ok && c.ascvd10 >= 10.0 && (!c.provisional || c.provisional.stable))) {
         recs.push('D_HIGH');
         goal = makeGoal(70, 100, '≥50%', 70, 'D_HIGH');
-        if (c.ok && c.ascvd10 >= 10.0) recs.push('D_ADD');
+        if (c.ok && c.ascvd10 >= 10.0 && (!c.provisional || c.provisional.stable)) recs.push('D_ADD');
       } else {
         recs.push({ id: 'D_HIGH', conditional: '複数のASCVD危険因子がある場合' });
       }
+      // spec_addendum_v2 §A-2（MOVE）: 「（参考: 一次予防区分 …）」は注記から判定ボックス2行目（sub）へ
       if (c.ok) {
-        referenceCategory = categoryFromRisk(c.ascvd10);
-        localNotes.push(`（参考: 一次予防区分 ${CATEGORY_LABEL[referenceCategory]}）`);
+        const lo = c.provisional ? c.provisional.range10[0] : c.ascvd10;
+        const hi = c.provisional ? c.provisional.range10[1] : c.ascvd10;
+        sub = `参考: 一次予防区分 ${catRangeLabel(lo, hi)}相当`;
       }
     } else {
       recs.push('D_DISC', 'D_75');
       prevent = { ok: false, reason: 'PREVENT_NA_AGE' };
       if (age <= 79) {
-        const c = computePreventIfNeeded();
-        if (c.ok) { prevent = c; }
+        // spec_addendum_v2 §B-6: 76〜79歳は kind=null（PREVENT は参考表示のみ、暫定でも常に stable）
+        const c = computePrevent(null);
+        if (c.ok) {
+          prevent = c;
+          if (c.provisional) { hasProvisional = true; provisionalStable = true; }
+        }
       }
     }
     recs.push('D_SIDE');
@@ -1085,7 +1307,7 @@ export function evaluate(p) {
         // fix_round1 C6: §6.5 の糖尿病向け規定は「age>40」のみ（汎用 highRiskStateCac0() の
         // 他項目 ldlRoute≥190/hefh/喫煙/enh_fhx は primary 専用のため diabetes には使わない）
         if (age !== null && age > 40) localNotes.push(NOTES.NOTE_CAC0_HIGHRISK(['糖尿病かつ40歳超']));
-        localNotes.push(NOTES.NOTE_CAROTID);
+        // spec_addendum_v2 §A-2: NOTE_CAROTID は primary の CAC_ZERO 併記時だけ（ここでは出さない）
         const cacRes0 = applyCac(null, true);
         cacRes0.extraRecs.forEach((id) => recs.push(id)); // fix_round2 R-A10: O_ELDER_CAC(76-79歳+CAC0)を拾う
         localNotes.push(...cacRes0.extraNotes);
@@ -1100,11 +1322,12 @@ export function evaluate(p) {
       }
     }
 
-    const title = `糖尿病（ASCVDなし）${ageBandLabelForDiabetes(age)}`;
+    // spec_addendum_v2 §B-7: 暫定かつ stable のときだけ title 末尾に「（暫定入力あり）」を付ける
+    const titleSuffix = (hasProvisional && provisionalStable) ? '（暫定入力あり）' : '';
+    const title = `糖尿病（ASCVDなし）${ageBandLabelForDiabetes(age)}${titleSuffix}`;
     return finalize({
       route: 'diabetes',
-      // fix_round2 R-C6: 仕様外の sub 文言を削除（§8.3 は判定ボックス1行目のみ規定）
-      title, sub: '', color: '#C62828',
+      title, sub, color: '#C62828',
       prevent,
       goal, optionalGoal,
       recs: recs.map((r) => (typeof r === 'string' ? { id: r } : r)),
@@ -1115,12 +1338,13 @@ export function evaluate(p) {
 
   /* ---------------- CKD（route: ckd） ---------------- */
   function buildCkd() {
-    const c = computePrevent();
+    const c = computePrevent('primary');
     const ref = primaryReferenceForOther(c);
     const localNotes = [...ref.notes];
+    const titleSuffix = (c.provisional && c.provisional.stable) ? '（暫定入力あり）' : '';
     return finalize({
       route: 'ckd',
-      title: `CKD ${CKD_STAGE_LABEL[ckd]}（ASCVDなし）`,
+      title: `CKD ${CKD_STAGE_LABEL[ckd]}（ASCVDなし）${titleSuffix}`,
       sub: '40〜75歳・LDL-C 70〜189 mg/dL',
       color: '#E65100',
       prevent: c,
@@ -1138,6 +1362,7 @@ export function evaluate(p) {
    * 「開始するかどうか」に関わる推奨（P_LIFE/P_LOW_COUNSEL/P_BORDER_STATIN/CAC_UNCERTAIN）は
    * 出さず、強度・目標の参考のみとする。CAC/偶発的CAC は PREVENT が理由付きで適用外
    * （CAC≥300 など）でも目標を採る。HIV で LDL<70（outOfLdlRange）の場合は区分別推奨・目標を採用しない。
+   * spec_addendum_v2 §B-7: open（判定が変わりうる暫定）のときも区分別推奨・目標を出さない。
    */
   function primaryReferenceForOther(c) {
     let category = null;
@@ -1145,17 +1370,17 @@ export function evaluate(p) {
     let optionalGoal = null;
     const recIds = [];
     const notesOut = [];
-    if (c.ok && !c.outOfLdlRange) {
+    if (c.ok && !c.outOfLdlRange && (c.provisional === null || c.provisional.stable)) {
       category = categoryFromRisk(c.ascvd10);
       const built = primaryCategoryRecs(category, c);
       const filtered = built.recIds.filter((id) => !START_DECISION_RECS.includes(id));
       filtered.forEach((id, i) => recIds.push(i === 0 ? { id, conditional: '一次予防区分による参考' } : { id }));
       goal = built.goal;
     }
-    // fix_round2 R-C6: CKD・HIV で CAC 0 のとき NOTE_CAROTID と applyCac の注記
-    // （NOTE_CAC_AGE・偶発的 CAC 無視、および R-A10 の O_ELDER_CAC）を捨てない
+    // fix_round2 R-C6: CKD・HIV で CAC 0 のとき applyCac の注記（NOTE_CAC_AGE・偶発的 CAC 無視、
+    // および R-A10 の O_ELDER_CAC）を捨てない。spec_addendum_v2 §A-2: NOTE_CAROTID はここでは出さない
+    // （primary の CAC_ZERO 併記時だけに限定）
     if (cac === 0) {
-      notesOut.push(NOTES.NOTE_CAROTID);
       const cacRes0 = applyCac(category, true);
       cacRes0.extraRecs.forEach((id) => recIds.push({ id }));
       notesOut.push(...cacRes0.extraNotes);
@@ -1191,30 +1416,33 @@ export function evaluate(p) {
 
   /* ---------------- HIV（route: hiv） ---------------- */
   function buildHiv() {
-    const c = computePrevent();
+    const c = computePrevent('primary');
     const ref = primaryReferenceForOther(c);
+    const titleSuffix = (c.provisional && c.provisional.stable) ? '（暫定入力あり）' : '';
     return finalize({
       route: 'hiv',
-      title: 'HIV 感染症（安定したART中）40〜75歳', sub: '', color: '#E65100',
+      title: `HIV 感染症（安定したART中）40〜75歳${titleSuffix}`, sub: '', color: '#E65100',
       prevent: c,
       category: ref.category,
       goal: ref.goal,
       optionalGoal: ref.optionalGoal,
       recs: [{ id: 'H40' }, ...ref.recIds],
       enhancers: null,
-      notes: [NOTES.NOTE_HIV_REPRIEVE, NOTES.NOTE_HIV_DDI, ...ref.notes],
+      // spec_addendum_v2 §A-2: NOTE_HIV_REPRIEVE は削除（出典の説明のみ）
+      notes: [NOTES.NOTE_HIV_DDI, ...ref.notes],
     });
   }
 
   /* ---------------- 20〜29歳（route: young） ---------------- */
   function buildYoung() {
     const recs = ['Y_LIFE'];
-    const localNotes = [NOTES.NOTE_YOUNG_LLT];
+    // spec_addendum_v2 §A-2: NOTE_YOUNG_LLT は削除（行動に効く部分は NOTE_TAKEHOME1 が担う）
+    const localNotes = [];
     if ((ldlRoute !== null && ldlRoute >= 160) || enhancerFlags.enh_fhx) localNotes.push(NOTES.NOTE_TAKEHOME1);
     let goal = null;
     if (cac !== null || incidCac !== 'none') {
       if (cac === 0) {
-        localNotes.push(NOTES.NOTE_CAROTID);
+        // spec_addendum_v2 §A-2: NOTE_CAROTID はここでは出さない（primary の CAC_ZERO 併記時だけ）
         localNotes.push(...applyCac(null, true).extraNotes);
       } else {
         const cacRes = applyCac(null, true);
@@ -1241,9 +1469,7 @@ export function evaluate(p) {
     const recs = ['O_ELDER_DISC', 'O_ELDER_START', 'O_ELDER_CAC', 'O_LIFE1'];
     const localNotes = [];
     let goal = null;
-    if (cac === 0) {
-      localNotes.push(NOTES.NOTE_CAROTID);
-    }
+    // spec_addendum_v2 §A-2: NOTE_CAROTID はここでは出さない（primary の CAC_ZERO 併記時だけ）
     if (cac !== null || incidCac !== 'none') {
       const cacRes = applyCac(null, true);
       cacRes.extraRecs.forEach((id) => recs.push(id));
@@ -1288,12 +1514,19 @@ export function evaluate(p) {
   function buildLdlLt70() {
     const recs = [];
     const localNotes = [];
+    // fix_v2_round1 M1: スタチン内服の有無が未入力なら required で確認を求め、
+    // P_LDL70_NB（未治療前提の推奨）には「スタチン未内服の場合」の条件を付ける
+    const extraRequired = [];
+    if (statin === null) extraRequired.push('スタチン内服の有無');
     if (nonHdl !== null && nonHdl < 100) {
-      recs.push({ id: 'P_LDL70_NB', conditional: '追加のASCVD危険因子が無い場合' });
+      const cond = statin === null
+        ? 'スタチン未内服の場合・追加のASCVD危険因子が無い場合'
+        : '追加のASCVD危険因子が無い場合';
+      recs.push({ id: 'P_LDL70_NB', conditional: cond });
     } else {
       localNotes.push(NOTES.NOTE_LDL70_NONHDL);
     }
-    const c = computePrevent();
+    const c = computePrevent(null); // spec_addendum_v2 §B-6: ldl_lt70 は kind=null（常に stable）
     // fix_round1 A3: CAC 再分類・「低い方の目標を採る」を ldl_lt70 にも適用する
     let goal = null;
     let optionalGoal = null;
@@ -1309,7 +1542,7 @@ export function evaluate(p) {
       localNotes.push(...cacRes.extraNotes);
       goal = cacRes.candidateGoal;
     } else if (cac === 0) {
-      localNotes.push(NOTES.NOTE_CAROTID);
+      // spec_addendum_v2 §A-2: NOTE_CAROTID はここでは出さない（primary の CAC_ZERO 併記時だけ）
       const cacRes0 = applyCac(null, true);
       cacRes0.extraRecs.forEach((id) => recs.push({ id })); // fix_round2 R-A10: O_ELDER_CAC(76-79歳)
       localNotes.push(...cacRes0.extraNotes);
@@ -1325,14 +1558,64 @@ export function evaluate(p) {
       recs,
       enhancers,
       notes: localNotes,
+      _extraRequired: extraRequired,
+    });
+  }
+
+  /* ---------------- LDL-C 未入力（route: provisional、spec_addendum_v2 §B-9） ---------------- */
+  function buildProvisional() {
+    let kind;
+    if (dm) {
+      if (age >= 30 && age <= 39) kind = 'dm3039';
+      else if (age >= 40 && age <= 75) kind = 'dm4075';
+      else kind = null;
+    } else if (age >= 30 && age <= 79) {
+      kind = 'primary';
+    } else {
+      kind = null;
+    }
+    const c = computePrevent(kind);
+    let sub;
+    if (c.ok) {
+      const lo = c.provisional ? c.provisional.range10[0] : c.ascvd10;
+      const hi = c.provisional ? c.provisional.range10[1] : c.ascvd10;
+      sub = `LDL-C 70〜189 の場合: ${catRangeLabel(lo, hi)}`;
+    } else if (c.reason) {
+      sub = `PREVENT-ASCVD 適用外（${PREVENT_NA[c.reason]}）`;
+    } else {
+      sub = 'PREVENT 未計算';
+    }
+    return finalize({
+      route: 'provisional',
+      title: '暫定評価（LDL-C 未入力）',
+      sub,
+      color: '#546E7A',
+      prevent: c,
+      category: null,
+      goal: null,
+      recs: [],
+      enhancers: null,
+      notes: [],
     });
   }
 
   /* ---------------- 一次予防（route: primary） ---------------- */
   function buildPrimary() {
-    const c = computePrevent();
+    const kindForPrimary = (ldlRoute !== null && ldlRoute < 70) ? null : 'primary';
+    const c = computePrevent(kindForPrimary);
+    // fix_v2_round1 M1: スタチン内服の有無が未入力（LDL 70〜189 経路）なら required で確認を求める
+    const statinRequired = statin === null ? ['スタチン内服の有無（内服中なら治療前 LDL-C）'] : [];
     if (!c.ok && c.missing) {
       return incompleteResult(c.missing);
+    }
+    // spec_addendum_v2 §B-7: 暫定表示の共通書式（10年・30年の範囲つき）
+    function provisionalSuffix(prefix) {
+      if (!c.provisional) return '';
+      let s = `${prefix} 暫定 10年 ${c.ascvd10.toFixed(1)}%（範囲 ${c.provisional.range10[0].toFixed(1)}〜${c.provisional.range10[1].toFixed(1)}%）`;
+      if (c.provisional.range30) {
+        s += ` / 30年 ${c.ascvd30.toFixed(1)}%（範囲 ${c.provisional.range30[0].toFixed(1)}〜${c.provisional.range30[1].toFixed(1)}%）`;
+      }
+      return s;
     }
     if (!c.ok && c.reason) {
       // fix_round1 A2: PREVENT が理由付きで適用外（eGFR<15・CKD G5 など、40〜75歳の CKD/HIV
@@ -1345,7 +1628,8 @@ export function evaluate(p) {
       let optionalGoal0 = null;
       const localNotes0 = [];
       if (cac === 0) {
-        localNotes0.push(NOTES.NOTE_CAROTID);
+        // spec_addendum_v2 §A-2: NOTE_CAROTID は primary の CAC_ZERO 併記時だけ（この分岐では
+        // category が無いため CAC_ZERO は付かない＝出さない）
         const cacRes0 = applyCac(null, true);
         recIds0.push(...cacRes0.extraRecs);
         localNotes0.push(...cacRes0.extraNotes);
@@ -1367,16 +1651,23 @@ export function evaluate(p) {
         recs: recIds0.map((id) => ({ id })),
         enhancers,
         notes: localNotes0,
+        _extraRequired: statinRequired,
       });
     }
     // fix_round1 A13: statin 内服中・治療前値なし・ldlRoute<70 で primary に入るケース（§4.6）。
     // PREVENT は参考値、区分別の「開始」推奨は出さず継続を基本とする。
     if (c.outOfLdlRange) {
       const category = categoryFromRisk(c.ascvd10);
+      const title = c.provisional
+        ? `一次予防 ${CATEGORY_LABEL[category]}（参考値・暫定入力あり）`
+        : `一次予防 ${CATEGORY_LABEL[category]}（参考値）`;
+      const sub = c.provisional
+        ? `${provisionalSuffix('PREVENT-ASCVD')}（LDL-C <70 のため参考値。区分適用範囲 70〜189 外）`
+        : `PREVENT-ASCVD 10年 ${c.ascvd10.toFixed(1)}%（LDL-C <70 のため参考値。区分適用範囲 70〜189 外）`;
       return finalize({
         route: 'primary',
-        title: `一次予防 ${CATEGORY_LABEL[category]}（参考値）`,
-        sub: `PREVENT-ASCVD 10年 ${c.ascvd10.toFixed(1)}%（LDL-C <70 のため参考値。区分適用範囲 70〜189 外）`,
+        title,
+        sub,
         color: CATEGORY_COLOR[category],
         category,
         prevent: c,
@@ -1384,8 +1675,53 @@ export function evaluate(p) {
         recs: [{ id: 'P_LIFE' }],
         enhancers,
         notes: [NOTES.NOTE_PRIMARY_LDL_LOW_CONTINUE],
+        // spec_addendum_v2 §A-2 NOTE_STATIN_BASELINE: A13 では NOTE_PRIMARY_LDL_LOW_CONTINUE と
+        // 重複するため出さない
+        _excludeSharedNotes: [NOTES.NOTE_STATIN_BASELINE],
+        _extraRequired: statinRequired,
       });
     }
+
+    // spec_addendum_v2 §B-7: open（判定が変わりうる）のときは「PREVENT が理由付きで適用外」と
+    // 同じ中身（P_LIFE のみ・CAC 入力があれば CAC 由来の推奨/目標）にする。区分別の推奨・目標は出さない。
+    const open = c.provisional && !c.provisional.stable;
+    if (open) {
+      const recIdsO = ['P_LIFE'];
+      let goalO = null;
+      let optionalGoalO = null;
+      const localNotesO = [];
+      if (cac === 0) {
+        const cacRes0 = applyCac(null, true);
+        recIdsO.push(...cacRes0.extraRecs);
+        localNotesO.push(...cacRes0.extraNotes);
+      } else if (cac !== null || incidCac !== 'none') {
+        const cacRes = applyCac(null, true);
+        recIdsO.push(...cacRes.extraRecs);
+        localNotesO.push(...cacRes.extraNotes);
+        if (cacRes.candidateGoal) { goalO = cacRes.candidateGoal; optionalGoalO = cacRes.optionalGoal; }
+      }
+      const [lo10, hi10] = c.provisional.range10;
+      const catLo = categoryFromRisk(lo10);
+      const catHi = categoryFromRisk(hi10);
+      const title = catLo !== catHi
+        ? `一次予防 リスク区分未確定（${catRangeLabel(lo10, hi10)}）`
+        : `一次予防 ${CATEGORY_LABEL[catLo]}（30年リスク未確定）`;
+      return finalize({
+        route: 'primary',
+        title,
+        sub: provisionalSuffix('PREVENT-ASCVD'),
+        color: '#546E7A',
+        category: null,
+        prevent: c,
+        goal: goalO,
+        optionalGoal: optionalGoalO,
+        recs: recIdsO.map((id) => ({ id })),
+        enhancers,
+        notes: localNotesO,
+        _extraRequired: statinRequired,
+      });
+    }
+
     const category = categoryFromRisk(c.ascvd10);
     const built = primaryCategoryRecs(category, c, true);
     const localNotes = [...built.notes];
@@ -1402,15 +1738,13 @@ export function evaluate(p) {
           if (hi.length === 0) {
             recIds = recIds.filter((id) => id !== 'CAC_UNCERTAIN');
             recIds.push('CAC_ZERO');
+            // spec_addendum_v2 §A-2: NOTE_CAROTID は CAC_ZERO を実際に付けたときだけ出す（1か所限定）
+            localNotes.push(NOTES.NOTE_CAROTID);
           } else {
             localNotes.push(NOTES.NOTE_CAC0_HIGHRISK(hi));
           }
-        } else if (!(age !== null && age >= 76)) {
-          // fix_round3 item4: 76歳以上では NOTE_CAC0_OTHER を出さない（O_ELDER_CAC 側の
-          // 説明と重複・矛盾するため。76〜79歳は applyCac の elderLowCac 分岐が優先する）
-          localNotes.push(NOTES.NOTE_CAC0_OTHER);
         }
-        localNotes.push(NOTES.NOTE_CAROTID);
+        // spec_addendum_v2 §A-2: NOTE_CAC0_OTHER は削除（low/high 区分での CAC=0 の定型説明）
         const cacRes0 = applyCac(category, true);
         recIds.push(...cacRes0.extraRecs); // fix_round2 R-A10: O_ELDER_CAC（76-79歳）
         localNotes.push(...cacRes0.extraNotes);
@@ -1430,10 +1764,13 @@ export function evaluate(p) {
     // fix_round1 B7: NOTE_LOW_ENH は low 区分だけに出す（本文 p40 は低リスクの文脈）
     if (category === 'low' && (enhancerFlags.enh_fhx || enhancerFlags.enh_lpa)) localNotes.push(NOTES.NOTE_LOW_ENH);
 
+    const title = c.provisional ? `一次予防 ${CATEGORY_LABEL[category]}（暫定入力あり）` : `一次予防 ${CATEGORY_LABEL[category]}`;
+    const sub = c.provisional ? provisionalSuffix('PREVENT-ASCVD') : `PREVENT-ASCVD 10年 ${c.ascvd10.toFixed(1)}%`;
+
     return finalize({
       route: 'primary',
-      title: `一次予防 ${CATEGORY_LABEL[category]}`,
-      sub: `PREVENT-ASCVD 10年 ${c.ascvd10.toFixed(1)}%`,
+      title,
+      sub,
       color: CATEGORY_COLOR[category],
       category,
       prevent: c,
@@ -1441,6 +1778,7 @@ export function evaluate(p) {
       recs: recIds.map((id) => ({ id })),
       enhancers,
       notes: localNotes,
+      _extraRequired: statinRequired,
     });
   }
 
@@ -1463,11 +1801,9 @@ export function evaluate(p) {
         goal.subReason = reasons.join(' / ');
       } else if (age3059) {
         recIds.push('P_LOW_COUNSEL');
-      } else if (ldlRoute >= 160 && ldlRoute <= 189) {
-        localNotes.push(NOTES.NOTE_LOW_60PLUS);
-      } else {
-        localNotes.push(NOTES.NOTE_LOW_60PLUS_COUNSEL);
       }
+      // spec_addendum_v2 §A-2: 60〜79歳の低リスクは NOTE_LOW_60PLUS／NOTE_LOW_60PLUS_COUNSEL を削除
+      // （P_LIFE のみで行動は変わらない・P_LIFE と重複するため）
     } else if (category === 'borderline') {
       recIds.push('P_BORDER_STATIN', 'P_BORDER_ENH', 'P_BI_GOAL');
       if (enhancerFlags.enh_crp) recIds.push('P_BORDER_CRP');
@@ -1505,6 +1841,15 @@ export function categoryFromRisk(r) {
   if (r < 5.0) return 'borderline';
   if (r < 10.0) return 'intermediate';
   return 'high';
+}
+
+const CATEGORY_SHORT = { low: '低', borderline: '境界', intermediate: '中間', high: '高' };
+/** spec_addendum_v2 §B-6: 区分範囲ラベル（区分が1つに決まらないときの表示） */
+export function catRangeLabel(min10, max10) {
+  const lo = categoryFromRisk(min10);
+  const hi = categoryFromRisk(max10);
+  if (lo === hi) return CATEGORY_LABEL[lo];
+  return `${CATEGORY_SHORT[lo]}〜${CATEGORY_LABEL[hi]}`;
 }
 
 function ageBandLabelForDiabetes(age) {
@@ -1565,15 +1910,64 @@ function summaryShort(recs) {
 function buildSummaryCore(result) {
   const r = result;
   const cur = r.ldlCurrent;
+  const prov = r.prevent.provisional;
   const curLine = (goal) => (cur !== null && goal ? ` / 現LDL-C ${cur}（${attain(cur, goal.ldl)}）` : '');
+  if (r.route === 'provisional') {
+    // spec_addendum_v2 §B-11
+    let s = '暫定評価（LDL-C 未入力）';
+    if (r.prevent.ok) {
+      if (prov) {
+        const [a10, b10] = prov.range10;
+        s += ` PREVENT-ASCVD 暫定10年 ${r.prevent.ascvd10.toFixed(1)}%（${a10.toFixed(1)}〜${b10.toFixed(1)}%）`;
+        if (prov.range30) s += ` 30年 ${r.prevent.ascvd30.toFixed(1)}%（${prov.range30[0].toFixed(1)}〜${prov.range30[1].toFixed(1)}%）`;
+      } else {
+        s += ` PREVENT-ASCVD 10年 ${r.prevent.ascvd10.toFixed(1)}%`;
+      }
+    }
+    return s;
+  }
   if (r.route === 'primary') {
-    // fix_round1 A2: PREVENT が理由付きで適用外の primary（category===null）でもクラッシュしない
-    let s = r.prevent.ok
-      ? `PREVENT-ASCVD 10年 ${r.prevent.ascvd10.toFixed(1)}%${r.category ? `（${CATEGORY_LABEL[r.category]}）` : ''}`
-      : `一次予防: PREVENT-ASCVD ${r.prevent.reason ? PREVENT_NA[r.prevent.reason] : '未計算'}`;
-    if (r.prevent.ok && r.prevent.ascvd30 !== null && r.prevent.ascvd30 !== undefined) s += ` 30年 ${r.prevent.ascvd30.toFixed(1)}%`;
+    let s;
+    if (!r.prevent.ok) {
+      // fix_round1 A2: PREVENT が理由付きで適用外の primary（category===null）でもクラッシュしない
+      // spec_addendum_v2 §A-3: 「適用外（…）」／未計算の表示に統一
+      const inner = r.prevent.reason ? `適用外（${PREVENT_NA[r.prevent.reason]}）`
+        : (r.prevent.missing ? preventNaMissingText(r.prevent.missing) : '未計算');
+      let s0 = `一次予防: PREVENT-ASCVD ${inner}`;
+      // fix_v2_round1 N1: PREVENT 適用外でも CAC 由来の推奨短縮語・目標があれば要約に出す（画面と一致）。
+      // この分岐の recs/goal は CAC 由来のもの（S_CAC* / candidateGoal）以外に発生しないため安全に出せる。
+      const shortNa = summaryShort(r.recs);
+      if (shortNa) s0 += ` ${shortNa}`;
+      if (r.goal) s0 += ` LDL<${r.goal.ldl}/non-HDL<${r.goal.nonHdl}`;
+      s0 += curLine(r.goal);
+      return s0;
+    }
+    if (prov && !prov.stable) {
+      // spec_addendum_v2 §B-7/§B-11: open は区分別の目標・推奨短縮は出さない。
+      // fix_v2_round1 N1: ただし CAC 由来の推奨短縮語・目標（この分岐でも candidateGoal 以外は
+      // goal に入らない）は画面と一致させて出す。
+      const [a10, b10] = prov.range10;
+      const catLo = categoryFromRisk(a10);
+      const catHi = categoryFromRisk(b10);
+      const paren = catLo !== catHi ? catRangeLabel(a10, b10) : `${CATEGORY_LABEL[catLo]}・30年未確定`;
+      s = `PREVENT-ASCVD 暫定10年 ${r.prevent.ascvd10.toFixed(1)}%（${a10.toFixed(1)}〜${b10.toFixed(1)}%）（${paren}）`;
+      if (prov.range30) s += ` 30年 ${r.prevent.ascvd30.toFixed(1)}%（${prov.range30[0].toFixed(1)}〜${prov.range30[1].toFixed(1)}%）`;
+      const shortOpen = summaryShort(r.recs);
+      if (shortOpen) s += ` ${shortOpen}`;
+      if (r.goal) s += ` LDL<${r.goal.ldl}/non-HDL<${r.goal.nonHdl}`;
+      s += curLine(r.goal);
+      return s;
+    }
+    if (prov) {
+      const [a10, b10] = prov.range10;
+      s = `PREVENT-ASCVD 暫定10年 ${r.prevent.ascvd10.toFixed(1)}%（${a10.toFixed(1)}〜${b10.toFixed(1)}%）（${r.category ? CATEGORY_LABEL[r.category] : ''}）`;
+      if (prov.range30) s += ` 30年 ${r.prevent.ascvd30.toFixed(1)}%（${prov.range30[0].toFixed(1)}〜${prov.range30[1].toFixed(1)}%）`;
+    } else {
+      s = `PREVENT-ASCVD 10年 ${r.prevent.ascvd10.toFixed(1)}%${r.category ? `（${CATEGORY_LABEL[r.category]}）` : ''}`;
+      if (r.prevent.ascvd30 !== null && r.prevent.ascvd30 !== undefined) s += ` 30年 ${r.prevent.ascvd30.toFixed(1)}%`;
+    }
     // fix_round2 R-C1: A13（参考値）のときは「参考値」を付ける
-    if (r.prevent.ok && r.prevent.outOfLdlRange) s += '（参考値）';
+    if (r.prevent.outOfLdlRange) s += '（参考値）';
     const short = summaryShort(r.recs);
     if (short) s += ` ${short}`;
     if (r.goal) s += ` LDL<${r.goal.ldl}/non-HDL<${r.goal.nonHdl}`;
@@ -1599,7 +1993,15 @@ function buildSummaryCore(result) {
     const short = summaryShort(r.recs);
     if (short) s += ` ${short}`;
     if (r.goal) s += ` LDL<${r.goal.ldl}/non-HDL<${r.goal.nonHdl}`;
-    if (r.prevent && r.prevent.ok) s += ` PREVENT 10年 ${r.prevent.ascvd10.toFixed(1)}%`;
+    if (r.prevent && r.prevent.ok) {
+      // spec_addendum_v2 §B-11: 暫定なら「PREVENT 暫定10年 {x}%（{a}〜{b}%）」
+      if (prov) {
+        const [a10, b10] = prov.range10;
+        s += ` PREVENT 暫定10年 ${r.prevent.ascvd10.toFixed(1)}%（${a10.toFixed(1)}〜${b10.toFixed(1)}%）`;
+      } else {
+        s += ` PREVENT 10年 ${r.prevent.ascvd10.toFixed(1)}%`;
+      }
+    }
     s += curLine(r.goal);
     return s;
   }
@@ -1618,34 +2020,102 @@ function buildSummaryCore(result) {
 
 export function buildSummary(result) {
   if (!result || result.route === 'incomplete') return '';
-  const s = buildSummaryCore(result);
+  let s = buildSummaryCore(result);
+  // spec_addendum_v2 §B-11: 全経路共通 — required があれば「 要追加: …」、その後に「・HFrEF」
+  if (result.required && result.required.length) s += ` 要追加: ${result.required.join('・')}`;
   // fix_round2 R-A8: 1行要約に「LLT開始は推奨されない」を出さない。他の経路の要約に「・HFrEF」だけ付ける
   return result.hfref ? `${s}・HFrEF` : s;
 }
 
 /** 全文コピー用テキスト（§11.1） */
+/** spec_addendum_v2 §A-3: PREVENT 行を出す経路の限定
+ *  fix_v2_round1 N2: UI 側と二重管理しないよう、この判定関数をデータ層から export する */
+export function showsPreventLine(r) {
+  return r.prevent.ok === true || !!r.prevent.missing || r.route === 'primary' || r.route === 'provisional';
+}
+
+/** fix_v2_round1 C1: non-HDL-C の出所を表す括弧書き（画面・コピー共通表記）。
+ *  nonHdlSrc が null（nonHdl 自体が未算出）のときは LDL+30 の仮定として表示する。 */
+export function nonHdlSrcSuffix(nonHdlSrc) {
+  if (nonHdlSrc === 'lab') return '（検査報告値）';
+  if (nonHdlSrc === 'est') return '（推定: LDL-C・HDL-C・TG から逆算）';
+  if (nonHdlSrc === 'calc') return '（TC − HDL-C）';
+  return '（仮定: LDL-C＋30）';
+}
+
+/** fix_v2_round1 L3: required（最低限追加すべき評価項目）が5項目以上のときだけ、
+ *  画面とコピーの「表示」を5つの束にまとめる。内部の required 配列そのものは変えない。
+ *  束にできない項目（年齢・LDL-C・高リスク状態の確認 など）はそのまま残す。 */
+export function bundleRequiredForDisplay(required) {
+  if (!required || required.length < 5) return required || [];
+  const BLOOD = ['HDL-C', 'TG（または総コレステロール）', '総コレステロール（または non-HDL-C）'];
+  const BP = ['収縮期血圧'];
+  const SMK = ['喫煙'];
+  const MED = ['降圧薬', 'スタチン内服', 'スタチン内服の有無', 'スタチン内服の有無（内服中なら治療前 LDL-C）'];
+  const EGFR = ['eGFR（またはクレアチニン）'];
+  let hasBlood = false;
+  let hasBp = false;
+  let hasSmk = false;
+  let hasMed = false;
+  let hasEgfr = false;
+  const rest = [];
+  required.forEach((item) => {
+    if (BLOOD.includes(item)) hasBlood = true;
+    else if (BP.includes(item)) hasBp = true;
+    else if (SMK.includes(item)) hasSmk = true;
+    else if (MED.includes(item)) hasMed = true;
+    else if (EGFR.includes(item)) hasEgfr = true;
+    else rest.push(item);
+  });
+  const out = [];
+  if (hasBlood) out.push('採血（HDL-C・総コレステロールまたは non-HDL-C・TG）');
+  if (hasBp) out.push('血圧');
+  if (hasSmk) out.push('喫煙');
+  if (hasMed) out.push('内服（降圧薬・スタチン）');
+  if (hasEgfr) out.push('eGFR（またはクレアチニン）');
+  return [...out, ...rest];
+}
+
 export function buildText(result, raw, dateLabel) {
   if (!result || result.route === 'incomplete') return '';
   const r = result;
+  const prov = r.prevent.provisional;
   const L = [];
   L.push('【2026 ACC/AHA 脂質異常症GL（PREVENT-ASCVD） __DATE__】');
   L.push('');
   L.push('■ 判定');
   // fix_round1 C5: sub が空文字なら括弧を出さない（HIV route など）
-  L.push(r.sub ? `  ${r.title}（${r.sub}）` : `  ${r.title}`);
-  if (r.prevent.ok) {
-    let line = `  PREVENT-ASCVD 10年 ${r.prevent.ascvd10.toFixed(1)}%`;
-    if (r.prevent.ascvd30 !== null && r.prevent.ascvd30 !== undefined) line += ` / 30年 ${r.prevent.ascvd30.toFixed(1)}%`;
-    // fix_round2 R-C3: 参考値の印（outOfLdlRange / ldlUnknown / A13）を画面と一致させてコピーにも出す
-    if (r.prevent.outOfLdlRange) line += '（参考値: GL の区分適用範囲 LDL-C 70〜189 外）';
-    if (r.prevent.ldlUnknown) line += '（LDL-C 未確定: 適用範囲 70〜189 の確認が必要）';
-    L.push(line);
-  } else if (r.prevent.reason) {
-    L.push(`  PREVENT-ASCVD: ${PREVENT_NA[r.prevent.reason]}`);
-  } else if (r.prevent.missing) {
-    L.push(`  PREVENT-ASCVD: ${preventNaMissingText(r.prevent.missing)}`);
+  // spec_addendum_v2 §A-7: primary は sub を出さない（次の PREVENT 行と重複するため）
+  if (r.route === 'primary') {
+    L.push(`  ${r.title}`);
+  } else {
+    L.push(r.sub ? `  ${r.title}（${r.sub}）` : `  ${r.title}`);
+  }
+  if (showsPreventLine(r)) {
+    if (r.prevent.ok) {
+      let line;
+      if (prov) {
+        line = `  PREVENT-ASCVD 暫定 10年 ${r.prevent.ascvd10.toFixed(1)}%（範囲 ${prov.range10[0].toFixed(1)}〜${prov.range10[1].toFixed(1)}%）`;
+        if (prov.range30) line += ` / 30年 ${r.prevent.ascvd30.toFixed(1)}%（範囲 ${prov.range30[0].toFixed(1)}〜${prov.range30[1].toFixed(1)}%）`;
+      } else {
+        line = `  PREVENT-ASCVD 10年 ${r.prevent.ascvd10.toFixed(1)}%`;
+        if (r.prevent.ascvd30 !== null && r.prevent.ascvd30 !== undefined) line += ` / 30年 ${r.prevent.ascvd30.toFixed(1)}%`;
+      }
+      // fix_round2 R-C3: 参考値の印（outOfLdlRange）を画面と一致させてコピーにも出す
+      // spec_addendum_v2 §A-5/§B-11: ldlUnknown の印は削除
+      if (r.prevent.outOfLdlRange) line += '（参考値: LDL-C <70）';
+      L.push(line);
+    } else if (r.prevent.reason) {
+      L.push(`  PREVENT-ASCVD: 適用外（${PREVENT_NA[r.prevent.reason]}）`);
+    } else if (r.prevent.missing) {
+      L.push(`  PREVENT-ASCVD: ${preventNaMissingText(r.prevent.missing)}`);
+    }
   }
   (r.prevent.clampNotes || []).forEach((n) => L.push(`  ※ ${n}`));
+  // spec_addendum_v2 §B-10/§B-11: 仮定値・最低限追加すべき評価項目
+  if (r.assumed && r.assumed.length) L.push(`  未入力（仮定値で計算）: ${r.assumed.join('、')}`);
+  // fix_v2_round1 L3: 5項目以上なら表示を束ねる（内部の r.required は変えない）
+  if (r.required && r.required.length) L.push(`  最低限追加すべき評価項目: ${bundleRequiredForDisplay(r.required).join('・')}`);
   // fix_round2 R-C3: 高齢者の CAC 強調行を画面と一致させてコピーにも出す
   if (r.elderCacEmphasis) {
     L.push(`  CAC ${r.cacValue !== null && r.cacValue !== undefined ? r.cacValue : ''}: LLT を避ける再分類の対象（0 または 1〜10）`);
@@ -1693,32 +2163,48 @@ export function buildText(result, raw, dateLabel) {
   } else {
     L.push('');
     L.push('■ 管理目標');
-    L.push('  GL に数値目標の記載なし');
+    // spec_addendum_v2 §A-7: 目標が無いときの文言を場合分けする
+    if (r.route === 'provisional') {
+      L.push('  LDL-C 入力後に表示');
+    } else if (prov && !prov.stable) {
+      L.push('  リスク区分の確定後に表示');
+    } else {
+      L.push('  GL に数値目標の記載なし');
+    }
   }
 
-  L.push('');
-  L.push('■ 推奨');
-  r.recs.forEach((rec) => L.push(`  ・${recText(rec.id, rec.conditional)}`));
-  if (r.addOnSteps) {
-    L.push('  （目標未達時の追加）');
-    r.addOnSteps.forEach((s) => L.push(`  ${s}`));
-  }
-  if (r.alsoApplies && r.alsoApplies.length) {
-    L.push('  （他に該当）');
-    // fix_round2 R-TG: 他に該当する推奨の conditional をコピーにも表示する
-    r.alsoApplies.forEach((a) => L.push(`  ・${recText(a.id, a.conditional)}`));
+  // spec_addendum_v2 §A-7: recs と alsoApplies が両方空なら「■ 推奨」見出しごと出さない
+  if ((r.recs && r.recs.length) || (r.alsoApplies && r.alsoApplies.length)) {
+    L.push('');
+    L.push('■ 推奨');
+    r.recs.forEach((rec) => L.push(`  ・${recText(rec.id, rec.conditional)}`));
+    if (r.addOnSteps) {
+      L.push('  （目標未達時の追加）');
+      r.addOnSteps.forEach((s) => L.push(`  ${s}`));
+    }
+    if (r.alsoApplies && r.alsoApplies.length) {
+      L.push('  （他に該当）');
+      // fix_round2 R-TG: 他に該当する推奨の conditional をコピーにも表示する
+      r.alsoApplies.forEach((a) => L.push(`  ・${recText(a.id, a.conditional)}`));
+    }
   }
 
   L.push('');
   L.push('■ 入力');
   L.push(`  年齢: ${raw.age !== null && raw.age !== undefined ? raw.age + '歳' : '未入力'} / 性別: ${raw.sex === 'male' ? '男性' : raw.sex === 'female' ? '女性' : '未入力'}`);
+  // spec_addendum_v2 §A-7: 臨床的ASCVD・HeFH/HoFH/糖尿病・CKD/HIV/HFrEF の3行を「背景: …」1行にまとめる
   const ascvdLabels = { acs: '急性冠症候群（ACS）の既往', mi: '心筋梗塞の既往', angina: '安定狭心症・不安定狭心症', revasc: '血行再建術の既往', stroke: '脳卒中の既往', tia: '一過性脳虚血発作（TIA）の既往', pad: '末梢動脈疾患（PAD）' };
-  const ascvdItems = Object.keys(ascvdLabels).filter((k) => raw[k]).map((k) => ascvdLabels[k]);
-  L.push(`  臨床的ASCVD: ${ascvdItems.length ? ascvdItems.join('、') : 'なし'}`);
-  let dmLine = `  HeFH: ${yesNo(!!raw.hefh)} / HoFH: ${yesNo(!!raw.hofh)} / 糖尿病: ${yesNo(raw.dm)}`;
-  if (raw.dm === true && r.dmEnhLabels && r.dmEnhLabels.length) dmLine += `（Table 17: ${r.dmEnhLabels.join('、')}）`;
-  L.push(dmLine);
-  L.push(`  CKD: ${raw.ckd && CKD_STAGE_LABEL[raw.ckd] ? CKD_STAGE_LABEL[raw.ckd] : '未選択'} / HIV: ${yesNo(!!raw.hiv)} / HFrEF: ${yesNo(!!raw.hfref)}`);
+  const bgItems = Object.keys(ascvdLabels).filter((k) => raw[k]).map((k) => ascvdLabels[k]);
+  if (raw.hefh) bgItems.push('HeFH');
+  if (raw.hofh) bgItems.push('HoFH');
+  if (raw.dm === true) {
+    bgItems.push((r.dmEnhLabels && r.dmEnhLabels.length) ? `糖尿病（Table 17: ${r.dmEnhLabels.join('、')}）` : '糖尿病');
+  }
+  if (raw.ckd && raw.ckd !== 'none' && CKD_STAGE_LABEL[raw.ckd]) bgItems.push(`CKD ${CKD_STAGE_LABEL[raw.ckd]}`);
+  if (raw.hiv) bgItems.push('HIV');
+  if (raw.hfref) bgItems.push('HFrEF');
+  if (raw.preg) bgItems.push('妊娠・授乳関連');
+  L.push(`  背景: ${bgItems.length ? bgItems.join('、') : 'なし'}`);
   L.push(`  収縮期血圧: ${raw.sbp ?? '未入力'} mmHg / 降圧薬: ${yesNo(raw.bptx)} / 現在喫煙: ${yesNo(raw.smoking)} / スタチン: ${yesNo(raw.statin)}`);
   L.push(`  採血: ${raw.fasting === 'fasting' ? '空腹時' : raw.fasting === 'casual' ? '随時' : '未選択'} / TC ${raw.tc ?? '未入力'} / HDL-C ${raw.hdl ?? '未入力'} / TG ${raw.tg ?? '未入力'} mg/dL`);
   if (r.ldlCurrent !== null) {
@@ -1727,7 +2213,11 @@ export function buildText(result, raw, dateLabel) {
     if (raw.statin === true && r.ldlBaseline !== null) ll += ` / 治療前 ${r.ldlBaseline} mg/dL`;
     L.push(ll);
   }
-  if (r.nonHdl !== null) L.push(`  non-HDL-C: ${r.nonHdl} mg/dL`);
+  if (r.nonHdl !== null) {
+    // spec_addendum_v2 §A-7 / fix_v2_round1 C1: 出所の表示。画面（PreventAscvdCalculator.js）と
+    // 同じ nonHdlSrcSuffix() を使い、表記を一致させる
+    L.push(`  non-HDL-C: ${r.nonHdl} mg/dL${nonHdlSrcSuffix(r.nonHdlSrc)}`);
+  }
   if (r.egfrUsed !== null) {
     L.push(`  eGFR: ${r.egfrUsed}（${r.egfrSource === 'ckdepi' ? `CKD-EPI 2021（Cr ${r.cr} mg/dL）` : '検査報告値'}）`);
   }
@@ -1746,11 +2236,11 @@ export function buildText(result, raw, dateLabel) {
     L.push(`  リスク増強因子: ${r.enhancers.count ? r.enhancers.items.join('、') : 'なし'}`);
   }
 
-  // fix_round1 C5: 注記が無い経路でも見出しの扱いを揃える（PRE_CORRECTION_NOTE を見出し無しで
-  // 孤立させない）。常に「■ 注記」見出しの下にまとめる。
-  L.push('');
-  L.push('■ 注記');
-  (r.notes || []).forEach((n) => L.push(`  ※ ${n}`));
-  // fix_round2 R-C5 / 仕様書 §11.1: コピー末尾は短縮形
+  // spec_addendum_v2 §A-7: notes が空なら「■ 注記」見出しごと出さない
+  if (r.notes && r.notes.length) {
+    L.push('');
+    L.push('■ 注記');
+    r.notes.forEach((n) => L.push(`  ※ ${n}`));
+  }
   return L.join('\n');
 }
