@@ -1,0 +1,49 @@
+---
+id: prevent-ascvd
+title: "2026 ACC/AHA 脂質異常症管理ツール（PREVENT-ASCVD）"
+sidebar_label: "ACC/AHA 2026 脂質（PREVENT）"
+sidebar_position: 1
+hide_table_of_contents: true
+description: "2026 ACC/AHA 脂質異常症ガイドラインに基づき、PREVENT-ASCVD の10年・30年リスク、一次予防のリスク区分、特殊集団の経路、二次予防の超高リスク判定と LDL-C／non-HDL-C 目標を示します。"
+keywords: ["PREVENT", "PREVENT-ASCVD", "ACC/AHA", "2026", "脂質異常症", "ガイドライン", "ASCVD", "LDL-C目標", "non-HDL-C", "超高リスク", "CAC", "Lp(a)", "apoB", "スタチン"]
+---
+
+import PreventAscvdCalculator from '@site/src/components/ClinicalCalc/PreventAscvdCalculator';
+
+# 2026 ACC/AHA 脂質異常症管理ツール（PREVENT-ASCVD）
+
+2026 ACC/AHA 脂質異常症ガイドラインの手順で、臨床的ASCVDの有無・特殊集団・PREVENT-ASCVD の10年リスクから経路を判定し、推奨クラス付きの推奨と LDL-C／non-HDL-C 目標を示します。
+
+<PreventAscvdCalculator />
+
+## 補足
+
+- PREVENT-ASCVD は **30〜79歳・臨床的ASCVDおよび無症候性動脈硬化なし・LDL-C 70〜189 mg/dL** の一次予防で10年リスクを推定し、低（&lt;3%）・境界（3〜&lt;5%）・中間（5〜&lt;10%）・高（≥10%）に区分します（1/B-NR）。30年リスクは30〜59歳のみ表示します。
+- 本ツールは PREVENT の **base model** を使います。GL は入手可能ならアルブミン尿・HbA1c・郵便番号（地域の社会的指標）も含めることを求めていますが、郵便番号は米国専用のため optional model は実装していません。BMI は ASCVD の式では係数が0のため入力不要です。
+- PREVENT は米国の集団データ（導出約330万人、外部検証約330万人）で作られた式です。日本動脈硬化学会「動脈硬化性疾患予防ガイドライン2022年版」は[久山町スコア](./hisayama)でリスク区分と管理目標を定めており、両者の閾値・目標値は異なります。
+- eGFR は PREVENT の導出と同じ CKD-EPI 2021 式を推奨します（クレアチニンを入力すると自動計算）。日本の検査報告 eGFR（日本腎臓学会の推算式）を入力した場合は値が異なりうることに注意してください。
+- LDL-C は検査報告値を優先し、空欄なら Sampson/NIH 式（TG ≤800 mg/dL）で推算します。GL は Friedewald 式・直接法（β定量以外）より Martin/Hopkins 式または Sampson/NIH 式を推奨しています（1/B-NR）。
+- PREVENT の入力範囲（収縮期血圧 90〜180 mmHg、総コレステロール 130〜320、HDL-C 20〜100 mg/dL、eGFR 15〜140）外の値は、最も近い範囲内の値で計算し注記します（AHA 公式計算機の扱い）。
+- 超高リスクの判定は図10の定義（年齢 ≥65歳、LDL-C ≥100 mg/dL）に従います。推奨表脚注・本文では「&gt;65歳」「&gt;100 mg/dL」と記載が異なります。
+- 高TG血症の薬物選択、小児、スタチン関連筋症状の管理、薬物相互作用、薬剤ごとの用量は本ツールの範囲外です。
+- 本ツールは 2026 ACC/AHA 脂質異常症ガイドライン（2026年3月13日オンライン公開）の推奨・図表に基づきます。2026年6月と9月の訂正（Circulation 2026;153:e1447、154:e393）は、Take-Home Message の apoB の記載（TG &gt;200 → ≥150）、高TG血症の推奨5・6の図番号、表5の胆汁酸吸着薬の用量・投与回数、査読委員名の修正で、本ツールの判定内容には影響しません。
+
+| 区分 | PREVENT-ASCVD 10年 | 主な推奨 | LDL-C／non-HDL-C 目標 |
+|---|---|---|---|
+| 低 | &lt;3% | 健康行動（1/A）。30〜59歳で LDL-C 160〜189 または30年 ≥10% なら中強度スタチン（2a/C-LD） | スタチン開始時 &lt;100／&lt;130 |
+| 境界 | 3〜&lt;5% | 開始を決めたら中強度スタチン（2a/A）、リスク増強因子を考慮（2a/B-NR） | &lt;100／&lt;130（2a/B-NR） |
+| 中間 | 5〜&lt;10% | 少なくとも中強度スタチン（1/A） | &lt;100／&lt;130（2a/B-NR） |
+| 高 | ≥10% | 高強度スタチン（1/A）、未達でエゼチミブ（2a/B-R） | &lt;70／&lt;100（2a/B-R） |
+| 二次予防（超高リスクでない） | — | 高強度スタチン（1/A） | &lt;70／&lt;100（任意 &lt;55／&lt;85） |
+| 二次予防（超高リスク・CKD合併） | — | 高強度スタチン＋未達でエゼチミブ／PCSK9 抗体（1/A） | &lt;55／&lt;85 |
+
+## 関連ページ
+
+- [久山町スコア（動脈硬化性疾患予防ガイドライン2022）](./hisayama)
+- [non-HDL-C 計算](./non-hdl)
+- [Friedewald式（LDL-C推算）](./friedewald)
+- [eGFR計算ツール](../physical-renal/egfr)
+- [脂質異常症](../../120-dyslipidemia/e785-dyslipidemia.mdx)
+- [高LDLコレステロール血症](../../120-dyslipidemia/e780-high-ldl-cholesterol.mdx)
+- [家族性高コレステロール血症（FH）](../../120-dyslipidemia/e780-familial-hypercholesterolemia-fh.mdx)
+- [高トリグリセライド血症](../../120-dyslipidemia/e781-hypertriglyceridemia.mdx)
