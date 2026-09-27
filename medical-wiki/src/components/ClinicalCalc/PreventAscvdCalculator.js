@@ -735,20 +735,7 @@ export default function PreventAscvdCalculator() {
 
       <div className={styles.note}>
         <p>
-          <strong>判定手順:</strong>
-          {' '}(0) 臨床的ASCVD → 二次予防（図10で超高リスク判定: 主要イベント2つ以上、または1つ＋高リスク状態2つ以上。超高リスク・CKD合併は LDL-C &lt;55／non-HDL-C &lt;85、それ以外は &lt;70／&lt;100）。
-          {' '}(1) HoFH → 脂質専門医。(2) HeFH・LDL-C ≥190 → 重症高コレステロール血症（PREVENT は用いない）。
-          {' '}(3) 糖尿病 → 年齢別（図9）。(4) CKD G3以上（40〜75歳）・HIV（40〜75歳）→ スタチン推奨（1/B-R）。
-          {' '}(5) 30〜79歳・LDL-C 70〜189 → PREVENT-ASCVD 10年リスクで 低 &lt;3%／境界 3〜&lt;5%／中間 5〜&lt;10%／高 ≥10%。30〜59歳は30年リスクも用いる。
-          {' '}(6) CAC があれば再分類（CAC ≥300 は PREVENT 適用外）。20〜29歳・80歳以上は PREVENT 適用外。HFrEF はどの分岐にも影響せず、該当すれば別途「HFrEF のみを理由とする LLT の開始は推奨されない」を付記します。
-        </p>
-        <p>
-          <strong>注意:</strong> PREVENT は米国の集団データで導出・検証された式です。日本動脈硬化学会のガイドライン2022年版は久山町スコアでリスク区分と管理目標を定めており、閾値・目標値が異なります。目標値・推奨クラスは GL の記載であり、治療の最終判断は臨床医が行います。
-        </p>
-        <p>
           <strong>参考:</strong> 2026 ACC/AHA/多学会 Guideline on the Management of Dyslipidemia（J Am Coll Cardiol 2026; Circulation 2026）; Khan SS, et al. PREVENT equations. Circulation 2024;149:430-449; Sampson M, et al. JAMA Cardiol 2020;5:540-548; CKD-EPI 2021.
-          <br />
-          本ツールは 2026 ACC/AHA 脂質異常症ガイドライン（2026年3月13日オンライン公開）の推奨・図表に基づきます。2026年6月と9月の訂正（Circulation 2026;153:e1447、154:e393）は、Take-Home Message の apoB の記載（TG &gt;200 → ≥150）、高TG血症の推奨5・6の図番号、表5の胆汁酸吸着薬の用量・投与回数、査読委員名の修正で、本ツールの判定内容には影響しません。
         </p>
       </div>
     </div>

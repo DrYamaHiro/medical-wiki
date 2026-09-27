@@ -559,7 +559,6 @@ export function evaluate(p) {
 
   if (age === null && (ev.acs12 || ev.mi || ev.isch || ev.pad || hasAscvdDef)) notes.push(NOTES.NOTE_VHR_AGE_MISSING);
   if (maxStatinEze && ldlCurrent === null) notes.push(NOTES.NOTE_VHR_LDL_MISSING);
-  if (hasAscvd && vhr !== vhrFootnote) notes.push(NOTES.NOTE_VHR_BOUNDARY(vhrFootnote ? '超高リスク' : '超高リスクではない'));
 
   /* ---- PREVENT 適用判定（§4.6、全経路共通の単一関数） ---- */
   function preventStatus(ldlRouteForCheck) {
@@ -610,7 +609,6 @@ export function evaluate(p) {
     // 立てるための唯一の入口。呼ぶたびにまずリセットする。
     lastElderLowCac = false;
     if (cac !== null && incidCac !== 'none') {
-      extraNotes.push(NOTES.NOTE_CAC_INCID_IGNORED);
     }
     if (cac !== null) {
       // fix_round2 R-A10: 75歳超（経路を問わない）で CAC 0〜10 のときは S_CAC1・CAC_POS を出さず
@@ -645,7 +643,6 @@ export function evaluate(p) {
       candidateGoal = makeGoal(100, 130, '≥30%', null, 'S_INCID_MILD');
     } else if (incidCac === 'modsev') {
       extraRecs.push('S_INCID_MODSEV', 'CAC_INCID');
-      extraNotes.push(NOTES.NOTE_FIG13_INCID);
       candidateGoal = makeGoal(70, 100, '≥50%', null, 'S_INCID_MODSEV');
     }
     return { extraRecs, extraNotes, candidateGoal, optionalGoal };
@@ -896,7 +893,7 @@ export function evaluate(p) {
       if (severeFh) mainRecs.push('F_55');
       goal = makeGoal(55, 85, '≥50%', 55, 'SEC_VH_STATIN');
       addOnSteps = FIG11_STEPS;
-      localNotes.push(NOTES.NOTE_EZE_NOT_REQUIRED, NOTES.NOTE_FIG11_ORDER);
+      localNotes.push(NOTES.NOTE_EZE_NOT_REQUIRED);
       // fix_round2 R-A12: 超高リスク（vhr）でも維持透析なら KHD と NOTE_HD_START を併記
       if (ckd === 'dialysis') {
         mainRecs.push('KHD');
@@ -909,7 +906,7 @@ export function evaluate(p) {
       mainRecs = ['K_ASCVD', 'SEC_VH_ADD', 'SEC_VH_INCL', 'SEC_VH_BEMP'];
       goal = makeGoal(55, 85, '≥50%', 55, 'K_ASCVD');
       addOnSteps = FIG11_STEPS;
-      localNotes.push(NOTES.NOTE_EZE_NOT_REQUIRED, NOTES.NOTE_FIG11_ORDER);
+      localNotes.push(NOTES.NOTE_EZE_NOT_REQUIRED);
       // fix_round1 A12: 維持透析＋臨床的ASCVD は K_ASCVD に加え KHD と NOTE_HD_START を併記
       if (ckd === 'dialysis') {
         mainRecs.push('KHD');
@@ -995,7 +992,6 @@ export function evaluate(p) {
       recs.push({ id: 'F_100', conditional: '追加のASCVD危険因子・HeFH・無症候性動脈硬化がいずれも無い場合' });
       recs.push({ id: 'F_70', conditional: '追加の危険因子がある場合' });
       goal = makeGoal(70, 100, null, null, 'F_70', '（追加危険因子の有無で <100 も可: 臨床判断）');
-      localNotes.push(NOTES.NOTE_SEVERE_RF);
     }
     recs.push({ id: 'F_INCL' });
     if (isHefh) recs.push({ id: 'F_NOPREVENT' });
@@ -1121,7 +1117,7 @@ export function evaluate(p) {
   function buildCkd() {
     const c = computePrevent();
     const ref = primaryReferenceForOther(c);
-    const localNotes = [NOTES.NOTE_CKD_STAGE34, ...ref.notes];
+    const localNotes = [...ref.notes];
     return finalize({
       route: 'ckd',
       title: `CKD ${CKD_STAGE_LABEL[ckd]}（ASCVDなし）`,
@@ -1756,6 +1752,5 @@ export function buildText(result, raw, dateLabel) {
   L.push('■ 注記');
   (r.notes || []).forEach((n) => L.push(`  ※ ${n}`));
   // fix_round2 R-C5 / 仕様書 §11.1: コピー末尾は短縮形
-  L.push('  ※ 2026年3月オンライン公開版に基づく（2026年6月・9月の訂正を確認済み、判定への影響なし）');
   return L.join('\n');
 }
